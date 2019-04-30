@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.136
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vlingo.Http", "Vlingo.Http\Vlingo.Http.csproj", "{B46A0736-489B-4BF7-9758-C0BBE70EA929}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vlingo.Http.Tests", "Vlingo.Http.Tests\Vlingo.Http.Tests.csproj", "{444E1E58-5F05-4BF4-B1FA-C5BB5164C14C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B46A0736-489B-4BF7-9758-C0BBE70EA929}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B46A0736-489B-4BF7-9758-C0BBE70EA929}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B46A0736-489B-4BF7-9758-C0BBE70EA929}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B46A0736-489B-4BF7-9758-C0BBE70EA929}.Release|Any CPU.Build.0 = Release|Any CPU
+		{444E1E58-5F05-4BF4-B1FA-C5BB5164C14C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{444E1E58-5F05-4BF4-B1FA-C5BB5164C14C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{444E1E58-5F05-4BF4-B1FA-C5BB5164C14C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{444E1E58-5F05-4BF4-B1FA-C5BB5164C14C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4E2584D9-B33D-4CB5-84B6-9D7E621FFFC1}
+	EndGlobalSection
+EndGlobal
