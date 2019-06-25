@@ -25,8 +25,6 @@ namespace Vlingo.Http
         /// </summary>
         public static Body Empty { get; } = new Body();
 
-        private readonly string _content;
-
         /// <summary>
         /// Answer a new <code>Body</code> with binary content using <paramref name="encoding"/>.
         /// </summary>
@@ -46,24 +44,40 @@ namespace Vlingo.Http
             throw new ArgumentException($"Unmapped encoding: {encoding}", nameof(encoding));
         }
 
+        /// <summary>
+        /// Answer a new <code>Body</code> with binary content encoded as a Base64 <code>string</code>.
+        /// </summary>
+        /// <param name="body">The byte[] content.</param>
+        /// <returns></returns>
+        public static Body From(byte[] body) => From(body, Encoding.Base64);
+
+        /// <summary>
+        /// Answer a new <code>Body</code> with text content, which is a <code>TextBody</code>.
+        /// </summary>
+        /// <param name="body">The string content.</param>
+        /// <returns></returns>
+        public static Body From(string body) => new Body(body);
+
         private static string BytesToBase64(byte[] body)
             => Convert.ToBase64String(body);
 
         private static string BytesToUTF8(byte[] body)
             => System.Text.Encoding.UTF8.GetString(body);
 
-        public bool HasContent => !string.IsNullOrEmpty(_content);
+        public bool HasContent => !string.IsNullOrEmpty(Content);
 
-        public override string ToString() => _content;
+        public override string ToString() => Content;
+
+        internal string Content { get; }
 
         private Body(string body)
         {
-            _content = body;
+            Content = body;
         }
 
         private Body()
         {
-            _content = string.Empty;
+            Content = string.Empty;
         }
     }
 }

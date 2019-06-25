@@ -12,14 +12,12 @@ namespace Vlingo.Http
 {
     public class Context
     {
-        private readonly RequestResponseContext<object> _requestResponseContext;
-        private readonly Request _request;
         private readonly ICompletesEventually _completes;
 
         public Context(RequestResponseContext<object> requestResponseContext, Request request, ICompletesEventually completes)
         {
-            _requestResponseContext = requestResponseContext;
-            _request = request;
+            ClientContext = requestResponseContext;
+            Request = request;
             _completes = completes;
         }
 
@@ -33,12 +31,12 @@ namespace Vlingo.Http
         {
         }
 
-        public RequestResponseContext<object> ClientContext => _requestResponseContext;
+        public RequestResponseContext<object> ClientContext { get; }
 
-        public bool HasClientContext => _requestResponseContext != null;
+        public bool HasClientContext => ClientContext != null;
 
-        public Request Request => _request;
+        public Request Request { get; }
 
-        public bool HasRequest => _request != null;
+        public bool HasRequest => Request != null;
     }
 }
