@@ -277,7 +277,7 @@ namespace Vlingo.Http
             return status.ToString();
         }
 
-        public static Response.ResponseStatus ConvertToResponseStatus(this string statusDescription)
+        internal static Response.ResponseStatus ConvertToResponseStatus(this string statusDescription)
         {
             if (int.TryParse(statusDescription.Substring(0, statusDescription.IndexOf(' ')).Trim(), out var statusCode))
             {
