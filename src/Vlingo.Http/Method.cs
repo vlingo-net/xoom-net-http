@@ -18,15 +18,15 @@ namespace Vlingo.Http
             _name = name;
         }
 
-        public static Method CONNECT => new Method("CONNECT");
-        public static Method DELETE => new Method("DELETE");
-        public static Method GET => new Method("GET");
-        public static Method HEAD => new Method("HEAD");
-        public static Method OPTIONS => new Method("OPTIONS");
-        public static Method PATCH => new Method("PATCH");
-        public static Method POST => new Method("POST");
-        public static Method PUT => new Method("PUT");
-        public static Method TRACE => new Method("TRACE");
+        public static Method CONNECT { get; } = new Method("CONNECT");
+        public static Method DELETE { get; } = new Method("DELETE");
+        public static Method GET { get; } = new Method("GET");
+        public static Method HEAD { get; } = new Method("HEAD");
+        public static Method OPTIONS { get; } = new Method("OPTIONS");
+        public static Method PATCH { get; } = new Method("PATCH");
+        public static Method POST { get; } = new Method("POST");
+        public static Method PUT { get; } = new Method("PUT");
+        public static Method TRACE { get; } = new Method("TRACE");
 
         public static Method From(string methodNameText)
         {
@@ -66,6 +66,8 @@ namespace Vlingo.Http
         public bool IsPUT() => MethodEquals("PUT");
         public bool IsTRACE() => MethodEquals("TRACE");
 
-        private bool MethodEquals(string name) => string.Equals(_name, name, StringComparison.InvariantCultureIgnoreCase);
+        public override string ToString() => _name;
+
+        private bool MethodEquals(string name) => string.Equals(_name, name);
     }
 }

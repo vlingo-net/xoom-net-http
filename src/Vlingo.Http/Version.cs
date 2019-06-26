@@ -20,9 +20,9 @@ namespace Vlingo.Http
             _version = version;
         }
 
-        public static Version Http1_1 => new Version(HTTP_1_1);
+        public static Version Http1_1 { get; } = new Version(HTTP_1_1);
 
-        public static Version Http2_0 => new Version(HTTP_2_0);
+        public static Version Http2_0 { get; } = new Version(HTTP_2_0);
 
         public static Version From(string version)
         {
