@@ -60,12 +60,12 @@ namespace Vlingo.Http.Media
             private const string QUALITY_FACTOR_PARAMETER = "q";
             private const float DEFAULT_QUALITY_FACTOR_VALUE = 1.0f;
 
-            private readonly float qualityFactor;
+            private readonly float _qualityFactor;
 
             public AcceptMediaType(string mimeType, string mimeSubType)
                 : base(mimeType, mimeSubType)
             {
-                qualityFactor = DEFAULT_QUALITY_FACTOR_VALUE;
+                _qualityFactor = DEFAULT_QUALITY_FACTOR_VALUE;
             }
 
             public AcceptMediaType(string mimeType, string mimeSubType, IDictionary<string, string> parameters)
@@ -81,7 +81,7 @@ namespace Vlingo.Http.Media
                     }
                 }
 
-                this.qualityFactor = qualityFactor;
+                _qualityFactor = qualityFactor;
             }
 
             public int Compare(AcceptMediaType x, AcceptMediaType y)
@@ -89,7 +89,7 @@ namespace Vlingo.Http.Media
 
             private static int CompareForAscendingOrder(AcceptMediaType x, AcceptMediaType y)
             {
-                if (x.qualityFactor == y.qualityFactor)
+                if (x._qualityFactor == y._qualityFactor)
                 {
                     if (x.IsGenericType() && !y.IsGenericType())
                     {
@@ -110,7 +110,7 @@ namespace Vlingo.Http.Media
                 }
                 else
                 {
-                    return x.qualityFactor.CompareTo(y.qualityFactor);
+                    return x._qualityFactor.CompareTo(y._qualityFactor);
                 }
             }
 

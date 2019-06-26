@@ -38,5 +38,7 @@ namespace Vlingo.Http
         public Request Request { get; }
 
         public bool HasRequest => Request != null;
+
+        internal ICompletesEventually Completes => _completes;
     }
 }

@@ -8,7 +8,7 @@
 using Newtonsoft.Json;
 using System.Collections.Generic;
 
-namespace Vlingo.Http.Serialization
+namespace Vlingo.Http.Resource.Serialization
 {
     public static class JsonSerialization
     {
