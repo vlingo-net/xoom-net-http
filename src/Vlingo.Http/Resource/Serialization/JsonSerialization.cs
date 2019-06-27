@@ -6,6 +6,7 @@
 // one at https://mozilla.org/MPL/2.0/.
 
 using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 
 namespace Vlingo.Http.Resource.Serialization
@@ -14,6 +15,9 @@ namespace Vlingo.Http.Resource.Serialization
     {
         public static T Deserialized<T>(string serialization)
             => JsonConvert.DeserializeObject<T>(serialization);
+
+        public static object Deserialized(string serialization, Type type)
+            => JsonConvert.DeserializeObject(serialization, type);
 
         public static List<T> DeserializedList<T>(string serialization)
             => JsonConvert.DeserializeObject<List<T>>(serialization);
