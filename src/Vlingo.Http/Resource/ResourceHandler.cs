@@ -5,6 +5,7 @@
 // was not distributed with this file, You can obtain
 // one at https://mozilla.org/MPL/2.0/.
 
+using System;
 using Vlingo.Actors;
 using Vlingo.Common;
 
@@ -15,7 +16,7 @@ namespace Vlingo.Http.Resource
         internal Context _context;
         internal Stage _stage;
 
-        public abstract Resource<T> Routes<T>();
+        public virtual Resource Routes<T>() => throw new NotSupportedException("Undefined resource; must override.");
 
         protected ResourceHandler() { }
 
@@ -23,10 +24,10 @@ namespace Vlingo.Http.Resource
 
         protected virtual Context Context => _context;
 
-        protected virtual ILogger Logger => _stage.World.DefaultLogger;
+        protected internal virtual ILogger Logger => _stage.World.DefaultLogger;
 
         public virtual Scheduler Scheduler => _stage.Scheduler;
 
-        protected virtual Stage Stage => _stage;
+        protected virtual Stage Stage { get => _stage; set => _stage = value; }
     }
 }

@@ -11,11 +11,11 @@ namespace Vlingo.Http
 {
     public class Method
     {
-        private readonly string _name;
+        public string Name { get; }
 
         private Method(string name)
         {
-            _name = name;
+            Name = name;
         }
 
         public static Method CONNECT { get; } = new Method("CONNECT");
@@ -66,8 +66,8 @@ namespace Vlingo.Http
         public bool IsPUT() => MethodEquals("PUT");
         public bool IsTRACE() => MethodEquals("TRACE");
 
-        public override string ToString() => _name;
+        public override string ToString() => Name;
 
-        private bool MethodEquals(string name) => string.Equals(_name, name);
+        private bool MethodEquals(string name) => string.Equals(Name, name);
     }
 }

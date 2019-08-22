@@ -20,8 +20,6 @@ namespace Vlingo.Http.Resource.SSE
 
         private readonly World _world;
 
-        public override Resource<T> Routes<T>() => throw new NotSupportedException("Undefined resource; must override.");
-
         public SseStreamResource(World world)
         {
             _world = world;
@@ -113,7 +111,7 @@ namespace Vlingo.Http.Resource.SSE
                     TimeSpan.FromMilliseconds(10),
                     TimeSpan.FromMilliseconds(feedInterval));
 
-                Logger.Log($"SsePublisher started for: {_streamName}");
+                Logger.Info($"SsePublisher started for: {_streamName}");
             }
 
             public void Subscribe(SseSubscriber subscriber)

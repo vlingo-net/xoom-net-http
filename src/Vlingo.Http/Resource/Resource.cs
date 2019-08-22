@@ -6,15 +6,48 @@
 // one at https://mozilla.org/MPL/2.0/.
 
 using System;
-using System.Collections.Generic;
-using System.Text;
+using Vlingo.Actors;
+using Vlingo.Common;
 
 namespace Vlingo.Http.Resource
 {
-    public abstract class Resource<T>
+    public abstract class Resource
     {
-        protected IResourceRequestHandler PooledHandler { get; }
+        public string Name { get; }
+        public int HandlerPoolSize { get; }
+
+        private readonly IResourceRequestHandler[] _handlerPool;
+        private readonly AtomicLong _handlerPoolIndex;
+
+        public Resource(string name, int handlerPoolSize)
+        {
+            Name = name;
+            HandlerPoolSize = handlerPoolSize;
+            _handlerPool = new IResourceRequestHandler[handlerPoolSize];
+            _handlerPoolIndex = new AtomicLong(0);
+        }
 
         public abstract void DispatchToHandlerWith(Context context, Action.MappedParameters mappedParameters);
+        internal abstract Action.MatchResults MatchWith(Method method, Uri uri);
+        protected abstract ResourceHandler ResourceHandlerInstance(Stage stage);
+
+        internal void AllocateHandlerPool(Stage stage)
+        {
+            for (var i = 0; i < HandlerPoolSize; ++i)
+            {
+                _handlerPool[i] = stage.ActorFor<IResourceRequestHandler>(
+                    Definition.Has<ResourceRequestHandlerActor>(
+                        Definition.Parameters(ResourceHandlerInstance(stage))));
+            }
+        }
+
+        protected IResourceRequestHandler PooledHandler
+        {
+            get
+            {
+                var index = (int)(_handlerPoolIndex.IncrementAndGet() % HandlerPoolSize);
+                return _handlerPool[index];
+            }
+        }
     }
 }

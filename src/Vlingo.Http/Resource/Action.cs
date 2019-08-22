@@ -13,17 +13,18 @@ namespace Vlingo.Http.Resource
 {
     public sealed class Action
     {
-        private static readonly MatchResults UnmatchedResults = new MatchResults(null, null, new List<string>(), "", false);
+        internal static readonly MatchResults UnmatchedResults = new MatchResults(null, null, new List<string>(), "", false);
 
         private readonly IList<MappedParameter> _additionalParameters;
         private readonly bool _disallowPathParametersWithSlash;
-        private readonly int _id;
         private readonly Method _method;
         private readonly string _uri;
         private readonly string _originalTo;
         private readonly ToSpec _to;
         private readonly IMapper _mapper;
         private readonly Matchable _matchable;
+
+        internal int Id { get; }
 
         public Action(
             int id,
@@ -34,7 +35,7 @@ namespace Vlingo.Http.Resource
             bool disallowPathParametersWithSlash,
             IList<MappedParameter> additionalParameters)
         {
-            _id = id;
+            Id = id;
             _method = Method.From(method);
             _uri = uri;
             _to = new ToSpec(to);
@@ -78,7 +79,7 @@ namespace Vlingo.Http.Resource
             }
             mapped.AddRange(_additionalParameters);
 
-            return new MappedParameters(_id, _method, _to.MethodName, mapped);
+            return new MappedParameters(Id, _method, _to.MethodName, mapped);
         }
 
         private int IndexOfNextSegmentStart(int currentIndex, string path)
@@ -149,7 +150,7 @@ namespace Vlingo.Http.Resource
         }
 
         public override string ToString()
-            => $"Action[Id={_id}, Method={_method}, Uri={_uri}, To={_to}]";
+            => $"Action[Id={Id}, Method={_method}, Uri={_uri}, To={_to}]";
 
         private IMapper MapperFrom(string mapper)
         {
