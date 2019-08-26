@@ -38,9 +38,7 @@ namespace Vlingo.Http.Resource
             _dictionary = properties;
         }
 
-        private string GetProperty(string key) => GetProperty(key, null);
-
-        private string GetProperty(string key, string defaultValue)
+        public string GetProperty(string key, string defaultValue)
         {
             if(_dictionary.TryGetValue(key, out string value))
             {
@@ -49,6 +47,8 @@ namespace Vlingo.Http.Resource
 
             return defaultValue;
         }
+        
+        private string GetProperty(string key) => GetProperty(key, null);
         
         private void SetProperty(string key, string value)
         {
