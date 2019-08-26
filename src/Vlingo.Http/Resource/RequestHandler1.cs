@@ -18,7 +18,7 @@ namespace Vlingo.Http.Resource
         private ParamExecutor1 _executor;
 
         public delegate ICompletes<Response> Handler1(T param1);
-        public delegate ICompletes<ObjectResponse<object>> ObjectHandler1(T param1);
+        public delegate ICompletes<IObjectResponse> ObjectHandler1(T param1);
         internal delegate ICompletes<Response> ParamExecutor1(
             Request request,
             T param1,
@@ -69,14 +69,14 @@ namespace Vlingo.Http.Resource
             => Execute(request, Resolver.Apply(request, mappedParameters), logger);
 
         public RequestHandler2<T, R> Param<R>(Type paramClass)
-            => new RequestHandler2<T, R>(Method, Path, Resolver, ParameterResolver.Path<T>(1, paramClass), ErrorHandler, MediaTypeMapper);
+            => new RequestHandler2<T, R>(Method, Path, Resolver, ParameterResolver.Path<R>(1, paramClass), ErrorHandler, MediaTypeMapper);
 
         public RequestHandler2<T, R> Body<R>(Type bodyClass)
             => new RequestHandler2<T, R>(
                 Method,
                 Path,
                 Resolver,
-                ParameterResolver.Body<T>(bodyClass, MediaTypeMapper),
+                ParameterResolver.Body<R>(bodyClass, MediaTypeMapper),
                 ErrorHandler,
                 MediaTypeMapper);
 
@@ -90,7 +90,7 @@ namespace Vlingo.Http.Resource
                 Method,
                 Path,
                 Resolver,
-                ParameterResolver.Body<T>(bodyClass, mapper),
+                ParameterResolver.Body<R>(bodyClass, mapper),
                 ErrorHandler,
                 MediaTypeMapper);
 
@@ -101,7 +101,7 @@ namespace Vlingo.Http.Resource
                 Method,
                 Path,
                 Resolver,
-                ParameterResolver.Body<T>(bodyClass, mediaTypeMapper),
+                ParameterResolver.Body<R>(bodyClass, mediaTypeMapper),
                 ErrorHandler,
                 mediaTypeMapper);
         }
