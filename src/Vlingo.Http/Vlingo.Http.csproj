@@ -23,7 +23,8 @@
     </AssemblyAttribute>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Vlingo.UUID" Version="1.0.0" />
+    <PackageReference Include="Vlingo.Actors" Version="0.4.1" />
+    <PackageReference Include="Vlingo.Common" Version="0.5.2" />
     <PackageReference Include="Vlingo.Wire" Version="0.5.3" />
   </ItemGroup>
 
