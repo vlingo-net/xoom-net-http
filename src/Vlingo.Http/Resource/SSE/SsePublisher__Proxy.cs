@@ -12,9 +12,10 @@ namespace Vlingo.Http.Resource.SSE
 {
     public class SsePublisher__Proxy : ISsePublisher
     {
-        private const string SubscribeRepresentation = "Subscribe(Vlingo.Http.Resource.SSE.SseSubscriber)";
-        private const string UnsubscribeRepresentation = "Unsubscribe(Vlingo.Http.Resource.SSE.SseSubscriber)";
-        private const string StopRepresentation = "Stop()";
+        private const string RepresentationConclude0 = "Conclude()";
+        private const string SubscribeRepresentation1 = "Subscribe(Vlingo.Http.Resource.SSE.SseSubscriber)";
+        private const string UnsubscribeRepresentation2 = "Unsubscribe(Vlingo.Http.Resource.SSE.SseSubscriber)";
+        private const string StopRepresentation3 = "Stop()";
 
         private readonly Actor _actor;
         private readonly IMailbox _mailbox;
@@ -34,16 +35,16 @@ namespace Vlingo.Http.Resource.SSE
                 Action<ISsePublisher> consumer = actor => actor.Stop();
                 if (_mailbox.IsPreallocated)
                 {
-                    _mailbox.Send(_actor, consumer, null, StopRepresentation);
+                    _mailbox.Send(_actor, consumer, null, StopRepresentation3);
                 }
                 else
                 {
-                    _mailbox.Send(new LocalMessage<ISsePublisher>(_actor, consumer, StopRepresentation));
+                    _mailbox.Send(new LocalMessage<ISsePublisher>(_actor, consumer, StopRepresentation3));
                 }
             }
             else
             {
-                _actor.DeadLetters.FailedDelivery(new DeadLetter(_actor, StopRepresentation));
+                _actor.DeadLetters.FailedDelivery(new DeadLetter(_actor, StopRepresentation3));
             }
         }
 
@@ -54,16 +55,16 @@ namespace Vlingo.Http.Resource.SSE
                 Action<ISsePublisher> consumer = actor => actor.Subscribe(subscriber);
                 if (_mailbox.IsPreallocated)
                 {
-                    _mailbox.Send(_actor, consumer, null, SubscribeRepresentation);
+                    _mailbox.Send(_actor, consumer, null, SubscribeRepresentation1);
                 }
                 else
                 {
-                    _mailbox.Send(new LocalMessage<ISsePublisher>(_actor, consumer, SubscribeRepresentation));
+                    _mailbox.Send(new LocalMessage<ISsePublisher>(_actor, consumer, SubscribeRepresentation1));
                 }
             }
             else
             {
-                _actor.DeadLetters.FailedDelivery(new DeadLetter(_actor, SubscribeRepresentation));
+                _actor.DeadLetters.FailedDelivery(new DeadLetter(_actor, SubscribeRepresentation1));
             }
         }
 
@@ -74,16 +75,36 @@ namespace Vlingo.Http.Resource.SSE
                 Action<ISsePublisher> consumer = actor => actor.Unsubscribe(subscriber);
                 if (_mailbox.IsPreallocated)
                 {
-                    _mailbox.Send(_actor, consumer, null, UnsubscribeRepresentation);
+                    _mailbox.Send(_actor, consumer, null, UnsubscribeRepresentation2);
                 }
                 else
                 {
-                    _mailbox.Send(new LocalMessage<ISsePublisher>(_actor, consumer, UnsubscribeRepresentation));
+                    _mailbox.Send(new LocalMessage<ISsePublisher>(_actor, consumer, UnsubscribeRepresentation2));
                 }
             }
             else
             {
-                _actor.DeadLetters.FailedDelivery(new DeadLetter(_actor, UnsubscribeRepresentation));
+                _actor.DeadLetters.FailedDelivery(new DeadLetter(_actor, UnsubscribeRepresentation2));
+            }
+        }
+        
+        public void Conclude()
+        {
+            if (!_actor.IsStopped)
+            {
+                Action<IStoppable> consumer = actor => actor.Conclude();
+                if (_mailbox.IsPreallocated)
+                {
+                    _mailbox.Send(_actor, consumer, null, RepresentationConclude0);
+                }
+                else
+                {
+                    _mailbox.Send(new LocalMessage<ISsePublisher>(_actor, consumer, UnsubscribeRepresentation2));
+                }
+            }
+            else
+            {
+                _actor.DeadLetters.FailedDelivery(new DeadLetter(_actor, UnsubscribeRepresentation2));
             }
         }
     }
