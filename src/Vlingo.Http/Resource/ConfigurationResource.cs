@@ -13,7 +13,7 @@ using Vlingo.Common.Compiler;
 
 namespace Vlingo.Http.Resource
 {
-    public abstract class ConfigurationResource : Resource
+    public abstract class ConfigurationResource<T> : Resource<T>
     {
         private const string DispatcherSuffix = "Dispatcher";
 
@@ -23,14 +23,14 @@ namespace Vlingo.Http.Resource
         public Type ResourceHandlerClass { get; }
         internal IReadOnlyList<Action> Actions { get; }
 
-        public static ConfigurationResource Defining(
+        public static ConfigurationResource<T> Defining(
             string resourceName,
             Type resourceHandlerClass,
             int handlerPoolSize,
             IList<Action> actions)
             => NewResourceFor(resourceName, resourceHandlerClass, handlerPoolSize, actions);
 
-        internal static ConfigurationResource NewResourceFor(
+        internal static ConfigurationResource<T> NewResourceFor(
             string resourceName,
             Type resourceHandlerClass,
             int handlerPoolSize,
@@ -59,11 +59,11 @@ namespace Vlingo.Http.Resource
                 {
                     if (ctor.GetParameters().Length == ctorParams.Length)
                     {
-                        var resourceDispatcher = (ConfigurationResource)ctor.Invoke(ctorParams);
+                        var resourceDispatcher = (ConfigurationResource<T>)ctor.Invoke(ctorParams);
                         return resourceDispatcher;
                     }
                 }
-                return (ConfigurationResource)Activator.CreateInstance(resourceClass);
+                return (ConfigurationResource<T>)Activator.CreateInstance(resourceClass);
             }
             catch (Exception e)
             {
@@ -152,7 +152,7 @@ namespace Vlingo.Http.Resource
             try
             {
                 var result = generator.GenerateFor(resourceHandlerClass.FullName);
-                var input = new Input(resourceHandlerClass, fullyQualifiedClassName, lookupTypeName, result.source, result.sourceFile, ClassLoader, generator.Type, true);
+                var input = new Input(resourceHandlerClass, fullyQualifiedClassName, lookupTypeName, result.Source, result.SourceFile, ClassLoader, generator.Type, true);
                 var resourceDispatcherClass = DynaCompiler.Compile(input);
                 return resourceDispatcherClass;
             }

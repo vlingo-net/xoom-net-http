@@ -33,11 +33,8 @@ namespace Vlingo.Http.Resource
             return props;
         }
 
-        private HttpProperties(Dictionary<string, string> properties)
-        {
-            _dictionary = properties;
-        }
-
+        public string GetProperty(string key) => GetProperty(key, null);
+        
         public string GetProperty(string key, string defaultValue)
         {
             if(_dictionary.TryGetValue(key, out string value))
@@ -47,9 +44,9 @@ namespace Vlingo.Http.Resource
 
             return defaultValue;
         }
-        
-        private string GetProperty(string key) => GetProperty(key, null);
-        
+
+        public IEnumerable<string> Keys => _dictionary.Keys;
+
         private void SetProperty(string key, string value)
         {
             _dictionary[key] = value;
@@ -79,6 +76,11 @@ namespace Vlingo.Http.Resource
             }
 
             return $"node.{nodeName}.{key}";
+        }
+        
+        private HttpProperties(Dictionary<string, string> properties)
+        {
+            _dictionary = properties;
         }
     }
 }

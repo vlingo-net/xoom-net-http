@@ -10,7 +10,7 @@ using System.Collections.Generic;
 
 namespace Vlingo.Http.Resource
 {
-    public class StaticFilesResourceDispatcher : ConfigurationResource
+    public class StaticFilesResourceDispatcher : ConfigurationResource<StaticFilesResource>
     {
         public StaticFilesResourceDispatcher(
             string name,

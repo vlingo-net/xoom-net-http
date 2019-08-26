@@ -11,10 +11,10 @@ namespace Vlingo.Http.Resource
 {
     public static class ResourceBuilder
     {
-        public static Resource Resource(string name, params RequestHandler[] requestHandlers)
+        public static Resource<ResourceHandler> Resource(string name, params RequestHandler[] requestHandlers)
             => Resource(name, 10, requestHandlers);
 
-        public static Resource Resource(string name, int handlerPoolSize, params RequestHandler[] requestHandlers)
+        public static Resource<ResourceHandler> Resource(string name, int handlerPoolSize, params RequestHandler[] requestHandlers)
             => new DynamicResource(name, handlerPoolSize, requestHandlers.ToList());
 
         public static RequestHandler0 Get(string uri)

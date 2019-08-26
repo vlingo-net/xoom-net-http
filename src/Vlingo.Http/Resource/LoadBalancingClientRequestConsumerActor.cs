@@ -6,7 +6,6 @@
 // one at https://mozilla.org/MPL/2.0/.
 
 using System;
-using System.Buffers;
 using Vlingo.Actors;
 using Vlingo.Common;
 using Vlingo.Wire.Message;
@@ -33,11 +32,11 @@ namespace Vlingo.Http.Resource
             Logger.Error(message, new NotSupportedException(message));
         }
 
-        public void Consume(ReadOnlySequence<byte> buffer)
+        /*public void Consume(ReadOnlySequence<byte> buffer)
         {
             var message = $"{ErrorMessage} Consume()";
             Logger.Error(message, new NotSupportedException(message));
-        }
+        }*/
 
         public void IntervalSignal(IScheduled<object> scheduled, object data)
         {

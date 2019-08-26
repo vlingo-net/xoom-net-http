@@ -40,7 +40,7 @@ namespace Vlingo.Http.Resource
 
         public static Resources LoadResources(HttpProperties properties)
         {
-            var namedResources = new Dictionary<string, Resource>();
+            var namedResources = new Dictionary<string, Resource<ResourceHandler>>();
 
             foreach (var resource in FindResources(properties, resourceNamePrefix))
             {
@@ -74,7 +74,7 @@ namespace Vlingo.Http.Resource
             return resource;
         }
 
-        private static ConfigurationResource LoadResource(HttpProperties properties, string resourceNameKey)
+        private static ConfigurationResource<ResourceHandler> LoadResource(HttpProperties properties, string resourceNameKey)
         {
             var resourceName = resourceNameKey.Substring(resourceNamePrefix.Length);
             var resourceActionNames = ActionNamesFrom(properties.GetProperty(resourceNameKey), resourceNameKey);
@@ -90,7 +90,7 @@ namespace Vlingo.Http.Resource
             {
                 var resourceActions = ResourceActionsOf(properties, resourceName, resourceActionNames, disallowPathParametersWithSlash);
 
-                var resourceHandlerClass = ConfigurationResource.NewResourceHandlerClassFor(resourceHandlerClassname);
+                var resourceHandlerClass = ConfigurationResource<ResourceHandler>.NewResourceHandlerClassFor(resourceHandlerClassname);
 
                 return ResourceFor(resourceName, resourceHandlerClass, handlerPoolSize, resourceActions);
             }
@@ -101,9 +101,9 @@ namespace Vlingo.Http.Resource
             }
         }
 
-        private static IDictionary<string, ConfigurationResource> LoadSseResources(HttpProperties properties)
+        private static IDictionary<string, ConfigurationResource<ResourceHandler>> LoadSseResources(HttpProperties properties)
         {
-            var sseResourceActions = new Dictionary<string, ConfigurationResource>();
+            var sseResourceActions = new Dictionary<string, ConfigurationResource<ResourceHandler>>();
 
             foreach (var streamResourceName in FindResources(properties, ssePublisherNamePrefix))
             {
@@ -152,9 +152,9 @@ namespace Vlingo.Http.Resource
         }
 
 
-        private static IDictionary<string, ConfigurationResource> LoadStaticFilesResource(HttpProperties properties)
+        private static IDictionary<string, ConfigurationResource<ResourceHandler>> LoadStaticFilesResource(HttpProperties properties)
         {
-            var staticFilesResourceActions = new Dictionary<string, ConfigurationResource>();
+            var staticFilesResourceActions = new Dictionary<string, ConfigurationResource<ResourceHandler>>();
 
             var root = properties.GetProperty(staticFilesResourceRoot);
 
@@ -196,7 +196,7 @@ namespace Vlingo.Http.Resource
             return staticFilesResourceActions;
         }
 
-        private static ConfigurationResource ResourceFor(
+        private static ConfigurationResource<ResourceHandler> ResourceFor(
             string resourceName,
             Type resourceHandlerClass,
             int handlerPoolSize,
@@ -204,7 +204,7 @@ namespace Vlingo.Http.Resource
         {
             try
             {
-                var resource = ConfigurationResource.NewResourceFor(resourceName, resourceHandlerClass, handlerPoolSize, resourceActions);
+                var resource = ConfigurationResource<ResourceHandler>.NewResourceFor(resourceName, resourceHandlerClass, handlerPoolSize, resourceActions);
                 return resource;
             }
             catch (Exception e)
