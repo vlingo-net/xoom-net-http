@@ -163,7 +163,7 @@ namespace Vlingo.Http.Resource
                 MediaTypeMapper);
 
         public RequestHandler5<T, R, U, I, Header> Header(string name)
-            => new RequestHandler5<T, R, U, I Header>(
+            => new RequestHandler5<T, R, U, I, Header>(
                 Method,
                 Path,
                 ResolverParam1,
