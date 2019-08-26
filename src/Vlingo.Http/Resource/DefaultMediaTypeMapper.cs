@@ -12,10 +12,9 @@ namespace Vlingo.Http.Resource
     public static class DefaultMediaTypeMapper
     {
         private static MediaTypeMapper BuildInstance()
-            => new MediaTypeMapper()
-                .Builder
-                .AddMapperFor(ContentMediaType.Json, DefaultJsonMapper.Instance)
-                .Build();
+            => new MediaTypeMapper.Builder()
+                    .AddMapperFor(ContentMediaType.Json, DefaultJsonMapper.Instance)
+                    .Build();
 
         public static MediaTypeMapper Instance { get; } = BuildInstance();
     }

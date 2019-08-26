@@ -23,7 +23,7 @@ namespace Vlingo.Http.Resource
         private ICompletesEventually _completesEventually;
         private ResponseParser _parser;
 
-        public ClientConsumerWorkerActor(Configuration configuration)
+        public ClientConsumerWorkerActor(Client.Configuration configuration)
         {
             _testId = configuration.HasTestInfo
                 ? TestIdGenerator.IncrementAndGet().ToString()
@@ -93,7 +93,7 @@ namespace Vlingo.Http.Resource
             base.Stop();
         }
 
-        private IRequestSender StartRequestSender(Configuration configuration)
+        private IRequestSender StartRequestSender(Client.Configuration configuration)
         {
             var self = SelfAs<IResponseChannelConsumer>();
 

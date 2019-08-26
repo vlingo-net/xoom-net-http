@@ -21,7 +21,7 @@ namespace Vlingo.Http.Resource
 
         public LoadBalancingClientRequestConsumerActor(
             Client.Configuration configuration,
-            RouterSpecification specification) 
+            RouterSpecification<IClientConsumer> specification) 
             : base(specification)
         {
         }

@@ -43,6 +43,8 @@ namespace Vlingo.Http.Resource
             _namedResources[resource.Name] = resource;
         }
 
+        public IEnumerable<Resource<ResourceHandler>> ResourceHandlers => _namedResources.Values;
+
         public override string ToString()
             => $"Resources[namedResource={_namedResources}]";
 

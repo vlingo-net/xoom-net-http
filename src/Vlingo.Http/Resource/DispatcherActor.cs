@@ -24,7 +24,7 @@ namespace Vlingo.Http.Resource
 
         private void AllocateHandlerPools()
         {
-            foreach (var resource in _resources.NamedResources.Values)
+            foreach (var resource in _resources.ResourceHandlers)
             {
                 resource.AllocateHandlerPool(Stage);
             }
