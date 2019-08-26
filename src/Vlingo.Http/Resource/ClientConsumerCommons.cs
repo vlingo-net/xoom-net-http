@@ -13,7 +13,7 @@ namespace Vlingo.Http.Resource
 {
     public static class ClientConsumerCommons
     {
-        public static ClientRequestResponseChannel ClientChannel(
+        public static IClientRequestResponseChannel ClientChannel(
             Client.Configuration configuration,
             IResponseChannelConsumer consumer,
             ILogger logger)
