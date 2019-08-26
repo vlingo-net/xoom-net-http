@@ -12,9 +12,9 @@ namespace Vlingo.Http.Resource
 {
     public class Dispatcher__Proxy : IDispatcher
     {
-        private const string RepresentationConclude = "Conclude()";
-        private const string DispatchForRepresentation = "DispatchFor(Vlingo.Http.Context)";
-        private const string StopRepresentation = "Stop()";
+        private const string RepresentationConclude0 = "Conclude()";
+        private const string DispatchForRepresentation1 = "DispatchFor(Vlingo.Http.Context)";
+        private const string StopRepresentation2 = "Stop()";
 
         private readonly Actor _actor;
         private readonly IMailbox _mailbox;
@@ -34,16 +34,16 @@ namespace Vlingo.Http.Resource
                 Action<IDispatcher> consumer = actor => actor.DispatchFor(context);
                 if (_mailbox.IsPreallocated)
                 {
-                    _mailbox.Send(_actor, consumer, null, DispatchForRepresentation);
+                    _mailbox.Send(_actor, consumer, null, DispatchForRepresentation1);
                 }
                 else
                 {
-                    _mailbox.Send(new LocalMessage<IDispatcher>(_actor, consumer, DispatchForRepresentation));
+                    _mailbox.Send(new LocalMessage<IDispatcher>(_actor, consumer, DispatchForRepresentation1));
                 }
             }
             else
             {
-                _actor.DeadLetters.FailedDelivery(new DeadLetter(_actor, DispatchForRepresentation));
+                _actor.DeadLetters.FailedDelivery(new DeadLetter(_actor, DispatchForRepresentation1));
             }
         }
 
@@ -54,16 +54,36 @@ namespace Vlingo.Http.Resource
                 Action<IDispatcher> consumer = actor => actor.Stop();
                 if (_mailbox.IsPreallocated)
                 {
-                    _mailbox.Send(_actor, consumer, null, StopRepresentation);
+                    _mailbox.Send(_actor, consumer, null, StopRepresentation2);
                 }
                 else
                 {
-                    _mailbox.Send(new LocalMessage<IDispatcher>(_actor, consumer, StopRepresentation));
+                    _mailbox.Send(new LocalMessage<IDispatcher>(_actor, consumer, StopRepresentation2));
                 }
             }
             else
             {
-                _actor.DeadLetters.FailedDelivery(new DeadLetter(_actor, StopRepresentation));
+                _actor.DeadLetters.FailedDelivery(new DeadLetter(_actor, StopRepresentation2));
+            }
+        }
+        
+        public void Conclude()
+        {
+            if (!_actor.IsStopped)
+            {
+                Action<IStoppable> consumer = actor => actor.Conclude();
+                if (_mailbox.IsPreallocated)
+                {
+                    _mailbox.Send(_actor, consumer, null, RepresentationConclude0);
+                }
+                else
+                {
+                    _mailbox.Send(new LocalMessage<IStoppable>(_actor, consumer, RepresentationConclude0));
+                }
+            }
+            else
+            {
+                _actor.DeadLetters.FailedDelivery(new DeadLetter(_actor, RepresentationConclude0));
             }
         }
     }

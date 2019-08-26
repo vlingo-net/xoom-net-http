@@ -92,8 +92,8 @@ namespace Vlingo.Http.Resource
         public ICompletes<Response> RequestWith(Request request)
         {
             var completes = configuration.KeepAlive
-                ? CompletesExt.RepeatableUsing<Response>(configuration.Stage.Scheduler)
-                : CompletesExt.Using<Response>(configuration.Stage.Scheduler);
+                ? Completes.RepeatableUsing<Response>(configuration.Stage.Scheduler)
+                : Completes.Using<Response>(configuration.Stage.Scheduler);
             consumer.RequestWith(request, completes);
             return completes;
         }

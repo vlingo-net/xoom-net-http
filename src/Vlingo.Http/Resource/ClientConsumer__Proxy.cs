@@ -14,11 +14,11 @@ namespace Vlingo.Http.Resource
 {
     public class ClientConsumer__Proxy : IClientConsumer
     {
-        private const string RepresentationConclude = "Conclude()";
-        private const string RequestWithRepresentation = "RequestWith(Vlingo.Http.Request)";
-        private const string ConsumeRepresentation = "Consume(Vlingo.Wire.Message.IConsumerByteBuffer)";
-        private const string IntervalSignalRepresentation = "IntervalSignal(Vlingo.Actors.IScheduled<object>, object)";
-        private const string StopRepresentation = "Stop()";
+        private const string RepresentationConclude0 = "Conclude()";
+        private const string RequestWithRepresentation1 = "RequestWith(Vlingo.Http.Request)";
+        private const string ConsumeRepresentation3 = "Consume(Vlingo.Wire.Message.IConsumerByteBuffer)";
+        private const string IntervalSignalRepresentation4 = "IntervalSignal(Vlingo.Actors.IScheduled<object>, object)";
+        private const string StopRepresentation5 = "Stop()";
 
         private readonly Actor _actor;
         private readonly IMailbox _mailbox;
@@ -38,16 +38,16 @@ namespace Vlingo.Http.Resource
                 Action<IClientConsumer> consumer = actor => actor.Consume(buffer);
                 if (_mailbox.IsPreallocated)
                 {
-                    _mailbox.Send(_actor, consumer, null, ConsumeRepresentation);
+                    _mailbox.Send(_actor, consumer, null, ConsumeRepresentation3);
                 }
                 else
                 {
-                    _mailbox.Send(new LocalMessage<IClientConsumer>(_actor, consumer, ConsumeRepresentation));
+                    _mailbox.Send(new LocalMessage<IClientConsumer>(_actor, consumer, ConsumeRepresentation3));
                 }
             }
             else
             {
-                _actor.DeadLetters.FailedDelivery(new DeadLetter(_actor, ConsumeRepresentation));
+                _actor.DeadLetters.FailedDelivery(new DeadLetter(_actor, ConsumeRepresentation3));
             }
         }
 
@@ -58,16 +58,16 @@ namespace Vlingo.Http.Resource
                 Action<IClientConsumer> consumer = actor => actor.IntervalSignal(scheduled, data);
                 if (_mailbox.IsPreallocated)
                 {
-                    _mailbox.Send(_actor, consumer, null, IntervalSignalRepresentation);
+                    _mailbox.Send(_actor, consumer, null, IntervalSignalRepresentation4);
                 }
                 else
                 {
-                    _mailbox.Send(new LocalMessage<IClientConsumer>(_actor, consumer, IntervalSignalRepresentation));
+                    _mailbox.Send(new LocalMessage<IClientConsumer>(_actor, consumer, IntervalSignalRepresentation4));
                 }
             }
             else
             {
-                _actor.DeadLetters.FailedDelivery(new DeadLetter(_actor, IntervalSignalRepresentation));
+                _actor.DeadLetters.FailedDelivery(new DeadLetter(_actor, IntervalSignalRepresentation4));
             }
         }
 
@@ -79,16 +79,16 @@ namespace Vlingo.Http.Resource
                 var innerCompletes = new BasicCompletes<Response>(_actor.Scheduler);
                 if (_mailbox.IsPreallocated)
                 {
-                    _mailbox.Send(_actor, consumer, innerCompletes, RequestWithRepresentation);
+                    _mailbox.Send(_actor, consumer, innerCompletes, RequestWithRepresentation1);
                 }
                 else
                 {
-                    _mailbox.Send(new LocalMessage<IClientConsumer>(_actor, consumer, innerCompletes, RequestWithRepresentation));
+                    _mailbox.Send(new LocalMessage<IClientConsumer>(_actor, consumer, innerCompletes, RequestWithRepresentation1));
                 }
             }
             else
             {
-                _actor.DeadLetters.FailedDelivery(new DeadLetter(_actor, RequestWithRepresentation));
+                _actor.DeadLetters.FailedDelivery(new DeadLetter(_actor, RequestWithRepresentation1));
             }
 
             return null;
@@ -101,16 +101,36 @@ namespace Vlingo.Http.Resource
                 Action<IClientConsumer> consumer = actor => actor.Stop();
                 if (_mailbox.IsPreallocated)
                 {
-                    _mailbox.Send(_actor, consumer, null, StopRepresentation);
+                    _mailbox.Send(_actor, consumer, null, StopRepresentation5);
                 }
                 else
                 {
-                    _mailbox.Send(new LocalMessage<IClientConsumer>(_actor, consumer, StopRepresentation));
+                    _mailbox.Send(new LocalMessage<IClientConsumer>(_actor, consumer, StopRepresentation5));
                 }
             }
             else
             {
-                _actor.DeadLetters.FailedDelivery(new DeadLetter(_actor, StopRepresentation));
+                _actor.DeadLetters.FailedDelivery(new DeadLetter(_actor, StopRepresentation5));
+            }
+        }
+        
+        public void Conclude()
+        {
+            if (!_actor.IsStopped)
+            {
+                Action<IStoppable> consumer = actor => actor.Conclude();
+                if (_mailbox.IsPreallocated)
+                {
+                    _mailbox.Send(_actor, consumer, null, RepresentationConclude0);
+                }
+                else
+                {
+                    _mailbox.Send(new LocalMessage<IStoppable>(_actor, consumer, RepresentationConclude0));
+                }
+            }
+            else
+            {
+                _actor.DeadLetters.FailedDelivery(new DeadLetter(_actor, RepresentationConclude0));
             }
         }
     }

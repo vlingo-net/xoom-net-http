@@ -99,12 +99,12 @@ namespace Vlingo.Http.Resource.SSE
                 }
                 else
                 {
-                    _mailbox.Send(new LocalMessage<ISsePublisher>(_actor, consumer, UnsubscribeRepresentation2));
+                    _mailbox.Send(new LocalMessage<IStoppable>(_actor, consumer, RepresentationConclude0));
                 }
             }
             else
             {
-                _actor.DeadLetters.FailedDelivery(new DeadLetter(_actor, UnsubscribeRepresentation2));
+                _actor.DeadLetters.FailedDelivery(new DeadLetter(_actor, RepresentationConclude0));
             }
         }
     }
