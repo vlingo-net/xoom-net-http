@@ -6,34 +6,79 @@
 // one at https://mozilla.org/MPL/2.0/.
 
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace Vlingo.Http.Resource
 {
-    public static class HttpProperties
+    public sealed class HttpProperties
     {
         private const string PropertiesFile = "vlingo-http.properties";
 
-        private static Actors.Properties _properties;
+        private static Func<HttpProperties> _factory = () => Open();
 
-        static HttpProperties()
+        private static Lazy<HttpProperties> SingleInstance => new Lazy<HttpProperties>(_factory, true);
+        
+        private readonly IDictionary<string, string> _dictionary;
+
+        public static HttpProperties Instance => SingleInstance.Value;
+        
+        public static HttpProperties OpenForTest(Dictionary<string, string> properties) => new HttpProperties(properties);
+
+        public static HttpProperties Open()
         {
-            _properties = LoadProperties();
+            var props = new HttpProperties(new Dictionary<string, string>());
+            props.Load(new FileInfo(PropertiesFile));
+            return props;
         }
 
-        static Actors.Properties LoadProperties()
+        private HttpProperties(Dictionary<string, string> properties)
         {
-            var props = new Actors.Properties();
-            try
+            _dictionary = properties;
+        }
+
+        private string GetProperty(string key) => GetProperty(key, null);
+
+        private string GetProperty(string key, string defaultValue)
+        {
+            if(_dictionary.TryGetValue(key, out string value))
             {
-                props.Load(new FileInfo(PropertiesFile));
-            }
-            catch (Exception)
-            {
-                throw new ApplicationException("Must provide properties file on classpath: /" + PropertiesFile);
+                return value;
             }
 
-            return props;
+            return defaultValue;
+        }
+        
+        private void SetProperty(string key, string value)
+        {
+            _dictionary[key] = value;
+        }
+        
+        private void Load(FileInfo configFile)
+        {
+            foreach(var line in File.ReadAllLines(configFile.FullName))
+            {
+                if(string.IsNullOrWhiteSpace(line) || line.Trim().StartsWith("#"))
+                {
+                    continue;
+                }
+
+                var items = line.Split(new[] { '=' }, StringSplitOptions.RemoveEmptyEntries);
+                var key = items[0].Trim();
+                var val = string.Join("=", items.Skip(1)).Trim();
+                SetProperty(key, val);
+            }
+        }
+
+        private string Key(string nodeName, string key)
+        {
+            if (string.IsNullOrWhiteSpace(nodeName))
+            {
+                return key;
+            }
+
+            return $"node.{nodeName}.{key}";
         }
     }
 }
