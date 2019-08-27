@@ -5,6 +5,7 @@
 // was not distributed with this file, You can obtain
 // one at https://mozilla.org/MPL/2.0/.
 
+using System;
 using System.Collections.Generic;
 using Vlingo.Http.Resource;
 
@@ -13,7 +14,7 @@ namespace Vlingo.Http.Media
     public class ContentMediaType : MediaTypeDescriptor
     {
         // IANA MIME Type List
-        private enum MimeTypes
+        internal enum MimeTypes
         {
             Application,
             Audio,
@@ -40,8 +41,7 @@ namespace Vlingo.Http.Media
 
         private void Validate()
         {
-            // MimeTypes.valueOf(MimeType);
-            if (string.Equals(MimeSubType, "*"))
+            if (string.Equals(MimeSubType, "*") || !Enum.TryParse(MimeType, true, out MimeTypes _))
             {
                 throw new MediaTypeNotSupportedException($"Illegal MIME type: {ToString()}");
             }
@@ -58,10 +58,10 @@ namespace Vlingo.Http.Media
         }
 
         public static ContentMediaType Json
-             => new ContentMediaType(MimeTypes.Application.ToString(), "json");
+             => new ContentMediaType(MimeTypes.Application.ToString().ToLower(), "json");
 
         public static ContentMediaType Xml
-             => new ContentMediaType(MimeTypes.Application.ToString(), "xml");
+             => new ContentMediaType(MimeTypes.Application.ToString().ToLower(), "xml");
 
         public static ContentMediaType ParseFromDescriptor(string contentMediaTypeDescriptor)
             => MediaTypeParser.ParseFrom(
