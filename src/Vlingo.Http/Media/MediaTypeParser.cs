@@ -11,10 +11,10 @@ namespace Vlingo.Http.Media
 {
     public static class MediaTypeParser
     {
-        private const int MIME_TYPE_AND_SUBTYPE_SIZE = 2;
-        private const int PARAMETER_VALUE_OFFSET = 1;
-        private const int PARAMETER_FIELD_OFFSET = 0;
-        private const int PARAMETER_AND_VALUE_SIZE = 2;
+        private const int MimeTypeAndSubtypeSize = 2;
+        private const int ParameterValueOffset = 1;
+        private const int ParameterFieldOffset = 0;
+        private const int ParameterAndValueSize = 2;
 
         public static T ParseFrom<T>(string mediaTypeDescriptor, MediaTypeDescriptor.Builder<T> builder) where T : MediaTypeDescriptor
         {
@@ -25,7 +25,7 @@ namespace Vlingo.Http.Media
             }
 
             var mimeParts = descriptorParts[0].Split(MediaTypeDescriptor.MimeSubtypeSeparator);
-            if (mimeParts.Length == MIME_TYPE_AND_SUBTYPE_SIZE)
+            if (mimeParts.Length == MimeTypeAndSubtypeSize)
             {
                 builder.WithMimeType(mimeParts[0].Trim())
                   .WithMimeSubType(mimeParts[1].Trim());
@@ -40,14 +40,13 @@ namespace Vlingo.Http.Media
             {
                 var parameterFieldAndValue = parameter.Split(MediaTypeDescriptor.ParameterAssignment);
 
-                if (parameterFieldAndValue.Length == PARAMETER_AND_VALUE_SIZE)
+                if (parameterFieldAndValue.Length == ParameterAndValueSize)
                 {
-                    var attributeName = parameterFieldAndValue[PARAMETER_FIELD_OFFSET];
-                    var value = parameterFieldAndValue[PARAMETER_VALUE_OFFSET];
+                    var attributeName = parameterFieldAndValue[ParameterFieldOffset];
+                    var value = parameterFieldAndValue[ParameterValueOffset];
                     builder.WithParameter(attributeName, value);
                 }
             }
         }
-
     }
 }
