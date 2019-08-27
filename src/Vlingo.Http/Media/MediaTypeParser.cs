@@ -18,13 +18,13 @@ namespace Vlingo.Http.Media
 
         public static T ParseFrom<T>(string mediaTypeDescriptor, MediaTypeDescriptor.Builder<T> builder) where T : MediaTypeDescriptor
         {
-            var descriptorParts = mediaTypeDescriptor.Split(MediaTypeDescriptor.PARAMETER_SEPARATOR);
+            var descriptorParts = mediaTypeDescriptor.Split(MediaTypeDescriptor.ParameterSeparator);
             if (descriptorParts.Length > 1)
             {
                 ParseAttributes(builder, new ArraySegment<string>(descriptorParts, 1, descriptorParts.Length-1));
             }
 
-            var mimeParts = descriptorParts[0].Split(MediaTypeDescriptor.MIME_SUBTYPE_SEPARATOR);
+            var mimeParts = descriptorParts[0].Split(MediaTypeDescriptor.MimeSubtypeSeparator);
             if (mimeParts.Length == MIME_TYPE_AND_SUBTYPE_SIZE)
             {
                 builder.WithMimeType(mimeParts[0].Trim())
@@ -38,7 +38,7 @@ namespace Vlingo.Http.Media
         {
             foreach (var parameter in parameters)
             {
-                var parameterFieldAndValue = parameter.Split(MediaTypeDescriptor.PARAMETER_ASSIGNMENT);
+                var parameterFieldAndValue = parameter.Split(MediaTypeDescriptor.ParameterAssignment);
 
                 if (parameterFieldAndValue.Length == PARAMETER_AND_VALUE_SIZE)
                 {

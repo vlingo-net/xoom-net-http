@@ -14,9 +14,9 @@ namespace Vlingo.Http.Media
 {
     public abstract class MediaTypeDescriptor
     {
-        internal const char PARAMETER_SEPARATOR = ';';
-        internal const char MIME_SUBTYPE_SEPARATOR = '/';
-        internal const char PARAMETER_ASSIGNMENT = '=';
+        internal const char ParameterSeparator = ';';
+        internal const char MimeSubtypeSeparator = '/';
+        internal const char ParameterAssignment = '=';
 
         protected internal string MimeType { get; }
         protected internal string MimeSubType { get; }
@@ -38,14 +38,14 @@ namespace Vlingo.Http.Media
         {
             var sb = new StringBuilder();
             sb.Append(MimeType)
-                .Append(MIME_SUBTYPE_SEPARATOR)
+                .Append(MimeSubtypeSeparator)
                 .Append(MimeSubType);
 
             foreach (var parameterName in Parameters.Keys)
             {
-                sb.Append(PARAMETER_SEPARATOR)
+                sb.Append(ParameterSeparator)
                   .Append(parameterName)
-                  .Append(PARAMETER_ASSIGNMENT)
+                  .Append(ParameterAssignment)
                   .Append(Parameters[parameterName]);
             }
             return sb.ToString();
