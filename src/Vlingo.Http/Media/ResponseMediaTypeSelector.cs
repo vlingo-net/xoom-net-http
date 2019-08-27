@@ -51,6 +51,7 @@ namespace Vlingo.Http.Media
                     }
                 }
             }
+            
             throw new MediaTypeNotSupportedException(_mediaTypeDescriptors);
         }
 
@@ -87,7 +88,7 @@ namespace Vlingo.Http.Media
             public int Compare(AcceptMediaType x, AcceptMediaType y)
                 => -CompareForAscendingOrder(x, y);
             
-            public int CompareTo(AcceptMediaType other) => CompareForAscendingOrder(this, other);
+            public int CompareTo(AcceptMediaType other) => -CompareForAscendingOrder(this, other);
 
             private static int CompareForAscendingOrder(AcceptMediaType x, AcceptMediaType y)
             {
@@ -97,18 +98,18 @@ namespace Vlingo.Http.Media
                     {
                         return -1;
                     }
-                    else if (!x.IsGenericType() && y.IsGenericType())
+
+                    if (!x.IsGenericType() && y.IsGenericType())
                     {
                         return 1;
                     }
-                    else if (x.IsGenericSubType())
+
+                    if (x.IsGenericSubType())
                     {
                         return (y.IsGenericSubType() ? x.CompareParameters(y) : -1);
                     }
-                    else
-                    {
-                        return (y.IsGenericSubType() ? 1 : x.CompareParameters(y));
-                    }
+
+                    return (y.IsGenericSubType() ? 1 : x.CompareParameters(y));
                 }
 
                 return x._qualityFactor.CompareTo(y._qualityFactor);
