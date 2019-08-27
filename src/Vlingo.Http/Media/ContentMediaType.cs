@@ -12,18 +12,18 @@ namespace Vlingo.Http.Media
 {
     public class ContentMediaType : MediaTypeDescriptor
     {
-        //IANA MIME Type List
+        // IANA MIME Type List
         private enum MimeTypes
         {
-            application,
-            audio,
-            font,
-            image,
-            model,
-            text,
-            video,
-            multipart,
-            message
+            Application,
+            Audio,
+            Font,
+            Image,
+            Model,
+            Text,
+            Video,
+            Multipart,
+            Message
         }
 
         public ContentMediaType(string mimeType, string mimeSubType)
@@ -58,10 +58,10 @@ namespace Vlingo.Http.Media
         }
 
         public static ContentMediaType Json
-             => new ContentMediaType(MimeTypes.application.ToString(), "json");
+             => new ContentMediaType(MimeTypes.Application.ToString(), "json");
 
         public static ContentMediaType Xml
-             => new ContentMediaType(MimeTypes.application.ToString(), "xml");
+             => new ContentMediaType(MimeTypes.Application.ToString(), "xml");
 
         public static ContentMediaType ParseFromDescriptor(string contentMediaTypeDescriptor)
             => MediaTypeParser.ParseFrom(
