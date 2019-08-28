@@ -316,7 +316,7 @@ namespace Vlingo.Http
                         break;
                     }
 
-                    var header = ResponseHeader.FromString(maybeHeaderLine);
+                    var header = ResponseHeader.From(maybeHeaderLine);
                     _headers.Add(header);
                     if (_contentLength == 0)
                     {

@@ -73,7 +73,7 @@ namespace Vlingo.Http
         public const string XUACompatible = "X-UA-Compatible";
         public const string XXSSProtection = "X-XSS-Protection";
 
-        public static ResponseHeader FromString(string textLine)
+        public static ResponseHeader From(string textLine)
         {
             var colonIndex = textLine.IndexOf(':');
 
