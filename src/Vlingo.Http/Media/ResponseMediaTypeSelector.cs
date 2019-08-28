@@ -7,6 +7,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using Vlingo.Http.Resource;
 
 namespace Vlingo.Http.Media
@@ -41,7 +42,7 @@ namespace Vlingo.Http.Media
 
         public ContentMediaType SelectType(ContentMediaType[] supportedContentMediaTypes)
         {
-            foreach (var responseMediaType in _responseMediaTypesByPriority)
+            foreach (var responseMediaType in _responseMediaTypesByPriority.Reverse())
             {
                 foreach (var supportedContentMediaType in supportedContentMediaTypes)
                 {
@@ -76,7 +77,7 @@ namespace Vlingo.Http.Media
 
                 if (parameters.ContainsKey(QualityFactorParameter))
                 {
-                    if (float.TryParse(parameters[QualityFactorParameter], out var f))
+                    if (float.TryParse(parameters[QualityFactorParameter], NumberStyles.Float, CultureInfo.InvariantCulture, out var f))
                     {
                         qualityFactor = f;
                     }
@@ -86,9 +87,9 @@ namespace Vlingo.Http.Media
             }
 
             public int Compare(AcceptMediaType x, AcceptMediaType y)
-                => -CompareForAscendingOrder(x, y);
+                => CompareForAscendingOrder(x, y);
             
-            public int CompareTo(AcceptMediaType other) => -CompareForAscendingOrder(this, other);
+            public int CompareTo(AcceptMediaType other) => Compare(this, other);
 
             private static int CompareForAscendingOrder(AcceptMediaType x, AcceptMediaType y)
             {
