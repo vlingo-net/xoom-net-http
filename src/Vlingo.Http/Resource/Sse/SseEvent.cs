@@ -7,7 +7,7 @@
 
 using System.Text;
 
-namespace Vlingo.Http.Resource.SSE
+namespace Vlingo.Http.Resource.Sse
 {
     public class SseEvent
     {

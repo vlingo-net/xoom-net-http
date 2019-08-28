@@ -7,7 +7,7 @@
 
 using System.Collections.Generic;
 
-namespace Vlingo.Http.Resource.SSE
+namespace Vlingo.Http.Resource.Sse
 {
     public class MessageEvent
     {

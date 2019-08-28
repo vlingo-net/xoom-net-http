@@ -12,7 +12,7 @@ using System.Linq;
 using Vlingo.Actors;
 using Vlingo.Common;
 
-namespace Vlingo.Http.Resource.SSE
+namespace Vlingo.Http.Resource.Sse
 {
     public class SseStreamResource : ResourceHandler
     {
