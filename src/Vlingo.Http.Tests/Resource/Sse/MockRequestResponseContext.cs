@@ -10,7 +10,7 @@ using Vlingo.Wire.Channel;
 
 namespace Vlingo.Http.Tests.Resource.Sse
 {
-    public class MockRequestResponseContext : RequestResponseContext<string>
+    public class MockRequestResponseContext : RequestResponseContext<object>
     {
         public MockResponseSenderChannel Channel { get; }
         
@@ -36,6 +36,6 @@ namespace Vlingo.Http.Tests.Resource.Sse
 
         public override string Id => "1";
 
-        public override IResponseSenderChannel<string> Sender => Channel;
+        public override IResponseSenderChannel<object> Sender => Channel;
     }
 }
