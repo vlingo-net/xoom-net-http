@@ -105,12 +105,22 @@ namespace Vlingo.Http
 
         public static ResponseHeader Of(string name, long value) => new ResponseHeader(name, value.ToString());
 
-        internal int IfContentLength
-        {
-            get => string.Equals(Name, ContentLength, StringComparison.InvariantCultureIgnoreCase)
+        public int IfContentLength =>
+            string.Equals(Name, ContentLength, StringComparison.InvariantCultureIgnoreCase)
                 ? int.Parse(Value)
                 : 0;
-        }
+
+        public bool IsKeepAliveConnection =>
+            string.Equals(Name, Connection, StringComparison.InvariantCultureIgnoreCase)
+            && string.Equals(Value, "keep-alive", StringComparison.InvariantCultureIgnoreCase);
+        
+        public bool IsStreamContentType =>
+            string.Equals(Name, ContentType, StringComparison.InvariantCultureIgnoreCase)
+            && string.Equals(Value, "-stream", StringComparison.InvariantCultureIgnoreCase);
+        
+        public bool IsTransferEncodingChunked =>
+            string.Equals(Name, TransferEncoding, StringComparison.InvariantCultureIgnoreCase)
+            && string.Equals(Value, "chunked", StringComparison.InvariantCultureIgnoreCase);
 
         private ResponseHeader(string name, string value)
             : base(name, value)
