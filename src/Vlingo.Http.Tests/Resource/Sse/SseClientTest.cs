@@ -18,7 +18,7 @@ namespace Vlingo.Http.Tests.Resource.Sse
         private readonly SseClient _client;
         private readonly MockRequestResponseContext _context;
         
-        [Fact(Skip = "In progress")]
+        [Fact]
         public void TestThatClientCloses()
         {
             var abandonSafely = _context.Channel.ExpectAbandon(1);

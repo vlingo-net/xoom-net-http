@@ -14,10 +14,10 @@ namespace Vlingo.Http.Tests.Resource.Sse
 {
     public class MockResponseSenderChannel : IResponseSenderChannel<object>
     {
-        public AtomicInteger AbandonCount => new AtomicInteger(0);
-        public AtomicReference<Response> EventsResponse => new AtomicReference<Response>();
-        public AtomicInteger RespondWithCount => new AtomicInteger(0);
-        public AtomicReference<Response> Response => new AtomicReference<Response>();
+        public AtomicInteger AbandonCount { get; }
+        public AtomicReference<Response> EventsResponse { get; }
+        public AtomicInteger RespondWithCount { get; }
+        public AtomicReference<Response> Response { get; }
         
         private AccessSafely _abandonSafely = AccessSafely.AfterCompleting(0);
         private AccessSafely _respondWithSafely;
@@ -26,6 +26,10 @@ namespace Vlingo.Http.Tests.Resource.Sse
 
         public MockResponseSenderChannel()
         {
+            AbandonCount = new AtomicInteger(0);
+            EventsResponse = new AtomicReference<Response>();
+            RespondWithCount = new AtomicInteger(0);
+            Response = new AtomicReference<Response>();
             _respondWithSafely = ExpectRespondWith(0);
             _receivedStatus = false;
         }
