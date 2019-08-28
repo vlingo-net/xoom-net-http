@@ -10,7 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Vlingo.Actors;
-using Vlingo.Http.Resource.SSE;
+using Vlingo.Http.Resource.Sse;
 
 namespace Vlingo.Http.Resource
 {
