@@ -35,7 +35,7 @@ namespace Vlingo.Http.Tests.Resource.Sse
             Assert.Equal(_context.Id, _client.Id);
         }
 
-        [Fact(Skip = "Fails")]
+        [Fact]
         public void TestThatSingleEventSends()
         {
             var respondWithSafely = _context.Channel.ExpectRespondWith(1);
@@ -75,7 +75,7 @@ namespace Vlingo.Http.Tests.Resource.Sse
             Assert.Equal(2500, messageEvent.Retry);
         }
 
-        [Fact(Skip = "Fails")]
+        [Fact]
         public void TestThatMultipleEventsSends()
         {
             var respondWithSafely = _context.Channel.ExpectRespondWith(1);
@@ -145,7 +145,7 @@ namespace Vlingo.Http.Tests.Resource.Sse
             Assert.Equal(MessageEvent.NoRetry, messageEvent3.Retry);
         }
         
-        [Fact(Skip = "Fails")]
+        [Fact]
         public void TestThatEndOfStreamSends()
         {
             var respondWithSafely = _context.Channel.ExpectRespondWith(1);

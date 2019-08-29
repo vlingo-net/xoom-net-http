@@ -74,7 +74,7 @@ namespace Vlingo.Http
             private int _contentLength;
             private bool _continuation;
             private Step _currentStep;
-            private List<Response> _fullResponses;
+            private readonly List<Response> _fullResponses;
             private int _fullResponsesIteratorPos;
             private Headers<ResponseHeader> _headers;
             private bool _keepAlive;
@@ -221,10 +221,6 @@ namespace Vlingo.Http
                         _continuation = true;
                         _outOfContentTime = DateTime.UtcNow;
                         return this;
-                    }
-                    catch (Exception ex)
-                    {
-                        throw ex;
                     }
                 }
                 
