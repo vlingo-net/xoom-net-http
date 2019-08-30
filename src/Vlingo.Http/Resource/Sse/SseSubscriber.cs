@@ -5,13 +5,13 @@
 // was not distributed with this file, You can obtain
 // one at https://mozilla.org/MPL/2.0/.
 
-namespace Vlingo.Http.Resource.SSE
+namespace Vlingo.Http.Resource.Sse
 {
     public class SseSubscriber
     {
         public SseClient Client { get; }
         public string CorrelationId { get; }
-        public string CurrentEventId { get; set; }
+        public string CurrentEventId { get; }
         public string StreamName { get; }
 
         public SseSubscriber(string streamName, SseClient client, string correlationId, string lastEventId)

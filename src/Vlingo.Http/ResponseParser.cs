@@ -15,8 +15,11 @@ namespace Vlingo.Http
     {
         private readonly VirtualStateParser _virtualStateParser;
 
-        public static ResponseParser ParserFor(byte[] responseContent)
-            => new ResponseParser(responseContent);
+        public static ResponseParser ParserFor(byte[] requestContent)
+            => new ResponseParser(requestContent);
+        
+        public static ResponseParser ParserForBodyOnly(byte[] requestContent)
+            => new ResponseParser(requestContent, true);
 
         public bool HasCompleted => _virtualStateParser.HasCompleted;
 
@@ -27,7 +30,11 @@ namespace Vlingo.Http
         public bool HasMissingContentTimeExpired(long timeLimit)
             => _virtualStateParser.HasMissingContentTimeExpired(timeLimit);
 
+        public bool IsKeepAliveConnection => _virtualStateParser.IsKeepAliveConnection;
+
         public bool IsMissingContent => _virtualStateParser.IsMissingContent;
+        
+        public bool IsStreamContentType => _virtualStateParser.IsStreamContentType;
 
         public void ParseNext(byte[] responseContent)
             => _virtualStateParser.Includes(responseContent).Parse();
@@ -35,6 +42,11 @@ namespace Vlingo.Http
         private ResponseParser(byte[] responseContent)
         {
             _virtualStateParser = new VirtualStateParser().Includes(responseContent).Parse();
+        }
+        
+        private ResponseParser(byte[] responseContent, bool bodyOnly)
+        {
+            _virtualStateParser = new VirtualStateParser(bodyOnly).Includes(responseContent).Parse();
         }
 
 
@@ -44,7 +56,7 @@ namespace Vlingo.Http
 
         private class VirtualStateParser
         {
-            private class OutOfContentException : Exception { private const long serialVersionUID = 1L; }
+            private class OutOfContentException : Exception { private const long SerialVersionUid = 1L; }
 
             private enum Step { NotStarted, StatusLine, Headers, Body, Completed }
 
@@ -58,18 +70,26 @@ namespace Vlingo.Http
             // DO NOT RESET: (1) headers, (2) fullResponses
 
             private Body _body;
+            private bool _bodyOnly;
             private int _contentLength;
             private bool _continuation;
             private Step _currentStep;
-            private List<Response> _fullResponses;
+            private readonly List<Response> _fullResponses;
             private int _fullResponsesIteratorPos;
             private Headers<ResponseHeader> _headers;
+            private bool _keepAlive;
             private DateTime _outOfContentTime;
             private Response.ResponseStatus _status;
+            private bool _stream;
             private Version _version;
 
-            internal VirtualStateParser()
+            internal VirtualStateParser() : this(false)
             {
+            }
+            
+            internal VirtualStateParser(bool bodyOnly)
+            {
+                _bodyOnly = bodyOnly;
                 _fullResponsesIteratorPos = -1;
                 _outOfContentTime = DateTime.MinValue;
                 _contentQueue = new Queue<string>();
@@ -77,6 +97,9 @@ namespace Vlingo.Http
                 _responseText = string.Empty;
                 _headers = new Headers<ResponseHeader>(2);
                 _fullResponses = new List<Response>(2);
+
+                _keepAlive = false;
+                _stream = false;
 
                 Reset();
             }
@@ -113,10 +136,8 @@ namespace Vlingo.Http
                             _fullResponsesIteratorPos = -1;
                             return false;
                         }
-                        else
-                        {
-                            return true;
-                        }
+
+                        return true;
                     }
 
                     if(_fullResponses.Count == 0)
@@ -161,7 +182,11 @@ namespace Vlingo.Http
                 return this;
             }
 
+            internal bool IsKeepAliveConnection => _keepAlive;
+
             internal bool IsMissingContent => _outOfContentTime > DateTime.MinValue;
+
+            internal bool IsStreamContentType => _stream;
 
             internal VirtualStateParser Parse()
             {
@@ -197,11 +222,10 @@ namespace Vlingo.Http
                         _outOfContentTime = DateTime.UtcNow;
                         return this;
                     }
-                    catch (Exception ex)
-                    {
-                        throw ex;
-                    }
                 }
+                
+                PrepareForStream();
+                
                 return this;
             }
 
@@ -216,7 +240,7 @@ namespace Vlingo.Http
             private string NextLine(bool mayBeBlank, string errorMessage)
             {
                 var possibleCarriageReturnIndex = -1;
-                var lineBreak = _responseText.IndexOf("\n", _position);
+                var lineBreak = _responseText.IndexOf("\n", _position, StringComparison.InvariantCultureIgnoreCase);
                 if (lineBreak < 0)
                 {
                     if (_contentQueue.Count == 0)
@@ -227,7 +251,8 @@ namespace Vlingo.Http
                     _responseText = Compact() + _contentQueue.Dequeue();
                     return NextLine(mayBeBlank, errorMessage);
                 }
-                else if (lineBreak == 0)
+
+                if (lineBreak == 0)
                 {
                     possibleCarriageReturnIndex = 0;
                 }
@@ -276,6 +301,11 @@ namespace Vlingo.Http
 
             private void ParseBody()
             {
+                if (_bodyOnly)
+                {
+                    _contentLength = _responseText.Length;
+                }
+                
                 _continuation = false;
                 if (_contentLength > 0)
                 {
@@ -303,6 +333,12 @@ namespace Vlingo.Http
 
             private void ParseHeaders()
             {
+                if (_bodyOnly)
+                {
+                    NextStep();
+                    return;
+                }
+                
                 if (!_continuation)
                 {
                     _headers = new Headers<ResponseHeader>(2);
@@ -316,7 +352,7 @@ namespace Vlingo.Http
                         break;
                     }
 
-                    var header = ResponseHeader.FromString(maybeHeaderLine);
+                    var header = ResponseHeader.From(maybeHeaderLine);
                     _headers.Add(header);
                     if (_contentLength == 0)
                     {
@@ -326,12 +362,29 @@ namespace Vlingo.Http
                             _contentLength = maybeContentLength;
                         }
                     }
+                    
+                    if (!_keepAlive && header.IsKeepAliveConnection)
+                    {
+                        _keepAlive = true;
+                    }
+                    else if (!_stream && header.IsStreamContentType)
+                    {
+                        _stream = true;
+                    }
                 }
                 NextStep();
             }
 
             private void ParseStatusLine()
             {
+                if (_bodyOnly)
+                {
+                    _version = Version.Http1_1;
+                    _status = Response.ResponseStatus.Ok;
+                    NextStep();
+                    return;
+                }
+                
                 _continuation = false;
                 var line = NextLine(false, "Response status line is required.");
                 var spaceIndex = line.IndexOf(' ');
@@ -346,6 +399,17 @@ namespace Vlingo.Http
                 catch (Exception ex)
                 {
                     throw new ArgumentException($"Response status line parsing exception:{ex.Message}", ex);
+                }
+            }
+            
+            private void PrepareForStream()
+            {
+                if (!_bodyOnly)
+                {
+                    if (_keepAlive && _stream)
+                    {
+                        _bodyOnly = true;
+                    }
                 }
             }
 

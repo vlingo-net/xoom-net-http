@@ -11,7 +11,7 @@ using System.Text;
 using Vlingo.Wire.Channel;
 using Vlingo.Wire.Message;
 
-namespace Vlingo.Http.Resource.SSE
+namespace Vlingo.Http.Resource.Sse
 {
     public class SseClient
     {

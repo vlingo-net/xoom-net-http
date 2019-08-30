@@ -12,11 +12,11 @@ using System.Linq;
 using Vlingo.Actors;
 using Vlingo.Common;
 
-namespace Vlingo.Http.Resource.SSE
+namespace Vlingo.Http.Resource.Sse
 {
     public class SseStreamResource : ResourceHandler
     {
-        private static readonly IDictionary<string, ISsePublisher> publishers = new ConcurrentDictionary<string, ISsePublisher>();
+        private static readonly IDictionary<string, ISsePublisher> Publishers = new ConcurrentDictionary<string, ISsePublisher>();
 
         private readonly World _world;
 
@@ -45,7 +45,7 @@ namespace Vlingo.Http.Resource.SSE
 
         public void UnsubscribeFromStream(string streamName, string id)
         {
-            if (publishers.TryGetValue(streamName, out var publisher))
+            if (Publishers.TryGetValue(streamName, out var publisher))
             {
                 if (publisher != null)
                 {
@@ -58,7 +58,7 @@ namespace Vlingo.Http.Resource.SSE
 
         private ISsePublisher PublisherFor(string streamName, Type feedClass, int feedPayload, int feedInterval, string feedDefaultId)
         {
-            if (publishers.TryGetValue(streamName, out var publisher))
+            if (Publishers.TryGetValue(streamName, out var publisher))
             {
                 if (publisher == null)
                 {
@@ -66,14 +66,14 @@ namespace Vlingo.Http.Resource.SSE
                         Definition.Has<SsePublisherActor>(
                             Definition.Parameters(streamName, feedClass, feedPayload, feedInterval, feedDefaultId)));
 
-                    if (publishers.TryGetValue(streamName, out var presentPublisher) && presentPublisher != null)
+                    if (Publishers.TryGetValue(streamName, out var presentPublisher) && presentPublisher != null)
                     {
                         publisher.Stop();
                         publisher = presentPublisher;
                     }
                     else
                     {
-                        publishers.Add(streamName, publisher);
+                        Publishers.Add(streamName, publisher);
                     }
                 }
             }
@@ -95,7 +95,7 @@ namespace Vlingo.Http.Resource.SSE
 
         private class SsePublisherActor : Actor, ISsePublisher, IScheduled<object>, IStoppable
         {
-            private readonly Common.ICancellable _cancellable;
+            private readonly ICancellable _cancellable;
             private readonly ISseFeed _feed;
             private readonly string _streamName;
             private readonly IDictionary<string, SseSubscriber> _subscribers;

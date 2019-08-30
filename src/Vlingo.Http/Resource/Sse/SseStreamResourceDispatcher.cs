@@ -8,7 +8,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Vlingo.Http.Resource.SSE
+namespace Vlingo.Http.Resource.Sse
 {
     public class SseStreamResourceDispatcher : ConfigurationResource<SseStreamResource>
     {
@@ -23,10 +23,9 @@ namespace Vlingo.Http.Resource.SSE
 
         public override void DispatchToHandlerWith(Context context, Action.MappedParameters mappedParameters)
         {
-            Action<SseStreamResource> consumer = null;
-
             try
             {
+                Action<SseStreamResource> consumer;
                 switch (mappedParameters.ActionId)
                 {
                     case 0: // GET /eventstreams/{streamName}

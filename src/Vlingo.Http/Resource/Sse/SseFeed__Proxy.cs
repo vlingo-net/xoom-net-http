@@ -8,7 +8,7 @@
 using System;
 using Vlingo.Actors;
 
-namespace Vlingo.Http.Resource.SSE
+namespace Vlingo.Http.Resource.Sse
 {
     public class SseFeed__Proxy : ISseFeed
     {

@@ -7,25 +7,25 @@
 
 using System.Collections.Generic;
 
-namespace Vlingo.Http.Resource.SSE
+namespace Vlingo.Http.Resource.Sse
 {
     public class MessageEvent
     {
         public const int NoRetry = -1;
 
-        public readonly string _comment;
-        public readonly string _data;
-        public readonly string _event;
-        public readonly string _id;
-        public readonly int _retry;
+        public string Comment { get; }
+        public string Data { get; }
+        public string Event { get; }
+        public string Id { get; }
+        public int Retry { get; }
 
         private MessageEvent(string id, string @event, string data, int retry, string comment)
         {
-            _id = id;
-            _event = @event;
-            _data = data;
-            _retry = retry;
-            _comment = comment;
+            Id = id;
+            Event = @event;
+            Data = data;
+            Retry = retry;
+            Comment = comment;
         }
 
         public static List<MessageEvent> From(Response response)
@@ -135,16 +135,16 @@ namespace Vlingo.Http.Resource.SSE
         }
 
         public bool EndOfStream
-            => _id != null && string.Equals(_id, string.Empty);
+            => Id != null && string.Equals(Id, string.Empty);
 
-        public bool HasCommend => !string.IsNullOrEmpty(_comment);
+        public bool HasCommend => !string.IsNullOrEmpty(Comment);
 
-        public bool HasData => !string.IsNullOrEmpty(_data);
+        public bool HasData => !string.IsNullOrEmpty(Data);
 
-        public bool HasEvent => !string.IsNullOrEmpty(_event);
+        public bool HasEvent => !string.IsNullOrEmpty(Event);
 
-        public bool HasId => !string.IsNullOrEmpty(_id);
+        public bool HasId => !string.IsNullOrEmpty(Id);
 
-        public bool HasRetry => _retry > 0;
+        public bool HasRetry => Retry > 0;
     }
 }

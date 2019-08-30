@@ -5,12 +5,13 @@
 // was not distributed with this file, You can obtain
 // one at https://mozilla.org/MPL/2.0/.
 
-using System.Collections.Generic;
+using Vlingo.Actors;
 
-namespace Vlingo.Http.Resource.SSE
+namespace Vlingo.Http.Resource.Sse
 {
-    public interface ISseFeed
+    public interface ISsePublisher : IStoppable
     {
-        void To(ICollection<SseSubscriber> subscribers);
+        void Subscribe(SseSubscriber subscriber);
+        void Unsubscribe(SseSubscriber subscriber);
     }
 }
