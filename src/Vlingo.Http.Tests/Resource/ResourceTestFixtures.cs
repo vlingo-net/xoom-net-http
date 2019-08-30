@@ -7,9 +7,14 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using Vlingo.Actors;
 using Vlingo.Http.Resource;
+using Vlingo.Http.Resource.Serialization;
 using Vlingo.Http.Tests.Sample.User;
+using Vlingo.Http.Tests.Sample.User.Model;
+using Vlingo.Wire.Channel;
+using Vlingo.Wire.Message;
 using Xunit.Abstractions;
 using Action = Vlingo.Http.Resource.Action;
 using IDispatcher = Vlingo.Http.Resource.IDispatcher;
@@ -31,6 +36,79 @@ namespace Vlingo.Http.Tests.Resource
         protected Resources _resources;
         protected IDispatcher _dispatcher;
         protected World _world;
+        
+        protected UserData JohnDoeUserData => UserData.From(NameData.From("John", "Doe"), ContactData.From("john.doe@vlingo.io", "+1 212-555-1212"));
+
+        protected string JohnDoeUserSerialized => JsonSerialization.Serialized(JohnDoeUserData);
+
+        protected UserData JaneDoeUserData => UserData.From(NameData.From("Jane", "Doe"), ContactData.From("jane.doe@vlingo.io", "+1 212-555-1212"));
+
+        protected string JaneDoeUserSerialized => JsonSerialization.Serialized(JaneDoeUserData);
+
+        protected string PostJohnDoeUserMessage => $"POST /users HTTP/1.1\nHost: vlingo.io\nContent-Length: {JohnDoeUserSerialized.Length}\n\n{JohnDoeUserSerialized}";
+
+        protected string PostJaneDoeUserMessage => $"POST /users HTTP/1.1\nHost: vlingo.io\nContent-Length: {JaneDoeUserSerialized.Length}\n\n{JaneDoeUserSerialized}";
+
+        private MemoryStream _buffer = new MemoryStream(65535);
+
+        private int _uniqueId = 1;
+        
+        protected MemoryStream ToStream(string requestContent) {
+            _buffer.Clear();
+            _buffer.Write(Converters.TextToBytes(requestContent));
+            _buffer.Flip();
+            return _buffer;
+        }
+        
+        protected string CreatedResponse(string body) => $"HTTP/1.1 201 CREATED\nContent-Length: {body.Length}\n\n{body}";
+
+        protected string PostRequest(string body) => $"POST /users HTTP/1.1\nHost: vlingo.io\nContent-Length: {body.Length}\n\n{body}";
+
+        protected string GetExceptionRequest(string userId) => $"GET /users/{userId}/error HTTP/1.1\nHost: vlingo.io\n\n";
+        
+        protected string JaneDoeCreated() => CreatedResponse(JaneDoeUserSerialized);
+
+        protected string UniqueJaneDoe()
+        {
+            var unique =
+                UserData.From(
+                    "" + _uniqueId,
+                    NameData.From("Jane", "Doe"),
+                    ContactData.From("jane.doe@vlingo.io", "+1 212-555-1212"));
+
+            ++_uniqueId;
+
+            string serialized = JsonSerialization.Serialized(unique);
+
+            return serialized;
+        }
+        
+        protected string UniqueJaneDoePostCreated() => CreatedResponse(UniqueJaneDoe());
+
+        protected string UniqueJaneDoePostRequest() => PostRequest(UniqueJaneDoe());
+
+        protected string UniqueJohnDoe() {
+            var id = "" + _uniqueId;
+            if (id.Length == 1) id = "00" + id;
+            if (id.Length == 2) id = "0" + id;
+            var unique =
+                UserData.From(
+                    id, //"" + uniqueId,
+                    NameData.From("John", "Doe"),
+                    ContactData.From("john.doe@vlingo.io", "+1 212-555-1212"));
+
+            ++_uniqueId;
+
+            var serialized = JsonSerialization.Serialized(unique);
+
+            return serialized;
+        }
+
+        protected string JohnDoeCreated() => CreatedResponse(JohnDoeUserSerialized);
+
+        protected string UniqueJohnDoePostCreated() => CreatedResponse(UniqueJohnDoe());
+
+        protected string UniqueJohnDoePostRequest() => PostRequest(UniqueJohnDoe());
 
         public ResourceTestFixtures(ITestOutputHelper output)
         {
