@@ -71,7 +71,7 @@ namespace Vlingo.Http.Resource
             }
         }
 
-        internal static Type NewResourceHandlerClassFor(string resourceHandlerClassname)
+        internal static Type NewResourceHandlerTypeFor(string resourceHandlerClassname)
         {
             try
             {

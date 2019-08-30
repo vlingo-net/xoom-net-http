@@ -90,7 +90,7 @@ namespace Vlingo.Http.Resource
             {
                 var resourceActions = ResourceActionsOf(properties, resourceName, resourceActionNames, disallowPathParametersWithSlash);
 
-                var resourceHandlerClass = ConfigurationResource<ResourceHandler>.NewResourceHandlerClassFor(resourceHandlerClassname);
+                var resourceHandlerClass = ConfigurationResource<ResourceHandler>.NewResourceHandlerTypeFor(resourceHandlerClassname);
 
                 return ResourceFor(resourceName, resourceHandlerClass, handlerPoolSize, resourceActions);
             }
