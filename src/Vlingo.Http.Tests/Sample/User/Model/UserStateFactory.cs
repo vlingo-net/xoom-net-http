@@ -9,17 +9,17 @@ namespace Vlingo.Http.Tests.Sample.User.Model
 {
     public static class UserStateFactory
     {
-        public static State NonExisting() => new State(null, null, null);
+        public static UserState NonExisting() => new UserState(null, null, null);
 
-        public static State From(Name name, Contact contact) => new State(NextId(), name, contact);
+        public static UserState From(Name name, Contact contact) => new UserState(NextId(), name, contact);
 
-        public static State From(string id, Name name, Contact contact) => new State(id, name, contact);
+        public static UserState From(string id, Name name, Contact contact) => new UserState(id, name, contact);
 
-        public static void ResetId() => State.NextId.Set(0);
+        public static void ResetId() => UserState.NextId.Set(0);
 
         public static string NextId()
         {
-            var id = State.NextId.IncrementAndGet();
+            var id = UserState.NextId.IncrementAndGet();
             return $"{id:D3}";
         }
     }

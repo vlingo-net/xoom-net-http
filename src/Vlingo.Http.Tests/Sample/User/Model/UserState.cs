@@ -9,7 +9,8 @@ using Vlingo.Common;
 
 namespace Vlingo.Http.Tests.Sample.User.Model
 {
-    public class State {
+    public class UserState
+    {
         public static AtomicInteger NextId { get; } = new AtomicInteger(0);
 
         public string Id { get; }
@@ -21,13 +22,14 @@ namespace Vlingo.Http.Tests.Sample.User.Model
             return Id == null;
         }
 
-        public State WithContact(Contact contact) => new State(Id, Name, contact);
+        public UserState WithContact(Contact contact) => new UserState(Id, Name, contact);
 
-        public State WithName(Name name) => new State(Id, name, Contact);
+        public UserState WithName(Name name) => new UserState(Id, name, Contact);
 
         public override string ToString() => $"User.State[id={Id}, name={Name}, contact={Contact}]";
 
-        public State(string id, Name name, Contact contact) {
+        public UserState(string id, Name name, Contact contact)
+        {
             Id = id;
             Name = name;
             Contact = contact;

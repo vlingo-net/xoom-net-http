@@ -21,7 +21,7 @@ namespace Vlingo.Http.Tests.Sample.User
   
         public static UserData From(string id, NameData nameData, ContactData contactData) => new UserData(id, nameData, contactData);
   
-        public static UserData From(State userState) =>
+        public static UserData From(UserState userState) =>
             new UserData(userState.Id, NameData.From(userState.Name), ContactData.From(userState.Contact));
 
         public static UserData UserAt(string location, List<UserData> userData)

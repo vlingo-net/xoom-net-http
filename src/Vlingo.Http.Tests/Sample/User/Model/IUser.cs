@@ -11,11 +11,11 @@ namespace Vlingo.Http.Tests.Sample.User.Model
 {
     public interface IUser
     {
-        ICompletes<State> WithContact(Contact contact);
-        ICompletes<State> WithName(Name name);
-        State NonExisting();
-        State From(Name name, Contact contact);
-        State From(string id, Name name, Contact contact);
+        ICompletes<UserState> WithContact(Contact contact);
+        ICompletes<UserState> WithName(Name name);
+        UserState NonExisting();
+        UserState From(Name name, Contact contact);
+        UserState From(string id, Name name, Contact contact);
         void ResetId();
         string NextId();
     }

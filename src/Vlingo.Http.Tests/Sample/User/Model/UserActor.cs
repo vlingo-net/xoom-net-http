@@ -12,30 +12,30 @@ namespace Vlingo.Http.Tests.Sample.User.Model
 {
     public class UserActor : Actor, IUser
     {
-        private State _state;
+        private UserState _userState;
 
-        public UserActor(State state)
+        public UserActor(UserState userState)
         {
-            _state = state;
+            _userState = userState;
         }
         
-        public ICompletes<State> WithContact(Contact contact)
+        public ICompletes<UserState> WithContact(Contact contact)
         {
-            _state = _state.WithContact(contact);
-            return Completes().With(_state);
+            _userState = _userState.WithContact(contact);
+            return Completes().With(_userState);
         }
 
-        public ICompletes<State> WithName(Name name)
+        public ICompletes<UserState> WithName(Name name)
         {
-            _state = _state.WithName(name);
-            return Completes().With(_state);
+            _userState = _userState.WithName(name);
+            return Completes().With(_userState);
         }
 
-        public State NonExisting() => UserStateFactory.NonExisting();
+        public UserState NonExisting() => UserStateFactory.NonExisting();
 
-        public State From(Name name, Contact contact) => UserStateFactory.From(name, contact);
+        public UserState From(Name name, Contact contact) => UserStateFactory.From(name, contact);
 
-        public State From(string id, Name name, Contact contact) => UserStateFactory.From(id, name, contact);
+        public UserState From(string id, Name name, Contact contact) => UserStateFactory.From(id, name, contact);
 
         public void ResetId() => UserStateFactory.ResetId();
 

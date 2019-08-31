@@ -13,13 +13,13 @@ namespace Vlingo.Http.Tests.Sample.User.Model
     {
         private static UserRepository _instance;
         
-        private Dictionary<string, State> _users;
+        private Dictionary<string, UserState> _users;
         
         private static volatile object _lockSync = new object();
 
         private UserRepository()
         {
-            _users = new Dictionary<string, State>();
+            _users = new Dictionary<string, UserState>();
         }
 
         public static UserRepository Instance()
@@ -37,14 +37,14 @@ namespace Vlingo.Http.Tests.Sample.User.Model
 
         public static void Reset() => _instance = null;
         
-        public State UserOf(string userId)
+        public UserState UserOf(string userId)
         {
             var userState = _users[userId];
             return userState == null ? UserStateFactory.NonExisting() : userState;
         }
 
-        public IEnumerable<State> Users => _users.Values;
+        public IEnumerable<UserState> Users => _users.Values;
 
-        public void Save(State userState) => _users.Add(userState.Id, userState);
+        public void Save(UserState userState) => _users.Add(userState.Id, userState);
     }
 }
