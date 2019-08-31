@@ -57,13 +57,13 @@ namespace Vlingo.Http.Resource.Sse
             Send(events.ToList());
         }
 
-        public void Send(ICollection<SseEvent> events)
+        public void Send(IEnumerable<SseEvent> events)
         {
             var entity = Flatten(events);
             Send(entity, Headers.Copy().And(ResponseHeader.WithContentLength(entity)));
         }
 
-        public void Send(ICollection<SseEvent> events, string correlationId)
+        public void Send(IEnumerable<SseEvent> events, string correlationId)
         {
             var entity = Flatten(events);
             Send(
@@ -78,7 +78,7 @@ namespace Vlingo.Http.Resource.Sse
             _context.RespondWith(response.Into(buffer));
         }
 
-        private string Flatten(ICollection<SseEvent> events)
+        private string Flatten(IEnumerable<SseEvent> events)
         {
             _builder.Clear();
 
