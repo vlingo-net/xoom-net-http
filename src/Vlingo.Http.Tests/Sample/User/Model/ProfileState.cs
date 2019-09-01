@@ -22,7 +22,7 @@ namespace Vlingo.Http.Tests.Sample.User.Model
 
         public ProfileState WithWebSite(string website) => new ProfileState(Id, TwitterAccount, LinkedInAccount, website);
 
-        private ProfileState(string id, string twitterAccount, string linkedInAccount, string website)
+        public ProfileState(string id, string twitterAccount, string linkedInAccount, string website)
         {
             Id = id;
             TwitterAccount = twitterAccount;
