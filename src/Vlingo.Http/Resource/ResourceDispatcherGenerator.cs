@@ -74,7 +74,7 @@ namespace Vlingo.Http.Resource
 
         public Result GenerateFor(Type handlerProtocol)
         {
-            Console.WriteLine("vlingo/http: Generating handler dispatcher for  " + (Type == DynaType.Main ? "main" : "test") + ": " + handlerProtocol.Name);
+            Console.WriteLine("vlingo/http: Generating handler dispatcher for " + (Type == DynaType.Main ? "main" : "test") + ": " + handlerProtocol.Name);
             try
             {
                 var dispatcherClassSource = DispatcherClassSource(handlerProtocol);
