@@ -31,7 +31,7 @@ namespace Vlingo.Http.Tests.Resource
         protected Action _actionGetUsers;
         protected Action _actionGetUserError;
         
-        protected ConfigurationResource<ResourceHandler> _resource;
+        protected ConfigurationResource<UserResource> _resource;
         protected Type _resourceHandlerType;
         protected Resources _resources;
         protected IDispatcher _dispatcher;
@@ -133,13 +133,13 @@ namespace Vlingo.Http.Tests.Resource
                 _actionGetUsers,
                 _actionGetUserError};
 
-            _resourceHandlerType = ConfigurationResource<ResourceHandler>.NewResourceHandlerTypeFor("Vlingo.Http.Tests.Sample.User.UserResource");
+            _resourceHandlerType = ConfigurationResource<UserResource>.NewResourceHandlerTypeFor("Vlingo.Http.Tests.Sample.User.UserResource");
 
-            _resource = ConfigurationResource<ResourceHandler>.NewResourceFor("user", _resourceHandlerType, 6, actions);
+            _resource = ConfigurationResource<UserResource>.NewResourceFor("user", _resourceHandlerType, 6, actions);
 
             _resource.AllocateHandlerPool(_world.Stage);
 
-            var oneResource = new Dictionary<string, Resource<ResourceHandler>>(1);
+            var oneResource = new Dictionary<string, Http.Resource.Resource>(1);
 
             oneResource.Add(_resource.Name, _resource);
 

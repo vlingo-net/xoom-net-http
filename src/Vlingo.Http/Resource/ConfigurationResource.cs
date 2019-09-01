@@ -14,7 +14,7 @@ using Vlingo.Common.Compiler;
 
 namespace Vlingo.Http.Resource
 {
-    public abstract class ConfigurationResource<T> : Resource<T>
+    public abstract class ConfigurationResource<T> : Resource
     {
         public const string DispatcherSuffix = "Dispatcher";
 
@@ -51,7 +51,7 @@ namespace Vlingo.Http.Resource
                     resourceClass = Type.GetType(fullyQualifiedTypeName);
                     if (resourceClass == null)
                     {
-                        resourceClass = Assembly.GetCallingAssembly().GetType(fullyQualifiedTypeName);
+                        resourceClass = Assembly.GetCallingAssembly().GetType(fullyQualifiedTypeName, true);
                     }
                 }
                 catch
@@ -83,7 +83,7 @@ namespace Vlingo.Http.Resource
                 var resourceHandlerClass = Type.GetType(resourceHandlerTypeName);
                 if (resourceHandlerClass == null)
                 {
-                    resourceHandlerClass = Assembly.GetCallingAssembly().GetType(resourceHandlerTypeName);
+                    resourceHandlerClass = Assembly.GetCallingAssembly().GetType(resourceHandlerTypeName, true);
                 }
                 ConfirmResourceHandler(resourceHandlerClass);
                 return resourceHandlerClass;

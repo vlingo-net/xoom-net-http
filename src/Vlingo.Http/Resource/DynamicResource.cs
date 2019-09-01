@@ -12,7 +12,7 @@ using Vlingo.Actors;
 
 namespace Vlingo.Http.Resource
 {
-    public class DynamicResource : Resource<ResourceHandler>
+    public class DynamicResource : Resource
     {
         internal IList<RequestHandler> Handlers { get; }
         public IList<Action> Actions { get; }

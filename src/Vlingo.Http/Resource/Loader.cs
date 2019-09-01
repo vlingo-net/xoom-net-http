@@ -40,7 +40,7 @@ namespace Vlingo.Http.Resource
 
         public static Resources LoadResources(HttpProperties properties)
         {
-            var namedResources = new Dictionary<string, Resource<ResourceHandler>>();
+            var namedResources = new Dictionary<string, Resource>();
 
             foreach (var resource in FindResources(properties, resourceNamePrefix))
             {

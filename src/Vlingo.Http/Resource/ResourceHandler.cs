@@ -16,7 +16,7 @@ namespace Vlingo.Http.Resource
         internal Context _context;
         internal Stage _stage;
 
-        public virtual Resource<T> Routes<T>() => throw new NotSupportedException("Undefined resource; must override.");
+        public virtual Resource Routes() => throw new NotSupportedException("Undefined resource; must override.");
 
         protected ResourceHandler() { }
 

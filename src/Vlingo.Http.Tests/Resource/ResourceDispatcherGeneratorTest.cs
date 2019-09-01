@@ -8,6 +8,7 @@
 using System;
 using System.Collections.Generic;
 using Vlingo.Http.Resource;
+using Vlingo.Http.Tests.Sample.User;
 using Xunit;
 using Xunit.Abstractions;
 using Action = Vlingo.Http.Resource.Action;
@@ -17,15 +18,14 @@ namespace Vlingo.Http.Tests.Resource
     public class ResourceDispatcherGeneratorTest
     {
         private readonly List<Action> _actions;
-        private ConfigurationResource<ResourceHandler> _resource;
-        private readonly Type _resourceHandlerClass;
+        private ConfigurationResource<UserResource> _resource;
 
         [Fact]
         public void TestSourceCodeGeneration()
         {
             var generator = ResourceDispatcherGenerator.ForTest(_actions, false);
 
-            var result = generator.GenerateFor(_resourceHandlerClass);
+            var result = generator.GenerateFor(_resource.ResourceHandlerClass);
 
             Assert.NotNull(result);
             Assert.NotNull(result.SourceFile);
@@ -40,7 +40,7 @@ namespace Vlingo.Http.Tests.Resource
         {
             var generator = ResourceDispatcherGenerator.ForTest(_actions, true);
 
-            var result = generator.GenerateFor(_resourceHandlerClass);
+            var result = generator.GenerateFor(_resource.ResourceHandlerClass);
 
             Assert.NotNull(result);
             Assert.NotNull(result.SourceFile);
@@ -72,17 +72,18 @@ namespace Vlingo.Http.Tests.Resource
                 actionQueryUserError
             };
 
+            Type resourceHandlerClass;
             
             try
             {
-                _resourceHandlerClass = Type.GetType("Vlingo.Http.Tests.Sample.User.UserResource");
+                resourceHandlerClass = Type.GetType("Vlingo.Http.Tests.Sample.User.UserResource");
             }
             catch (Exception)
             {
-                _resourceHandlerClass = ConfigurationResource<ResourceHandler>.NewResourceHandlerTypeFor("Vlingo.Http.Tests.Sample.User.UserResource");
+                resourceHandlerClass = ConfigurationResource<UserResource>.NewResourceHandlerTypeFor("Vlingo.Http.Tests.Sample.User.UserResource");
             }
             
-            // _resource = ConfigurationResource<ResourceHandler>.NewResourceFor("user", resourceHandlerClass, 5, _actions);
+            _resource = ConfigurationResource<UserResource>.NewResourceFor("user", resourceHandlerClass, 5, _actions);
         }
     }
 }

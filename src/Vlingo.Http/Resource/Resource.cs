@@ -11,7 +11,7 @@ using Vlingo.Common;
 
 namespace Vlingo.Http.Resource
 {
-    public abstract class Resource<T>
+    public abstract class Resource
     {
         public string Name { get; }
         public int HandlerPoolSize { get; }
