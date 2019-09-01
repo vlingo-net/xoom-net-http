@@ -121,8 +121,8 @@ namespace Vlingo.Http.Resource
                 constructorName = constructorName.Substring(0, constructorName.IndexOf('<'));
             }
 
-            var signature = string.Format("  public {0}(string name, Type resourceHandlerClass, int handlerPoolSize, IEnumerable<Vlingo.Http.Resource.Action> actions)" +
-                                          " : this(name, resourceHandlerClass, handlerPoolSize, actions)", constructorName);
+            var signature = string.Format("  public {0}(string name, Type resourceHandlerClass, int handlerPoolSize, IList<Vlingo.Http.Resource.Action> actions)" +
+                                          " : base(name, resourceHandlerClass, handlerPoolSize, actions)", constructorName);
 
             builder
                 .Append(signature).Append("\n")
@@ -197,10 +197,10 @@ namespace Vlingo.Http.Resource
             builder
                 .Append("      }\n")
                 .Append("    } catch (Exception e) {\n")
-                .Append("      throw new IllegalArgumentException(\"Action mismatch: Request: \" + context.request + \"Parameters: \" + mappedParameters);\n")
+                .Append("      throw new ArgumentException(\"Action mismatch: Request: \" + context.Request + \"Parameters: \" + mappedParameters);\n")
                 .Append("    }\n")
                 .Append("  }\n");
-    
+            
             return builder.ToString();
         }
 

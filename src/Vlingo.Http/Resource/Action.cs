@@ -545,7 +545,7 @@ namespace Vlingo.Http.Resource
             public ToSpec(string to)
             {
                 var parsed = Parse(to);
-                MethodName = parsed.Item1;
+                MethodName = FirstLetterToUpperCase(parsed.Item1);
                 Parameters = parsed.Item2;
             }
 
@@ -653,6 +653,16 @@ namespace Vlingo.Http.Resource
                 type_name[0] = rawParameter.Substring(0, space).Trim();
                 type_name[1] = rawParameter.Substring(space + 1).Trim();
                 return type_name;
+            }
+            
+            private string FirstLetterToUpperCase(string s)
+            {
+                if (string.IsNullOrEmpty(s))
+                    throw new ArgumentException("There is no first letter");
+
+                char[] a = s.ToCharArray();
+                a[0] = char.ToUpper(a[0]);
+                return new string(a);
             }
         }
     }
