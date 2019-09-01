@@ -96,6 +96,12 @@ namespace Vlingo.Http.Resource
         {
             if (_method.Equals(method))
             {
+                if (!uri.IsAbsoluteUri || uri.Scheme != "http" && uri.Scheme != "https")
+                {
+                    throw new ArgumentException(
+                        "In order to match on Uri, it has to be an absolute uri for http or https scheme", nameof(uri));
+                }
+                
                 var path = uri.AbsolutePath;
                 var pathCurrentIndex = 0;
                 var totalSegments = _matchable.TotalSegments;
@@ -300,7 +306,7 @@ namespace Vlingo.Http.Resource
                                 IsMatched = false;
                                 return;
                             }
-                            var value = path.Substring(pathStartIndex, pathEndIndex);
+                            var value = path.Substring(pathStartIndex, pathEndIndex - pathStartIndex);
                             if (disallowPathParametersWithSlash && value.IndexOf("/") >= 0)
                             {
                                 IsMatched = false;
@@ -474,7 +480,7 @@ namespace Vlingo.Http.Resource
                         {
                             var segment = start.Substring(0, openBrace);
                             segments.Add(new PathSegment(segment, false));
-                            var parameter = start.Substring(openBrace + 1, closeBrace);
+                            var parameter = start.Substring(openBrace + 1, closeBrace - (openBrace + 1));
                             segments.Add(new PathSegment(parameter, true));
                             start = start.Substring(closeBrace + 1);
                             if (string.IsNullOrEmpty(start))
@@ -569,7 +575,7 @@ namespace Vlingo.Http.Resource
                 }
 
                 var methodName = to.Substring(0, openParen);
-                var rawParameters = to.Substring(openParen + 1, closeParen).Split(',');
+                var rawParameters = to.Substring(openParen + 1, closeParen - (openParen + 1)).Split(',');
                 var parameters = new List<MethodParameter>(rawParameters.Length);
 
                 foreach (var p in rawParameters)
