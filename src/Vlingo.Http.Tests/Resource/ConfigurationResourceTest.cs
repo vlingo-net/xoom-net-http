@@ -207,12 +207,12 @@ namespace Vlingo.Http.Tests.Resource
         [Fact]
         public void TestThatAllPoorlyOrderedActionHaveMatches()
         {
-            _actionPostUser = new Http.Resource.Action(0, "POST", "/users", "register(body:Vlingo.Http.Tests.Sample.User.UserData userData)", null, true);
-            _actionPatchUserContact = new Http.Resource.Action(1, "PATCH", "/users/{userId}/contact", "changeContact(string userId, body:Vlingo.Http.Tests.Sample.User.ContactData contactData)", null, true);
-            _actionPatchUserName = new Http.Resource.Action(2, "PATCH", "/users/{userId}/name", "changeName(string userId, body:Vlingo.Http.Tests.Sample.User.NameData nameData)", null, true);
-            _actionGetUsers = new Http.Resource.Action(3, "GET", "/users", "queryUsers()", null, true);
-            _actionGetUser = new Http.Resource.Action(4, "GET", "/users/{userId}", "queryUser(string userId)", null, true);
-            var actionGetUserEmailAddress = new Http.Resource.Action(5, "GET", "/users/{userId}/emailAddresses/{emailAddressId}", "queryUserEmailAddress(string userId, string emailAddressId)", null, true);
+            _actionPostUser = new Action(0, "POST", "/users", "register(body:Vlingo.Http.Tests.Sample.User.UserData userData)", null, true);
+            _actionPatchUserContact = new Action(1, "PATCH", "/users/{userId}/contact", "changeContact(string userId, body:Vlingo.Http.Tests.Sample.User.ContactData contactData)", null, true);
+            _actionPatchUserName = new Action(2, "PATCH", "/users/{userId}/name", "changeName(string userId, body:Vlingo.Http.Tests.Sample.User.NameData nameData)", null, true);
+            _actionGetUsers = new Action(3, "GET", "/users", "queryUsers()", null, true);
+            _actionGetUser = new Action(4, "GET", "/users/{userId}", "queryUser(string userId)", null, true);
+            var actionGetUserEmailAddress = new Action(5, "GET", "/users/{userId}/emailAddresses/{emailAddressId}", "queryUserEmailAddress(string userId, string emailAddressId)", null, true);
 
             //=============================================================
             // this test assures that the optional feature used in the
@@ -228,7 +228,7 @@ namespace Vlingo.Http.Tests.Resource
             //   userResource.NAME.disallowPathParametersWithSlash = true/false
             //=============================================================
 
-            var actions = new List<Vlingo.Http.Resource.Action>
+            var actions = new List<Action>
                                 {
                                     _actionPostUser,
                                     _actionPatchUserContact,
