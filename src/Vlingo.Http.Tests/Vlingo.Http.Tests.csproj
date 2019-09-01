@@ -16,4 +16,13 @@
     <ProjectReference Include="..\Vlingo.Http\Vlingo.Http.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="vlingo-actors.properties">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="vlingo-http.properties">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

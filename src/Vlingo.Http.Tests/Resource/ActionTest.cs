@@ -9,7 +9,7 @@ using System;
 using Xunit;
 using Action = Vlingo.Http.Resource.Action;
 
-namespace Vlingo.Http.Tests
+namespace Vlingo.Http.Tests.Resource
 {
     public class ActionTest
     {

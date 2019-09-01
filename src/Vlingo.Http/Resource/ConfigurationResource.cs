@@ -8,6 +8,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using Vlingo.Actors;
 using Vlingo.Common.Compiler;
 
@@ -32,7 +33,7 @@ namespace Vlingo.Http.Resource
 
         internal static ConfigurationResource<T> NewResourceFor(
             string resourceName,
-            Type resourceHandlerClass,
+            Type resourceHandlerType,
             int handlerPoolSize,
             IList<Action> actions)
         {
@@ -40,21 +41,25 @@ namespace Vlingo.Http.Resource
 
             try
             {
-                var fullyQualifiedClassName = DynaNaming.FullyQualifiedClassNameFor(resourceHandlerClass, DispatcherSuffix);
-                var lookupTypeName = DynaNaming.FullyQualifiedClassNameFor(resourceHandlerClass, DispatcherSuffix, true);
+                var fullyQualifiedTypeName = DynaNaming.FullyQualifiedClassNameFor(resourceHandlerType, DispatcherSuffix);
+                var lookupTypeName = DynaNaming.FullyQualifiedClassNameFor(resourceHandlerType, DispatcherSuffix, true);
 
-                Type resourceClass = null;
+                Type resourceClass;
                 try
                 {
                     // this check is done primarily for testing to prevent duplicate class mimeType in class loader
-                    resourceClass = Type.GetType(fullyQualifiedClassName);
+                    resourceClass = Type.GetType(fullyQualifiedTypeName);
+                    if (resourceClass == null)
+                    {
+                        resourceClass = Assembly.GetCallingAssembly().GetType(fullyQualifiedTypeName);
+                    }
                 }
                 catch
                 {
-                    resourceClass = TryGenerateCompile(resourceHandlerClass, fullyQualifiedClassName, lookupTypeName, actions);
+                    resourceClass = TryGenerateCompile(resourceHandlerType, fullyQualifiedTypeName, lookupTypeName, actions);
                 }
 
-                var ctorParams = new object[] { resourceName, resourceHandlerClass, handlerPoolSize, actions };
+                var ctorParams = new object[] { resourceName, resourceHandlerType, handlerPoolSize, actions };
                 foreach (var ctor in resourceClass.GetConstructors())
                 {
                     if (ctor.GetParameters().Length == ctorParams.Length)
@@ -67,21 +72,25 @@ namespace Vlingo.Http.Resource
             }
             catch (Exception e)
             {
-                throw new ArgumentException($"Cannot create a resource from resource handler {resourceHandlerClass.Name} because: {e.Message}");
+                throw new ArgumentException($"Cannot create a resource from resource handler {resourceHandlerType.Name} because: {e.Message}");
             }
         }
 
-        internal static Type NewResourceHandlerTypeFor(string resourceHandlerClassname)
+        internal static Type NewResourceHandlerTypeFor(string resourceHandlerTypeName)
         {
             try
             {
-                var resourceHandlerClass = Type.GetType(resourceHandlerClassname);
+                var resourceHandlerClass = Type.GetType(resourceHandlerTypeName);
+                if (resourceHandlerClass == null)
+                {
+                    resourceHandlerClass = Assembly.GetCallingAssembly().GetType(resourceHandlerTypeName);
+                }
                 ConfirmResourceHandler(resourceHandlerClass);
                 return resourceHandlerClass;
             }
             catch (Exception e)
             {
-                throw new ArgumentException($"The resource handler class {resourceHandlerClassname} cannot be loaded because: {e.Message}");
+                throw new ArgumentException($"The resource handler class {resourceHandlerTypeName} cannot be loaded because: {e.Message}");
             }
         }
 
