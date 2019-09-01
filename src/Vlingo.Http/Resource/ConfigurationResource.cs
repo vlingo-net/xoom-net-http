@@ -16,7 +16,7 @@ namespace Vlingo.Http.Resource
 {
     public abstract class ConfigurationResource<T> : Resource<T>
     {
-        private const string DispatcherSuffix = "Dispatcher";
+        public const string DispatcherSuffix = "Dispatcher";
 
         private static readonly DynaClassLoader ClassLoader = new DynaClassLoader();
         private static readonly DynaCompiler DynaCompiler = new DynaCompiler();
@@ -160,7 +160,7 @@ namespace Vlingo.Http.Resource
         {
             try
             {
-                var result = generator.GenerateFor(resourceHandlerClass.FullName);
+                var result = generator.GenerateFor(resourceHandlerClass);
                 var input = new Input(resourceHandlerClass, fullyQualifiedClassName, lookupTypeName, result.Source, result.SourceFile, ClassLoader, generator.Type, true);
                 var resourceDispatcherClass = DynaCompiler.Compile(input);
                 return resourceDispatcherClass;

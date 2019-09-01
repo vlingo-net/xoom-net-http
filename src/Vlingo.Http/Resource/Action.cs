@@ -26,6 +26,14 @@ namespace Vlingo.Http.Resource
 
         internal int Id { get; }
 
+        public Method Method => _method;
+
+        public string Uri => _uri;
+
+        public string OriginalTo => _originalTo;
+
+        public ToSpec To => _to;
+
         public Action(
             int id,
             string method,
