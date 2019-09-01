@@ -51,8 +51,6 @@ namespace Vlingo.Http.Tests
 
         public ResponseParserTest(ITestOutputHelper output) : base(output)
         {
-            var converter = new Converter(output);
-            Console.SetOut(converter);
         }
     }
 }
