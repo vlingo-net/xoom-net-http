@@ -16,7 +16,7 @@ namespace Vlingo.Http.Tests
 {
     public class ResponseParserTest : ResourceTestFixtures
     {
-        List<String> _uniqueBodies = new List<string>();
+        private List<String> _uniqueBodies = new List<string>();
         
         [Fact]
         public void TestThatSingleResponseParses()

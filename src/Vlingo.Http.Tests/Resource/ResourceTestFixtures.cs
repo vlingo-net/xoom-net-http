@@ -37,11 +37,11 @@ namespace Vlingo.Http.Tests.Resource
         protected IDispatcher _dispatcher;
         protected World _world;
         
-        protected UserData JohnDoeUserData => UserData.From(NameData.From("John", "Doe"), ContactData.From("john.doe@vlingo.io", "+1 212-555-1212"));
+        protected UserData JohnDoeUserData { get; } = UserData.From(NameData.From("John", "Doe"), ContactData.From("john.doe@vlingo.io", "+1 212-555-1212"));
 
         protected string JohnDoeUserSerialized => JsonSerialization.Serialized(JohnDoeUserData);
 
-        protected UserData JaneDoeUserData => UserData.From(NameData.From("Jane", "Doe"), ContactData.From("jane.doe@vlingo.io", "+1 212-555-1212"));
+        protected UserData JaneDoeUserData { get; } = UserData.From(NameData.From("Jane", "Doe"), ContactData.From("jane.doe@vlingo.io", "+1 212-555-1212"));
 
         protected string JaneDoeUserSerialized => JsonSerialization.Serialized(JaneDoeUserData);
 

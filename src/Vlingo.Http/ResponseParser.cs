@@ -75,10 +75,10 @@ namespace Vlingo.Http
             private bool _continuation;
             private Step _currentStep;
             private readonly List<Response> _fullResponses;
-            private int _fullResponsesIteratorPos;
+            private List<Response>.Enumerator _fullResponsesIterator;
             private Headers<ResponseHeader> _headers;
             private bool _keepAlive;
-            private DateTime _outOfContentTime;
+            private long _outOfContentTime;
             private Response.ResponseStatus _status;
             private bool _stream;
             private Version _version;
@@ -90,8 +90,7 @@ namespace Vlingo.Http
             internal VirtualStateParser(bool bodyOnly)
             {
                 _bodyOnly = bodyOnly;
-                _fullResponsesIteratorPos = -1;
-                _outOfContentTime = DateTime.MinValue;
+                _outOfContentTime = 0;
                 _contentQueue = new Queue<string>();
                 _currentStep = Step.NotStarted;
                 _responseText = string.Empty;
@@ -108,19 +107,17 @@ namespace Vlingo.Http
             {
                 get
                 {
-                    if(_fullResponsesIteratorPos < 0)
+                    if(_fullResponsesIterator.Current == null)
                     {
-                        _fullResponsesIteratorPos = 0;
+                        _fullResponsesIterator = _fullResponses.GetEnumerator();
                     }
 
-                    if (HasNextFullResponse())
+                    if (_fullResponsesIterator.MoveNext())
                     {
-                        var resp = _fullResponses[_fullResponsesIteratorPos];
-                        _fullResponses.RemoveAt(_fullResponsesIteratorPos);
-                        return resp;
+                        return _fullResponsesIterator.Current;
                     }
 
-                    _fullResponsesIteratorPos = -1;
+                    _fullResponsesIterator.Dispose();
                     throw new InvalidOperationException("Response is not completed.");
                 }
             }
@@ -129,11 +126,11 @@ namespace Vlingo.Http
             {
                 get
                 {
-                    if(_fullResponsesIteratorPos >= 0)
+                    if(_fullResponsesIterator.Current != null)
                     {
-                        if (!HasNextFullResponse())
+                        if (!_fullResponsesIterator.MoveNext())
                         {
-                            _fullResponsesIteratorPos = -1;
+                            _fullResponsesIterator.Dispose();
                             return false;
                         }
 
@@ -142,7 +139,7 @@ namespace Vlingo.Http
 
                     if(_fullResponses.Count == 0)
                     {
-                        _fullResponsesIteratorPos = -1;
+                        _fullResponsesIterator.Dispose();
                         return false;
                     }
 
@@ -164,11 +161,11 @@ namespace Vlingo.Http
             }
 
             internal bool HasMissingContentTimeExpired(long timeLimit)
-                => (DateTime.UtcNow - _outOfContentTime).TotalMilliseconds > timeLimit;
+                => (_outOfContentTime + timeLimit) < DateExtensions.GetCurrentMillis();
 
             internal VirtualStateParser Includes(byte[] responseContent)
             {
-                _outOfContentTime = DateTime.MinValue;
+                _outOfContentTime = 0;
                 var responseContentText = Converters.BytesToText(responseContent);
                 if (_contentQueue.Count == 0)
                 {
@@ -184,7 +181,7 @@ namespace Vlingo.Http
 
             internal bool IsKeepAliveConnection => _keepAlive;
 
-            internal bool IsMissingContent => _outOfContentTime > DateTime.MinValue;
+            internal bool IsMissingContent => _outOfContentTime > 0;
 
             internal bool IsStreamContentType => _stream;
 
@@ -219,7 +216,7 @@ namespace Vlingo.Http
                     catch (OutOfContentException e)
                     {
                         _continuation = true;
-                        _outOfContentTime = DateTime.UtcNow;
+                        _outOfContentTime = (long)DateExtensions.GetCurrentMillis();
                         return this;
                     }
                 }
@@ -258,7 +255,7 @@ namespace Vlingo.Http
                 }
 
                 var endOfLine = _responseText[lineBreak + possibleCarriageReturnIndex] == '\r' ? lineBreak - 1 : lineBreak;
-                var line = _responseText.Substring(_position, endOfLine).Trim();
+                var line = _responseText.Substring(_position, endOfLine - _position).Trim();
                 _position = lineBreak + 1;
                 return line;
             }
@@ -297,8 +294,6 @@ namespace Vlingo.Http
 
             private bool IsCompletedStep => _currentStep == Step.Completed;
 
-            private bool HasNextFullResponse() => _fullResponsesIteratorPos < _fullResponses.Count - 1;
-
             private void ParseBody()
             {
                 if (_bodyOnly)
@@ -321,7 +316,7 @@ namespace Vlingo.Http
                         ParseBody();
                         return;
                     }
-                    _body = Body.From(_responseText.Substring(_position, endIndex));
+                    _body = Body.From(_responseText.Substring(_position, endIndex - _position));
                     _position += _contentLength;
                 }
                 else
@@ -428,7 +423,7 @@ namespace Vlingo.Http
                 _body = null;
                 _contentLength = 0;
                 _continuation = false;
-                _outOfContentTime = DateTime.MinValue;
+                _outOfContentTime = 0;
                 _status = 0;
                 _version = null;
             }
