@@ -26,9 +26,9 @@
     </AssemblyAttribute>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Vlingo.Actors" Version="0.4.2" />
+    <PackageReference Include="Vlingo.Actors" Version="0.4.4" />
     <PackageReference Include="Vlingo.Common" Version="0.5.2" />
-    <PackageReference Include="Vlingo.Wire" Version="0.5.4" />
+    <PackageReference Include="Vlingo.Wire" Version="0.5.5" />
   </ItemGroup>
 
 </Project>
