@@ -44,16 +44,15 @@ namespace Vlingo.Http.Resource
         private readonly ILogger _logger;
         private readonly bool _persist;
         private readonly IList<Action> _actions;
+        private readonly FileInfo _rootOfClasses;
         private readonly DirectoryInfo _rootOfGenerated;
+        private readonly AppDomain _currentDomain = AppDomain.CurrentDomain;
 
         internal DynaType Type { get; }
 
         public static ResourceDispatcherGenerator ForMain(IList<Action> actions, bool persist/*, ILogger logger*/)
         {
-            var classPath = new List<FileInfo>
-            {
-                new FileInfo(Properties.Instance.GetProperty("resource.dispatcher.generated.classes.main", RootOfMainClasses))
-            };
+            var classPath = new FileInfo(Properties.Instance.GetProperty("resource.dispatcher.generated.classes.main", RootOfMainClasses));
             var type = DynaType.Main;
             var rootOfGenerated = RootOfGeneratedSources(type);
 
@@ -62,10 +61,7 @@ namespace Vlingo.Http.Resource
 
         public static ResourceDispatcherGenerator ForTest(IList<Action> actions, bool persist/*, ILogger logger*/)
         {
-            var classPath = new List<FileInfo>
-            {
-                new FileInfo(Properties.Instance.GetProperty("resource.dispatcher.generated.classes.test", RootOfTestClasses))
-            };
+            var classPath = new FileInfo(Properties.Instance.GetProperty("resource.dispatcher.generated.classes.test", RootOfTestClasses));
             var type = DynaType.Test;
             var rootOfGenerated = RootOfGeneratedSources(type);
 
@@ -97,9 +93,10 @@ namespace Vlingo.Http.Resource
                 new DirectoryInfo(Properties.Instance.GetProperty("resource.dispatcher.generated.sources.main", GeneratedSources)) :
                 new DirectoryInfo(Properties.Instance.GetProperty("resource.dispatcher.generated.sources.test", GeneratedTestSources));
 
-        private ResourceDispatcherGenerator(IList<Action> actions, IList<FileInfo> rootOfClasses, DirectoryInfo rootOfGenerated, DynaType type, bool persist/*, ILogger logger*/)
+        private ResourceDispatcherGenerator(IList<Action> actions, FileInfo rootOfClasses, DirectoryInfo rootOfGenerated, DynaType type, bool persist/*, ILogger logger*/)
         {
             _actions = actions;
+            _rootOfClasses = rootOfClasses;
             _rootOfGenerated = rootOfGenerated;
             Type = type;
             _persist = persist;
