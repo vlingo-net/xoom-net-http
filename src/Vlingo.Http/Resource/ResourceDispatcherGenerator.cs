@@ -168,7 +168,7 @@ namespace Vlingo.Http.Resource
 
             foreach (var parameter in to.Parameters)
             {
-                builder.Append(separator).Append("(").Append(parameter.Type).Append(") ").Append("mappedParameters.Mapped[(" + parameterIndex + ")].Value");
+                builder.Append(separator).Append("(").Append(parameter.Type).Append(") ").Append("mappedParameters.Mapped[" + parameterIndex + "].Value");
                 ++parameterIndex;
                 separator = ", ";
             }
