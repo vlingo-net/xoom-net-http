@@ -187,19 +187,19 @@ namespace Vlingo.Http.Tests.Resource
         [Fact]
         public void TestThatAllWellOrderedActionHaveMatches()
         {
-            var actionGetUsersMatch = _resource.MatchWith(Method.GET, new Uri("/users").ToMatchableUri());
+            var actionGetUsersMatch = _resource.MatchWith(Method.GET, "/users".ToMatchableUri());
             Assert.True(actionGetUsersMatch.IsMatched);
             Assert.Equal(_actionGetUsers, actionGetUsersMatch.Action);
 
-            var actionGetUserMatch = _resource.MatchWith(Method.GET, new Uri("/users/1234567").ToMatchableUri());
+            var actionGetUserMatch = _resource.MatchWith(Method.GET, "/users/1234567".ToMatchableUri());
             Assert.True(actionGetUserMatch.IsMatched);
             Assert.Equal(_actionGetUser, actionGetUserMatch.Action);
 
-            var actionPatchUserNameMatch = _resource.MatchWith(Method.PATCH, new Uri("/users/1234567/name").ToMatchableUri());
+            var actionPatchUserNameMatch = _resource.MatchWith(Method.PATCH, "/users/1234567/name".ToMatchableUri());
             Assert.True(actionPatchUserNameMatch.IsMatched);
             Assert.Equal(_actionPatchUserName, actionPatchUserNameMatch.Action);
 
-            var actionPostUserMatch = _resource.MatchWith(Method.POST, new Uri("/users").ToMatchableUri());
+            var actionPostUserMatch = _resource.MatchWith(Method.POST, "/users".ToMatchableUri());
             Assert.True(actionPostUserMatch.IsMatched);
             Assert.Equal(_actionPostUser, actionPostUserMatch.Action);
         }
@@ -240,23 +240,23 @@ namespace Vlingo.Http.Tests.Resource
 
             var resource = ConfigurationResource<UserResource>.NewResourceFor("user", _resourceHandlerType, 5, actions);
 
-            var actionGetUsersMatch = resource.MatchWith(Method.GET, new Uri("/users").ToMatchableUri());
+            var actionGetUsersMatch = resource.MatchWith(Method.GET, "/users".ToMatchableUri());
             Assert.True(actionGetUsersMatch.IsMatched);
             Assert.Equal(_actionGetUsers, actionGetUsersMatch.Action);
 
-            var actionGetUserMatch = resource.MatchWith(Method.GET, new Uri("/users/1234567").ToMatchableUri());
+            var actionGetUserMatch = resource.MatchWith(Method.GET, "/users/1234567".ToMatchableUri());
             Assert.True(actionGetUserMatch.IsMatched);
             Assert.Equal(_actionGetUser, actionGetUserMatch.Action);
 
-            var actionGetUserEmailAddressMatch = resource.MatchWith(Method.GET, new Uri("/users/1234567/emailAddresses/890").ToMatchableUri());
+            var actionGetUserEmailAddressMatch = resource.MatchWith(Method.GET, "/users/1234567/emailAddresses/890".ToMatchableUri());
             Assert.True(actionGetUserEmailAddressMatch.IsMatched);
             Assert.Equal(actionGetUserEmailAddress, actionGetUserEmailAddressMatch.Action);
 
-            var actionPatchUserNameMatch = resource.MatchWith(Method.PATCH, new Uri("/users/1234567/name").ToMatchableUri());
+            var actionPatchUserNameMatch = resource.MatchWith(Method.PATCH, "/users/1234567/name".ToMatchableUri());
             Assert.True(actionPatchUserNameMatch.IsMatched);
             Assert.Equal(_actionPatchUserName, actionPatchUserNameMatch.Action);
 
-            var actionPostUserMatch = resource.MatchWith(Method.POST, new Uri("/users").ToMatchableUri());
+            var actionPostUserMatch = resource.MatchWith(Method.POST, "/users".ToMatchableUri());
             Assert.True(actionPostUserMatch.IsMatched);
             Assert.Equal(_actionPostUser, actionPostUserMatch.Action);
         }

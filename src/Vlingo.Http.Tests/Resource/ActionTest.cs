@@ -18,7 +18,7 @@ namespace Vlingo.Http.Tests.Resource
         {
             var action = new Action(0, "GET", "/users", "QueryUsers()", null, false);
     
-            var matchResults = action.MatchWith(Method.GET, new Uri("/users").ToMatchableUri());
+            var matchResults = action.MatchWith(Method.GET, "/users".ToMatchableUri());
         
             Assert.True(matchResults.IsMatched);
             Assert.Equal(0, matchResults.ParameterCount);
@@ -30,7 +30,7 @@ namespace Vlingo.Http.Tests.Resource
         {
             var action = new Action(0, "PATCH", "/users/{userId}/name", "ChangeName(string userId)", null, false);
     
-            var matchResults = action.MatchWith(Method.PATCH, new Uri("/users/1234567/name").ToMatchableUri());
+            var matchResults = action.MatchWith(Method.PATCH, "/users/1234567/name".ToMatchableUri());
         
             Assert.True(matchResults.IsMatched);
             Assert.Same(action, matchResults.Action);
@@ -44,7 +44,7 @@ namespace Vlingo.Http.Tests.Resource
         {
             var action = new Action(0, "GET", "/users/{userId}", "QueryUser(string userId)", null, false);
     
-            var matchResults = action.MatchWith(Method.GET, new Uri("/users/1234567").ToMatchableUri());
+            var matchResults = action.MatchWith(Method.GET, "/users/1234567".ToMatchableUri());
         
             Assert.True(matchResults.IsMatched);
             Assert.Same(action, matchResults.Action);
@@ -65,7 +65,7 @@ namespace Vlingo.Http.Tests.Resource
                 null,
                 false);
     
-            var matchResults = action.MatchWith(Method.GET, new Uri("/catalogs/123/products/4567/details/890").ToMatchableUri());
+            var matchResults = action.MatchWith(Method.GET, "/catalogs/123/products/4567/details/890".ToMatchableUri());
         
             Assert.True(matchResults.IsMatched);
             Assert.Same(action, matchResults.Action);
@@ -83,7 +83,7 @@ namespace Vlingo.Http.Tests.Resource
         {
             var action = new Action(0, "GET", "/users/{userId}/", "QueryUser(string userId)", null, false);
     
-            var matchResults = action.MatchWith(Method.GET, new Uri("/users/1234567/").ToMatchableUri());
+            var matchResults = action.MatchWith(Method.GET, "/users/1234567/".ToMatchableUri());
         
             Assert.True(matchResults.IsMatched);
             Assert.Same(action, matchResults.Action);
@@ -104,7 +104,7 @@ namespace Vlingo.Http.Tests.Resource
                 null,
                 false);
     
-            var matchResults = action.MatchWith(Method.GET, new Uri("/users/1234567/emailAddresses/890/").ToMatchableUri());
+            var matchResults = action.MatchWith(Method.GET, "/users/1234567/emailAddresses/890/".ToMatchableUri());
         
             Assert.True(matchResults.IsMatched);
             Assert.Same(action, matchResults.Action);
@@ -120,7 +120,7 @@ namespace Vlingo.Http.Tests.Resource
         {
             var action = new Action(0, "GET", "/users/all", "queryUsers()", null, false);
     
-            var matchResults = action.MatchWith(Method.POST, new Uri("/users").ToMatchableUri());
+            var matchResults = action.MatchWith(Method.POST, "/users".ToMatchableUri());
         
             Assert.False(matchResults.IsMatched);
             Assert.Null(matchResults.Action);
@@ -132,7 +132,7 @@ namespace Vlingo.Http.Tests.Resource
         {
             var action = new Action(0, "GET", "/users/all", "queryUsers()", null, false);
     
-            var matchResults = action.MatchWith(Method.GET, new Uri("/users/one").ToMatchableUri());
+            var matchResults = action.MatchWith(Method.GET, "/users/one".ToMatchableUri());
         
             Assert.False(matchResults.IsMatched);
             Assert.Null(matchResults.Action);
@@ -144,7 +144,7 @@ namespace Vlingo.Http.Tests.Resource
         {
             var action = new Action(0, "GET", "/users/{id}", "queryUsers(String userId)", null, false);
 
-            var matchResults = action.MatchWith(Method.GET, new Uri("/users/1234/extra").ToMatchableUri());
+            var matchResults = action.MatchWith(Method.GET, "/users/1234/extra".ToMatchableUri());
 
             Assert.False(matchResults.IsMatched);
             Assert.Null(matchResults.Action);
@@ -156,7 +156,7 @@ namespace Vlingo.Http.Tests.Resource
         {
             var action = new Action(0, "GET", "/users/{id}/data", "queryUserData(String userId)", null, true);
 
-            var matchResults = action.MatchWith(Method.GET, new Uri("/users//data").ToMatchableUri());
+            var matchResults = action.MatchWith(Method.GET, "/users//data".ToMatchableUri());
 
             Assert.False(matchResults.IsMatched);
             Assert.Same(action, matchResults.Action);
@@ -168,7 +168,7 @@ namespace Vlingo.Http.Tests.Resource
         {
             var action = new Action(0, "GET", "/users/{id}", "queryUsers(String userId)", null, false);
 
-            var matchResults = action.MatchWith(Method.GET, new Uri("/users//").ToMatchableUri());
+            var matchResults = action.MatchWith(Method.GET, "/users//".ToMatchableUri());
 
             Assert.True(matchResults.IsMatched);
             Assert.Same(action, matchResults.Action);
@@ -187,7 +187,7 @@ namespace Vlingo.Http.Tests.Resource
                 null,
                 false);
     
-            var matchResults = action.MatchWith(Method.GET, new Uri("/users/1234567/emailAddresses/890").ToMatchableUri());
+            var matchResults = action.MatchWith(Method.GET, "/users/1234567/emailAddresses/890".ToMatchableUri());
         
             Assert.False(matchResults.IsMatched);
             Assert.Null(matchResults.Action);
@@ -206,7 +206,7 @@ namespace Vlingo.Http.Tests.Resource
                 null,
                 false);
     
-            var matchResults = action.MatchWith(Method.GET, new Uri("/users/1234567/emailAddresses/890/").ToMatchableUri());
+            var matchResults = action.MatchWith(Method.GET, "/users/1234567/emailAddresses/890/".ToMatchableUri());
         
             Assert.True(matchResults.IsMatched);
             Assert.Same(action, matchResults.Action);
@@ -227,7 +227,7 @@ namespace Vlingo.Http.Tests.Resource
                 null,
                 false);
 
-            var uri = new Uri("/users/1234567?one=1.1&two=2.0&three=three*&three=3.3").ToMatchableUri();
+            var uri = "/users/1234567?one=1.1&two=2.0&three=three*&three=3.3".ToMatchableUri();
             
             var matchResults = action.MatchWith(Method.GET, uri);
             Assert.True(matchResults.IsMatched);
