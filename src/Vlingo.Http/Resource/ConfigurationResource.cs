@@ -60,7 +60,7 @@ namespace Vlingo.Http.Resource
                         }
                         else
                         {
-                            resourceClass = Assembly.GetCallingAssembly().GetType(fullyQualifiedTypeName, true);   
+                            resourceClass = Assembly.GetCallingAssembly().GetType(fullyQualifiedTypeName, true);
                         }
                     }
                 }
@@ -99,7 +99,7 @@ namespace Vlingo.Http.Resource
                     }
                     else
                     {
-                        resourceHandlerClass = Assembly.GetCallingAssembly().GetType(resourceHandlerTypeName, true);   
+                        resourceHandlerClass = Assembly.GetCallingAssembly().GetType(resourceHandlerTypeName, true);
                     }
                 }
                 ConfirmResourceHandler(resourceHandlerClass);
