@@ -212,7 +212,7 @@ namespace Vlingo.Http
             private string NextLine(string errorResult, string errorMessage)
             {
                 var possibleCarriageReturnIndex = -1;
-                var lineBreak = _requestText.IndexOf("\n", _position);
+                var lineBreak = _requestText.IndexOf("\n", _position, StringComparison.InvariantCultureIgnoreCase);
                 if(lineBreak < 0)
                 {
                     if (_contentQueue.Count == 0)
@@ -229,7 +229,7 @@ namespace Vlingo.Http
                 }
 
                 var endOfLine = _requestText[lineBreak + possibleCarriageReturnIndex] == '\r' ? lineBreak - 1 : lineBreak;
-                var line = _requestText.Substring(_position, endOfLine).Trim();
+                var line = _requestText.Substring(_position, endOfLine - _position).Trim();
                 _position = lineBreak + 1;
                 return line;
             }
@@ -288,7 +288,7 @@ namespace Vlingo.Http
                     }
                     else
                     {
-                        _body = Body.From(_requestText.Substring(_position, endIndex));
+                        _body = Body.From(_requestText.Substring(_position, endIndex - _position));
                         _position += _contentLength;
                         NextStep();
                     }
@@ -342,7 +342,7 @@ namespace Vlingo.Http
                 try
                 {
                     _method = Method.From(ParseSpecificRequestLinePart(parts, 1, "Method"));
-                    _uri = new Uri(ParseSpecificRequestLinePart(parts, 2, "URI/path"));
+                    _uri = ParseSpecificRequestLinePart(parts, 2, "URI/path").ToMatchableUri();
                     _version = Version.From(ParseSpecificRequestLinePart(parts, 3, "HTTP/version"));
 
                     NextStep();
