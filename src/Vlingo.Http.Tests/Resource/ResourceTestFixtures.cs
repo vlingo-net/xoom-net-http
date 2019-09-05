@@ -8,11 +8,14 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using Vlingo.Actors;
 using Vlingo.Http.Resource;
 using Vlingo.Http.Resource.Serialization;
 using Vlingo.Http.Tests.Sample.User;
 using Vlingo.Http.Tests.Sample.User.Model;
+using Vlingo.Http.Tests.Sample.User.Serialization;
 using Vlingo.Wire.Channel;
 using Vlingo.Wire.Message;
 using Xunit.Abstractions;
@@ -115,6 +118,14 @@ namespace Vlingo.Http.Tests.Resource
             var converter = new Converter(output);
             Console.SetOut(converter);
             
+            /*JsonConvert.DefaultSettings = () => new JsonSerializerSettings
+            {
+                Converters = new List<JsonConverter> {new UserDataConverter()},
+                Formatting = Formatting.Indented,
+                ContractResolver = new CamelCasePropertyNamesContractResolver(),
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+            };*/
+
             _world = World.Start(WorldName);
 
             _actionPostUser = new Action(0, "POST", "/users", "Register(body:Vlingo.Http.Tests.Sample.User.UserData userData)", null, true);
