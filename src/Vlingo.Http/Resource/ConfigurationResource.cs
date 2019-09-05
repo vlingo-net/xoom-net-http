@@ -7,10 +7,13 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using Vlingo.Actors;
 using Vlingo.Common.Compiler;
+
+using static Vlingo.Common.Compiler.DynaFile;
 
 namespace Vlingo.Http.Resource
 {
@@ -51,7 +54,14 @@ namespace Vlingo.Http.Resource
                     resourceClass = Type.GetType(fullyQualifiedTypeName);
                     if (resourceClass == null)
                     {
-                        resourceClass = Assembly.GetCallingAssembly().GetType(fullyQualifiedTypeName, true);
+                        if (TryLoadAlreadyGeneratedAssembly(resourceHandlerType, out var assembly))
+                        {
+                            resourceClass = assembly.GetType(fullyQualifiedTypeName, true);
+                        }
+                        else
+                        {
+                            resourceClass = Assembly.GetCallingAssembly().GetType(fullyQualifiedTypeName, true);   
+                        }
                     }
                 }
                 catch
@@ -83,7 +93,14 @@ namespace Vlingo.Http.Resource
                 var resourceHandlerClass = Type.GetType(resourceHandlerTypeName);
                 if (resourceHandlerClass == null)
                 {
-                    resourceHandlerClass = Assembly.GetCallingAssembly().GetType(resourceHandlerTypeName, true);
+                    if (TryLoadAlreadyGeneratedAssembly(resourceHandlerTypeName, out var assembly))
+                    {
+                        resourceHandlerClass = assembly.GetType(resourceHandlerTypeName, true);
+                    }
+                    else
+                    {
+                        resourceHandlerClass = Assembly.GetCallingAssembly().GetType(resourceHandlerTypeName, true);   
+                    }
                 }
                 ConfirmResourceHandler(resourceHandlerClass);
                 return resourceHandlerClass;
@@ -119,6 +136,45 @@ namespace Vlingo.Http.Resource
                 superclass = superclass.BaseType;
             }
             throw new ArgumentException($"ConfigurationResource handler class must extends ResourceHandler: {resourceHandlerClass.Name}");
+        }
+        
+        private static bool TryLoadAlreadyGeneratedAssembly(Type resourceHandlerType, out Assembly assembly)
+        {
+            try
+            {
+                var classPath = new FileInfo(Properties.Instance.GetProperty("resource.dispatcher.generated.classes.main", RootOfMainClasses));
+                var resourcePath = resourceHandlerType.FullName
+                    .Substring(0, resourceHandlerType.FullName.LastIndexOf('.'))
+                    .Replace('.', Path.DirectorySeparatorChar);
+                var filePath = Path.Combine(classPath.DirectoryName, resourcePath, resourceHandlerType.Name + DispatcherSuffix + ".dll");
+                assembly = Assembly.LoadFrom(filePath);
+                return true;
+            }
+            catch
+            {
+                assembly = null;
+                return false;
+            }
+        }
+        
+        private static bool TryLoadAlreadyGeneratedAssembly(string resourceHandlerTypeName, out Assembly assembly)
+        {
+            try
+            {
+                var classPath = new FileInfo(Properties.Instance.GetProperty("resource.dispatcher.generated.classes.main", RootOfMainClasses));
+                var resourcePath = resourceHandlerTypeName
+                    .Substring(0, resourceHandlerTypeName.LastIndexOf('.'))
+                    .Replace('.', Path.DirectorySeparatorChar);
+                var resourceHandlerName = resourceHandlerTypeName.Substring(resourceHandlerTypeName.LastIndexOf('.'));
+                var filePath = Path.Combine(classPath.DirectoryName, resourcePath, resourceHandlerName + DispatcherSuffix + ".dll");
+                assembly = Assembly.LoadFrom(filePath);
+                return true;
+            }
+            catch
+            {
+                assembly = null;
+                return false;
+            }
         }
 
         private static Type TryGenerateCompile(
