@@ -59,7 +59,7 @@ namespace Vlingo.Http
             private bool _continuation;
             private Step _currentStep;
             private List<Request> _fullRequests;
-            private int _fullRequestsIteratorPos;
+            private List<Request>.Enumerator _fullRequestsIterator;
             private Headers<RequestHeader> _headers;
             private Method _method;
             private DateTime _outOfContentTime;
@@ -68,7 +68,6 @@ namespace Vlingo.Http
 
             internal VirtualStateParser()
             {
-                _fullRequestsIteratorPos = -1;
                 _outOfContentTime = DateTime.MinValue;
                 _contentQueue = new Queue<string>();
                 _currentStep = Step.NotStarted;
@@ -82,18 +81,17 @@ namespace Vlingo.Http
             internal Request FullRequest {
                 get
                 {
-                    if(_fullRequestsIteratorPos < 0)
+                    if(_fullRequestsIterator.Current == null)
                     {
-                        _fullRequestsIteratorPos = 0;
+                        _fullRequestsIterator = _fullRequests.GetEnumerator();
                     }
 
-                    if (HasNextFullRequest())
+                    if (_fullRequestsIterator.MoveNext())
                     {
-                        var req = _fullRequests[_fullRequestsIteratorPos];
-                        _fullRequests.RemoveAt(_fullRequestsIteratorPos);
-                        return req;
+                        return _fullRequestsIterator.Current;
                     }
 
+                    _fullRequestsIterator.Dispose();
                     throw new InvalidOperationException($"{Response.ResponseStatus.BadRequest}\n\nRequest is not completed: {_method} {_uri}");
                 }
             }
@@ -102,21 +100,20 @@ namespace Vlingo.Http
             {
                 get
                 {
-                    if(_fullRequestsIteratorPos >= 0)
+                    if(_fullRequestsIterator.Current != null)
                     {
-                        if (!HasNextFullRequest())
+                        if (!_fullRequestsIterator.MoveNext())
                         {
-                            _fullRequestsIteratorPos = -1;
+                            _fullRequestsIterator.Dispose();
                             return false;
                         }
-                        else
-                        {
-                            return true;
-                        }
+
+                        return true;
                     }
+
                     if(_fullRequests.Count == 0)
                     {
-                        _fullRequestsIteratorPos = -1;
+                        _fullRequestsIterator.Dispose();
                         return false;
                     }
 
@@ -267,8 +264,6 @@ namespace Vlingo.Http
             private bool IsBodyStep => _currentStep == Step.Body;
 
             private bool IsCompletedStep => _currentStep == Step.Completed;
-
-            private bool HasNextFullRequest() => _fullRequestsIteratorPos < _fullRequests.Count - 1;
 
             private void ParseBody()
             {
