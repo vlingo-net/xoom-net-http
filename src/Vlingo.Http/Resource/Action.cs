@@ -8,6 +8,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 
 namespace Vlingo.Http.Resource
 {
@@ -560,15 +561,30 @@ namespace Vlingo.Http.Resource
 
             private Type Load(string className)
             {
-                try
+                var classType = Type.GetType(className);
+                if (classType == null)
                 {
-                    return Type.GetType(className);
+                    // tires to load type with assembly name
+                    var classNameParts = className.Split('.');
+                    for (var i = 0; i < classNameParts.Length; i++)
+                    {
+                        var potentialAssemblyName = string.Join("." ,classNameParts.Take(i + 1));
+                        var fullyQualifiedTypeName = $"{className}, {potentialAssemblyName}";
+                        classType = Type.GetType(fullyQualifiedTypeName);
+                        if (classType != null)
+                        {
+                            break;
+                        }
+                    }
                 }
-                catch
+
+                if (classType == null)
                 {
                     throw new InvalidOperationException($"Cannot load class for: {className}");
                 }
-            }
+                
+                return classType;
+                }
 
             private Tuple<string, IList<MethodParameter>> Parse(string to)
             {
