@@ -39,7 +39,7 @@ namespace Vlingo.Http.Tests.Resource
             Assert.StartsWith("/users/", completes.Response.HeaderOf(ResponseHeader.Location).Value);
             Assert.NotNull(completes.Response.Entity);
 
-            var createdUserData = (UserData)JsonSerialization.Deserialized(completes.Response.Entity.Content, typeof(UserData));
+            var createdUserData = (UserData)JsonSerialization.Deserialized(completes.Response.Entity.Content, typeof(UserData), _settings);
             Assert.NotNull(createdUserData);
             Assert.Equal(JohnDoeUserData.NameData.Given, createdUserData.NameData.Given);
             Assert.Equal(JohnDoeUserData.NameData.Family, createdUserData.NameData.Family);
@@ -65,7 +65,7 @@ namespace Vlingo.Http.Tests.Resource
             getCompletesWithCalls.ReadFrom<int>("completed");
             Assert.NotNull(getCompletes.Response);
             Assert.Equal(Response.ResponseStatus.Ok, getCompletes.Response.Status);
-            var getUserData = JsonSerialization.Deserialized<UserData>(getCompletes.Response.Entity.Content);
+            var getUserData = JsonSerialization.Deserialized<UserData>(getCompletes.Response.Entity.Content, _settings);
             Assert.NotNull(getUserData);
             Assert.Equal(JohnDoeUserData.NameData.Given, getUserData.NameData.Given);
             Assert.Equal(JohnDoeUserData.NameData.Family, getUserData.NameData.Family);
@@ -158,7 +158,7 @@ namespace Vlingo.Http.Tests.Resource
 
             Assert.NotNull(patchCompletes1.Response);
             Assert.Equal(Response.ResponseStatus.Ok, patchCompletes1.Response.Status);
-            var getJohnDoeDoeUserData = JsonSerialization.Deserialized<UserData>(patchCompletes1.Response.Entity.Content);
+            var getJohnDoeDoeUserData = JsonSerialization.Deserialized<UserData>(patchCompletes1.Response.Entity.Content, _settings);
             Assert.Equal(johnNameData.Given, getJohnDoeDoeUserData.NameData.Given);
             Assert.Equal(johnNameData.Family, getJohnDoeDoeUserData.NameData.Family);
             Assert.Equal(JohnDoeUserData.ContactData.EmailAddress, getJohnDoeDoeUserData.ContactData.EmailAddress);
