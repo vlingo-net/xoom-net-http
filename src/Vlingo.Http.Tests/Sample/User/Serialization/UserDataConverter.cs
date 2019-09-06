@@ -8,31 +8,26 @@
 using System;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using Vlingo.Http.Resource;
 
 namespace Vlingo.Http.Tests.Sample.User.Serialization
 {
     public class UserDataConverter : JsonConverter<UserData>
     {
+        public override bool CanWrite { get; } = false;
+
         public override void WriteJson(JsonWriter writer, UserData value, JsonSerializer serializer)
         {
-            serializer.Serialize(writer, value);
         }
 
         public override UserData ReadJson(JsonReader reader, Type objectType, UserData existingValue, bool hasExistingValue, JsonSerializer serializer)
         {
-            // Load the JSON for the Result into a JObject
             JObject jo = JObject.Load(reader);
 
-            // Read the properties which will be used as constructor parameters
-
-            // Construct the Result object using the non-default constructor
+            var id = jo["Id"].ToObject<string>();
+            var nameData = jo["NameData"].ToObject<NameData>();
+            var contactData = jo["ContactData"].ToObject<ContactData>();
             
-
-            // (If anything else needs to be populated on the result object, do that here)
-
-            // Return the result
-            return null;
+            return UserData.From(id, nameData, contactData);
         }
     }
 }

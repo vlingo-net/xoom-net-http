@@ -117,23 +117,15 @@ namespace Vlingo.Http.Tests.Resource
         {
             var converter = new Converter(output);
             Console.SetOut(converter);
-            
-            /*JsonConvert.DefaultSettings = () => new JsonSerializerSettings
-            {
-                Converters = new List<JsonConverter> {new UserDataConverter()},
-                Formatting = Formatting.Indented,
-                ContractResolver = new CamelCasePropertyNamesContractResolver(),
-                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
-            };*/
 
             _world = World.Start(WorldName);
 
-            _actionPostUser = new Action(0, "POST", "/users", "Register(body:Vlingo.Http.Tests.Sample.User.UserData userData)", null, true);
-            _actionPatchUserContact = new Action(1, "PATCH", "/users/{userId}/contact", "changeContact(string userId, body:Vlingo.Http.Tests.Sample.User.ContactData contactData)", null, true);
-            _actionPatchUserName = new Action(2, "PATCH", "/users/{userId}/name", "changeName(string userId, body:Vlingo.Http.Tests.Sample.User.NameData nameData)", null, true);
-            _actionGetUser = new Action(3, "GET", "/users/{userId}", "queryUser(string userId)", null, true);
-            _actionGetUsers = new Action(4, "GET", "/users", "queryUsers()", null, true);
-            _actionGetUserError = new Action(5, "GET", "/users/{userId}/error", "queryUserError(string userId)", null, true);
+            _actionPostUser = new Action(0, "POST", "/users", "Register(body:Vlingo.Http.Tests.Sample.User.UserData userData)", "Vlingo.Http.Tests.Sample.User.UserDataMapper", true);
+            _actionPatchUserContact = new Action(1, "PATCH", "/users/{userId}/contact", "changeContact(string userId, body:Vlingo.Http.Tests.Sample.User.ContactData contactData)", "Vlingo.Http.Tests.Sample.User.UserDataMapper", true);
+            _actionPatchUserName = new Action(2, "PATCH", "/users/{userId}/name", "changeName(string userId, body:Vlingo.Http.Tests.Sample.User.NameData nameData)", "Vlingo.Http.Tests.Sample.User.UserDataMapper", true);
+            _actionGetUser = new Action(3, "GET", "/users/{userId}", "queryUser(string userId)", "Vlingo.Http.Tests.Sample.User.UserDataMapper", true);
+            _actionGetUsers = new Action(4, "GET", "/users", "queryUsers()", "Vlingo.Http.Tests.Sample.User.UserDataMapper", true);
+            _actionGetUserError = new Action(5, "GET", "/users/{userId}/error", "queryUserError(string userId)", "Vlingo.Http.Tests.Sample.User.UserDataMapper", true);
 
 
             var actions = new List<Action> {

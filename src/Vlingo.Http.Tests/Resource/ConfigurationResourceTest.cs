@@ -5,12 +5,13 @@
 // was not distributed with this file, You can obtain
 // one at https://mozilla.org/MPL/2.0/.
 
-using System;
 using System.Collections.Generic;
 using System.Text;
+using Newtonsoft.Json;
 using Vlingo.Http.Resource;
 using Vlingo.Http.Resource.Serialization;
 using Vlingo.Http.Tests.Sample.User;
+using Vlingo.Http.Tests.Sample.User.Serialization;
 using Xunit;
 using Xunit.Abstractions;
 using Action = Vlingo.Http.Resource.Action;
@@ -19,6 +20,8 @@ namespace Vlingo.Http.Tests.Resource
 {
     public class ConfigurationResourceTest : ResourceTestFixtures
     {
+        private JsonSerializerSettings _settings;
+
         [Fact]
         public void TestThatPostRegisterUserDispatches() {
             var request = Request.From(Encoding.UTF8.GetBytes(PostJohnDoeUserMessage));
@@ -100,7 +103,7 @@ namespace Vlingo.Http.Tests.Resource
 
             Assert.NotNull(getCompletes.Response);
             Assert.Equal(Response.ResponseStatus.Ok, getCompletes.Response.Status);
-            var getUserData = JsonSerialization.DeserializedList<UserData>(getCompletes.Response.Entity.Content);
+            var getUserData = JsonSerialization.DeserializedList<UserData>(getCompletes.Response.Entity.Content, _settings);
             Assert.NotNull(getUserData);
 
             var johnUserData = UserData.UserAt(postCompletes1.Response.HeaderOf(ResponseHeader.Location).Value, getUserData);
@@ -263,6 +266,8 @@ namespace Vlingo.Http.Tests.Resource
         
         public ConfigurationResourceTest(ITestOutputHelper output) : base(output)
         {
+            _settings = new JsonSerializerSettings();
+            _settings.Converters.Add(new UserDataConverter());
         }
     }
 }
