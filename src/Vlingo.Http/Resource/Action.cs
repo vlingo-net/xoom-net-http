@@ -171,7 +171,7 @@ namespace Vlingo.Http.Resource
         {
             try
             {
-                var mapperClass = Type.GetType(mapper);
+                var mapperClass = TypeLoader.Load(mapper);
                 return (IMapper) Activator.CreateInstance(mapperClass);
             }
             catch
@@ -559,33 +559,6 @@ namespace Vlingo.Http.Resource
             public MethodParameter ParameterOf(string name)
                 => Parameters.FirstOrDefault(p => string.Equals(name, p.Name));
 
-            private Type Load(string className)
-            {
-                var classType = Type.GetType(className);
-                if (classType == null)
-                {
-                    // tires to load type with assembly name
-                    var classNameParts = className.Split('.');
-                    for (var i = 0; i < classNameParts.Length; i++)
-                    {
-                        var potentialAssemblyName = string.Join("." ,classNameParts.Take(i + 1));
-                        var fullyQualifiedTypeName = $"{className}, {potentialAssemblyName}";
-                        classType = Type.GetType(fullyQualifiedTypeName);
-                        if (classType != null)
-                        {
-                            break;
-                        }
-                    }
-                }
-
-                if (classType == null)
-                {
-                    throw new InvalidOperationException($"Cannot load class for: {className}");
-                }
-                
-                return classType;
-                }
-
             private Tuple<string, IList<MethodParameter>> Parse(string to)
             {
                 var bad = $"Invalid to declaration: {to}";
@@ -610,7 +583,7 @@ namespace Vlingo.Http.Resource
                         if (rawParameter.StartsWith("body:"))
                         {
                             var body = TypeAndName(rawParameter.Substring(5));
-                            parameters.Add(new MethodParameter(body[0], body[1], Load(QualifiedType(body[0]))));
+                            parameters.Add(new MethodParameter(body[0], body[1], TypeLoader.Load(QualifiedType(body[0]))));
                         }
                         else
                         {
