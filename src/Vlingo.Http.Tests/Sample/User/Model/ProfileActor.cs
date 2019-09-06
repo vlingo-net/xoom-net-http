@@ -31,10 +31,5 @@ namespace Vlingo.Http.Tests.Sample.User.Model
             _state = _state.WithWebSite(website);
             return Completes().With(_state);
         }
-
-        public ProfileState From(string id, string twitterAccount, string linkedInAccount, string website) =>
-            ProfileStateFactory.From(id, twitterAccount, linkedInAccount, website);
-        
-        public ProfileState NonExisting() => ProfileStateFactory.NonExisting();
     }
 }

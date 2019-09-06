@@ -14,7 +14,5 @@ namespace Vlingo.Http.Tests.Sample.User.Model
         ICompletes<ProfileState> WithTwitterAccount(string twitterAccount);
         ICompletes<ProfileState> WithLinkedInAccount(string linkedInAccount);
         ICompletes<ProfileState> WithWebSite(string website);
-        ProfileState From(string id, string twitterAccount, string linkedInAccount, string website);
-        ProfileState NonExisting();
     }
 }

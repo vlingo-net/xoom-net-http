@@ -30,15 +30,5 @@ namespace Vlingo.Http.Tests.Sample.User.Model
             _userState = _userState.WithName(name);
             return Completes().With(_userState);
         }
-
-        public UserState NonExisting() => UserStateFactory.NonExisting();
-
-        public UserState From(Name name, Contact contact) => UserStateFactory.From(name, contact);
-
-        public UserState From(string id, Name name, Contact contact) => UserStateFactory.From(id, name, contact);
-
-        public void ResetId() => UserStateFactory.ResetId();
-
-        public string NextId() => UserStateFactory.NextId();
     }
 }
