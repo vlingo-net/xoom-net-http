@@ -1,7 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
 
     <!-- NuGet Metadata -->
     <IsPackable>true</IsPackable>
@@ -26,9 +28,9 @@
     </AssemblyAttribute>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Vlingo.Actors" Version="0.4.4" />
-    <PackageReference Include="Vlingo.Common" Version="0.5.2" />
-    <PackageReference Include="Vlingo.Wire" Version="0.5.5" />
+    <PackageReference Include="Vlingo.Actors" Version="0.6.0" />
+    <PackageReference Include="Vlingo.Common" Version="0.6.0" />
+    <PackageReference Include="Vlingo.Wire" Version="0.6.0" />
   </ItemGroup>
 
 </Project>

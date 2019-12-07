@@ -9,78 +9,48 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Vlingo.Common;
 
 namespace Vlingo.Http.Resource
 {
-    public sealed class HttpProperties
+    public sealed class HttpProperties : ConfigurationProperties
     {
-        private const string PropertiesFile = "vlingo-http.properties";
-
-        private static Func<HttpProperties> _factory = () => Open();
-
-        private static Lazy<HttpProperties> SingleInstance => new Lazy<HttpProperties>(_factory, true);
+        private static IDictionary<string, string> _properties = new Dictionary<string, string>();
         
-        private readonly IDictionary<string, string> _dictionary;
-
-        public static HttpProperties Instance => SingleInstance.Value;
-        
-        public static HttpProperties OpenForTest(Dictionary<string, string> properties) => new HttpProperties(properties);
-
-        public static HttpProperties Open()
+        private static Func<HttpProperties> Factory = () =>
         {
-            var props = new HttpProperties(new Dictionary<string, string>());
-            props.Load(new FileInfo(PropertiesFile));
+            var props = new HttpProperties(_properties);
+            props.Load(new FileInfo("vlingo-http.json"));
             return props;
-        }
+        };
 
-        public string GetProperty(string key) => GetProperty(key, null);
-        
-        public string GetProperty(string key, string defaultValue)
+        private static Lazy<HttpProperties> SingleInstance = new Lazy<HttpProperties>(Factory, true);
+
+        public static HttpProperties Instance
         {
-            if(_dictionary.TryGetValue(key, out string value))
+            get
             {
-                return value;
-            }
-
-            return defaultValue;
-        }
-
-        public IEnumerable<string> Keys => _dictionary.Keys;
-
-        private void SetProperty(string key, string value)
-        {
-            _dictionary[key] = value;
-        }
-        
-        private void Load(FileInfo configFile)
-        {
-            foreach(var line in File.ReadAllLines(configFile.FullName))
-            {
-                if(string.IsNullOrWhiteSpace(line) || line.Trim().StartsWith("#"))
+                if (_properties.Any())
                 {
-                    continue;
+                    SingleInstance.Value.UpdateCustomProperties(_properties);
+                    _properties.Clear();
                 }
-
-                var items = line.Split(new[] { '=' }, StringSplitOptions.RemoveEmptyEntries);
-                var key = items[0].Trim();
-                var val = string.Join("=", items.Skip(1)).Trim();
-                SetProperty(key, val);
+                
+                return SingleInstance.Value;
             }
         }
 
-        private string Key(string nodeName, string key)
+        private HttpProperties(IDictionary<string, string> properties)
         {
-            if (string.IsNullOrWhiteSpace(nodeName))
-            {
-                return key;
-            }
-
-            return $"node.{nodeName}.{key}";
+            _properties = properties;
         }
         
-        private HttpProperties(Dictionary<string, string> properties)
+        private void UpdateCustomProperties(IDictionary<string, string> properties)
         {
-            _dictionary = properties;
+            foreach (var property in properties)
+            {
+                SetProperty(property.Key, property.Value);
+            }
         }
     }
 }

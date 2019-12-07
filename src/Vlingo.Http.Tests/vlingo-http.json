@@ -1,0 +1,153 @@
+{
+  "server": {
+    "http": {
+      "port": "8080"
+    },
+    "dispatcher": {
+      "pool": "10"
+    },
+    "buffer": {
+      "pool": {
+        "size": "100"
+      }
+    },
+    "message": {
+      "buffer": {
+        "size": "65535"
+      }
+    },
+    "probe": {
+      "interval": "2",
+      "timeout": "2"
+    },
+    "processor": {
+      "pool": {
+        "size": "10"
+      }
+    },
+    "request": {
+      "missing": {
+        "content": {
+          "timeout": "100"
+        }
+      }
+    }
+  },
+  "resource": {
+    "dispatcher": {
+      "generated": {
+        "sources": {
+          "main": "target/generated-sources/",
+          "test": "target/generated-test-sources/"
+        },
+        "classes": {
+          "main": "target/classes/",
+          "test": "target/test-classes/"
+        }
+      }
+    },
+    "name": {
+      "user": "[Register, Contact, Name, QueryUser, QueryUsers, QueryUserError]",
+      "profile": "[Define, Query]"
+    },
+    "user": {
+      "handler": "Vlingo.Http.Tests.Sample.User.UserResource",
+      "pool": "10",
+      "disallowPathParametersWithSlash": "true"
+    },
+    "profile": {
+      "handler": "Vlingo.Http.Tests.Sample.User.ProfileResource",
+      "pool": "5",
+      "disallowPathParametersWithSlash": "false"
+    }
+  },
+  "static": {
+    "files": {
+      "resource": {
+        "pool": "5",
+        "root": "/siteroot/content",
+        "subpaths": "[/, /css, /js, /views]"
+      }
+    }
+  },
+  "sse": {
+    "stream": {
+      "name": {
+        "all": "/eventstreams/all"
+      },
+      "all": {
+        "feed": {
+          "class": "Vlingo.Http.Tests.Sample.User.AllSseFeedActor",
+          "payload": "50",
+          "interval": "1000",
+          "default": {
+            "id": "-1"
+          }
+        },
+        "pool": "10"
+      }
+    }
+  },
+  "feed": {
+    "resource": {
+      "name": {
+        "events": "/feeds/events"
+      },
+      "events": {
+        "producer": {
+          "class": "Vlingo.Http.Tests.Resource.Feed.EventsFeedProducerActor"
+        },
+        "elements": "20",
+        "pool": "10"
+      }
+    }
+  },
+  "action": {
+    "user": {
+      "register": {
+        "method": "POST",
+        "uri": "/users",
+        "to": "Register(body:Vlingo.Http.Tests.Sample.User.UserData userData)"
+      },
+      "contact": {
+        "method": "PATCH",
+        "uri": "/users/{userId}/contact",
+        "to": "ChangeContact(string userId, body:iVlingo.Http.Tests.Sample.User.ContactData contactData)"
+      },
+      "name": {
+        "method": "PATCH",
+        "uri": "/users/{userId}/name",
+        "to": "ChangeName(string userId, body:io.Vlingo.Http.Tests.Sample.User.NameData nameData)"
+      },
+      "queryUser": {
+        "method": "GET",
+        "uri": "/users/{userId}",
+        "to": "QueryUser(string userId)"
+      },
+      "queryUsers": {
+        "method": "GET",
+        "uri": "/users",
+        "to": "QueryUsers()"
+      },
+      "queryUserError": {
+        "method": "GET",
+        "uri": "/user/{userId}/error",
+        "to": "QueryUserError(string userId)"
+      }
+    },
+    "profile": {
+      "define": {
+        "method": "PUT",
+        "uri": "/users/{userId}/profile",
+        "to": "Define(string userId, body:Vlingo.Http.Tests.Sample.User.ProfileData profileData)",
+        "mapper": "Vlingo.Http.Tests.Sample.User.ProfileDataMapper"
+      },
+      "query": {
+        "method": "GET",
+        "uri": "/users/{userId}/profile",
+        "to": "Query(string userId)",
+        "mapper": "Vlingo.Http.Tests.Sample.User.ProfileDataMapper"
+      }
+    }
+  }
+}

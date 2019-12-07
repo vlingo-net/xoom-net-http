@@ -1,0 +1,46 @@
+﻿{
+  "plugin": {
+    "name": {
+      "queueMailbox": true,
+      "arrayQueueMailbox": true,
+      "consoleLogger": true,
+      "pooledCompletes": true
+    },
+    "pooledCompletes": {
+      "classname" : "Vlingo.Actors.Plugin.Completes.PooledCompletesPlugin",
+      "pool" : 10,
+      "mailbox" : "queueMailbox"
+    },
+    "queueMailbox": {
+      "classname": "Vlingo.Actors.Plugin.Mailbox.ConcurrentQueue.ConcurrentQueueMailboxPlugin",
+      "defaultMailbox": true,
+      "numberOfDispatchersFactor": 1.5,
+      "dispatcherThrottlingCount": 1
+    },
+    "arrayQueueMailbox": {
+      "classname": "Vlingo.Actors.Plugin.Mailbox.AgronaMPSCArrayQueue.ManyToOneConcurrentArrayQueuePlugin",
+      "defaultMailbox": false,
+      "size": 65535,
+      "fixedBackoff": 2,
+      "dispatcherThrottlingCount": 1,
+      "sendRetires": 10
+    },
+    "consoleLogger": {
+      "classname": "Vlingo.Actors.Plugin.Logging.Console.ConsoleLoggerPlugin",
+      "name": "vlingo-net/http",
+      "defaultLogger": true
+    }
+  },
+  "proxy": {
+    "generated": {
+      "classes": {
+        "main": "target/classes/",
+        "test": "target/test-classes/"
+      },
+      "sources": {
+        "main": "target/generated-sources/",
+        "test": "target/generated-test-sources/"
+      }
+    }
+  }
+}

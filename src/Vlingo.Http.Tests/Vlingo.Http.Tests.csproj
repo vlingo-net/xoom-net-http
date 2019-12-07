@@ -1,7 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
 
     <IsPackable>false</IsPackable>
   </PropertyGroup>
@@ -17,12 +18,48 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="vlingo-actors.properties">
+    <None Update="vlingo-actors.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="vlingo-http.properties">
+    <None Update="vlingo-http.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <_UnmanagedRegistrationCache Remove="obj\Vlingo.Http.Tests.csproj.UnmanagedRegistration.cache" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ResolveComReferenceCache Remove="obj\Debug\netcoreapp3.0\Vlingo.Http.Tests.csproj.ResolveComReference.cache" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <IntermediateAssembly Remove="obj\Debug\netcoreapp3.0\Vlingo.Http.Tests.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_DebugSymbolsIntermediatePath Remove="obj\Debug\netcoreapp3.0\Vlingo.Http.Tests.pdb" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_DeploymentManifestEntryPoint Remove="obj\Debug\netcoreapp3.0\Vlingo.Http.Tests.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ApplicationManifest Remove="obj\Debug\netcoreapp3.0\Native.Vlingo.Http.Tests.manifest" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <DeployManifest Remove="obj\Debug\netcoreapp3.0\Vlingo.Http.Tests.application" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ClsidMap Remove="obj\Debug\netcoreapp3.0\Vlingo.Http.Tests.clsidmap" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <RegFreeComManifest Remove="obj\Debug\netcoreapp3.0\Vlingo.Http.Tests.X.manifest" />
   </ItemGroup>
 
 </Project>
