@@ -15,17 +15,17 @@ namespace Vlingo.Http.Resource.Sse
 {
     public class SseClient
     {
+        private static readonly ResponseHeader CacheControl;
         private static readonly ResponseHeader Connection;
         private static readonly ResponseHeader ContentType;
-        private static readonly ResponseHeader TransferEncoding;
         private static readonly Headers<ResponseHeader> Headers;
 
         static SseClient()
         {
+            CacheControl = ResponseHeader.Of(ResponseHeader.CacheControl, "no-cache");
             Connection = ResponseHeader.Of(ResponseHeader.Connection, "keep-alive");
-            ContentType = ResponseHeader.Of(ResponseHeader.ContentType, "text/event-stream");
-            TransferEncoding = ResponseHeader.Of(ResponseHeader.TransferEncoding, "chunked");
-            Headers = Http.Headers.Empty<ResponseHeader>().And(Connection).And(ContentType).And(TransferEncoding);
+            ContentType = ResponseHeader.Of(ResponseHeader.ContentType, "text/event-stream;charset=utf-8");
+            Headers = Http.Headers.Empty<ResponseHeader>().And(Connection).And(ContentType).And(CacheControl);
         }
 
         private readonly StringBuilder _builder;
@@ -37,44 +37,34 @@ namespace Vlingo.Http.Resource.Sse
             _context = context;
             _builder = new StringBuilder();
             _maxMessageSize = Configuration.Instance.Sizing.MaxMessageSize;
+            
+            SendInitialResponse();
         }
 
         public void Close() => _context.Abandon();
 
         public string Id => _context.Id;
 
-        public void Send(SseEvent @event)
-        {
-            var buffer = BasicConsumerByteBuffer.Allocate(1, _maxMessageSize);
-            var entity = @event.Sendable();
-            var withContentLength = Headers.Copy().And(ResponseHeader.WithContentLength(entity));
-            var response = Response.Of(Response.ResponseStatus.Ok, withContentLength, entity);
-            _context.RespondWith(response.Into(buffer));
-        }
+        public void Send(SseEvent @event) => Send(@event.Sendable());
 
-        public void Send(params SseEvent[] events)
-        {
-            Send(events.ToList());
-        }
+        public void Send(params SseEvent[] events) => Send(events.ToList());
 
         public void Send(IEnumerable<SseEvent> events)
         {
             var entity = Flatten(events);
-            Send(entity, Headers.Copy().And(ResponseHeader.WithContentLength(entity)));
+            Send(entity);
         }
 
-        public void Send(IEnumerable<SseEvent> events, string correlationId)
-        {
-            var entity = Flatten(events);
-            Send(
-                entity, 
-                Headers.Copy().And(ResponseHeader.WithContentLength(entity)).And(ResponseHeader.WithCorrelationId(correlationId)));
-        }
-
-        private void Send(string entity, Headers<ResponseHeader> headers)
+        private void Send(string entity)
         {
             var buffer = BasicConsumerByteBuffer.Allocate(1, _maxMessageSize);
-            var response = Response.Of(Response.ResponseStatus.Ok, Headers, entity);
+            _context.RespondWith(buffer.Put(Encoding.UTF8.GetBytes(entity)).Flip());
+        }
+        
+        private void SendInitialResponse()
+        {
+            var response = Response.Of(Response.ResponseStatus.Ok, Headers.Copy());
+            var buffer = BasicConsumerByteBuffer.Allocate(1, _maxMessageSize);
             _context.RespondWith(response.Into(buffer));
         }
 
