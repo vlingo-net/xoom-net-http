@@ -44,7 +44,7 @@ namespace Vlingo.Http.Tests.Sample.User
             return null;
         }
 
-        public UserData(NameData nameData, ContactData contactData)
+        private UserData(NameData nameData, ContactData contactData)
         {
             Id = Guid.NewGuid().ToString();
             NameData = nameData;

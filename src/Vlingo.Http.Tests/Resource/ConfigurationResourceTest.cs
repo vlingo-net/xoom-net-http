@@ -20,6 +20,7 @@ namespace Vlingo.Http.Tests.Resource
 {
     public class ConfigurationResourceTest : ResourceTestFixtures
     {
+        private readonly ITestOutputHelper _output;
         private JsonSerializerSettings _settings;
 
         [Fact]
@@ -124,6 +125,7 @@ namespace Vlingo.Http.Tests.Resource
         [Fact]
         public void TestThatPatchNameWorks()
         {
+            _output.WriteLine("TestThatPatchNameWorks()");
             var postRequest1 = Request.From(Encoding.UTF8.GetBytes(PostJohnDoeUserMessage));
             var postCompletes1 = new MockCompletesEventuallyResponse();
             var postCompletes1WithCalls = postCompletes1.ExpectWithTimes(1);
@@ -131,6 +133,7 @@ namespace Vlingo.Http.Tests.Resource
             postCompletes1WithCalls.ReadFrom<int>("completed");
 
             Assert.NotNull(postCompletes1.Response);
+            _output.WriteLine("1");
 
             var postRequest2 = Request.From(Encoding.UTF8.GetBytes(PostJaneDoeUserMessage));
             var postCompletes2 = new MockCompletesEventuallyResponse();
@@ -140,6 +143,7 @@ namespace Vlingo.Http.Tests.Resource
             postCompletes2WithCalls.ReadFrom<int>("completed");
 
             Assert.NotNull(postCompletes2.Response);
+            _output.WriteLine("2");
 
             // John Doe and Jane Doe marry and change their family name to, of course, Doe-Doe
             var johnNameData = NameData.From("John", "Doe-Doe");
@@ -149,6 +153,7 @@ namespace Vlingo.Http.Tests.Resource
                 $"/name HTTP/1.1\nHost: vlingo.io\nContent-Length: {johnNameSerialized.Length}" +
                 $"\n\n{johnNameSerialized}";
 
+            _output.WriteLine($"2.0: {patchJohnDoeUserMessage}");
             var patchRequest1 = Request.From(Encoding.UTF8.GetBytes(patchJohnDoeUserMessage));
             var patchCompletes1 = new MockCompletesEventuallyResponse();
 
@@ -181,8 +186,8 @@ namespace Vlingo.Http.Tests.Resource
             Assert.NotNull(patchCompletes2.Response);
             Assert.Equal(Response.ResponseStatus.Ok, patchCompletes2.Response.Status);
             var getJaneDoeDoeUserData = JsonSerialization.Deserialized<UserData>(patchCompletes2.Response.Entity.Content);
-            Assert.Equal(JaneDoeUserData.NameData.Given, getJaneDoeDoeUserData.NameData.Given);
-            Assert.Equal(JaneDoeUserData.NameData.Family, getJaneDoeDoeUserData.NameData.Family);
+            Assert.Equal(janeNameData.Given, getJaneDoeDoeUserData.NameData.Given);
+            Assert.Equal(janeNameData.Family, getJaneDoeDoeUserData.NameData.Family);
             Assert.Equal(JaneDoeUserData.ContactData.EmailAddress, getJaneDoeDoeUserData.ContactData.EmailAddress);
             Assert.Equal(JaneDoeUserData.ContactData.TelephoneNumber, getJaneDoeDoeUserData.ContactData.TelephoneNumber);
         }
@@ -266,6 +271,7 @@ namespace Vlingo.Http.Tests.Resource
         
         public ConfigurationResourceTest(ITestOutputHelper output) : base(output)
         {
+            _output = output;
             _settings = new JsonSerializerSettings();
             _settings.Converters.Add(new UserDataConverter());
         }

@@ -54,7 +54,7 @@ namespace Vlingo.Http.Tests.Sample.User
                 .OtherwiseConsume(noUser => Completes.With(Response.Of(Response.ResponseStatus.NotFound, UserLocation(userId))))
                 .AndThenConsume(userState => {
                     _repository.Save(userState);
-                Completes.With(Response.Of(Response.ResponseStatus.Ok, JsonSerialization.Serialized(UserData.From(userState))));
+                    Completes.With(Response.Of(Response.ResponseStatus.Ok, JsonSerialization.Serialized(UserData.From(userState))));
             });
         }
 

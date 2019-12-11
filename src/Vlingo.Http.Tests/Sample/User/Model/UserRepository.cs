@@ -45,6 +45,6 @@ namespace Vlingo.Http.Tests.Sample.User.Model
 
         public IEnumerable<UserState> Users => _users.Values;
 
-        public void Save(UserState userState) => _users.Add(userState.Id, userState);
+        public void Save(UserState userState) => _users[userState.Id] = userState;
     }
 }
