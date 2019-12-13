@@ -27,13 +27,13 @@ namespace Vlingo.Http.Resource
         public MemoryStream Buffer { get; }
         public IClientRequestResponseChannel Channel { get; }
         public Client.Configuration Configuration { get; }
-        public ResponseParser Parser { get; internal set; }
+        public ResponseParser? Parser { get; internal set; }
         public ICancellable Probe { get; }
 
         public State(
             Client.Configuration configuration,
             IClientRequestResponseChannel channel,
-            ResponseParser parser,
+            ResponseParser? parser,
             ICancellable probe,
             MemoryStream buffer)
         {

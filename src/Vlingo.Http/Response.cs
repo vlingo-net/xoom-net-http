@@ -55,7 +55,7 @@ namespace Vlingo.Http
             AddMissingContentLengthHeader();
         }
 
-        public Header HeaderOf(string name) => Headers.HeaderOf(name);
+        public Header? HeaderOf(string name) => Headers.HeaderOf(name);
 
         public string HeaderValueOr(string headerName, string defaultValue)
             => Headers.HeaderOf(headerName)?.Value ?? defaultValue;
@@ -112,7 +112,7 @@ namespace Vlingo.Http
                 foreach (var header in Headers)
                 {
                     // name + ": " + value + "\n"
-                    headersSize += header.Name.Length + 2 + header.Value.Length + 1;
+                    headersSize += header.Name.Length + 2 + header.Value!.Length + 1;
                 }
                 // HTTP/1.1 + 1 + status code + "\n" + headers + "\n" + entity + just-in-case
                 return 9 + StatusCode.Length + 1 + headersSize + 1 + Entity.Content.Length + 5;

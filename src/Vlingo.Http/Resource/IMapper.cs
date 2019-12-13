@@ -11,7 +11,7 @@ namespace Vlingo.Http.Resource
 {
     public interface IMapper
     {
-        object? From(string? data, Type type);
+        object? From(string? data, Type? type);
         string? From<T>(T data);
     }
 }

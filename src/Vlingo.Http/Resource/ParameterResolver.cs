@@ -51,7 +51,7 @@ namespace Vlingo.Http.Resource
                     var value = mappedParameters.Mapped[position].Value;
                     if (paramClass.IsInstanceOfType(value))
                     {
-                        return (T)value;
+                        return (T)value!;
                     }
 
                     throw new ArgumentException("Value " + value + " is of mimeType " + mappedParameters.Mapped[position].Type + " instead of " + paramClass.Name);
@@ -64,7 +64,7 @@ namespace Vlingo.Http.Resource
             => ParameterResolver<T>.Create(
                 Type.BODY,
                 bodyClass,
-                (request, mappedParameters) => (T)mapper.From(request?.Body.ToString(), bodyClass)!);
+                (request, mappedParameters) => (T)mapper.From(request?.Body?.ToString(), bodyClass)!);
 
         public static ParameterResolver<T> Body<T>(System.Type bodyClass, MediaTypeMapper mediaTypeMapper)
             => ParameterResolver<T>.Create(

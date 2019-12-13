@@ -213,7 +213,7 @@ namespace Vlingo.Http
                             NewResponse();
                         }
                     }
-                    catch (OutOfContentException e)
+                    catch (OutOfContentException)
                     {
                         _continuation = true;
                         _outOfContentTime = (long)DateExtensions.GetCurrentMillis();

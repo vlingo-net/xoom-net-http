@@ -56,7 +56,7 @@ namespace Vlingo.Http.Resource
                     {
                         if (TryLoadAlreadyGeneratedAssembly(resourceHandlerType, out var assembly))
                         {
-                            resourceClass = assembly.GetType(fullyQualifiedTypeName, true);
+                            resourceClass = assembly?.GetType(fullyQualifiedTypeName, true);
                         }
                         else
                         {
@@ -86,7 +86,7 @@ namespace Vlingo.Http.Resource
             }
         }
 
-        internal static Type NewResourceHandlerTypeFor(string resourceHandlerTypeName)
+        internal static Type NewResourceHandlerTypeFor(string? resourceHandlerTypeName)
         {
             try
             {
@@ -164,7 +164,7 @@ namespace Vlingo.Http.Resource
             }
         }
         
-        private static bool TryLoadAlreadyGeneratedAssembly(string resourceHandlerTypeName, out Assembly? assembly)
+        private static bool TryLoadAlreadyGeneratedAssembly(string? resourceHandlerTypeName, out Assembly? assembly)
         {
             try
             {
@@ -234,7 +234,7 @@ namespace Vlingo.Http.Resource
             }
         }
 
-        internal override Action.MatchResults MatchWith(Method method, Uri uri)
+        internal override Action.MatchResults MatchWith(Method? method, Uri? uri)
         {
             foreach (var action in Actions)
             {

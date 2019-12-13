@@ -15,7 +15,7 @@ namespace Vlingo.Http.Resource
     public class DynamicResource : Resource
     {
         internal IList<RequestHandler> Handlers { get; }
-        public IList<Action> Actions { get; }
+        public IList<Action>? Actions { get; }
 
         public DynamicResource(string name, int handlerPoolSize, IList<RequestHandler> unsortedHandlers)
             : base(name, handlerPoolSize)
@@ -34,7 +34,7 @@ namespace Vlingo.Http.Resource
             }
         }
 
-        public override void DispatchToHandlerWith(Context context, Action.MappedParameters mappedParameters)
+        public override void DispatchToHandlerWith(Context context, Action.MappedParameters? mappedParameters)
         {
             try
             {
@@ -51,7 +51,7 @@ namespace Vlingo.Http.Resource
             }
         }
 
-        internal override Action.MatchResults MatchWith(Method method, Uri uri)
+        internal override Action.MatchResults MatchWith(Method? method, Uri? uri)
         {
             foreach (var action in Actions)
             {

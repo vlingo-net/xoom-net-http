@@ -25,10 +25,10 @@ namespace Vlingo.Http.Resource
         {
             try
             {
-                switch (mappedParameters.ActionId)
+                switch (mappedParameters?.ActionId)
                 {
                     case 0: // GET %root%{path} ServeFile(string root, string paths, string contentFilePath)
-                        Action<StaticFilesResource>? consumer = handler => handler.ServeFile((string)mappedParameters?.Mapped[0].Value, (string)mappedParameters?.Mapped[1].Value, (string)mappedParameters?.Mapped[2].Value);
+                        Action<StaticFilesResource>? consumer = handler => handler.ServeFile((string)mappedParameters?.Mapped[0].Value!, (string)mappedParameters?.Mapped[1].Value!, (string)mappedParameters?.Mapped[2].Value!);
                         PooledHandler.HandleFor(context, consumer);
                         break;
                 }

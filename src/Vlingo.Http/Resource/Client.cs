@@ -114,7 +114,7 @@ namespace Vlingo.Http.Resource
             public Stage Stage { get; }
             public bool IsSecure { get; }
 
-            private object _testInfo;
+            private object? _testInfo;
 
             /// <summary>
             /// Answer the <code>Configuration</code> with defaults except for the <paramref name="addressOfHost"/>.

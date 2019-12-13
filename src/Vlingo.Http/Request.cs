@@ -68,11 +68,11 @@ namespace Vlingo.Http
         // instance
         // ===========================================
 
-        public Header HeaderOf(string name) => Headers.HeaderOf(name);
+        public Header? HeaderOf(string name) => Headers.HeaderOf(name);
 
         public string HeaderValueOr(string name, string defaultValue) => HeaderOf(name)?.Value ?? defaultValue;
 
-        public QueryParameters QueryParameters => new QueryParameters(Uri.Query);
+        public QueryParameters QueryParameters => new QueryParameters(Uri?.Query);
 
         public override string ToString()
             => $"{Method} {Uri} {Version}\n{Headers}\n{Body}";

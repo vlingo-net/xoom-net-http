@@ -21,12 +21,12 @@ namespace Vlingo.Http.Resource.Sse
         {
         }
 
-        public override void DispatchToHandlerWith(Context context, Action.MappedParameters mappedParameters)
+        public override void DispatchToHandlerWith(Context context, Action.MappedParameters? mappedParameters)
         {
             try
             {
                 Action<SseStreamResource> consumer;
-                switch (mappedParameters.ActionId)
+                switch (mappedParameters?.ActionId)
                 {
                     case 0: // GET /eventstreams/{streamName}
                         consumer = handler => handler.SubscribeToStream(

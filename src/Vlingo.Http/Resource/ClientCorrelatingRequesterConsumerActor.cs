@@ -29,7 +29,7 @@ namespace Vlingo.Http.Resource
                 ClientConsumerCommons.ClientChannel(configuration, SelfAs<IResponseChannelConsumer>(), Logger),
                 null,
                 Stage.Scheduler.Schedule(
-                    SelfAs<IScheduled<object>>(),
+                    SelfAs<IScheduled<object?>>(),
                     null,
                     TimeSpan.FromMilliseconds(1),
                     TimeSpan.FromMilliseconds(configuration.ProbeInterval)),

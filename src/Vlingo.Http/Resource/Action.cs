@@ -19,8 +19,8 @@ namespace Vlingo.Http.Resource
         private readonly IList<MappedParameter> _additionalParameters;
         private readonly bool _disallowPathParametersWithSlash;
         private readonly Method _method;
-        private readonly string _uri;
-        private readonly string _originalTo;
+        private readonly string? _uri;
+        private readonly string? _originalTo;
         private readonly ToSpec _to;
         private readonly IMapper _mapper;
         private readonly Matchable _matchable;
@@ -29,9 +29,9 @@ namespace Vlingo.Http.Resource
 
         public Method Method => _method;
 
-        public string Uri => _uri;
+        public string? Uri => _uri;
 
-        public string OriginalTo => _originalTo;
+        public string? OriginalTo => _originalTo;
 
         public ToSpec To => _to;
 
@@ -150,7 +150,7 @@ namespace Vlingo.Http.Resource
         }
 
         public override int GetHashCode()
-            => 31 * (_method.GetHashCode() + _uri.GetHashCode() + _to.GetHashCode() + _mapper.GetHashCode() + _matchable.GetHashCode());
+            => 31 * (_method.GetHashCode() + _uri!.GetHashCode() + _to!.GetHashCode() + _mapper.GetHashCode() + _matchable.GetHashCode());
 
         public override bool Equals(object other)
         {
@@ -161,7 +161,7 @@ namespace Vlingo.Http.Resource
 
             var otherAction = (Action)other;
 
-            return _method.Equals(otherAction._method) && _uri.Equals(otherAction._uri) && _to.Equals(otherAction._to);
+            return _method.Equals(otherAction._method) && _uri!.Equals(otherAction._uri) && _to!.Equals(otherAction._to);
         }
 
         public override string ToString()
@@ -465,7 +465,7 @@ namespace Vlingo.Http.Resource
             public override int GetHashCode()
                 => 31 * PathSegments.GetHashCode();
 
-            public Matchable(string uri)
+            public Matchable(string? uri)
             {
                 PathSegments = Segmented(uri);
             }
@@ -475,23 +475,23 @@ namespace Vlingo.Http.Resource
 
             public int TotalSegments => PathSegments.Count;
 
-            private IList<PathSegment> Segmented(string uri)
+            private IList<PathSegment> Segmented(string? uri)
             {
                 var segments = new List<PathSegment>();
                 var start = uri;
                 while (true)
                 {
-                    var openBrace = start.IndexOf("{");
-                    if (openBrace >= 0)
+                    var openBrace = start?.IndexOf("{");
+                    if (openBrace.HasValue && openBrace >= 0)
                     {
-                        var closeBrace = start.IndexOf("}", openBrace);
+                        var closeBrace = start?.IndexOf("}", openBrace.Value);
                         if (closeBrace > openBrace)
                         {
-                            var segment = start.Substring(0, openBrace);
+                            var segment = start.Substring(0, openBrace.Value);
                             segments.Add(new PathSegment(segment, false));
-                            var parameter = start.Substring(openBrace + 1, closeBrace - (openBrace + 1));
+                            var parameter = start.Substring(openBrace.Value + 1, closeBrace.Value - (openBrace.Value + 1));
                             segments.Add(new PathSegment(parameter, true));
-                            start = start.Substring(closeBrace + 1);
+                            start = start.Substring(closeBrace.Value + 1);
                             if (string.IsNullOrEmpty(start))
                             {
                                 break;
@@ -543,7 +543,7 @@ namespace Vlingo.Http.Resource
             public string MethodName { get; }
             public IList<MethodParameter> Parameters { get; }
 
-            public ToSpec(string to)
+            public ToSpec(string? to)
             {
                 var parsed = Parse(to);
                 MethodName = FirstLetterToUpperCase(parsed.Item1);
@@ -559,20 +559,20 @@ namespace Vlingo.Http.Resource
             public MethodParameter ParameterOf(string name)
                 => Parameters.FirstOrDefault(p => string.Equals(name, p.Name));
 
-            private Tuple<string, IList<MethodParameter>> Parse(string to)
+            private Tuple<string, IList<MethodParameter>> Parse(string? to)
             {
                 var bad = $"Invalid to declaration: {to}";
 
-                var openParen = to.IndexOf("(");
-                var closeParen = to.LastIndexOf(")");
+                var openParen = to?.IndexOf("(");
+                var closeParen = to?.LastIndexOf(")");
 
-                if (openParen < 0 || closeParen < 0)
+                if (!openParen.HasValue || openParen < 0 || !closeParen.HasValue || closeParen < 0)
                 {
                     throw new InvalidOperationException(bad);
                 }
 
-                var methodName = to.Substring(0, openParen);
-                var rawParameters = to.Substring(openParen + 1, closeParen - (openParen + 1)).Split(',');
+                var methodName = to?.Substring(0, openParen.Value);
+                var rawParameters = to?.Substring(openParen.Value + 1, closeParen.Value - (openParen.Value + 1)).Split(',');
                 var parameters = new List<MethodParameter>(rawParameters.Length);
 
                 foreach (var p in rawParameters)

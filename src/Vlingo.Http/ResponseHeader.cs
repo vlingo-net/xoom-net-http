@@ -99,7 +99,7 @@ namespace Vlingo.Http
 
         public static ResponseHeader WithCorrelationId(string? correlationId) => new ResponseHeader(XCorrelationID, correlationId);
 
-        public static ResponseHeader Of(string name, string value) => new ResponseHeader(name, value);
+        public static ResponseHeader Of(string name, string? value) => new ResponseHeader(name, value);
 
         public static ResponseHeader Of(string name, int value) => new ResponseHeader(name, value.ToString());
 
@@ -122,7 +122,7 @@ namespace Vlingo.Http
             string.Equals(Name, TransferEncoding, StringComparison.InvariantCultureIgnoreCase)
             && string.Equals(Value, "chunked", StringComparison.InvariantCultureIgnoreCase);
 
-        private ResponseHeader(string name, string value)
+        private ResponseHeader(string name, string? value)
             : base(name, value)
         {
         }

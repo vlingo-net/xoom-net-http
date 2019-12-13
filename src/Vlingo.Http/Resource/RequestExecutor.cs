@@ -21,8 +21,8 @@ namespace Vlingo.Http.Resource
 
             try
             {
-                return executeAction.Invoke()
-                    .RecoverFrom(ex => ResourceErrorProcessor.ResourceHandlerError(errorHandler, logger, ex));
+                return executeAction.Invoke()?
+                    .RecoverFrom(ex => ResourceErrorProcessor.ResourceHandlerError(errorHandler, logger, ex))!;
             }
             catch (Exception ex)
             {

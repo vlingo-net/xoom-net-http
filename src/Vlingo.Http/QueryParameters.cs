@@ -15,7 +15,7 @@ namespace Vlingo.Http
     {
         private readonly IDictionary<string, IList<string>> _allParameters;
 
-        public QueryParameters(string query)
+        public QueryParameters(string? query)
         {
             _allParameters = ParseQuery(query);
         }
@@ -34,7 +34,7 @@ namespace Vlingo.Http
 
         public bool ContainsKey(string name) => _allParameters.ContainsKey(name);
 
-        private static IDictionary<string, IList<string>> ParseQuery(string query)
+        private static IDictionary<string, IList<string>> ParseQuery(string? query)
         {
             if (string.IsNullOrWhiteSpace(query))
             {
@@ -43,7 +43,7 @@ namespace Vlingo.Http
 
             try
             {
-                var parameters = query.Replace("?", string.Empty) .Split(new char[] { '&' }, StringSplitOptions.RemoveEmptyEntries);
+                var parameters = query?.Replace("?", string.Empty) .Split(new[] { '&' }, StringSplitOptions.RemoveEmptyEntries);
                 var queryParameters = new Dictionary<string, IList<string>>(parameters.Length);
 
                 foreach (var parameter in parameters)
@@ -60,7 +60,7 @@ namespace Vlingo.Http
                     {
                         queryParameters[name] = new List<string>();
                     }
-                    queryParameters[name].Add(value);
+                    queryParameters[name].Add(value!);
                 }
 
                 return queryParameters;

@@ -53,7 +53,7 @@ namespace Vlingo.Http.Resource
             return RunParamExecutor(_executor, () => RequestExecutor.ExecuteRequest(exec, ErrorHandler, logger));
         }
 
-        public RequestHandler3<T, R, U> Handle(Handler3 handler)
+        public RequestHandler3<T, R, U>? Handle(Handler3 handler)
         {
             _executor = (request, param1, param2, param3, mediaTypeMapper1, errorHandler1, logger1)
                 => RequestExecutor.ExecuteRequest(() => handler.Invoke(param1, param2, param3), errorHandler1, logger1);

@@ -14,7 +14,7 @@ namespace Vlingo.Http.Resource
 {
     public class RequestHandler0 : RequestHandler
     {
-        private ParamExecutor0 _executor;
+        private ParamExecutor0? _executor;
 
         public delegate ICompletes<Response> Handler0();
         public delegate ICompletes<IObjectResponse> ObjectHandler0();
@@ -29,41 +29,41 @@ namespace Vlingo.Http.Resource
         {
         }
 
-        public RequestHandler0 Handle(Handler0 handler)
+        public RequestHandler0? Handle(Handler0 handler)
         {
             _executor = (request, mediaTypeMapper1, errorHandler1, logger)
                 => RequestExecutor.ExecuteRequest(() => handler.Invoke(), errorHandler1, logger);
             return this;
         }
 
-        public RequestHandler0 Handle(ObjectHandler0 handler)
+        public RequestHandler0? Handle(ObjectHandler0 handler)
         {
             _executor = (request, mediaTypeMapper1, errorHandler1, logger)
                 => RequestObjectExecutor.ExecuteRequest(request, mediaTypeMapper1, () => handler.Invoke(), errorHandler1, logger);
             return this;
         }
 
-        public RequestHandler0 OnError(IErrorHandler errorHandler)
+        public RequestHandler0? OnError(IErrorHandler errorHandler)
         {
             ErrorHandler = errorHandler;
             return this;
         }
 
-        public RequestHandler0 Mapper(MediaTypeMapper mediaTypeMapper)
+        public RequestHandler0? Mapper(MediaTypeMapper mediaTypeMapper)
         {
             MediaTypeMapper = mediaTypeMapper;
             return this;
         }
 
-        internal ICompletes<Response> Execute(Request request, ILogger logger)
+        internal ICompletes<Response>? Execute(Request request, ILogger logger)
         {
-            Func<ICompletes<Response>> exec = ()
-                => _executor.Invoke(request, MediaTypeMapper, ErrorHandler, logger);
+            Func<ICompletes<Response>?> exec = ()
+                => _executor?.Invoke(request, MediaTypeMapper, ErrorHandler, logger);
 
             return RunParamExecutor(_executor, () => RequestExecutor.ExecuteRequest(exec, ErrorHandler, logger));
         }
 
-        internal override ICompletes<Response> Execute(Request request, Action.MappedParameters mappedParameters, ILogger logger)
+        internal override ICompletes<Response>? Execute(Request request, Action.MappedParameters mappedParameters, ILogger logger)
             => Execute(request, logger);
 
 

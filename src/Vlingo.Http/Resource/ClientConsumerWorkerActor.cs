@@ -55,7 +55,7 @@ namespace Vlingo.Http.Resource
                     response.Headers.Add(ResponseHeader.Of(Client.ClientIdCustomHeader, _testId));
                 }
 
-                _completesEventually.With(response);
+                _completesEventually?.With(response);
                 _completesEventually = null;
                 DisperseStowedMessages();
             }

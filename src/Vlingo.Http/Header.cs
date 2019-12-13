@@ -11,14 +11,14 @@ namespace Vlingo.Http
 {
     public class Header
     {
-        protected Header(string name, string value)
+        protected Header(string name, string? value)
         {
             Name = name;
             Value = value;
         }
 
         internal string Name { get; }
-        internal string Value { get; }
+        internal string? Value { get; }
 
         public bool MatchesName(Header header)
             => string.Equals(Name, header.Name, StringComparison.InvariantCultureIgnoreCase);
@@ -36,7 +36,7 @@ namespace Vlingo.Http
         }
 
         public override int GetHashCode()
-            => 13 * Name.GetHashCode() + Value.GetHashCode();
+            => 13 * Name.GetHashCode() + (Value != null ? Value.GetHashCode() : 0);
 
         public override string ToString()
              => $"{Name}: {Value}";

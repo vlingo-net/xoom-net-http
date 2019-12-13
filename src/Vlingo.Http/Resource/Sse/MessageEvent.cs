@@ -31,7 +31,7 @@ namespace Vlingo.Http.Resource.Sse
         public static List<MessageEvent> From(Response response)
         {
             var header = response.HeaderOf(ResponseHeader.ContentType);
-            if (header == null || !header.Value.Equals("text/event-stream"))
+            if (header == null || header.Value != null && !header.Value.Equals("text/event-stream"))
             {
                 // should be confirmed why this is done like that on Java side.
                 ;

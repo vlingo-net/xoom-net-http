@@ -12,7 +12,7 @@ namespace Vlingo.Http.Resource
 {
     public class StaticFilesResource : ResourceHandler
     {
-        private string _rootPath;
+        private string? _rootPath;
 
         public StaticFilesResource()
         {
@@ -26,24 +26,24 @@ namespace Vlingo.Http.Resource
                 _rootPath = root + slash;
             }
 
-            var contentPath = _rootPath + Context.Request.Uri;
+            var contentPath = _rootPath + Context?.Request?.Uri;
 
             try
             {
                 var fileContent = ReadFile(contentPath);
-                Completes.With(Response.Of(Response.ResponseStatus.Ok, Body.From(fileContent, Body.Encoding.UTF8).Content));
+                Completes?.With(Response.Of(Response.ResponseStatus.Ok, Body.From(fileContent, Body.Encoding.UTF8).Content));
             }
             catch (IOException)
             {
-                Completes.With(Response.Of(Response.ResponseStatus.InternalServerError));
+                Completes?.With(Response.Of(Response.ResponseStatus.InternalServerError));
             }
             catch (ArgumentException)
             {
-                Completes.With(Response.Of(Response.ResponseStatus.NotFound));
+                Completes?.With(Response.Of(Response.ResponseStatus.NotFound));
             }
         }
 
-        private byte[] ReadFile(string path)
+        private byte[] ReadFile(string? path)
         {
             if (File.Exists(path))
             {

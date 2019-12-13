@@ -9,7 +9,7 @@ namespace Vlingo.Http.Resource
 {
     public class Configuration
     {
-        public static Configuration Instance { get; private set; }
+        public static Configuration? Instance { get; private set; }
 
         public int Port { get; }
         public SizingConf Sizing { get; }

@@ -16,7 +16,7 @@ namespace Vlingo.Http
     {
         private readonly List<T> _list;
 
-        public T HeaderOf(string name)
+        public T? HeaderOf(string name)
         {
             foreach(var header in _list)
             {

@@ -14,14 +14,14 @@ namespace Vlingo.Http.Resource
     {
         public static DefaultJsonMapper Instance { get; } = new DefaultJsonMapper();
 
-        public object? From(string? data, Type type)
+        public object? From(string? data, Type? type)
         {
             if(type == typeof(string))
             {
                 return data;
             }
 
-            return JsonSerialization.Deserialized(data, type);
+            return JsonSerialization.Deserialized(data!, type!);
         }
 
         public string From<T>(T data)
