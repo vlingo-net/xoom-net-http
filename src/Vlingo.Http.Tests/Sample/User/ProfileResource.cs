@@ -12,15 +12,15 @@ using Vlingo.Http.Tests.Sample.User.Model;
 
 namespace Vlingo.Http.Tests.Sample.User
 {
-    public class ProfileResource : ResourceHandler
+    public sealed class ProfileResource : ResourceHandler
     {
         private ProfileRepository _repository = ProfileRepository.Instance();
 
-        public ProfileResource(World world) => _stage = world.StageNamed("service");
+        public ProfileResource(World world) => Stage = world.StageNamed("service");
         
         public void Define(string userId, ProfileData profileData)
         {
-            _stage.ActorOf<IProfile>(_stage.World.AddressFactory.FindableBy(int.Parse(userId)))
+            Stage.ActorOf<IProfile>(Stage.World.AddressFactory.FindableBy(int.Parse(userId)))
                 .AndThenConsume(profile => {
                     var profileState = _repository.ProfileOf(userId);
                     Completes.With(Response.Of(
@@ -36,7 +36,7 @@ namespace Vlingo.Http.Tests.Sample.User
                         profileData.LinkedInAccount,
                         profileData.Website);
   
-                _stage.ActorFor<IProfile>(Definition.Has<ProfileActor>(Definition.Parameters(profileState)));
+                Stage.ActorFor<IProfile>(Definition.Has<ProfileActor>(Definition.Parameters(profileState)));
   
                 _repository.Save(profileState);
                 Completes.With(Response.Of(Response.ResponseStatus.Created, JsonSerialization.Serialized(ProfileData.From(profileState))));

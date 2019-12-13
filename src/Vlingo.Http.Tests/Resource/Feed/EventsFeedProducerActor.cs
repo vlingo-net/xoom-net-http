@@ -17,18 +17,18 @@ namespace Vlingo.Http.Tests.Resource.Feed
         {
             var body =
                 new StringBuilder()
-                    .Append(request.feedName)
+                    .Append(request.FeedName)
                     .Append(":")
-                    .Append(request.feedProductId)
+                    .Append(request.FeedProductId)
                     .Append(":");
             
-            for (int count = 1; count <= request.feedProductElements; ++count)
+            for (int count = 1; count <= request.FeedProductElements; ++count)
             {
                 body.Append(count).Append("\n");
             }
             
             var response = Response.Of(Response.ResponseStatus.Ok, body.ToString());
-            request.context.Completes.With(response);
+            request.Context.Completes.With(response);
         }
     }
 }

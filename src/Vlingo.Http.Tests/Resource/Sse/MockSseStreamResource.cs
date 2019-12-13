@@ -29,6 +29,6 @@ namespace Vlingo.Http.Tests.Resource.Sse
 
         protected override ICompletesEventually Completes => _completes;
 
-        protected override Context Context => new Context(_requestResponseContext, _request, _completes);
+        public override Context Context => new Context(_requestResponseContext, _request, _completes);
     }
 }

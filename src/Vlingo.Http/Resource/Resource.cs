@@ -27,7 +27,7 @@ namespace Vlingo.Http.Resource
             _handlerPoolIndex = new AtomicLong(0);
         }
 
-        public abstract void DispatchToHandlerWith(Context context, Action.MappedParameters mappedParameters);
+        public abstract void DispatchToHandlerWith(Context context, Action.MappedParameters? mappedParameters);
         internal abstract Action.MatchResults MatchWith(Method method, Uri uri);
         protected abstract ResourceHandler ResourceHandlerInstance(Stage stage);
 

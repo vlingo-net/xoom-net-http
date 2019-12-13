@@ -29,10 +29,10 @@ namespace Vlingo.Http.Resource.Sse
         }
 
         private readonly StringBuilder _builder;
-        private readonly RequestResponseContext<object> _context;
+        private readonly RequestResponseContext<object>? _context;
         private readonly int _maxMessageSize;
 
-        public SseClient(RequestResponseContext<object> context)
+        public SseClient(RequestResponseContext<object>? context)
         {
             _context = context;
             _builder = new StringBuilder();
@@ -41,9 +41,9 @@ namespace Vlingo.Http.Resource.Sse
             SendInitialResponse();
         }
 
-        public void Close() => _context.Abandon();
+        public void Close() => _context?.Abandon();
 
-        public string Id => _context.Id;
+        public string Id => _context?.Id;
 
         public void Send(SseEvent @event) => Send(@event.Sendable());
 
@@ -58,14 +58,14 @@ namespace Vlingo.Http.Resource.Sse
         private void Send(string entity)
         {
             var buffer = BasicConsumerByteBuffer.Allocate(1, _maxMessageSize);
-            _context.RespondWith(buffer.Put(Encoding.UTF8.GetBytes(entity)).Flip());
+            _context?.RespondWith(buffer.Put(Encoding.UTF8.GetBytes(entity)).Flip());
         }
         
         private void SendInitialResponse()
         {
             var response = Response.Of(Response.ResponseStatus.Ok, Headers.Copy());
             var buffer = BasicConsumerByteBuffer.Allocate(1, _maxMessageSize);
-            _context.RespondWith(response.Into(buffer));
+            _context?.RespondWith(response.Into(buffer));
         }
 
         private string Flatten(IEnumerable<SseEvent> events)

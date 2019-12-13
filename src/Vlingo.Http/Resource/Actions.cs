@@ -36,10 +36,12 @@ namespace Vlingo.Http.Resource
 
         public IList<Action> ThatsAll() => new ArraySegment<Action>(_actions.ToArray());
 
-        private Actions(string method, string uri, string to, string mapper, bool disallowPathParametersWithSlash)
+        private Actions(string method, string uri, string to, string? mapper, bool disallowPathParametersWithSlash)
         {
-            _actions = new List<Action>();
-            _actions.Add(new Action(_currentId++, method, uri, to, mapper, disallowPathParametersWithSlash));
+            _actions = new List<Action>
+            {
+                new Action(_currentId++, method, uri, to, mapper, disallowPathParametersWithSlash)
+            };
         }
     }
 }

@@ -23,8 +23,8 @@ namespace Vlingo.Http.Resource
         {
             try
             {
-                _resourceHandler._context = context;
-                _resourceHandler._stage = Stage;
+                _resourceHandler.Context = context;
+                _resourceHandler.Stage = Stage;
                 consumer((T)_resourceHandler);
             }
             catch (Exception e)

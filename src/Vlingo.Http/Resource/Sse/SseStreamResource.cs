@@ -28,7 +28,7 @@ namespace Vlingo.Http.Resource.Sse
         public void SubscribeToStream(string streamName, Type feedClass, int feedPayload, int feedInterval, string feedDefaultId)
         {
             var clientContext = Context.ClientContext;
-            clientContext.WhenClosing(UnsubscribeRequest());
+            clientContext?.WhenClosing(UnsubscribeRequest());
 
             var correlationId = Context.Request.HeaderValueOr(RequestHeader.XCorrelationID, string.Empty);
 
@@ -80,12 +80,12 @@ namespace Vlingo.Http.Resource.Sse
             return publisher;
         }
 
-        private Request UnsubscribeRequest()
+        private Request? UnsubscribeRequest()
         {
             try
             {
-                var unsubscribePath = Context.Request.Uri.AbsolutePath + "/" + Context.ClientContext.Id;
-                return Request.Has(Method.DELETE).And(new Uri(unsubscribePath));
+                var unsubscribePath = Context?.Request.Uri.AbsolutePath + "/" + Context?.ClientContext?.Id;
+                return Request.Has(Method.Delete).And(new Uri(unsubscribePath));
             }
             catch
             {
@@ -106,7 +106,7 @@ namespace Vlingo.Http.Resource.Sse
                 _feed = Stage.ActorFor<ISseFeed>(Definition.Has(feedClass, Definition.Parameters(streamName, feedPayload, feedDefaultId)));
                 _subscribers = new Dictionary<string, SseSubscriber>();
                 _cancellable = Stage.Scheduler.Schedule(
-                    SelfAs<IScheduled<object>>(),
+                    SelfAs<IScheduled<object?>>(),
                     null,
                     TimeSpan.FromMilliseconds(10),
                     TimeSpan.FromMilliseconds(feedInterval));

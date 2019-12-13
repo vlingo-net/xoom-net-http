@@ -13,19 +13,19 @@ namespace Vlingo.Http.Resource.Sse
     {
         public const int NoRetry = -1;
 
-        public readonly string _comment;
-        public readonly string _data;
-        public readonly string _event;
-        public readonly string _id;
-        public readonly int _retry;
+        public string? Comment { get; }
+        public string? Data { get; }
+        public string? Event { get; }
+        public string? Id { get; }
+        public int Retry { get; }
 
-        public SseEvent(string id, string @event, string data, int retry, string comment)
+        public SseEvent(string? id, string? @event, string? data, int retry, string? comment)
         {
-            _id = id;
-            _event = @event;
-            _data = data;
-            _retry = retry;
-            _comment = comment;
+            Id = id;
+            Event = @event;
+            Data = data;
+            Retry = retry;
+            Comment = comment;
         }
 
         public SseEvent(string id, string @event, string data)
@@ -38,9 +38,9 @@ namespace Vlingo.Http.Resource.Sse
         {
         }
 
-        public bool EndOfStream => _id != null && string.Equals(_id, string.Empty);
+        public bool EndOfStream => Id != null && string.Equals(Id, string.Empty);
 
-        public bool HasId => string.IsNullOrEmpty(_id);
+        public bool HasId => string.IsNullOrEmpty(Id);
 
         public string Sendable() => ToString();
 
@@ -48,35 +48,35 @@ namespace Vlingo.Http.Resource.Sse
         {
             var builder = new StringBuilder();
 
-            if (_comment != null)
+            if (Comment != null)
             {
-                builder.Append(": ").Append(Flatten(_comment)).Append('\n');
+                builder.Append(": ").Append(Flatten(Comment)).Append('\n');
             }
-            if (_id != null)
+            if (Id != null)
             {
-                if (_id.Length > 0)
+                if (Id.Length > 0)
                 {
-                    builder.Append("id: ").Append(Flatten(_id)).Append('\n');
+                    builder.Append("id: ").Append(Flatten(Id)).Append('\n');
                 }
                 else
                 {
                     builder.Append("id").Append('\n'); // end of stream
                 }
             }
-            if (_event != null)
+            if (Event != null)
             {
-                builder.Append("event: ").Append(Flatten(_event)).Append('\n');
+                builder.Append("event: ").Append(Flatten(Event)).Append('\n');
             }
-            if (_data != null)
+            if (Data != null)
             {
-                foreach (var value in _data.Split('\n'))
+                foreach (var value in Data.Split('\n'))
                 {
                     builder.Append("data: ").Append(value).Append('\n');
                 }
             }
-            if (_retry >= 0)
+            if (Retry >= 0)
             {
-                builder.Append("retry: ").Append(_retry).Append('\n');
+                builder.Append("retry: ").Append(Retry).Append('\n');
             }
 
             return builder.Append('\n').ToString();
@@ -87,10 +87,10 @@ namespace Vlingo.Http.Resource.Sse
 
         public class Builder
         {
-            private string _comment;
-            private string _data;
-            private string _event;
-            private string _id;
+            private string? _comment;
+            private string? _data;
+            private string? _event;
+            private string? _id;
             private int _retry = NoRetry;
 
             private Builder()

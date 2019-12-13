@@ -18,30 +18,30 @@ namespace Vlingo.Http.Resource
             => new DynamicResource(name, handlerPoolSize, requestHandlers.ToList());
 
         public static RequestHandler0 Get(string uri)
-            => new RequestHandler0(Method.GET, uri);
+            => new RequestHandler0(Method.Get, uri);
 
         public static RequestHandler0 Post(string uri)
-            => new RequestHandler0(Method.POST, uri);
+            => new RequestHandler0(Method.Post, uri);
 
         public static RequestHandler0 Put(string uri)
-            => new RequestHandler0(Method.PUT, uri);
+            => new RequestHandler0(Method.Put, uri);
 
         public static RequestHandler0 Delete(string uri)
-            => new RequestHandler0(Method.DELETE, uri);
+            => new RequestHandler0(Method.Delete, uri);
 
         public static RequestHandler0 Patch(string uri)
-            => new RequestHandler0(Method.PATCH, uri);
+            => new RequestHandler0(Method.Patch, uri);
 
         public static RequestHandler0 Head(string uri)
-            => new RequestHandler0(Method.HEAD, uri);
+            => new RequestHandler0(Method.Head, uri);
 
         public static RequestHandler0 Options(string uri)
-            => new RequestHandler0(Method.OPTIONS, uri);
+            => new RequestHandler0(Method.Options, uri);
 
         public static RequestHandler0 Trace(string uri)
-            => new RequestHandler0(Method.TRACE, uri);
+            => new RequestHandler0(Method.Trace, uri);
 
         public static RequestHandler0 Connect(string uri)
-            => new RequestHandler0(Method.CONNECT, uri);
+            => new RequestHandler0(Method.Connect, uri);
     }
 }

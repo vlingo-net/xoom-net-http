@@ -71,7 +71,7 @@ namespace Vlingo.Http.Resource
             => unsortedHandlers.OrderBy(x => x.Path.LongCount(c => c == '/')).ToList();
 
 
-        private class SpecificResourceHandler : ResourceHandler
+        private sealed class SpecificResourceHandler : ResourceHandler
         {
             public SpecificResourceHandler(Stage stage)
             {

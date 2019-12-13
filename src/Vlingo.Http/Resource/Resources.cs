@@ -59,7 +59,7 @@ namespace Vlingo.Http.Resource
                     var matchResults = resource.MatchWith(context.Request.Method, context.Request.Uri);
                     if (matchResults.IsMatched)
                     {
-                        var mappedParameters = matchResults.Action.Map(context.Request, matchResults.Parameters);
+                        var mappedParameters = matchResults.Action?.Map(context.Request, matchResults.Parameters);
                         resource.DispatchToHandlerWith(context, mappedParameters);
                         return;
                     }

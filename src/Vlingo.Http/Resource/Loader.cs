@@ -122,7 +122,7 @@ namespace Vlingo.Http.Resource
                 var poolKey = $"sse.stream.{resourceName}.pool";
                 var maybePoolSize = int.Parse(properties.GetProperty(poolKey, "1"));
                 var handlerPoolSize = maybePoolSize <= 0 ? 1 : maybePoolSize;
-                var subscribeURI = streamURI.Replace(resourceName, ssePublisherNamePathParameter);
+                var subscribeURI = streamURI?.Replace(resourceName, ssePublisherNamePathParameter);
                 var unsubscribeURI = subscribeURI + "/" + ssePublisherIdPathParameter;
 
                 try
@@ -135,8 +135,8 @@ namespace Vlingo.Http.Resource
 
                     var actions = new List<Action>(2);
                     var additionalParameters = new List<Action.MappedParameter> { mappedParameterClass, mappedParameterPayload, mappedParameterInterval, mappedParameterDefaultId };
-                    actions.Add(new Action(0, Method.GET.Name, subscribeURI, ssePublisherSubscribeTo, null, true, additionalParameters));
-                    actions.Add(new Action(1, Method.DELETE.Name, unsubscribeURI, ssePublisherUnsubscribeTo, null, true));
+                    actions.Add(new Action(0, Method.Get.Name, subscribeURI, ssePublisherSubscribeTo, null, true, additionalParameters));
+                    actions.Add(new Action(1, Method.Delete.Name, unsubscribeURI, ssePublisherUnsubscribeTo, null, true));
                     var resource = ResourceFor(resourceName, typeof(SseStreamResource), handlerPoolSize, actions);
                     sseResourceActions[resourceName] = resource;
                 }
@@ -181,7 +181,7 @@ namespace Vlingo.Http.Resource
 
                     var actions = new List<Action>(1);
                     var additionalParameters = new List<Action.MappedParameter> { mappedParameterRoot, mappedParameterValidSubPaths };
-                    actions.Add(new Action(0, Method.GET.Name, actionSubPath + slash + staticFilesResourcePathParameter, staticFilesResourceServeFile, null, false, additionalParameters));
+                    actions.Add(new Action(0, Method.Get.Name, actionSubPath + slash + staticFilesResourcePathParameter, staticFilesResourceServeFile, null, false, additionalParameters));
                     var resource = ResourceFor(resourceName, typeof(StaticFilesResource), int.Parse(poolSize), actions);
                     staticFilesResourceActions[resourceName] = resource;
                 }
@@ -209,21 +209,21 @@ namespace Vlingo.Http.Resource
             }
             catch (Exception e)
             {
-                throw new InvalidOperationException("ConfigurationResource cannot be created for: " + resourceHandlerClass.Name);
+                throw new InvalidOperationException("ConfigurationResource cannot be created for: " + resourceHandlerClass.Name, e);
             }
         }
 
-        private static string[] ActionNamesFrom(string actionNamesProperty, string key)
+        private static string[] ActionNamesFrom(string? actionNamesProperty, string key)
         {
-            var open = actionNamesProperty.IndexOf("[");
-            var close = actionNamesProperty.IndexOf("]");
+            var open = actionNamesProperty?.IndexOf("[");
+            var close = actionNamesProperty?.IndexOf("]");
 
-            if (open == -1 || close == -1)
+            if (!open.HasValue || !close.HasValue || open == -1 || close == -1)
             {
                 throw new IndexOutOfRangeException("Cannot load action names for resource: " + key);
             }
 
-            var actionNames = Regex.Split(actionNamesProperty.Substring(open + 1, close).Trim(), ",\\s?");
+            var actionNames = Regex.Split(actionNamesProperty?.Substring(open.Value + 1, close.Value).Trim(), ",\\s?");
 
             if (actionNames.Length == 0)
             {
@@ -265,7 +265,7 @@ namespace Vlingo.Http.Resource
             return resourceActions;
         }
 
-        private static Type ActorClassWithProtocol(string actorClassname, Type protocolClass)
+        private static Type ActorClassWithProtocol(string? actorClassname, Type protocolClass)
         {
             try
             {

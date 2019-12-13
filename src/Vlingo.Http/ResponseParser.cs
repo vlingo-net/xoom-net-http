@@ -69,7 +69,7 @@ namespace Vlingo.Http
 
             // DO NOT RESET: (1) headers, (2) fullResponses
 
-            private Body _body;
+            private Body? _body;
             private bool _bodyOnly;
             private int _contentLength;
             private bool _continuation;
@@ -81,7 +81,7 @@ namespace Vlingo.Http
             private long _outOfContentTime;
             private Response.ResponseStatus _status;
             private bool _stream;
-            private Version _version;
+            private Version? _version;
 
             internal VirtualStateParser() : this(false)
             {
@@ -234,7 +234,7 @@ namespace Vlingo.Http
                 return compact;
             }
 
-            private string NextLine(bool mayBeBlank, string errorMessage)
+            private string NextLine(bool mayBeBlank, string? errorMessage)
             {
                 var possibleCarriageReturnIndex = -1;
                 var lineBreak = _responseText.IndexOf("\n", _position, StringComparison.InvariantCultureIgnoreCase);

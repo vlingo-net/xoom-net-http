@@ -14,22 +14,22 @@ using Vlingo.Http.Tests.Sample.User.Model;
 
 namespace Vlingo.Http.Tests.Sample.User
 {
-    public class UserResource : ResourceHandler
+    public sealed class UserResource : ResourceHandler
     {
         private UserRepository _repository = UserRepository.Instance();
 
-        public UserResource(World world) => _stage = world.StageNamed("service");
+        public UserResource(World world) => Stage = world.StageNamed("service");
         
         public void Register(UserData userData)
         {
-            var userAddress = _stage.World.AddressFactory.UniquePrefixedWith("u-");
+            var userAddress = Stage.World.AddressFactory.UniquePrefixedWith("u-");
             var userState =
                 UserStateFactory.From(
                     userAddress.IdString,
                     Name.From(userData.NameData.Given, userData.NameData.Family),
                     Contact.From(userData.ContactData.EmailAddress, userData.ContactData.TelephoneNumber));
 
-            _stage.ActorFor<IUser>(Definition.Has<UserActor>(Definition.Parameters(userState)), userAddress);
+            Stage.ActorFor<IUser>(Definition.Has<UserActor>(Definition.Parameters(userState)), userAddress);
 
             _repository.Save(userState);
 
@@ -41,7 +41,7 @@ namespace Vlingo.Http.Tests.Sample.User
         
         public void ChangeContact(string userId, ContactData contactData)
         {
-            _stage.ActorOf<IUser>(_stage.World.AddressFactory.From(userId))
+            Stage.ActorOf<IUser>(Stage.World.AddressFactory.From(userId))
                 .AndThenTo(user => user.WithContact(new Contact(contactData.EmailAddress, contactData.TelephoneNumber)))
                 .OtherwiseConsume(noUser => Completes.With(Response.Of(Response.ResponseStatus.NotFound, UserLocation(userId))))
                 .AndThenConsume(userState => Response.Of(Response.ResponseStatus.Ok, JsonSerialization.Serialized(UserData.From(userState))));
@@ -49,7 +49,7 @@ namespace Vlingo.Http.Tests.Sample.User
 
         public void ChangeName(string userId, NameData nameData)
         {
-            _stage.ActorOf<IUser>(_stage.World.AddressFactory.From(userId))
+            Stage.ActorOf<IUser>(Stage.World.AddressFactory.From(userId))
                 .AndThenTo(user => user.WithName(new Name(nameData.Given, nameData.Family)))
                 .OtherwiseConsume(noUser => Completes.With(Response.Of(Response.ResponseStatus.NotFound, UserLocation(userId))))
                 .AndThenConsume(userState => {

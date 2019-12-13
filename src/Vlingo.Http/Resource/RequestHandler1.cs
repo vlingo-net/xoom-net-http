@@ -110,7 +110,7 @@ namespace Vlingo.Http.Resource
             => Query<string>(name, typeof(string));
 
         public RequestHandler2<T, R> Query<R>(string name, Type queryClass)
-            => Query(name, queryClass, default(R));
+            => Query(name, queryClass, default(R)!);
 
         public RequestHandler2<T, R> Query<R>(string name, Type queryClass, R defaultValue)
             => new RequestHandler2<T, R>(

@@ -14,7 +14,7 @@ namespace Vlingo.Http
     {
         private readonly ICompletesEventually _completes;
 
-        public Context(RequestResponseContext<object> requestResponseContext, Request request, ICompletesEventually completes)
+        public Context(RequestResponseContext<object>? requestResponseContext, Request request, ICompletesEventually completes)
         {
             ClientContext = requestResponseContext;
             Request = request;
@@ -31,7 +31,7 @@ namespace Vlingo.Http
         {
         }
 
-        public RequestResponseContext<object> ClientContext { get; }
+        public RequestResponseContext<object>? ClientContext { get; }
 
         public bool HasClientContext => ClientContext != null;
 

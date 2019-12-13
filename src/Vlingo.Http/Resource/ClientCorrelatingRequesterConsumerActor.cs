@@ -63,7 +63,7 @@ namespace Vlingo.Http.Resource
                 }
                 else
                 {
-                    ICompletesEventually completes = null;
+                    ICompletesEventually completes;
                     if (_completables.TryGetValue(correlationId.Value, out completes))
                     {
                         if (!_state.Configuration.KeepAlive)

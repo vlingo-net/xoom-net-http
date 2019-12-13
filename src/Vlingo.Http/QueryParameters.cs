@@ -22,7 +22,7 @@ namespace Vlingo.Http
 
         public ICollection<string> Names => _allParameters.Keys;
 
-        public IReadOnlyList<string> ValuesOf(string name)
+        public IReadOnlyList<string>? ValuesOf(string name)
         {
             if (!_allParameters.ContainsKey(name))
             {

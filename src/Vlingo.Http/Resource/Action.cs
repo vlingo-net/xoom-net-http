@@ -37,10 +37,10 @@ namespace Vlingo.Http.Resource
 
         public Action(
             int id,
-            string method,
-            string uri,
-            string to,
-            string mapper,
+            string? method,
+            string? uri,
+            string? to,
+            string? mapper,
             bool disallowPathParametersWithSlash,
             IList<MappedParameter> additionalParameters)
         {
@@ -57,10 +57,10 @@ namespace Vlingo.Http.Resource
 
         public Action(
             int id,
-            string method,
-            string uri,
-            string to,
-            string mapper,
+            string? method,
+            string? uri,
+            string? to,
+            string? mapper,
             bool disallowPathParametersWithSlash)
             : this(id, method, uri, to, mapper, disallowPathParametersWithSlash, new List<MappedParameter>())
         { }
@@ -259,9 +259,9 @@ namespace Vlingo.Http.Resource
         public class MappedParameter
         {
             public string Type { get; }
-            public object Value { get; }
+            public object? Value { get; }
 
-            public MappedParameter(string type, object value)
+            public MappedParameter(string type, object? value)
             {
                 Type = type;
                 Value = value;
@@ -277,7 +277,7 @@ namespace Vlingo.Http.Resource
 
         public class MatchResults
         {
-            public Action Action { get; }
+            public Action? Action { get; }
             public bool IsMatched { get; }
             public IList<RawPathParameter> Parameters { get; }
 
@@ -285,8 +285,8 @@ namespace Vlingo.Http.Resource
                 => $"MatchResults[Action={Action}, Matched={IsMatched}, Parameters={Parameters}]";
 
             public MatchResults(
-                Action action,
-                RunningMatchSegments running,
+                Action? action,
+                RunningMatchSegments? running,
                 IList<string> parameterNames,
                 string path,
                 bool disallowPathParametersWithSlash)
@@ -326,7 +326,7 @@ namespace Vlingo.Http.Resource
                         }
                         else
                         {
-                            pathLength += action._matchable.PathSegment(idx).Value.Length;
+                            pathLength += action!._matchable.PathSegment(idx).Value.Length;
                         }
                     }
                     IsMatched = pathLength == path.Length;
@@ -379,11 +379,11 @@ namespace Vlingo.Http.Resource
 
         public class MethodParameter
         {
-            public Type BodyType { get; }
+            public Type? BodyType { get; }
             public string Name { get; }
             public string Type { get; }
 
-            public MethodParameter(string type, string name, Type bodyClass)
+            public MethodParameter(string type, string name, Type? bodyClass)
             {
                 Type = type;
                 Name = name;

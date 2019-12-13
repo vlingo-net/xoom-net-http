@@ -18,53 +18,53 @@ namespace Vlingo.Http
             Name = name;
         }
 
-        public static Method CONNECT { get; } = new Method("CONNECT");
-        public static Method DELETE { get; } = new Method("DELETE");
-        public static Method GET { get; } = new Method("GET");
-        public static Method HEAD { get; } = new Method("HEAD");
-        public static Method OPTIONS { get; } = new Method("OPTIONS");
-        public static Method PATCH { get; } = new Method("PATCH");
-        public static Method POST { get; } = new Method("POST");
-        public static Method PUT { get; } = new Method("PUT");
-        public static Method TRACE { get; } = new Method("TRACE");
+        public static Method Connect { get; } = new Method("CONNECT");
+        public static Method Delete { get; } = new Method("DELETE");
+        public static Method Get { get; } = new Method("GET");
+        public static Method Head { get; } = new Method("HEAD");
+        public static Method Options { get; } = new Method("OPTIONS");
+        public static Method Patch { get; } = new Method("PATCH");
+        public static Method Post { get; } = new Method("POST");
+        public static Method Put { get; } = new Method("PUT");
+        public static Method Trace { get; } = new Method("TRACE");
 
-        public static Method From(string methodNameText)
+        public static Method From(string? methodNameText)
         {
             var name = (methodNameText ?? string.Empty).ToUpperInvariant();
             switch (name)
             {
                 case "CONNECT":
-                    return CONNECT;
+                    return Connect;
                 case "DELETE":
-                    return DELETE;
+                    return Delete;
                 case "GET":
-                    return GET;
+                    return Get;
                 case "HEAD":
-                    return HEAD;
+                    return Head;
                 case "OPTIONS":
-                    return OPTIONS;
+                    return Options;
                 case "PATCH":
-                    return PATCH;
+                    return Patch;
                 case "POST":
-                    return POST;
+                    return Post;
                 case "PUT":
-                    return PUT;
+                    return Put;
                 case "TRACE":
-                    return TRACE;
+                    return Trace;
                 default:
                     throw new ArgumentException($"{Response.ResponseStatus.MethodNotAllowed.GetDescription()}\n\n${methodNameText}");
             }
         }
 
-        public bool IsCONNECT() => MethodEquals("CONNECT");
-        public bool IsDELETE() => MethodEquals("DELETE");
-        public bool IsGET() => MethodEquals("GET");
-        public bool IsHEAD() => MethodEquals("HEAD");
-        public bool IsOPTIONS() => MethodEquals("OPTIONS");
-        public bool IsPATCH() => MethodEquals("PATCH");
-        public bool IsPOST() => MethodEquals("POST");
-        public bool IsPUT() => MethodEquals("PUT");
-        public bool IsTRACE() => MethodEquals("TRACE");
+        public bool IsConnect() => MethodEquals("CONNECT");
+        public bool IsDelete() => MethodEquals("DELETE");
+        public bool IsGet() => MethodEquals("GET");
+        public bool IsHead() => MethodEquals("HEAD");
+        public bool IsOptions() => MethodEquals("OPTIONS");
+        public bool IsPatch() => MethodEquals("PATCH");
+        public bool IsPost() => MethodEquals("POST");
+        public bool IsPut() => MethodEquals("PUT");
+        public bool IsTrace() => MethodEquals("TRACE");
 
         public override string ToString() => Name;
 

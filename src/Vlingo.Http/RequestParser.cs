@@ -54,17 +54,17 @@ namespace Vlingo.Http
 
             // DO NOT RESET: (1) headers, (2) fullRequests
 
-            private Body _body;
+            private Body? _body;
             private int _contentLength;
             private bool _continuation;
             private Step _currentStep;
             private List<Request> _fullRequests;
             private List<Request>.Enumerator _fullRequestsIterator;
             private Headers<RequestHeader> _headers;
-            private Method _method;
+            private Method? _method;
             private DateTime _outOfContentTime;
-            private Uri _uri;
-            private Version _version;
+            private Uri? _uri;
+            private Version? _version;
 
             internal VirtualStateParser()
             {

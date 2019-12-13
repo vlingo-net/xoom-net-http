@@ -41,7 +41,7 @@ namespace Vlingo.Http.Resource
             public FileInfo SourceFile { get; }
         }
         
-        private readonly ILogger _logger;
+        //private readonly ILogger _logger;
         private readonly bool _persist;
         private readonly IList<Action> _actions;
         private readonly FileInfo _rootOfClasses;

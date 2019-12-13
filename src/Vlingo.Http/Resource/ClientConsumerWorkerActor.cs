@@ -20,8 +20,8 @@ namespace Vlingo.Http.Resource
         private readonly string _testId;
         private readonly IRequestSender _requestSender;
 
-        private ICompletesEventually _completesEventually;
-        private ResponseParser _parser;
+        private ICompletesEventually? _completesEventually;
+        private ResponseParser? _parser;
 
         public ClientConsumerWorkerActor(Client.Configuration configuration)
         {

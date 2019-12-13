@@ -13,8 +13,8 @@ namespace Vlingo.Http.Resource
 {
     public abstract class ResourceHandler
     {
-        internal Context _context;
-        internal Stage _stage;
+        private Context? _context;
+        private Stage? _stage;
 
         public virtual Resource Routes() => throw new NotSupportedException("Undefined resource; must override.");
 
@@ -22,12 +22,16 @@ namespace Vlingo.Http.Resource
 
         protected virtual ICompletesEventually Completes => Context.Completes;
 
-        protected virtual Context Context => _context;
+        public virtual Context Context
+        {
+            get => _context;
+            set => _context = value;
+        }
 
         protected internal virtual ILogger Logger => _stage.World.DefaultLogger;
 
         public virtual Scheduler Scheduler => _stage.Scheduler;
 
-        protected virtual Stage Stage { get => _stage; set => _stage = value; }
+        public virtual Stage Stage { get => _stage; set => _stage = value; }
     }
 }

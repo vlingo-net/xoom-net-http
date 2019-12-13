@@ -13,13 +13,13 @@ namespace Vlingo.Http.Resource.Sse
     {
         public const int NoRetry = -1;
 
-        public string Comment { get; }
-        public string Data { get; }
-        public string Event { get; }
-        public string Id { get; }
+        public string? Comment { get; }
+        public string? Data { get; }
+        public string? Event { get; }
+        public string? Id { get; }
         public int Retry { get; }
 
-        private MessageEvent(string id, string @event, string data, int retry, string comment)
+        private MessageEvent(string? id, string? @event, string? data, int retry, string? comment)
         {
             Id = id;
             Event = @event;
@@ -75,10 +75,10 @@ namespace Vlingo.Http.Resource.Sse
 
         private static MessageEvent EventFrom(string[] rawContent, int startIndex, int endIndex)
         {
-            string comment = null;
-            string data = null;
-            string @event = null;
-            string id = null;
+            string? comment = null;
+            string? data = null;
+            string? @event = null;
+            string? id = null;
             var retry = NoRetry;
 
             for (var currentIndex = startIndex; currentIndex <= endIndex; ++currentIndex)
