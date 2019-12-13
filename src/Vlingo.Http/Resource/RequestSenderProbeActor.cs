@@ -25,7 +25,7 @@ namespace Vlingo.Http.Resource
         {
             _channel = ClientConsumerCommons.ClientChannel(configuration, consumer, Logger);
             _cancellable = Stage.Scheduler.Schedule(
-                SelfAs<IScheduled<object>>(), 
+                SelfAs<IScheduled<object?>>(), 
                 null, 
                 TimeSpan.FromMilliseconds(1), 
                 TimeSpan.FromMilliseconds(configuration.ProbeInterval));

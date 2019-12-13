@@ -27,20 +27,20 @@ namespace Vlingo.Http.Resource.Sse
 
         public void SubscribeToStream(string streamName, Type feedClass, int feedPayload, int feedInterval, string feedDefaultId)
         {
-            var clientContext = Context.ClientContext;
-            clientContext?.WhenClosing(UnsubscribeRequest());
+            var clientContext = Context?.ClientContext;
+            clientContext?.WhenClosing(UnsubscribeRequest()!);
 
-            var correlationId = Context.Request.HeaderValueOr(RequestHeader.XCorrelationID, string.Empty);
+            var correlationId = Context?.Request.HeaderValueOr(RequestHeader.XCorrelationID, string.Empty);
 
             var subscriber = new SseSubscriber(
                     streamName,
                     new SseClient(clientContext),
                     correlationId,
-                    Context.Request.HeaderValueOr(RequestHeader.LastEventID, string.Empty));
+                    Context?.Request.HeaderValueOr(RequestHeader.LastEventID, string.Empty));
 
             PublisherFor(streamName, feedClass, feedPayload, feedInterval, feedDefaultId).Subscribe(subscriber);
 
-            Completes.With(Response.Of(Response.ResponseStatus.Ok, ResponseHeader.WithHeaders(ResponseHeader.WithCorrelationId(correlationId))));
+            Completes?.With(Response.Of(Response.ResponseStatus.Ok, ResponseHeader.WithHeaders(ResponseHeader.WithCorrelationId(correlationId))));
         }
 
         public void UnsubscribeFromStream(string streamName, string id)
@@ -49,11 +49,11 @@ namespace Vlingo.Http.Resource.Sse
             {
                 if (publisher != null)
                 {
-                    publisher.Unsubscribe(new SseSubscriber(streamName, new SseClient(Context.ClientContext)));
+                    publisher.Unsubscribe(new SseSubscriber(streamName, new SseClient(Context?.ClientContext)));
                 }
             }
 
-            Completes.With(Response.Of(Response.ResponseStatus.Ok));
+            Completes?.With(Response.Of(Response.ResponseStatus.Ok));
         }
 
         private ISsePublisher PublisherFor(string streamName, Type feedClass, int feedPayload, int feedInterval, string feedDefaultId)
@@ -84,7 +84,7 @@ namespace Vlingo.Http.Resource.Sse
         {
             try
             {
-                var unsubscribePath = Context?.Request.Uri.AbsolutePath + "/" + Context?.ClientContext?.Id;
+                var unsubscribePath = Context?.Request.Uri?.AbsolutePath + "/" + Context?.ClientContext?.Id;
                 return Request.Has(Method.Delete).And(new Uri(unsubscribePath));
             }
             catch

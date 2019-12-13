@@ -20,18 +20,18 @@ namespace Vlingo.Http.Resource
 
         protected ResourceHandler() { }
 
-        protected virtual ICompletesEventually Completes => Context.Completes;
+        protected virtual ICompletesEventually? Completes => Context?.Completes;
 
-        public virtual Context Context
+        public virtual Context? Context
         {
             get => _context;
             set => _context = value;
         }
 
-        protected internal virtual ILogger Logger => _stage.World.DefaultLogger;
+        protected internal virtual ILogger? Logger => _stage?.World.DefaultLogger;
 
-        public virtual Scheduler Scheduler => _stage.Scheduler;
+        public virtual Scheduler? Scheduler => _stage?.Scheduler;
 
-        public virtual Stage Stage { get => _stage; set => _stage = value; }
+        public virtual Stage? Stage { get => _stage; set => _stage = value; }
     }
 }

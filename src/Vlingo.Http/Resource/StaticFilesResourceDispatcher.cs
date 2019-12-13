@@ -21,16 +21,14 @@ namespace Vlingo.Http.Resource
         {
         }
 
-        public override void DispatchToHandlerWith(Context context, Action.MappedParameters mappedParameters)
+        public override void DispatchToHandlerWith(Context context, Action.MappedParameters? mappedParameters)
         {
-            Action<StaticFilesResource> consumer = null;
-
             try
             {
                 switch (mappedParameters.ActionId)
                 {
                     case 0: // GET %root%{path} ServeFile(string root, string paths, string contentFilePath)
-                        consumer = handler => handler.ServeFile((string)mappedParameters.Mapped[0].Value, (string)mappedParameters.Mapped[1].Value, (string)mappedParameters.Mapped[2].Value);
+                        Action<StaticFilesResource>? consumer = handler => handler.ServeFile((string)mappedParameters?.Mapped[0].Value, (string)mappedParameters?.Mapped[1].Value, (string)mappedParameters?.Mapped[2].Value);
                         PooledHandler.HandleFor(context, consumer);
                         break;
                 }

@@ -14,7 +14,7 @@ namespace Vlingo.Http.Resource.Sse
         public string CurrentEventId { get; set; }
         public string StreamName { get; }
 
-        public SseSubscriber(string streamName, SseClient client, string correlationId, string lastEventId)
+        public SseSubscriber(string? streamName, SseClient client, string? correlationId, string? lastEventId)
         {
             StreamName = streamName;
             Client = client;

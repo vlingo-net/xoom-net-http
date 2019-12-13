@@ -64,7 +64,7 @@ namespace Vlingo.Http.Resource
             => ParameterResolver<T>.Create(
                 Type.BODY,
                 bodyClass,
-                (request, mappedParameters) => (T)mapper.From(request.Body.ToString(), bodyClass));
+                (request, mappedParameters) => (T)mapper.From(request?.Body.ToString(), bodyClass)!);
 
         public static ParameterResolver<T> Body<T>(System.Type bodyClass, MediaTypeMapper mediaTypeMapper)
             => ParameterResolver<T>.Create(
@@ -74,7 +74,7 @@ namespace Vlingo.Http.Resource
                 {
                     var assumedBodyContentType = ContentMediaType.Json.ToString();
                     var bodyMediaType = request.HeaderValueOr(RequestHeader.ContentType, assumedBodyContentType);
-                    return mediaTypeMapper.From<T>(request.Body.ToString(), ContentMediaType.ParseFromDescriptor(bodyMediaType), bodyClass);
+                    return mediaTypeMapper.From<T>(request?.Body?.ToString(), ContentMediaType.ParseFromDescriptor(bodyMediaType), bodyClass);
                 });
 
         public static ParameterResolver<Header> Header(string headerName)
@@ -84,10 +84,10 @@ namespace Vlingo.Http.Resource
                 (request, mappedParameters) => request.HeaderOf(headerName));
 
         public static ParameterResolver<T> Query<T>(string name)
-            => Query(name, typeof(string), default(T));
+            => Query(name, typeof(string), default(T)!);
 
         public static ParameterResolver<T> Query<T>(string name, System.Type type)
-            => Query(name, type, default(T));
+            => Query(name, type, default(T)!);
 
         public static ParameterResolver<T> Query<T>(string name, System.Type type, T defaultValue)
             => ParameterResolver<T>.Create(
@@ -95,10 +95,10 @@ namespace Vlingo.Http.Resource
                 type,
                 (request, mappedParameters) =>
                 {
-                    string value;
+                    string? value;
                     try
                     {
-                        value = request.QueryParameters.ValuesOf(name)[0];
+                        value = request.QueryParameters.ValuesOf(name)?[0];
                     }
                     catch (ArgumentException)
                     {
@@ -115,7 +115,7 @@ namespace Vlingo.Http.Resource
                     }
                     else if (type == typeof(string))
                     {
-                        return (T)(object)value;
+                        return (T)(object)value!;
                     }
                     else if (type == typeof(float))
                     {

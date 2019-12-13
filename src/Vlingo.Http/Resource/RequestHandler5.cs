@@ -19,7 +19,7 @@ namespace Vlingo.Http.Resource
         internal ParameterResolver<U> ResolverParam3 { get; }
         internal ParameterResolver<I> ResolverParam4 { get; }
         internal ParameterResolver<J> ResolverParam5 { get; }
-        private ParamExecutor5 _executor;
+        private ParamExecutor5? _executor;
 
         public delegate ICompletes<Response> Handler5(T param1, R param2, U param3, I param4, J param5);
         public delegate ICompletes<IObjectResponse> ObjectHandler5(T param1, R param2, U param3, I param4, J param5);
@@ -53,10 +53,10 @@ namespace Vlingo.Http.Resource
             ResolverParam5 = resolverParam5;
         }
 
-        internal ICompletes<Response> Execute(Request request, T param1, R param2, U param3, I param4, J param5, ILogger logger)
+        internal ICompletes<Response>? Execute(Request request, T param1, R param2, U param3, I param4, J param5, ILogger logger)
         {
-            Func<ICompletes<Response>> exec = ()
-                => _executor.Invoke(request, param1, param2, param3, param4, param5, MediaTypeMapper, ErrorHandler, logger);
+            Func<ICompletes<Response>?> exec = ()
+                => _executor?.Invoke(request, param1, param2, param3, param4, param5, MediaTypeMapper, ErrorHandler, logger);
 
             return RunParamExecutor(_executor, () => RequestExecutor.ExecuteRequest(exec, ErrorHandler, logger));
         }
@@ -86,7 +86,7 @@ namespace Vlingo.Http.Resource
             return this;
         }
 
-        internal override ICompletes<Response> Execute(
+        internal override ICompletes<Response>? Execute(
             Request request,
             Action.MappedParameters mappedParameters,
             ILogger logger)

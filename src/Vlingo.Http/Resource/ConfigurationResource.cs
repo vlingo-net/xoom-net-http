@@ -145,7 +145,7 @@ namespace Vlingo.Http.Resource
             throw new ArgumentException($"ConfigurationResource handler class must extends ResourceHandler: {resourceHandlerClass.Name}");
         }
         
-        private static bool TryLoadAlreadyGeneratedAssembly(Type resourceHandlerType, out Assembly assembly)
+        private static bool TryLoadAlreadyGeneratedAssembly(Type resourceHandlerType, out Assembly? assembly)
         {
             try
             {
@@ -164,7 +164,7 @@ namespace Vlingo.Http.Resource
             }
         }
         
-        private static bool TryLoadAlreadyGeneratedAssembly(string resourceHandlerTypeName, out Assembly assembly)
+        private static bool TryLoadAlreadyGeneratedAssembly(string resourceHandlerTypeName, out Assembly? assembly)
         {
             try
             {

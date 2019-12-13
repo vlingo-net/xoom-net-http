@@ -43,7 +43,7 @@ namespace Vlingo.Http.Resource.Sse
 
         public void Close() => _context?.Abandon();
 
-        public string Id => _context?.Id;
+        public string? Id => _context?.Id;
 
         public void Send(SseEvent @event) => Send(@event.Sendable());
 

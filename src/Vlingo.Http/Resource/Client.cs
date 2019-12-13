@@ -309,7 +309,7 @@ namespace Vlingo.Http.Resource
             /// </summary>
             /// <typeparam name="R">The type expected by the test request/response handler.</typeparam>
             /// <returns></returns>
-            public R TestInfo<R>() => (R)_testInfo;
+            public R TestInfo<R>() => (R)_testInfo!;
 
             /// <summary>
             /// Marks this configuration as used for testing. There may be a

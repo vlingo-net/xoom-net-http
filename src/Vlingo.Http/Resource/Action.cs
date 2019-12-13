@@ -65,7 +65,7 @@ namespace Vlingo.Http.Resource
             : this(id, method, uri, to, mapper, disallowPathParametersWithSlash, new List<MappedParameter>())
         { }
 
-        internal MappedParameters Map(Request request, IList<RawPathParameter> parameters)
+        internal MappedParameters Map(Request? request, IList<RawPathParameter> parameters)
         {
             var mapped = new List<MappedParameter>(parameters.Count);
             foreach (var typed in _to.Parameters)
@@ -182,17 +182,17 @@ namespace Vlingo.Http.Resource
 
         private int ParameterCount => _matchable.PathSegments.Count(s => s.IsPathParameter);
 
-        private object MapBodyFrom(Request request)
+        private object? MapBodyFrom(Request? request)
         {
             var body = _to.Body;
             if (body != null)
             {
-                return _mapper.From(request.Body.ToString(), body.BodyType);
+                return _mapper.From(request?.Body?.ToString(), body?.BodyType);
             }
             return null;
         }
 
-        private object MapOtherFrom(RawPathParameter parameter)
+        private object? MapOtherFrom(RawPathParameter parameter)
         {
             var type = _to.ParameterOf(parameter.Name).Type;
 

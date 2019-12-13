@@ -14,7 +14,7 @@ namespace Vlingo.Http.Resource
     internal abstract class RequestExecutor
     {
         internal static ICompletes<Response> ExecuteRequest(
-            Func<ICompletes<Response>> executeAction,
+            Func<ICompletes<Response>?> executeAction,
             IErrorHandler errorHandler,
             ILogger logger)
         {

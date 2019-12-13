@@ -14,7 +14,7 @@ namespace Vlingo.Http.Resource
     {
         public static DefaultJsonMapper Instance { get; } = new DefaultJsonMapper();
 
-        public object From(string data, Type type)
+        public object? From(string? data, Type type)
         {
             if(type == typeof(string))
             {

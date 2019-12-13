@@ -21,7 +21,7 @@ namespace Vlingo.Http.Resource
             _mappersByContentType = mappersByContentType;
         }
 
-        public T From<T>(string data, ContentMediaType contentMediaType, Type type)
+        public T From<T>(string? data, ContentMediaType contentMediaType, Type type)
         {
             var baseType = contentMediaType.ToBaseType();
             if (_mappersByContentType.ContainsKey(baseType))

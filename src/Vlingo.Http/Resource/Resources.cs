@@ -56,7 +56,7 @@ namespace Vlingo.Http.Resource
             {
                 foreach (var resource in _namedResources.Values)
                 {
-                    var matchResults = resource.MatchWith(context.Request.Method, context.Request.Uri);
+                    var matchResults = resource.MatchWith(context.Request?.Method, context.Request?.Uri);
                     if (matchResults.IsMatched)
                     {
                         var mappedParameters = matchResults.Action?.Map(context.Request, matchResults.Parameters);
@@ -64,12 +64,12 @@ namespace Vlingo.Http.Resource
                         return;
                     }
                 }
-                message = $"No matching resource for method {context.Request.Method} and Uri {context.Request.Uri}";
+                message = $"No matching resource for method {context.Request?.Method} and Uri {context.Request?.Uri}";
                 logger.Warn(message);
             }
             catch (Exception e)
             {
-                message = $"Problem dispatching request for method {context.Request.Method} and Uri {context.Request.Uri} because: {e.Message}";
+                message = $"Problem dispatching request for method {context.Request?.Method} and Uri {context.Request?.Uri} because: {e.Message}";
                 logger.Error(message, e);
             }
 

@@ -35,16 +35,16 @@ namespace Vlingo.Http
         public static Response Of(ResponseStatus statusCode, Headers<ResponseHeader> headers, Body entity)
             => new Response(Version.Http1_1, statusCode, headers, entity);
 
-        public static Response Of(Version version, ResponseStatus statusCode, Headers<ResponseHeader> headers, Body entity)
+        public static Response Of(Version? version, ResponseStatus statusCode, Headers<ResponseHeader> headers, Body? entity)
             => new Response(version, statusCode, headers, entity);
 
         public ResponseStatus Status { get; }
         public string StatusCode { get; }
         public Headers<ResponseHeader> Headers { get; }
         public Body Entity { get; }
-        public Version Version { get; }
+        public Version? Version { get; }
 
-        protected Response(Version version, ResponseStatus status, Headers<ResponseHeader> headers, Body entity)
+        protected Response(Version? version, ResponseStatus status, Headers<ResponseHeader> headers, Body? entity)
         {
             Version = version;
             Status = status;

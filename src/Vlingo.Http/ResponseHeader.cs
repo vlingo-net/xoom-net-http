@@ -97,7 +97,7 @@ namespace Vlingo.Http
 
         public static ResponseHeader WithContentType(string type) => new ResponseHeader(ContentType, type);
 
-        public static ResponseHeader WithCorrelationId(string correlationId) => new ResponseHeader(XCorrelationID, correlationId);
+        public static ResponseHeader WithCorrelationId(string? correlationId) => new ResponseHeader(XCorrelationID, correlationId);
 
         public static ResponseHeader Of(string name, string value) => new ResponseHeader(name, value);
 

@@ -15,7 +15,7 @@ namespace Vlingo.Http.Resource
     public class RequestHandler1<T> : RequestHandler
     {
         internal ParameterResolver<T> Resolver { get; }
-        private ParamExecutor1 _executor;
+        private ParamExecutor1? _executor;
 
         public delegate ICompletes<Response> Handler1(T param1);
         public delegate ICompletes<IObjectResponse> ObjectHandler1(T param1);
@@ -57,15 +57,15 @@ namespace Vlingo.Http.Resource
             return this;
         }
 
-        internal ICompletes<Response> Execute(Request request, T param1, ILogger logger)
+        internal ICompletes<Response>? Execute(Request request, T param1, ILogger logger)
         {
-            Func<ICompletes<Response>> exec = ()
-                => _executor.Invoke(request, param1, MediaTypeMapper, ErrorHandler, logger);
+            Func<ICompletes<Response>?> exec = ()
+                => _executor?.Invoke(request, param1, MediaTypeMapper, ErrorHandler, logger);
 
             return RunParamExecutor(_executor, () => RequestExecutor.ExecuteRequest(exec, ErrorHandler, logger));
         }
 
-        internal override ICompletes<Response> Execute(Request request, Action.MappedParameters mappedParameters, ILogger logger)
+        internal override ICompletes<Response>? Execute(Request request, Action.MappedParameters mappedParameters, ILogger logger)
             => Execute(request, Resolver.Apply(request, mappedParameters), logger);
 
         public RequestHandler2<T, R> Param<R>(Type paramClass)

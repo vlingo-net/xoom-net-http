@@ -11,11 +11,11 @@ namespace Vlingo.Http
 {
     public class Request
     {
-        public Body Body { get; }
+        public Body? Body { get; }
         public Headers<RequestHeader> Headers { get; }
-        public Method Method { get; }
-        public Uri Uri { get; }
-        public Version Version { get; }
+        public Method? Method { get; }
+        public Uri? Uri { get; }
+        public Version? Version { get; }
 
         public static Request From(byte[] requestContent)
             => RequestParser.ParseFor(requestContent).FullRequest;
@@ -77,7 +77,7 @@ namespace Vlingo.Http
         public override string ToString()
             => $"{Method} {Uri} {Version}\n{Headers}\n{Body}";
 
-        internal Request(Method method, Uri uri, Version version, Headers<RequestHeader> headers, Body body)
+        internal Request(Method? method, Uri? uri, Version? version, Headers<RequestHeader> headers, Body? body)
         {
             Method = method;
             Uri = uri;

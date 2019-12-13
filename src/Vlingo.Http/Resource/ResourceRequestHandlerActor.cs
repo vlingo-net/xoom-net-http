@@ -19,13 +19,13 @@ namespace Vlingo.Http.Resource
             _resourceHandler = resourceHandler;
         }
         
-        public void HandleFor<T>(Context context, Action<T> consumer) where T : ResourceHandler
+        public void HandleFor<T>(Context context, Action<T>? consumer) where T : ResourceHandler
         {
             try
             {
                 _resourceHandler.Context = context;
                 _resourceHandler.Stage = Stage;
-                consumer((T)_resourceHandler);
+                consumer?.Invoke((T)_resourceHandler);
             }
             catch (Exception e)
             {
