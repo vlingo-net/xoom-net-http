@@ -31,9 +31,9 @@ namespace Vlingo.Http.Resource
         }
 
         object IParameterResolver.Apply(Request request, Action.MappedParameters mappedParameters)
-            => _resolver.Invoke(request, mappedParameters);
+            => _resolver.Invoke(request, mappedParameters)!;
 
-        public T Apply(Request request, Action.MappedParameters mappedParameters)
+        public T Apply(Request? request, Action.MappedParameters mappedParameters)
             => _resolver.Invoke(request, mappedParameters);
 
         internal static ParameterResolver<T> Create(ParameterResolver.Type type, Type paramClass, Func<Request, Action.MappedParameters, T> resolver)

@@ -91,7 +91,7 @@ namespace Vlingo.Http.Resource
                 _actor.DeadLetters.FailedDelivery(new DeadLetter(_actor, RequestWithRepresentation1));
             }
 
-            return null;
+            return null!;
         }
 
         public void Stop()

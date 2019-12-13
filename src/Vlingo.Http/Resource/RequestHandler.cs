@@ -46,7 +46,7 @@ namespace Vlingo.Http.Resource
             MediaTypeMapper = mediaTypeMapper;
         }
 
-        protected internal ICompletes<Response> RunParamExecutor(object? paramExecutor, Func<ICompletes<Response>?> executeRequest)
+        protected internal ICompletes<Response>? RunParamExecutor(object? paramExecutor, Func<ICompletes<Response>?> executeRequest)
         {
             if (paramExecutor == null)
             {
@@ -56,9 +56,9 @@ namespace Vlingo.Http.Resource
         }
 
         internal abstract ICompletes<Response>? Execute(
-            Request request, 
+            Request? request, 
             Action.MappedParameters mappedParameters,
-            ILogger logger);
+            ILogger? logger);
 
         private string GenerateActionSignature(IList<IParameterResolver> parameterResolvers)
         {

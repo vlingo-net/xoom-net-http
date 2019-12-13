@@ -101,11 +101,11 @@ namespace Vlingo.Http.Resource
             return nextSegmentStart;
         }
 
-        internal MatchResults MatchWith(Method method, Uri uri)
+        internal MatchResults MatchWith(Method? method, Uri? uri)
         {
             if (_method.Equals(method))
             {
-                if (!uri.IsAbsoluteUri || uri.Scheme != "http" && uri.Scheme != "https")
+                if (uri == null || !uri.IsAbsoluteUri || uri.Scheme != "http" && uri.Scheme != "https")
                 {
                     throw new ArgumentException(
                         "In order to match on Uri, it has to be an absolute uri for http or https scheme", nameof(uri));
@@ -487,11 +487,11 @@ namespace Vlingo.Http.Resource
                         var closeBrace = start?.IndexOf("}", openBrace.Value);
                         if (closeBrace > openBrace)
                         {
-                            var segment = start.Substring(0, openBrace.Value);
+                            var segment = start?.Substring(0, openBrace.Value);
                             segments.Add(new PathSegment(segment, false));
-                            var parameter = start.Substring(openBrace.Value + 1, closeBrace.Value - (openBrace.Value + 1));
+                            var parameter = start?.Substring(openBrace.Value + 1, closeBrace.Value - (openBrace.Value + 1));
                             segments.Add(new PathSegment(parameter, true));
-                            start = start.Substring(closeBrace.Value + 1);
+                            start = start?.Substring(closeBrace.Value + 1);
                             if (string.IsNullOrEmpty(start))
                             {
                                 break;
@@ -504,7 +504,7 @@ namespace Vlingo.Http.Resource
                     }
                     else
                     {
-                        segments.Add(new PathSegment(start, false));
+                        segments.Add(new PathSegment(start!, false));
                         break;
                     }
                 }
@@ -573,7 +573,7 @@ namespace Vlingo.Http.Resource
 
                 var methodName = to?.Substring(0, openParen.Value);
                 var rawParameters = to?.Substring(openParen.Value + 1, closeParen.Value - (openParen.Value + 1)).Split(',');
-                var parameters = new List<MethodParameter>(rawParameters.Length);
+                var parameters = new List<MethodParameter>(rawParameters!.Length);
 
                 foreach (var p in rawParameters)
                 {
@@ -593,7 +593,7 @@ namespace Vlingo.Http.Resource
                     }
                 }
 
-                return new Tuple<string, IList<MethodParameter>>(methodName, parameters);
+                return new Tuple<string, IList<MethodParameter>>(methodName!, parameters);
             }
 
             private string QualifiedType(string possiblyUnqualifiedType)

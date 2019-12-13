@@ -47,7 +47,7 @@ namespace Vlingo.Http.Resource
                 var fullyQualifiedTypeName = DynaNaming.FullyQualifiedClassNameFor(resourceHandlerType, DispatcherSuffix);
                 var lookupTypeName = DynaNaming.FullyQualifiedClassNameFor(resourceHandlerType, DispatcherSuffix, true);
 
-                Type resourceClass;
+                Type? resourceClass;
                 try
                 {
                     // this check is done primarily for testing to prevent duplicate class mimeType in class loader
@@ -70,7 +70,7 @@ namespace Vlingo.Http.Resource
                 }
 
                 var ctorParams = new object[] { resourceName, resourceHandlerType, handlerPoolSize, actions };
-                foreach (var ctor in resourceClass.GetConstructors())
+                foreach (var ctor in resourceClass!.GetConstructors())
                 {
                     if (ctor.GetParameters().Length == ctorParams.Length)
                     {
@@ -86,20 +86,20 @@ namespace Vlingo.Http.Resource
             }
         }
 
-        internal static Type NewResourceHandlerTypeFor(string? resourceHandlerTypeName)
+        internal static Type? NewResourceHandlerTypeFor(string? resourceHandlerTypeName)
         {
             try
             {
-                var resourceHandlerClass = Type.GetType(resourceHandlerTypeName);
+                Type? resourceHandlerClass = Type.GetType(resourceHandlerTypeName);
                 if (resourceHandlerClass == null)
                 {
                     if (TryLoadAlreadyGeneratedAssembly(resourceHandlerTypeName, out var assembly))
                     {
                         try
                         {
-                            resourceHandlerClass = assembly.GetType(resourceHandlerTypeName, true);
+                            resourceHandlerClass = assembly?.GetType(resourceHandlerTypeName, true);
                         }
-                        catch (Exception e)
+                        catch (Exception)
                         {
                             resourceHandlerClass = Assembly.GetCallingAssembly().GetType(resourceHandlerTypeName, true);
                         }
@@ -131,9 +131,9 @@ namespace Vlingo.Http.Resource
             }
         }
 
-        private static void ConfirmResourceHandler(Type resourceHandlerClass)
+        private static void ConfirmResourceHandler(Type? resourceHandlerClass)
         {
-            var superclass = resourceHandlerClass.BaseType;
+            var superclass = resourceHandlerClass?.BaseType;
             while (superclass != null)
             {
                 if (superclass == typeof(ResourceHandler))
@@ -142,7 +142,7 @@ namespace Vlingo.Http.Resource
                 }
                 superclass = superclass.BaseType;
             }
-            throw new ArgumentException($"ConfigurationResource handler class must extends ResourceHandler: {resourceHandlerClass.Name}");
+            throw new ArgumentException($"ConfigurationResource handler class must extends ResourceHandler: {resourceHandlerClass?.Name}");
         }
         
         private static bool TryLoadAlreadyGeneratedAssembly(Type resourceHandlerType, out Assembly? assembly)
@@ -169,10 +169,10 @@ namespace Vlingo.Http.Resource
             try
             {
                 var classPath = new FileInfo(HttpProperties.Instance.GetProperty("resource.dispatcher.generated.classes.main", RootOfMainClasses));
-                var resourcePath = resourceHandlerTypeName
+                var resourcePath = resourceHandlerTypeName?
                     .Substring(0, resourceHandlerTypeName.LastIndexOf('.'))
                     .Replace('.', Path.DirectorySeparatorChar);
-                var resourceHandlerName = resourceHandlerTypeName.Substring(resourceHandlerTypeName.LastIndexOf('.') + 1);
+                var resourceHandlerName = resourceHandlerTypeName?.Substring(resourceHandlerTypeName.LastIndexOf('.') + 1);
                 var filePath = Path.Combine(classPath.DirectoryName, resourcePath, resourceHandlerName + DispatcherSuffix + ".dll");
                 assembly = Assembly.LoadFrom(filePath);
                 return true;

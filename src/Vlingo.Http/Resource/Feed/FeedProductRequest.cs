@@ -9,9 +9,9 @@ namespace Vlingo.Http.Resource.Feed
 {
     public class FeedProductRequest
     {
-        public Context Context { get; }
-        public string FeedName { get; }
+        public Context? Context { get; }
+        public string? FeedName { get; }
         public int FeedProductElements { get; }
-        public string FeedProductId { get; }
+        public string? FeedProductId { get; }
     }
 }

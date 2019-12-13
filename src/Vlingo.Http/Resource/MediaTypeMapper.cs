@@ -26,7 +26,7 @@ namespace Vlingo.Http.Resource
             var baseType = contentMediaType.ToBaseType();
             if (_mappersByContentType.ContainsKey(baseType))
             {
-                return (T)_mappersByContentType[baseType].From(data, type);
+                return (T)_mappersByContentType[baseType].From(data, type)!;
             }
             throw new MediaTypeNotSupportedException(contentMediaType.ToString());
         }
@@ -36,7 +36,7 @@ namespace Vlingo.Http.Resource
             var baseType = contentMediaType.ToBaseType();
             if (_mappersByContentType.ContainsKey(baseType))
             {
-                return _mappersByContentType[baseType].From(data);
+                return _mappersByContentType[baseType].From(data)!;
             }
             throw new MediaTypeNotSupportedException(contentMediaType.ToString());
         }

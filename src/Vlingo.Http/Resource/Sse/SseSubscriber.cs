@@ -27,7 +27,7 @@ namespace Vlingo.Http.Resource.Sse
         {
         }
 
-        public void Close() => Client.Close();
+        public void Close() => Client?.Close();
 
         public bool IsCompatibleWith(string streamName) => string.Equals(StreamName, streamName);
 
@@ -35,6 +35,6 @@ namespace Vlingo.Http.Resource.Sse
 
         public bool HasCurrentEventId => !string.IsNullOrEmpty(CurrentEventId);
 
-        public string Id => Client.Id;
+        public string? Id => Client?.Id;
     }
 }

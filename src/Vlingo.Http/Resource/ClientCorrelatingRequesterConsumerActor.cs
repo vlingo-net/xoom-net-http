@@ -64,18 +64,18 @@ namespace Vlingo.Http.Resource
                 else
                 {
                     ICompletesEventually completes;
-                    if (_completables.TryGetValue(correlationId.Value, out completes))
+                    if (_completables.TryGetValue(correlationId?.Value!, out completes))
                     {
                         if (!_state.Configuration.KeepAlive)
                         {
-                            _completables.Remove(correlationId.Value);
+                            _completables.Remove(correlationId?.Value!);
                         }
                     }
 
                     if (completes == null)
                     {
                         _state.Configuration.Stage.World.DefaultLogger.Warn(
-                                $"Client Consumer: Cannot complete response because mismatched correlation id: {correlationId.Value}");
+                                $"Client Consumer: Cannot complete response because mismatched correlation id: {correlationId?.Value}");
                         _state.Configuration.ConsumerOfUnknownResponses.Consume(response);
                     }
                     else
@@ -105,7 +105,7 @@ namespace Vlingo.Http.Resource
                 readyRequest = request;
             }
 
-            _completables[correlationId.Value] = Stage.World.CompletesFor(completes);
+            _completables[correlationId!.Value!] = Stage.World.CompletesFor(completes);
 
             _state.Buffer.Clear();
             _state.Buffer.Seek(0, SeekOrigin.Begin);

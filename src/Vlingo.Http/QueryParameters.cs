@@ -44,7 +44,7 @@ namespace Vlingo.Http
             try
             {
                 var parameters = query?.Replace("?", string.Empty) .Split(new[] { '&' }, StringSplitOptions.RemoveEmptyEntries);
-                var queryParameters = new Dictionary<string, IList<string>>(parameters.Length);
+                var queryParameters = new Dictionary<string, IList<string>>(parameters!.Length);
 
                 foreach (var parameter in parameters)
                 {

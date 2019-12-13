@@ -24,7 +24,7 @@ namespace Vlingo.Http.Resource
             var currentId = 0;
             foreach (var predicate in Handlers)
             {
-                Actions.Add(new Action(
+                Actions?.Add(new Action(
                     currentId++,
                     predicate.Method.ToString(),
                     predicate.Path,
@@ -39,8 +39,8 @@ namespace Vlingo.Http.Resource
             try
             {
                 Action<ResourceHandler> consumer = resource =>
-                    Handlers[mappedParameters.ActionId]
-                    .Execute(context.Request, mappedParameters, resource.Logger)
+                    Handlers[mappedParameters!.ActionId]
+                    .Execute(context.Request, mappedParameters, resource.Logger)?
                     .AndThenConsume(context.Completes.With);
 
                 PooledHandler.HandleFor(context, consumer);
@@ -53,14 +53,18 @@ namespace Vlingo.Http.Resource
 
         internal override Action.MatchResults MatchWith(Method? method, Uri? uri)
         {
-            foreach (var action in Actions)
+            if (Actions != null)
             {
-                var matchResults = action.MatchWith(method, uri);
-                if (matchResults.IsMatched)
+                foreach (var action in Actions)
                 {
-                    return matchResults;
-                }
+                    var matchResults = action.MatchWith(method, uri);
+                    if (matchResults.IsMatched)
+                    {
+                        return matchResults;
+                    }
+                }    
             }
+            
             return Action.UnmatchedResults;
         }
 

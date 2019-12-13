@@ -30,13 +30,13 @@ namespace Vlingo.Http.Resource.Sse
             var clientContext = Context?.ClientContext;
             clientContext?.WhenClosing(UnsubscribeRequest()!);
 
-            var correlationId = Context?.Request.HeaderValueOr(RequestHeader.XCorrelationID, string.Empty);
+            var correlationId = Context?.Request?.HeaderValueOr(RequestHeader.XCorrelationID, string.Empty);
 
             var subscriber = new SseSubscriber(
                     streamName,
                     new SseClient(clientContext),
                     correlationId,
-                    Context?.Request.HeaderValueOr(RequestHeader.LastEventID, string.Empty));
+                    Context?.Request?.HeaderValueOr(RequestHeader.LastEventID, string.Empty));
 
             PublisherFor(streamName, feedClass, feedPayload, feedInterval, feedDefaultId).Subscribe(subscriber);
 
@@ -84,7 +84,7 @@ namespace Vlingo.Http.Resource.Sse
         {
             try
             {
-                var unsubscribePath = Context?.Request.Uri?.AbsolutePath + "/" + Context?.ClientContext?.Id;
+                var unsubscribePath = Context?.Request?.Uri?.AbsolutePath + "/" + Context?.ClientContext?.Id;
                 return Request.Has(Method.Delete).And(new Uri(unsubscribePath));
             }
             catch
@@ -115,12 +115,12 @@ namespace Vlingo.Http.Resource.Sse
             }
 
             public void Subscribe(SseSubscriber subscriber)
-                => _subscribers.Add(subscriber.Id, subscriber);
+                => _subscribers.Add(subscriber.Id!, subscriber);
 
             public void Unsubscribe(SseSubscriber subscriber)
             {
                 subscriber.Close();
-                _subscribers.Remove(subscriber.Id);
+                _subscribers.Remove(subscriber.Id!);
             }
 
             public void IntervalSignal(IScheduled<object> scheduled, object data)

@@ -198,7 +198,7 @@ namespace Vlingo.Http.Resource
 
         private static ConfigurationResource<ResourceHandler> ResourceFor(
             string resourceName,
-            Type resourceHandlerClass,
+            Type? resourceHandlerClass,
             int handlerPoolSize,
             IList<Action> resourceActions)
         {
@@ -209,7 +209,7 @@ namespace Vlingo.Http.Resource
             }
             catch (Exception e)
             {
-                throw new InvalidOperationException("ConfigurationResource cannot be created for: " + resourceHandlerClass.Name, e);
+                throw new InvalidOperationException("ConfigurationResource cannot be created for: " + resourceHandlerClass?.Name, e);
             }
         }
 
