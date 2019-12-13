@@ -40,7 +40,7 @@ namespace Vlingo.Http.Resource
             {
                 Action<ResourceHandler> consumer = resource =>
                     Handlers[mappedParameters!.ActionId]
-                    .Execute(context.Request, mappedParameters, resource.Logger)?
+                    .Execute(context.Request!, mappedParameters, resource.Logger!)
                     .AndThenConsume(context.Completes.With);
 
                 PooledHandler.HandleFor(context, consumer);

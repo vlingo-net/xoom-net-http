@@ -488,9 +488,9 @@ namespace Vlingo.Http.Resource
                         if (closeBrace > openBrace)
                         {
                             var segment = start?.Substring(0, openBrace.Value);
-                            segments.Add(new PathSegment(segment, false));
+                            segments.Add(new PathSegment(segment!, false));
                             var parameter = start?.Substring(openBrace.Value + 1, closeBrace.Value - (openBrace.Value + 1));
-                            segments.Add(new PathSegment(parameter, true));
+                            segments.Add(new PathSegment(parameter!, true));
                             start = start?.Substring(closeBrace.Value + 1);
                             if (string.IsNullOrEmpty(start))
                             {

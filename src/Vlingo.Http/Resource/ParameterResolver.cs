@@ -34,7 +34,7 @@ namespace Vlingo.Http.Resource
             => _resolver.Invoke(request, mappedParameters)!;
 
         public T Apply(Request? request, Action.MappedParameters mappedParameters)
-            => _resolver.Invoke(request, mappedParameters);
+            => _resolver.Invoke(request!, mappedParameters);
 
         internal static ParameterResolver<T> Create(ParameterResolver.Type type, Type paramClass, Func<Request, Action.MappedParameters, T> resolver)
             => new ParameterResolver<T>(type, paramClass, resolver);
@@ -81,7 +81,7 @@ namespace Vlingo.Http.Resource
             => ParameterResolver<Header>.Create(
                 Type.HEADER,
                 typeof(Header),
-                (request, mappedParameters) => request.HeaderOf(headerName));
+                (request, mappedParameters) => request.HeaderOf(headerName)!);
 
         public static ParameterResolver<T> Query<T>(string name)
             => Query(name, typeof(string), default(T)!);

@@ -41,10 +41,10 @@ namespace Vlingo.Http.Resource
             ResolverParam2 = resolverParam2;
         }
 
-        internal ICompletes<Response>? Execute(Request? request, T param1, R param2, ILogger? logger)
+        internal ICompletes<Response> Execute(Request request, T param1, R param2, ILogger logger)
         {
-            Func<ICompletes<Response>?> exec = ()
-                => _executor?.Invoke(request, param1, param2, MediaTypeMapper, ErrorHandler, logger);
+            Func<ICompletes<Response>> exec = ()
+                => _executor?.Invoke(request, param1, param2, MediaTypeMapper, ErrorHandler, logger)!;
 
             return RunParamExecutor(_executor, () => RequestExecutor.ExecuteRequest(exec, ErrorHandler, logger));
         }
@@ -74,10 +74,10 @@ namespace Vlingo.Http.Resource
             return this;
         }
 
-        internal override ICompletes<Response>? Execute(
-            Request? request,
+        internal override ICompletes<Response> Execute(
+            Request request,
             Action.MappedParameters mappedParameters,
-            ILogger? logger)
+            ILogger logger)
         {
             var param1 = ResolverParam1.Apply(request, mappedParameters);
             var param2 = ResolverParam2.Apply(request, mappedParameters);

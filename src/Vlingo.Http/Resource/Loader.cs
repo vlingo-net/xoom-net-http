@@ -92,7 +92,7 @@ namespace Vlingo.Http.Resource
 
                 var resourceHandlerClass = ConfigurationResource<ResourceHandler>.NewResourceHandlerTypeFor(resourceHandlerClassname);
 
-                return ResourceFor(resourceName, resourceHandlerClass, handlerPoolSize, resourceActions);
+                return ResourceFor(resourceName, resourceHandlerClass!, handlerPoolSize, resourceActions);
             }
             catch (Exception e)
             {
@@ -198,7 +198,7 @@ namespace Vlingo.Http.Resource
 
         private static ConfigurationResource<ResourceHandler> ResourceFor(
             string resourceName,
-            Type? resourceHandlerClass,
+            Type resourceHandlerClass,
             int handlerPoolSize,
             IList<Action> resourceActions)
         {

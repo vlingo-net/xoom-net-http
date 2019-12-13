@@ -46,19 +46,19 @@ namespace Vlingo.Http.Resource
             MediaTypeMapper = mediaTypeMapper;
         }
 
-        protected internal ICompletes<Response>? RunParamExecutor(object? paramExecutor, Func<ICompletes<Response>?> executeRequest)
+        protected internal ICompletes<Response> RunParamExecutor(object? paramExecutor, Func<ICompletes<Response>?> executeRequest)
         {
             if (paramExecutor == null)
             {
-                throw new HandlerMissingException("No handler defined for " + Method.ToString() + " " + Path);
+                throw new HandlerMissingException("No handler defined for " + Method + " " + Path);
             }
-            return executeRequest?.Invoke();
+            return executeRequest?.Invoke()!;
         }
 
-        internal abstract ICompletes<Response>? Execute(
-            Request? request, 
+        internal abstract ICompletes<Response> Execute(
+            Request request, 
             Action.MappedParameters mappedParameters,
-            ILogger? logger);
+            ILogger logger);
 
         private string GenerateActionSignature(IList<IParameterResolver> parameterResolvers)
         {

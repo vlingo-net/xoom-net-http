@@ -36,7 +36,7 @@ namespace Vlingo.Http.Resource.Sse
         {
             _context = context;
             _builder = new StringBuilder();
-            _maxMessageSize = Configuration.Instance.Sizing.MaxMessageSize;
+            _maxMessageSize = Configuration.Instance != null ? Configuration.Instance.Sizing.MaxMessageSize : 65535;
             
             SendInitialResponse();
         }
