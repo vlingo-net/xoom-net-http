@@ -1,5 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿// Copyright (c) 2012-2019 Vaughn Vernon. All rights reserved.
+//
+// This Source Code Form is subject to the terms of the
+// Mozilla Public License, v. 2.0. If a copy of the MPL
+// was not distributed with this file, You can obtain
+// one at https://mozilla.org/MPL/2.0/.
+
+using System;
 using System.ComponentModel;
 using System.Text;
 using Vlingo.Wire.Message;
@@ -16,8 +22,14 @@ namespace Vlingo.Http
 
         public static Response Of(ResponseStatus statusCode, string entity)
             => new Response(Version.Http1_1, statusCode, Http.Headers.Empty<ResponseHeader>(), Body.From(entity));
+        
+        public static Response Of(ResponseStatus statusCode, byte[] entity)
+            => new Response(Version.Http1_1, statusCode, Http.Headers.Empty<ResponseHeader>(), Body.From(entity));
 
         public static Response Of(Version version, ResponseStatus statusCode, string entity)
+            => new Response(version, statusCode, Http.Headers.Empty<ResponseHeader>(), Body.From(entity));
+
+        public static Response Of(Version version, ResponseStatus statusCode, byte[] entity)
             => new Response(version, statusCode, Http.Headers.Empty<ResponseHeader>(), Body.From(entity));
 
         public static Response Of(ResponseStatus statusCode, Headers<ResponseHeader> headers)
@@ -29,8 +41,17 @@ namespace Vlingo.Http
         public static Response Of(ResponseStatus statusCode, Headers<ResponseHeader> headers, string entity)
             => new Response(Version.Http1_1, statusCode, headers, Body.From(entity));
 
+        public static Response Of(ResponseStatus statusCode, Headers<ResponseHeader> headers, byte[] entity)
+            => new Response(Version.Http1_1, statusCode, headers, Body.From(entity));
+
         public static Response Of(Version version, ResponseStatus statusCode, Headers<ResponseHeader> headers, string entity)
            => new Response(version, statusCode, headers, Body.From(entity));
+        
+        public static Response Of(Version version, ResponseStatus statusCode, Headers<ResponseHeader> headers, byte[] entity)
+            => new Response(version, statusCode, headers, Body.From(entity));
+        
+        public static Response Of(ResponseStatus statusCode, Body body)
+            => new Response(Version.Http1_1, statusCode, Http.Headers.Empty<ResponseHeader>(), body);
 
         public static Response Of(ResponseStatus statusCode, Headers<ResponseHeader> headers, Body entity)
             => new Response(Version.Http1_1, statusCode, headers, entity);
@@ -50,9 +71,8 @@ namespace Vlingo.Http
             Status = status;
             var statusDescription = status.GetDescription();
             StatusCode = statusDescription.Substring(0, statusDescription.IndexOf(' '));
-            Headers = headers;
-            Entity = entity ?? Body.Empty;
-            AddMissingContentLengthHeader();
+            Entity = EntityFrom(headers, entity);
+            Headers = AddMissingContentLengthHeader(headers);
         }
 
         public Header? HeaderOf(string name) => Headers.HeaderOf(name);
@@ -71,40 +91,8 @@ namespace Vlingo.Http
 
         public IConsumerByteBuffer Into(IConsumerByteBuffer consumerByteBuffer)
             => consumerByteBuffer.Put(Converters.TextToBytes(ToString())).Flip();
-
-        public override string ToString()
-        {
-            var builder = new StringBuilder();
-
-            // TODO: currently supports only HTTP/1.1
-
-            builder.Append(Version.Http1_1.ToString()).Append(" ").Append(Status.GetDescription()).Append("\n");
-            AppendAllHeadersTo(builder);
-            builder.Append("\n").Append(Entity);
-
-            return builder.ToString();
-        }
-
-        private void AddMissingContentLengthHeader()
-        {
-            var contentLength = Entity.Content.Length;
-            var header = Headers.HeaderOf(ResponseHeader.ContentLength);
-            if (header == null)
-            {
-                Headers.Add(ResponseHeader.Of(ResponseHeader.ContentLength, contentLength.ToString()));
-            }
-        }
-
-        private StringBuilder AppendAllHeadersTo(StringBuilder builder)
-        {
-            foreach (var header in Headers)
-            {
-                builder.Append(header.Name).Append(": ").Append(header.Value).Append("\n");
-            }
-            return builder;
-        }
-
-        private int Size
+        
+        public int Size
         {
             get
             {
@@ -117,6 +105,58 @@ namespace Vlingo.Http
                 // HTTP/1.1 + 1 + status code + "\n" + headers + "\n" + entity + just-in-case
                 return 9 + StatusCode.Length + 1 + headersSize + 1 + Entity.Content.Length + 5;
             }
+        }
+
+        public override string ToString()
+        {
+            var builder = new StringBuilder();
+
+            // TODO: currently supports only HTTP/1.1
+
+            builder.Append(Version.Http1_1).Append(" ").Append(Status.GetDescription()).Append("\n");
+            builder = AppendAllHeadersTo(builder);
+            builder.Append("\n").Append(Entity);
+
+            return builder.ToString();
+        }
+
+        private Headers<ResponseHeader> AddMissingContentLengthHeader(Headers<ResponseHeader> headers)
+        {
+            if (!Entity.IsComplex)
+            {
+                var contentLength = Entity.Content.Length;
+                var header = headers.HeaderOf(ResponseHeader.ContentLength);
+                if (header == null && contentLength > 0)
+                {
+                    headers.Add(ResponseHeader.Of(ResponseHeader.ContentLength, contentLength));
+                }
+            }
+
+            return headers;
+        }
+
+        private StringBuilder AppendAllHeadersTo(StringBuilder builder)
+        {
+            foreach (var header in Headers)
+            {
+                builder.Append(header.Name).Append(": ").Append(header.Value).Append("\n");
+            }
+            return builder;
+        }
+        
+        private Body EntityFrom(Headers<ResponseHeader> headers, Body entity)
+        {
+            var header = headers.HeaderOf(ResponseHeader.TransferEncoding);
+
+            if (header != null && header.Value.Equals("chunked"))
+            {
+                if (entity.IsComplex && !entity.HasContent)
+                {
+                    return Body.BeginChunked();
+                }
+            }
+
+            return entity;
         }
 
         public enum ResponseStatus

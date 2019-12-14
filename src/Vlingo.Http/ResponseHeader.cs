@@ -5,7 +5,6 @@
 // was not distributed with this file, You can obtain
 // one at https://mozilla.org/MPL/2.0/.
 
-
 using System;
 
 namespace Vlingo.Http
@@ -108,7 +107,7 @@ namespace Vlingo.Http
         public int IfContentLength =>
             string.Equals(Name, ContentLength, StringComparison.InvariantCultureIgnoreCase)
                 ? int.Parse(Value)
-                : 0;
+                : -1;
 
         public bool IsKeepAliveConnection =>
             string.Equals(Name, Connection, StringComparison.InvariantCultureIgnoreCase)
