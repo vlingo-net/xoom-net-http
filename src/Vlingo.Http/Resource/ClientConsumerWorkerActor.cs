@@ -46,9 +46,9 @@ namespace Vlingo.Http.Resource
             buffer.Release();
 
             // don't disperse stowed messages unless a full response has arrived
-            if (_parser.HasFullResponse)
+            if (_parser.HasFullResponse())
             {
-                var response = _parser.FullResponse;
+                var response = _parser.FullResponse();
 
                 if (_testId != EmptyTestId)
                 {

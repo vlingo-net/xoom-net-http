@@ -52,9 +52,9 @@ namespace Vlingo.Http.Resource
 
             buffer.Release();
 
-            while (_state.Parser.HasFullResponse)
+            while (_state.Parser.HasFullResponse())
             {
-                var response = _state.Parser.FullResponse;
+                var response = _state.Parser.FullResponse();
                 var correlationId = response.Headers.HeaderOf(ResponseHeader.XCorrelationID);
                 if (correlationId == null)
                 {

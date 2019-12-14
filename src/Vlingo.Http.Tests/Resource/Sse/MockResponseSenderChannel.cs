@@ -48,11 +48,11 @@ namespace Vlingo.Http.Tests.Resource.Sse
 
             if (!_receivedStatus)
             {
-                Response.Set(parser.FullResponse);
+                Response.Set(parser.FullResponse());
             }
             else
             {
-                _respondWithSafely.WriteUsing("events", parser.FullResponse);
+                _respondWithSafely.WriteUsing("events", parser.FullResponse());
             }
             
             _receivedStatus = true;
