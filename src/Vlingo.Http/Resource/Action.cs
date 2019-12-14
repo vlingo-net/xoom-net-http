@@ -8,16 +8,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 
 namespace Vlingo.Http.Resource
 {
     public sealed class Action
     {
-        internal static readonly MatchResults UnmatchedResults = new MatchResults(null, null, new List<string>(), "", false);
+        internal static readonly MatchResults UnmatchedResults = new MatchResults(null, null, new List<string>(), "");
 
         private readonly IList<MappedParameter> _additionalParameters;
-        private readonly bool _disallowPathParametersWithSlash;
         private readonly Method _method;
         private readonly string? _uri;
         private readonly string? _originalTo;
@@ -41,7 +39,6 @@ namespace Vlingo.Http.Resource
             string? uri,
             string? to,
             string? mapper,
-            bool disallowPathParametersWithSlash,
             IList<MappedParameter> additionalParameters)
         {
             Id = id;
@@ -50,7 +47,6 @@ namespace Vlingo.Http.Resource
             _to = new ToSpec(to);
             _originalTo = to;
             _mapper = mapper == null ? DefaultJsonMapper.Instance : MapperFrom(mapper);
-            _disallowPathParametersWithSlash = disallowPathParametersWithSlash;
             _additionalParameters = additionalParameters;
             _matchable = new Matchable(uri);
         }
@@ -60,9 +56,8 @@ namespace Vlingo.Http.Resource
             string? method,
             string? uri,
             string? to,
-            string? mapper,
-            bool disallowPathParametersWithSlash)
-            : this(id, method, uri, to, mapper, disallowPathParametersWithSlash, new List<MappedParameter>())
+            string? mapper)
+            : this(id, method, uri, to, mapper, new List<MappedParameter>())
         { }
 
         internal MappedParameters Map(Request? request, IList<RawPathParameter> parameters)
@@ -93,7 +88,7 @@ namespace Vlingo.Http.Resource
 
         private int IndexOfNextSegmentStart(int currentIndex, string path)
         {
-            int nextSegmentStart = path.IndexOf("/", currentIndex);
+            int nextSegmentStart = path.IndexOf("/", currentIndex, StringComparison.InvariantCulture);
             if (nextSegmentStart < currentIndex)
             {
                 return path.Length;
@@ -125,7 +120,7 @@ namespace Vlingo.Http.Resource
                     }
                     else
                     {
-                        var indexOfSegment = path.IndexOf(segment.Value, pathCurrentIndex);
+                        var indexOfSegment = path.IndexOf(segment.Value, pathCurrentIndex, StringComparison.InvariantCulture);
                         if (indexOfSegment == -1 || (pathCurrentIndex == 0 && indexOfSegment != 0))
                         {
                             return UnmatchedResults;
@@ -138,12 +133,12 @@ namespace Vlingo.Http.Resource
                 int nextPathSegmentIndex = IndexOfNextSegmentStart(pathCurrentIndex, path);
                 if (nextPathSegmentIndex != path.Length)
                 {
-                    if (_disallowPathParametersWithSlash || nextPathSegmentIndex < path.Length - 1)
+                    if (nextPathSegmentIndex < path.Length - 1)
                     {
                         return UnmatchedResults;
                     }
                 }
-                var matchResults = new MatchResults(this, running, ParameterNames, path, _disallowPathParametersWithSlash);
+                var matchResults = new MatchResults(this, running, ParameterNames, path);
                 return matchResults;
             }
             return UnmatchedResults;
@@ -187,7 +182,7 @@ namespace Vlingo.Http.Resource
             var body = _to.Body;
             if (body != null)
             {
-                return _mapper.From(request?.Body?.ToString(), body?.BodyType);
+                return _mapper.From(request?.Body?.ToString(), body.BodyType);
             }
             return null;
         }
@@ -288,8 +283,7 @@ namespace Vlingo.Http.Resource
                 Action? action,
                 RunningMatchSegments? running,
                 IList<string> parameterNames,
-                string path,
-                bool disallowPathParametersWithSlash)
+                string path)
             {
                 Action = action;
                 Parameters = new List<RawPathParameter>(parameterNames.Count);
@@ -316,7 +310,7 @@ namespace Vlingo.Http.Resource
                                 return;
                             }
                             var value = path.Substring(pathStartIndex, pathEndIndex - pathStartIndex);
-                            if (disallowPathParametersWithSlash && value.IndexOf("/") >= 0)
+                            if (value.IndexOf("/", StringComparison.InvariantCulture) >= 0 && !"/".Equals(path.Substring(pathEndIndex - 1)))
                             {
                                 IsMatched = false;
                                 return;

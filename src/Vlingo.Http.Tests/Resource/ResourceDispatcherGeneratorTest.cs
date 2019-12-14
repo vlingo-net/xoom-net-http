@@ -55,12 +55,12 @@ namespace Vlingo.Http.Tests.Resource
             var converter = new Converter(output);
             Console.SetOut(converter);
             
-            var actionPostUser = new Action(0, "POST", "/users", "register(body:Vlingo.Http.Tests.Sample.User.UserData userData)", null, true);
-            var actionPatchUserContact = new Action(1, "PATCH", "/users/{userId}/contact", "changeContact(string userId, body:Vlingo.Http.Tests.Sample.User.ContactData contactData)", null, true);
-            var actionPatchUserName = new Action(2, "PATCH", "/users/{userId}/name", "changeName(string userId, body:Vlingo.Http.Tests.Sample.User.NameData nameData)", null, true);
-            var actionGetUser = new Action(3, "GET", "/users/{userId}", "queryUser(string userId)", null, true);
-            var actionGetUsers = new Action(4, "GET", "/users", "queryUsers()", null, true);
-            var actionQueryUserError = new Action(5, "GET", "/users/{userId}/error", "queryUserError(string userId)", null, true);
+            var actionPostUser = new Action(0, "POST", "/users", "register(body:Vlingo.Http.Tests.Sample.User.UserData userData)", null);
+            var actionPatchUserContact = new Action(1, "PATCH", "/users/{userId}/contact", "changeContact(string userId, body:Vlingo.Http.Tests.Sample.User.ContactData contactData)", null);
+            var actionPatchUserName = new Action(2, "PATCH", "/users/{userId}/name", "changeName(string userId, body:Vlingo.Http.Tests.Sample.User.NameData nameData)", null);
+            var actionGetUser = new Action(3, "GET", "/users/{userId}", "queryUser(string userId)", null);
+            var actionGetUsers = new Action(4, "GET", "/users", "queryUsers()", null);
+            var actionQueryUserError = new Action(5, "GET", "/users/{userId}/error", "queryUserError(string userId)", null);
             
             _actions = new List<Action>
             {

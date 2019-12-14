@@ -29,8 +29,7 @@ namespace Vlingo.Http.Resource
                     predicate.Method.ToString(),
                     predicate.Path,
                     "Dynamic" + currentId + "(" + predicate.ActionSignature + ")",
-                    null,
-                    false));
+                    null));
             }
         }
 

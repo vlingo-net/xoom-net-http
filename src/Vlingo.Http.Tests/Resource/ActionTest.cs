@@ -16,7 +16,7 @@ namespace Vlingo.Http.Tests.Resource
         [Fact]
         public void TestMatchesNoParameters()
         {
-            var action = new Action(0, "GET", "/users", "QueryUsers()", null, false);
+            var action = new Action(0, "GET", "/users", "QueryUsers()", null);
     
             var matchResults = action.MatchWith(Method.Get, "/users".ToMatchableUri());
         
@@ -28,7 +28,7 @@ namespace Vlingo.Http.Tests.Resource
         [Fact]
         public void TestMatchesOneParameterInBetween()
         {
-            var action = new Action(0, "PATCH", "/users/{userId}/name", "ChangeName(string userId)", null, false);
+            var action = new Action(0, "PATCH", "/users/{userId}/name", "ChangeName(string userId)", null);
     
             var matchResults = action.MatchWith(Method.Patch, "/users/1234567/name".ToMatchableUri());
         
@@ -42,7 +42,7 @@ namespace Vlingo.Http.Tests.Resource
         [Fact]
         public void TestMatchesOneParameterLastPosition()
         {
-            var action = new Action(0, "GET", "/users/{userId}", "QueryUser(string userId)", null, false);
+            var action = new Action(0, "GET", "/users/{userId}", "QueryUser(string userId)", null);
     
             var matchResults = action.MatchWith(Method.Get, "/users/1234567".ToMatchableUri());
         
@@ -62,8 +62,7 @@ namespace Vlingo.Http.Tests.Resource
                 "GET",
                 "/catalogs/{catalogId}/products/{productId}/details/{detailId}",
                 "queryCatalogProductDetails(String catalogId, String productId, String detailId)",
-                null,
-                false);
+                null);
     
             var matchResults = action.MatchWith(Method.Get, "/catalogs/123/products/4567/details/890".ToMatchableUri());
         
@@ -81,7 +80,7 @@ namespace Vlingo.Http.Tests.Resource
         [Fact]
         public void TestMatchesOneParameterWithEndSlash()
         {
-            var action = new Action(0, "GET", "/users/{userId}/", "QueryUser(string userId)", null, false);
+            var action = new Action(0, "GET", "/users/{userId}/", "QueryUser(string userId)", null);
     
             var matchResults = action.MatchWith(Method.Get, "/users/1234567/".ToMatchableUri());
         
@@ -93,6 +92,38 @@ namespace Vlingo.Http.Tests.Resource
         }
         
         [Fact]
+        public void TestMatchesMultipleParametersWithSimilarUri()
+        {
+            var shortAction =
+                new Action(
+                0,
+                "GET",
+                "/o/{oId}/u/{uId}/foo",
+                "foo(string oId, string uId, string uId)",
+                null);
+
+            var longAction =
+                new Action(
+                    0,
+                    "GET",
+                    "/o/{oId}/u/{uId}/c/{cId}/foo",
+                    "foo(string oId, string uId, string uId, string cId)",
+                    null);
+
+            var matchResultsShortUriToShortAction = shortAction.MatchWith(Method.Get, "/o/1/u/2/foo".ToMatchableUri());
+            var matchResultsLongUriToShortAction = shortAction.MatchWith(Method.Get, "/o/1/u/2/c/3/foo".ToMatchableUri());
+
+            var matchResultsShortUriToLongAction = longAction.MatchWith(Method.Get, "/o/1/u/2/foo".ToMatchableUri());
+            var matchResultsLongUriToLongAction = longAction.MatchWith(Method.Get, "/o/1/u/2/c/3/foo".ToMatchableUri());
+
+
+            Assert.True(matchResultsShortUriToShortAction.IsMatched);
+            Assert.False(matchResultsLongUriToShortAction.IsMatched);
+            Assert.False(matchResultsShortUriToLongAction.IsMatched);
+            Assert.True(matchResultsLongUriToLongAction.IsMatched);
+        }
+        
+        [Fact]
         public void TestMatchesMultipleParametersWithEndSlash()
         {
             var action =
@@ -101,8 +132,7 @@ namespace Vlingo.Http.Tests.Resource
                 "GET",
                 "/users/{userId}/emailAddresses/{emailAddressId}/",
                 "queryUserEmailAddress(String userId, String emailAddressId)",
-                null,
-                false);
+                null);
     
             var matchResults = action.MatchWith(Method.Get, "/users/1234567/emailAddresses/890/".ToMatchableUri());
         
@@ -118,7 +148,7 @@ namespace Vlingo.Http.Tests.Resource
         [Fact]
         public void TestNoMatchMethod()
         {
-            var action = new Action(0, "GET", "/users/all", "queryUsers()", null, false);
+            var action = new Action(0, "GET", "/users/all", "queryUsers()", null);
     
             var matchResults = action.MatchWith(Method.Post, "/users".ToMatchableUri());
         
@@ -130,7 +160,7 @@ namespace Vlingo.Http.Tests.Resource
         [Fact]
         public void TestNoMatchNoParameters()
         {
-            var action = new Action(0, "GET", "/users/all", "queryUsers()", null, false);
+            var action = new Action(0, "GET", "/users/all", "queryUsers()", null);
     
             var matchResults = action.MatchWith(Method.Get, "/users/one".ToMatchableUri());
         
@@ -142,7 +172,7 @@ namespace Vlingo.Http.Tests.Resource
         [Fact]
         public void TestNoMatchGivenAdditionalElements()
         {
-            var action = new Action(0, "GET", "/users/{id}", "queryUsers(String userId)", null, false);
+            var action = new Action(0, "GET", "/users/{id}", "queryUsers(String userId)", null);
 
             var matchResults = action.MatchWith(Method.Get, "/users/1234/extra".ToMatchableUri());
 
@@ -154,7 +184,7 @@ namespace Vlingo.Http.Tests.Resource
         [Fact]
         public void TestNoMatchEmptyParam()
         {
-            var action = new Action(0, "GET", "/users/{id}/data", "queryUserData(String userId)", null, true);
+            var action = new Action(0, "GET", "/users/{id}/data", "queryUserData(String userId)", null);
 
             var matchResults = action.MatchWith(Method.Get, "/users//data".ToMatchableUri());
 
@@ -166,7 +196,7 @@ namespace Vlingo.Http.Tests.Resource
         [Fact]
         public void TestMatchEmptyParamGivenAllowsTrailingSlash()
         {
-            var action = new Action(0, "GET", "/users/{id}", "queryUsers(String userId)", null, false);
+            var action = new Action(0, "GET", "/users/{id}", "queryUsers(String userId)", null);
 
             var matchResults = action.MatchWith(Method.Get, "/users//".ToMatchableUri());
 
@@ -184,8 +214,7 @@ namespace Vlingo.Http.Tests.Resource
                 "GET",
                 "/users/{userId}/emailAddresses/{emailAddressId}/",
                 "queryUserEmailAddress(String userId, String emailAddressId)",
-                null,
-                false);
+                null);
     
             var matchResults = action.MatchWith(Method.Get, "/users/1234567/emailAddresses/890".ToMatchableUri());
         
@@ -203,8 +232,7 @@ namespace Vlingo.Http.Tests.Resource
                 "GET",
                 "/users/{userId}/emailAddresses/{emailAddressId}",
                 "queryUserEmailAddress(String userId, String emailAddressId)",
-                null,
-                false);
+                null);
     
             var matchResults = action.MatchWith(Method.Get, "/users/1234567/emailAddresses/890/".ToMatchableUri());
         
@@ -224,8 +252,7 @@ namespace Vlingo.Http.Tests.Resource
                 "GET",
                 "/users/{userId}",
                 "queryUser(String userId)",
-                null,
-                false);
+                null);
 
             var uri = "/users/1234567?one=1.1&two=2.0&three=three*&three=3.3".ToMatchableUri();
             

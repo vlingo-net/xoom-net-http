@@ -16,31 +16,31 @@ namespace Vlingo.Http.Resource
         private int _currentId;
         private readonly IList<Action> _actions;
 
-        public static Actions CanBe(string method, string uri, string to, bool disallowPathParametersWithSlash)
-            => new Actions(method, uri, to, null, disallowPathParametersWithSlash);
+        public static Actions CanBe(string method, string uri, string to)
+            => new Actions(method, uri, to, null);
 
-        public static Actions CanBe(string method, string uri, string to, string mapper, bool disallowPathParametersWithSlash)
-            => new Actions(method, uri, to, mapper, disallowPathParametersWithSlash);
+        public static Actions CanBe(string method, string uri, string to, string mapper)
+            => new Actions(method, uri, to, mapper);
 
-        public Actions Also(string method, string uri, string to, bool disallowPathParametersWithSlash)
+        public Actions Also(string method, string uri, string to)
         {
-            _actions.Add(new Action(_currentId++, method, uri, to, null, disallowPathParametersWithSlash));
+            _actions.Add(new Action(_currentId++, method, uri, to, null));
             return this;
         }
 
-        public Actions Also(string method, string uri, string to, string mapper, bool disallowPathParametersWithSlash)
+        public Actions Also(string method, string uri, string to, string mapper)
         {
-            _actions.Add(new Action(_currentId++, method, uri, to, mapper, disallowPathParametersWithSlash));
+            _actions.Add(new Action(_currentId++, method, uri, to, mapper));
             return this;
         }
 
         public IList<Action> ThatsAll() => new ArraySegment<Action>(_actions.ToArray());
 
-        private Actions(string method, string uri, string to, string? mapper, bool disallowPathParametersWithSlash)
+        private Actions(string method, string uri, string to, string? mapper)
         {
             _actions = new List<Action>
             {
-                new Action(_currentId++, method, uri, to, mapper, disallowPathParametersWithSlash)
+                new Action(_currentId++, method, uri, to, mapper)
             };
         }
     }

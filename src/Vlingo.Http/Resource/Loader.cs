@@ -83,12 +83,10 @@ namespace Vlingo.Http.Resource
             var handlerPoolKey = $"resource.{resourceName}.pool";
             var maybeHandlerPoolSize = int.Parse(properties.GetProperty(handlerPoolKey, "1"));
             var handlerPoolSize = maybeHandlerPoolSize <= 0 ? 1 : maybeHandlerPoolSize;
-            var disallowPathParametersWithSlashKey = $"resource.{resourceName}.disallowPathParametersWithSlash";
-            var disallowPathParametersWithSlash = bool.Parse(properties.GetProperty(disallowPathParametersWithSlashKey, "true"));
 
             try
             {
-                var resourceActions = ResourceActionsOf(properties, resourceName, resourceActionNames, disallowPathParametersWithSlash);
+                var resourceActions = ResourceActionsOf(properties, resourceName, resourceActionNames);
 
                 var resourceHandlerClass = ConfigurationResource<ResourceHandler>.NewResourceHandlerTypeFor(resourceHandlerClassname);
 
@@ -135,8 +133,8 @@ namespace Vlingo.Http.Resource
 
                     var actions = new List<Action>(2);
                     var additionalParameters = new List<Action.MappedParameter> { mappedParameterClass, mappedParameterPayload, mappedParameterInterval, mappedParameterDefaultId };
-                    actions.Add(new Action(0, Method.Get.Name, subscribeURI, ssePublisherSubscribeTo, null, true, additionalParameters));
-                    actions.Add(new Action(1, Method.Delete.Name, unsubscribeURI, ssePublisherUnsubscribeTo, null, true));
+                    actions.Add(new Action(0, Method.Get.Name, subscribeURI, ssePublisherSubscribeTo, null, additionalParameters));
+                    actions.Add(new Action(1, Method.Delete.Name, unsubscribeURI, ssePublisherUnsubscribeTo, null));
                     var resource = ResourceFor(resourceName, typeof(SseStreamResource), handlerPoolSize, actions);
                     sseResourceActions[resourceName] = resource;
                 }
@@ -181,7 +179,7 @@ namespace Vlingo.Http.Resource
 
                     var actions = new List<Action>(1);
                     var additionalParameters = new List<Action.MappedParameter> { mappedParameterRoot, mappedParameterValidSubPaths };
-                    actions.Add(new Action(0, Method.Get.Name, actionSubPath + slash + staticFilesResourcePathParameter, staticFilesResourceServeFile, null, false, additionalParameters));
+                    actions.Add(new Action(0, Method.Get.Name, actionSubPath + slash + staticFilesResourcePathParameter, staticFilesResourceServeFile, null, additionalParameters));
                     var resource = ResourceFor(resourceName, typeof(StaticFilesResource), int.Parse(poolSize), actions);
                     staticFilesResourceActions[resourceName] = resource;
                 }
@@ -236,8 +234,7 @@ namespace Vlingo.Http.Resource
         private static List<Action> ResourceActionsOf(
             HttpProperties properties,
             string resourceName,
-            string[] resourceActionNames,
-            bool disallowPathParametersWithSlash)
+            string[] resourceActionNames)
         {
             var resourceActions = new List<Action>(resourceActionNames.Length);
 
@@ -253,7 +250,7 @@ namespace Vlingo.Http.Resource
                     var to = properties.GetProperty(keyPrefix + "to", null);
                     var mapper = properties.GetProperty(keyPrefix + "mapper", null);
 
-                    resourceActions.Add(new Action(actionId, method, uri, to, mapper, disallowPathParametersWithSlash));
+                    resourceActions.Add(new Action(actionId, method, uri, to, mapper));
                 }
                 catch (Exception e)
                 {
