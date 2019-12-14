@@ -10,20 +10,43 @@ using System;
 namespace Vlingo.Http
 {
     /// <summary>
-    /// An HTTP request/response body, with concrete subclasses <code>BinaryBody</code> and <code>TextBody</code>.
+    /// An HTTP request/response body, with concrete subclasses <see cref="PlainBody"/> and <see cref="ChunkedBody"/>.
     /// </summary>
-    public class Body
+    public abstract class Body
     {
+        private readonly string _content;
+        
         public enum Encoding
         {
             Base64,
-            UTF8
+            UTF8,
+            None
         }
 
         /// <summary>
-        /// An empty body.
+        /// An empty <see cref="PlainBody"/>
         /// </summary>
-        public static Body Empty { get; } = new Body();
+        public static Body Empty { get; } = new PlainBody();
+        
+        /// <summary>
+        /// Gets <see cref="ChunkedBody"/> prepared to receive chunks of content.
+        /// </summary>
+        /// <returns><see cref="ChunkedBody"/></returns>
+        public static ChunkedBody BeginChunked() => new ChunkedBody();
+        
+        /// <summary>
+        /// Gets a new <see cref="ChunkedBody"/> with <see cref="Body"/> content as the initial chunk.
+        /// </summary>
+        /// <param name="body">the <see cref="Body"/> content to add as a chunk</param>
+        /// <returns><see cref="ChunkedBody"/></returns>
+        public static ChunkedBody BeginChunkedWith(Body body) => BeginChunked().AppendChunk(body);
+        
+        /// <summary>
+        /// Gets a new <see cref="ChunkedBody"/> with <see cref="Body"/> content as the initial chunk.
+        /// </summary>
+        /// <param name="content">The string content.</param>
+        /// <returns><see cref="ChunkedBody"/></returns>
+        public static ChunkedBody BeginChunkedWith(string content) => Body.BeginChunked().AppendChunk(content);
 
         /// <summary>
         /// Answer a new <code>Body</code> with binary content using <paramref name="encoding"/>.
@@ -36,9 +59,11 @@ namespace Vlingo.Http
             switch (encoding)
             {
                 case Encoding.Base64:
-                    return new Body(BytesToBase64(body));
+                    return new PlainBody(BytesToBase64(body));
                 case Encoding.UTF8:
-                    return new Body(BytesToUTF8(body));
+                    return new PlainBody(BytesToUTF8(body));
+                case Encoding.None:
+                    return new BinaryBody(body);
             }
             
             throw new ArgumentException($"Unmapped encoding: {encoding}", nameof(encoding));
@@ -56,28 +81,39 @@ namespace Vlingo.Http
         /// </summary>
         /// <param name="body">The string content.</param>
         /// <returns></returns>
-        public static Body From(string body) => new Body(body);
+        public static Body From(string body) => new PlainBody(body);
 
-        private static string BytesToBase64(byte[] body)
-            => Convert.ToBase64String(body);
+        /// <summary>
+        /// Gets whether or not this <see cref="Body"/> content is complex.
+        /// A <see cref="PlainBody"/> is not complex. A <see cref="ChunkedBody"/> is complex.
+        /// </summary>
+        public virtual bool IsComplex { get; } = false;
 
-        private static string BytesToUTF8(byte[] body)
-            => System.Text.Encoding.UTF8.GetString(body);
+        /// <summary>
+        /// Gets the content as a string
+        /// </summary>
+        public virtual string Content => _content;
+        
+        public virtual byte[] BinaryContent => System.Text.Encoding.UTF8.GetBytes(_content);
 
-        public bool HasContent => !string.IsNullOrEmpty(Content);
+        public virtual bool HasContent => !string.IsNullOrEmpty(Content);
 
         public override string ToString() => Content;
 
-        internal string Content { get; }
+        internal static string BytesToBase64(byte[] body)
+            => Convert.ToBase64String(body);
 
-        private Body(string body)
+        internal static string BytesToUTF8(byte[] body)
+            => System.Text.Encoding.UTF8.GetString(body);
+
+        protected Body(string body)
         {
-            Content = body;
+            _content = body;
         }
 
-        private Body()
+        protected Body()
         {
-            Content = string.Empty;
+            _content = string.Empty;
         }
     }
 }
