@@ -67,7 +67,7 @@ namespace Vlingo.Http
 
         public static RequestHeader FromString(string textLine)
         {
-            var colonIndex = textLine.IndexOf(":");
+            var colonIndex = textLine.IndexOf(":", StringComparison.InvariantCulture);
 
             if (colonIndex == -1)
             {
@@ -100,7 +100,7 @@ namespace Vlingo.Http
                 ? int.Parse(Value)
                 : 0;
 
-        protected RequestHeader(string name, string value)
+        private RequestHeader(string name, string value)
             : base(name, value)
         {
         }

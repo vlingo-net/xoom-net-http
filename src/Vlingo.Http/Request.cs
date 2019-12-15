@@ -60,7 +60,7 @@ namespace Vlingo.Http
 
         public Request WithHeader(string name, int value) => WithHeader(name, value.ToString());
 
-        public Request WithUri(string uri) => new Request(Method, new Uri(uri, UriKind.RelativeOrAbsolute), Version, Headers, Body);
+        public Request WithUri(string uri) => new Request(Method, new Uri(uri, UriKind.Absolute), Version, Headers, Body);
 
         public Request WithVersion(string version) => new Request(Method, Uri, Version.From(version), Headers, Body);
 
@@ -75,7 +75,7 @@ namespace Vlingo.Http
         public QueryParameters QueryParameters => new QueryParameters(Uri?.Query);
 
         public override string ToString()
-            => $"{Method} {Uri} {Version}\n{Headers}\n{Body}";
+            => $"{Method} {Uri.PathAndQuery} {Version}\n{Headers}\n{Body}";
 
         internal Request(Method? method, Uri? uri, Version? version, Headers<RequestHeader> headers, Body? body)
         {
