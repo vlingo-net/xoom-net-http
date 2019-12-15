@@ -71,7 +71,7 @@ namespace Vlingo.Http
             Status = status;
             var statusDescription = status.GetDescription();
             StatusCode = statusDescription.Substring(0, statusDescription.IndexOf(' '));
-            Entity = EntityFrom(headers, entity);
+            Entity = EntityFrom(headers, entity!);
             Headers = AddMissingContentLengthHeader(headers);
         }
 
@@ -148,7 +148,7 @@ namespace Vlingo.Http
         {
             var header = headers.HeaderOf(ResponseHeader.TransferEncoding);
 
-            if (header != null && header.Value.Equals("chunked"))
+            if (header != null && header.Value!.Equals("chunked"))
             {
                 if (entity.IsComplex && !entity.HasContent)
                 {
