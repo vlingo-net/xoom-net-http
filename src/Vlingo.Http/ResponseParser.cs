@@ -163,7 +163,7 @@ namespace Vlingo.Http
             }
 
             internal bool HasMissingContentTimeExpired(long timeLimit)
-                => (_outOfContentTime + timeLimit) < DateExtensions.GetCurrentMillis();
+                => _outOfContentTime + timeLimit < DateExtensions.GetCurrentMillis();
 
             internal VirtualStateParser Includes(byte[] responseContent)
             {

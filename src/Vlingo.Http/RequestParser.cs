@@ -15,14 +15,14 @@ namespace Vlingo.Http
     {
         private readonly VirtualStateParser _virtualStateParser;
 
-        public static RequestParser ParseFor(byte[] requestContent)
+        public static RequestParser ParserFor(byte[] requestContent)
             => new RequestParser(requestContent);
 
         public bool HasCompleted => _virtualStateParser.HasCompleted;
 
-        public Request FullRequest => _virtualStateParser.FullRequest;
+        public Request FullRequest() => _virtualStateParser.FullRequest();
 
-        public bool HasFullRequest => _virtualStateParser.HasFullRequest;
+        public bool HasFullRequest() => _virtualStateParser.HasFullRequest();
 
         public bool HasMissingContentTimeExpired(long timeLimit) => _virtualStateParser.HasMissingContentTimeExpired(timeLimit);
 
@@ -60,15 +60,16 @@ namespace Vlingo.Http
             private Step _currentStep;
             private List<Request> _fullRequests;
             private List<Request>.Enumerator _fullRequestsIterator;
+            private bool _availableNext;
             private Headers<RequestHeader> _headers;
             private Method? _method;
-            private DateTime _outOfContentTime;
+            private long _outOfContentTime;
             private Uri? _uri;
             private Version? _version;
 
             internal VirtualStateParser()
             {
-                _outOfContentTime = DateTime.MinValue;
+                _outOfContentTime = 0;
                 _contentQueue = new Queue<string>();
                 _currentStep = Step.NotStarted;
                 _requestText = string.Empty;
@@ -78,40 +79,35 @@ namespace Vlingo.Http
                 Reset();
             }
 
-            internal Request FullRequest {
-                get
+            internal Request FullRequest()
+            {
+                if (_fullRequestsIterator.Current == null)
                 {
-                    if(_fullRequestsIterator.Current == null)
-                    {
-                        _fullRequestsIterator = _fullRequests.GetEnumerator();
-                    }
-
-                    if (_fullRequestsIterator.MoveNext())
-                    {
-                        return _fullRequestsIterator.Current;
-                    }
-
-                    _fullRequestsIterator.Dispose();
-                    throw new InvalidOperationException($"{Response.ResponseStatus.BadRequest}\n\nRequest is not completed: {_method} {_uri}");
+                    _fullRequestsIterator = _fullRequests.GetEnumerator();
                 }
+
+                if (_availableNext)
+                {
+                    _availableNext = false;
+                    return _fullRequestsIterator.Current;
+                }
+
+                if (_fullRequestsIterator.MoveNext())
+                {
+                    return _fullRequestsIterator.Current;
+                }
+
+                _fullRequestsIterator.Dispose();
+                throw new InvalidOperationException(
+                    $"{Response.ResponseStatus.BadRequest}\n\nRequest is not completed: {_method} {_uri}");
             }
 
-            internal bool HasFullRequest
+            internal bool HasFullRequest()
             {
-                get
+                if (_fullRequestsIterator.Current != null)
                 {
-                    if(_fullRequestsIterator.Current != null)
-                    {
-                        if (!_fullRequestsIterator.MoveNext())
-                        {
-                            _fullRequestsIterator.Dispose();
-                            return false;
-                        }
-
-                        return true;
-                    }
-
-                    if(_fullRequests.Count == 0)
+                    _availableNext = _fullRequestsIterator.MoveNext();
+                    if (!_availableNext)
                     {
                         _fullRequestsIterator.Dispose();
                         return false;
@@ -119,6 +115,14 @@ namespace Vlingo.Http
 
                     return true;
                 }
+
+                if (_fullRequests.Count == 0)
+                {
+                    _fullRequestsIterator.Dispose();
+                    return false;
+                }
+
+                return true;
             }
 
             internal bool HasCompleted
@@ -135,12 +139,11 @@ namespace Vlingo.Http
             }
 
             internal bool HasMissingContentTimeExpired(long timeLimit)
-                => (DateTime.UtcNow - _outOfContentTime).TotalMilliseconds > timeLimit;
+                => _outOfContentTime + timeLimit < DateExtensions.GetCurrentMillis();
 
             internal VirtualStateParser Includes(byte[] requestContent)
             {
-                _outOfContentTime = DateTime.MinValue;
-                
+                _outOfContentTime = 0;
                 var requestContentText = Converters.BytesToText(requestContent);
                 if(_contentQueue.Count == 0)
                 {
@@ -154,7 +157,7 @@ namespace Vlingo.Http
                 return this;
             }
 
-            internal bool IsMissingContent => _outOfContentTime > DateTime.MinValue;
+            internal bool IsMissingContent => _outOfContentTime > 0;
 
             internal VirtualStateParser Parse()
             {
@@ -187,7 +190,7 @@ namespace Vlingo.Http
                     catch(OutOfContentException)
                     {
                         _continuation = true;
-                        _outOfContentTime = DateTime.UtcNow;
+                        _outOfContentTime = (long)DateExtensions.GetCurrentMillis();
                         return this;
                     }
                     catch(Exception ex)
@@ -380,7 +383,7 @@ namespace Vlingo.Http
                 _contentLength = 0;
                 _continuation = false;
                 _method = null;
-                _outOfContentTime = DateTime.MinValue;
+                _outOfContentTime = 0;
                 _version = null;
                 _uri = null;
             }
