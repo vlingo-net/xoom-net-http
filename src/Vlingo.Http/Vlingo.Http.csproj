@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿  <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
@@ -28,9 +28,9 @@
     </AssemblyAttribute>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Vlingo.Actors" Version="0.6.0.2" />
-    <PackageReference Include="Vlingo.Common" Version="0.6.0.2" />
-    <PackageReference Include="Vlingo.Wire" Version="0.6.0.2" />
+    <PackageReference Include="Vlingo.Actors" Version="0.6.2" />
+    <PackageReference Include="Vlingo.Common" Version="0.6.2" />
+    <PackageReference Include="Vlingo.Wire" Version="0.6.2" />
   </ItemGroup>
 
 </Project>

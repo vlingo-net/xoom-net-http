@@ -118,6 +118,16 @@ namespace Vlingo.Http.Resource
             }
         }
 
+        internal override void Log(ILogger logger)
+        {
+            logger.Info($"Resource: {Name}");
+
+            foreach (var action in Actions)
+            {
+                logger.Info($"Action: id={action.Id}, method={action.Method}, uri={action.Uri}, to={action.To.Signature}");
+            }
+        }
+
         private static void AssertSaneActions(IList<Action> actions)
         {
             var expectedId = 0;

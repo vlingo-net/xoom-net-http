@@ -50,6 +50,20 @@ namespace Vlingo.Http.Resource
             }
         }
 
+        internal override void Log(ILogger logger)
+        {
+            logger.Info($"Resource: {Name}");
+
+            if (Actions != null)
+            {
+                foreach (var action in Actions)
+                {
+                    logger.Info(
+                        $"Action: id={action.Id}, method={action.Method}, uri={action.Uri}, to={action.To.Signature}");
+                }
+            }
+        }
+
         internal override Action.MatchResults MatchWith(Method? method, Uri? uri)
         {
             if (Actions != null)

@@ -8,6 +8,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace Vlingo.Http.Resource
 {
@@ -535,7 +536,24 @@ namespace Vlingo.Http.Resource
         public class ToSpec
         {
             public string MethodName { get; }
+            
             public IList<MethodParameter> Parameters { get; }
+
+            public string Signature
+            {
+                get
+                {
+                    var builder = new StringBuilder();
+
+                    builder
+                        .Append(MethodName)
+                        .Append("(")
+                        .Append(CommaSeparatedParameters())
+                        .Append(")");
+
+                    return builder.ToString();
+                }
+            }
 
             public ToSpec(string? to)
             {
@@ -552,6 +570,26 @@ namespace Vlingo.Http.Resource
 
             public MethodParameter ParameterOf(string name)
                 => Parameters.FirstOrDefault(p => string.Equals(name, p.Name));
+
+            private string CommaSeparatedParameters()
+            {
+                var builder = new StringBuilder();
+
+                string separator = "";
+
+                foreach (var parameter in Parameters)
+                {
+                    builder
+                        .Append(separator)
+                        .Append(parameter.Type)
+                        .Append(" ")
+                        .Append(parameter.Name);
+
+                    separator = ", ";
+                }
+
+                return builder.ToString();
+            }
 
             private Tuple<string, IList<MethodParameter>> Parse(string? to)
             {
