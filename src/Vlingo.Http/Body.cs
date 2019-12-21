@@ -6,6 +6,7 @@
 // one at https://mozilla.org/MPL/2.0/.
 
 using System;
+using System.IO;
 
 namespace Vlingo.Http
 {
@@ -46,7 +47,7 @@ namespace Vlingo.Http
         /// </summary>
         /// <param name="content">The string content.</param>
         /// <returns><see cref="ChunkedBody"/></returns>
-        public static ChunkedBody BeginChunkedWith(string content) => Body.BeginChunked().AppendChunk(content);
+        public static ChunkedBody BeginChunkedWith(string content) => BeginChunked().AppendChunk(content);
 
         /// <summary>
         /// Answer a new <code>Body</code> with binary content using <paramref name="encoding"/>.
@@ -75,6 +76,23 @@ namespace Vlingo.Http
         /// <param name="body">The byte[] content.</param>
         /// <returns></returns>
         public static Body From(byte[] body) => From(body, Encoding.Base64);
+
+        public static Body From(MemoryStream stream) => new PlainBody(BytesToBase64(stream.ToArray()));
+
+        public static Body From(MemoryStream stream, Encoding encoding)
+        {
+            switch (encoding)
+            {
+                case Encoding.Base64:
+                    return new PlainBody(BytesToBase64(stream.ToArray()));
+                case Encoding.UTF8:
+                    return new PlainBody(BytesToUTF8(stream.ToArray()));
+                case Encoding.None:
+                    return new BinaryBody(stream.ToArray());
+            }
+            
+            throw new ArgumentException($"Unmapped encoding: {encoding}", nameof(encoding));
+        }
 
         /// <summary>
         /// Answer a new <code>Body</code> with text content, which is a <code>TextBody</code>.
