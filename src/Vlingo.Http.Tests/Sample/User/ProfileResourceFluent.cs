@@ -16,16 +16,16 @@ namespace Vlingo.Http.Tests.Sample.User
 {
     public class ProfileResourceFluent : ResourceHandler
     {
-        private ProfileRepository repository = ProfileRepository.Instance();
-        private Stage stage;
+        private readonly ProfileRepository _repository = ProfileRepository.Instance();
+        private readonly Stage _stage;
 
-        public ProfileResourceFluent(World world) => stage = world.StageNamed("service");
+        public ProfileResourceFluent(World world) => _stage = world.StageNamed("service");
 
         public ICompletes<Response> Define(string userId, ProfileData profileData)
         {
-            return stage.ActorOf<IProfile>(stage.World.AddressFactory.FindableBy(int.Parse(userId)))
+            return _stage.ActorOf<IProfile>(_stage.World.AddressFactory.FindableBy(int.Parse(userId)))
                 .AndThenTo(profile => {
-                    var profileState = repository.ProfileOf(userId);
+                    var profileState = _repository.ProfileOf(userId);
                     return Vlingo.Common.Completes.WithSuccess(Response.Of(Response.ResponseStatus.Ok, Headers.Of(ResponseHeader.Of(ResponseHeader.Location, ProfileLocation(userId))),
                         JsonSerialization.Serialized(ProfileData.From(profileState))));
                 })
@@ -39,14 +39,14 @@ namespace Vlingo.Http.Tests.Sample.User
 
                     Stage.ActorFor<IProfile>(Definition.Has<ProfileActor>(Definition.Parameters(profileState)));
 
-                repository.Save(profileState);
+                _repository.Save(profileState);
                 return Response.Of(Response.ResponseStatus.Created, JsonSerialization.Serialized(ProfileData.From(profileState)));
             });
         }
 
         public ICompletes<Response> Query(string userId)
         {
-            var profileState = repository.ProfileOf(userId);
+            var profileState = _repository.ProfileOf(userId);
             if (profileState.DoesNotExist)
             {
                 return Vlingo.Common.Completes.WithSuccess(Response.Of(Response.ResponseStatus.NotFound, ProfileLocation(userId)));
