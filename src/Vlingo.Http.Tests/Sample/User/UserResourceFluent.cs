@@ -99,15 +99,15 @@ namespace Vlingo.Http.Tests.Sample.User
                         .Body<UserData>(typeof(UserData))
                         .Handle(Register),
                     ResourceBuilder.Patch("/users/{userId}/contact")
-                .Param<string>(typeof(string))
+                .Param<string>()
                 .Body<ContactData>(typeof(ContactData))
                 .Handle(ChangeContact),
                     ResourceBuilder.Patch("/users/{userId}/name")
-                .Param<string>(typeof(string))
+                .Param<string>()
                 .Body<NameData>(typeof(NameData))
                 .Handle(ChangeName),
                     ResourceBuilder.Get("/users/{userId}")
-                .Param<string>(typeof(string))
+                .Param<string>()
                 .Handle(QueryUser),
                     ResourceBuilder.Get("/users")
                 .Handle(QueryUsers));

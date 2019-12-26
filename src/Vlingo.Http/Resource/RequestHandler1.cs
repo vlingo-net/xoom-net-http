@@ -69,7 +69,7 @@ namespace Vlingo.Http.Resource
             => Execute(request, Resolver.Apply(request, mappedParameters), logger);
 
         public RequestHandler2<T, R> Param<R>(Type paramClass)
-            => new RequestHandler2<T, R>(Method, Path, Resolver, ParameterResolver.Path<R>(1, paramClass), ErrorHandler, MediaTypeMapper);
+            => new RequestHandler2<T, R>(Method, Path, Resolver, ParameterResolver.Path<R>(1), ErrorHandler, MediaTypeMapper);
 
         public RequestHandler2<T, R> Body<R>(Type bodyClass)
             => new RequestHandler2<T, R>(

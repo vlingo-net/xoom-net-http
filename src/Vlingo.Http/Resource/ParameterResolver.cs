@@ -23,10 +23,11 @@ namespace Vlingo.Http.Resource
         public Type ParamClass { get; }
         private readonly Func<Request, Action.MappedParameters, T> _resolver;
 
-        private ParameterResolver(ParameterResolver.Type type, Type paramClass, Func<Request, Action.MappedParameters, T> resolver)
+        private ParameterResolver(ParameterResolver.Type type,
+            Func<Request, Action.MappedParameters, T> resolver)
         {
             Type = type;
-            ParamClass = paramClass;
+            ParamClass = typeof(T);
             _resolver = resolver;
         }
 
@@ -36,25 +37,25 @@ namespace Vlingo.Http.Resource
         public T Apply(Request? request, Action.MappedParameters mappedParameters)
             => _resolver.Invoke(request!, mappedParameters);
 
-        internal static ParameterResolver<T> Create(ParameterResolver.Type type, Type paramClass, Func<Request, Action.MappedParameters, T> resolver)
-            => new ParameterResolver<T>(type, paramClass, resolver);
+        internal static ParameterResolver<T> Create(ParameterResolver.Type type,
+            Func<Request, Action.MappedParameters, T> resolver)
+            => new ParameterResolver<T>(type, resolver);
     }
 
     internal static class ParameterResolver
     {
-        public static ParameterResolver<T> Path<T>(int position, System.Type paramClass)
+        public static ParameterResolver<T> Path<T>(int position)
             => ParameterResolver<T>.Create(
                 Type.PATH,
-                paramClass,
                 (request, mappedParameters) =>
                 {
                     var value = mappedParameters.Mapped[position].Value;
-                    if (paramClass.IsInstanceOfType(value))
+                    if (value is T)
                     {
                         return (T)value!;
                     }
 
-                    throw new ArgumentException("Value " + value + " is of mimeType " + mappedParameters.Mapped[position].Type + " instead of " + paramClass.Name);
+                    throw new ArgumentException("Value " + value + " is of mimeType " + mappedParameters.Mapped[position].Type + " instead of " + typeof(T).Name);
                 });
 
         public static ParameterResolver<T> Body<T>(System.Type bodyClass)
@@ -63,13 +64,11 @@ namespace Vlingo.Http.Resource
         public static ParameterResolver<T> Body<T>(System.Type bodyClass, IMapper mapper)
             => ParameterResolver<T>.Create(
                 Type.BODY,
-                bodyClass,
                 (request, mappedParameters) => (T)mapper.From(request?.Body?.ToString(), bodyClass)!);
 
         public static ParameterResolver<T> Body<T>(System.Type bodyClass, MediaTypeMapper mediaTypeMapper)
             => ParameterResolver<T>.Create(
                 Type.BODY,
-                bodyClass,
                 (request, mappedParameters) =>
                 {
                     var assumedBodyContentType = ContentMediaType.Json.ToString();
@@ -80,7 +79,6 @@ namespace Vlingo.Http.Resource
         public static ParameterResolver<Header> Header(string headerName)
             => ParameterResolver<Header>.Create(
                 Type.HEADER,
-                typeof(Header),
                 (request, mappedParameters) => request.HeaderOf(headerName)!);
 
         public static ParameterResolver<T> Query<T>(string name)
@@ -92,7 +90,6 @@ namespace Vlingo.Http.Resource
         public static ParameterResolver<T> Query<T>(string name, System.Type type, T defaultValue)
             => ParameterResolver<T>.Create(
                 Type.QUERY,
-                type,
                 (request, mappedParameters) =>
                 {
                     string? value;

@@ -102,7 +102,7 @@ namespace Vlingo.Http.Resource
                 ResolverParam2,
                 ResolverParam3,
                 ResolverParam4,
-                ParameterResolver.Path<J>(4, paramClass),
+                ParameterResolver.Path<J>(4),
                 ErrorHandler,
                 MediaTypeMapper);
 
