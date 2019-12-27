@@ -107,7 +107,7 @@ namespace Vlingo.Http.Resource
                 ResolverParam1,
                 ResolverParam2,
                 ResolverParam3,
-                ParameterResolver.Body<I>(bodyClass, MediaTypeMapper),
+                ParameterResolver.Body<I>(MediaTypeMapper),
                 ErrorHandler,
                 MediaTypeMapper);
 
@@ -136,7 +136,7 @@ namespace Vlingo.Http.Resource
                 ResolverParam1,
                 ResolverParam2,
                 ResolverParam3,
-                ParameterResolver.Body<I>(bodyClass, mediaTypeMapper),
+                ParameterResolver.Body<I>(mediaTypeMapper),
                 ErrorHandler,
                 mediaTypeMapper);
         }

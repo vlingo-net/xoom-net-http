@@ -88,7 +88,7 @@ namespace Vlingo.Http.Resource
             => new RequestHandler3<T, R, U>(Method, Path, ResolverParam1, ResolverParam2, ParameterResolver.Path<U>(2), ErrorHandler, MediaTypeMapper);
 
         public RequestHandler3<T, R, U> Body<U>(Type bodyClass)
-            => new RequestHandler3<T, R, U>(Method, Path, ResolverParam1, ResolverParam2, ParameterResolver.Body<U>(bodyClass, MediaTypeMapper), ErrorHandler, MediaTypeMapper);
+            => new RequestHandler3<T, R, U>(Method, Path, ResolverParam1, ResolverParam2, ParameterResolver.Body<U>(MediaTypeMapper), ErrorHandler, MediaTypeMapper);
 
         [Obsolete("Deprecated in favor of using the ContentMediaType method, which handles media types appropriately. Use Body<U>(Type, MediaTypeMapper) or Body<U>(Type).")]
         public RequestHandler3<T, R, U> Body<U>(Type bodyClass, Type mapperClass)
@@ -113,7 +113,7 @@ namespace Vlingo.Http.Resource
                 Path, 
                 ResolverParam1, 
                 ResolverParam2,
-                ParameterResolver.Body<U>(bodyClass, mediaTypeMapper), 
+                ParameterResolver.Body<U>(mediaTypeMapper), 
                 ErrorHandler, 
                 MediaTypeMapper);
         }

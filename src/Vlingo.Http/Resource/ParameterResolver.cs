@@ -59,21 +59,21 @@ namespace Vlingo.Http.Resource
                 });
 
         public static ParameterResolver<T> Body<T>(System.Type bodyClass)
-            => Body<T>(bodyClass, DefaultMediaTypeMapper.Instance);
+            => Body<T>(DefaultMediaTypeMapper.Instance);
 
         public static ParameterResolver<T> Body<T>(System.Type bodyClass, IMapper mapper)
             => ParameterResolver<T>.Create(
                 Type.BODY,
                 (request, mappedParameters) => (T)mapper.From(request?.Body?.ToString(), bodyClass)!);
 
-        public static ParameterResolver<T> Body<T>(System.Type bodyClass, MediaTypeMapper mediaTypeMapper)
+        public static ParameterResolver<T> Body<T>(MediaTypeMapper mediaTypeMapper)
             => ParameterResolver<T>.Create(
                 Type.BODY,
                 (request, mappedParameters) =>
                 {
                     var assumedBodyContentType = ContentMediaType.Json.ToString();
                     var bodyMediaType = request.HeaderValueOr(RequestHeader.ContentType, assumedBodyContentType);
-                    return mediaTypeMapper.From<T>(request?.Body?.ToString(), ContentMediaType.ParseFromDescriptor(bodyMediaType), bodyClass);
+                    return mediaTypeMapper.From<T>(request.Body?.ToString(), ContentMediaType.ParseFromDescriptor(bodyMediaType));
                 });
 
         public static ParameterResolver<Header> Header(string headerName)

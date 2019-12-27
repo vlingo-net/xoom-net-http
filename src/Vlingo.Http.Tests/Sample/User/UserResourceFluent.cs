@@ -96,7 +96,7 @@ namespace Vlingo.Http.Tests.Sample.User
         {
             return ResourceBuilder.Resource("user resource fluent api",
                     ResourceBuilder.Post("/users")
-                        .Body<UserData>(typeof(UserData))
+                        .Body<UserData>()
                         .Handle(Register),
                     ResourceBuilder.Patch("/users/{userId}/contact")
                 .Param<string>()

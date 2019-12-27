@@ -21,12 +21,12 @@ namespace Vlingo.Http.Resource
             _mappersByContentType = mappersByContentType;
         }
 
-        public T From<T>(string? data, ContentMediaType contentMediaType, Type type)
+        public T From<T>(string? data, ContentMediaType contentMediaType)
         {
             var baseType = contentMediaType.ToBaseType();
             if (_mappersByContentType.ContainsKey(baseType))
             {
-                return (T)_mappersByContentType[baseType].From(data, type)!;
+                return (T)_mappersByContentType[baseType].From(data, typeof(T))!;
             }
             throw new MediaTypeNotSupportedException(contentMediaType.ToString());
         }
