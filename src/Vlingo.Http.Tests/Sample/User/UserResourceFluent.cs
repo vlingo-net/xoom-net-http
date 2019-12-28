@@ -77,10 +77,7 @@ namespace Vlingo.Http.Tests.Sample.User
             return Vlingo.Common.Completes.WithSuccess(Response.Of(Response.ResponseStatus.Ok, JsonSerialization.Serialized(UserData.From(userState))));
         }
 
-        public void QueryUserError(string userId)
-        {
-            throw new Exception("Test exception");
-        }
+        public void QueryUserError(string userId) => throw new Exception("Test exception");
 
         public ICompletes<Response> QueryUsers()
         {
@@ -100,11 +97,11 @@ namespace Vlingo.Http.Tests.Sample.User
                         .Handle(Register),
                     ResourceBuilder.Patch("/users/{userId}/contact")
                 .Param<string>()
-                .Body<ContactData>(typeof(ContactData))
+                .Body<ContactData>()
                 .Handle(ChangeContact),
                     ResourceBuilder.Patch("/users/{userId}/name")
                 .Param<string>()
-                .Body<NameData>(typeof(NameData))
+                .Body<NameData>()
                 .Handle(ChangeName),
                     ResourceBuilder.Get("/users/{userId}")
                 .Param<string>()

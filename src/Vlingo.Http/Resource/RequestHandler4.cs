@@ -94,7 +94,7 @@ namespace Vlingo.Http.Resource
             return Execute(request, param1, param2, param3, param4, logger);
         }
 
-        public RequestHandler5<T, R, U, I, J> Param<J>(Type paramClass)
+        public RequestHandler5<T, R, U, I, J> Param<J>()
             => new RequestHandler5<T, R, U, I, J>(
                 Method,
                 Path,
@@ -106,7 +106,7 @@ namespace Vlingo.Http.Resource
                 ErrorHandler,
                 MediaTypeMapper);
 
-        public RequestHandler5<T, R, U, I, J> Body<J>(Type bodyClass)
+        public RequestHandler5<T, R, U, I, J> Body<J>()
             => new RequestHandler5<T, R, U, I, J>(
                 Method,
                 Path,
@@ -119,11 +119,11 @@ namespace Vlingo.Http.Resource
                 MediaTypeMapper);
 
         [Obsolete("Deprecated in favor of using the ContentMediaType method, which handles media types appropriately. Use Body<J>(Type, MediaTypeMapper) or Body<J>(Type).")]
-        public RequestHandler5<T, R, U, I, J> Body<J>(Type bodyClass, Type mapperClass)
-            => Body<J>(bodyClass, MapperFrom(mapperClass));
+        public RequestHandler5<T, R, U, I, J> Body<J>(Type mapperClass)
+            => Body<J>(MapperFrom(mapperClass));
 
         [Obsolete("Deprecated in favor of using the ContentMediaType method, which handles media types appropriately. Use Body<J>(Type, MediaTypeMapper) or Body<J>(Type).")]
-        public RequestHandler5<T, R, U, I, J> Body<J>(Type bodyClass, IMapper mapper)
+        public RequestHandler5<T, R, U, I, J> Body<J>(IMapper mapper)
             => new RequestHandler5<T, R, U, I, J>(
                 Method,
                 Path,
@@ -131,11 +131,11 @@ namespace Vlingo.Http.Resource
                 ResolverParam2,
                 ResolverParam3,
                 ResolverParam4,
-                ParameterResolver.Body<J>(bodyClass, mapper),
+                ParameterResolver.Body<J>(mapper),
                 ErrorHandler,
                 MediaTypeMapper);
 
-        public RequestHandler5<T, R, U, I, J> Body<J>(Type bodyClass, MediaTypeMapper mediaTypeMapper)
+        public RequestHandler5<T, R, U, I, J> Body<J>(MediaTypeMapper mediaTypeMapper)
             => new RequestHandler5<T, R, U, I, J>(
                 Method,
                 Path,

@@ -61,10 +61,10 @@ namespace Vlingo.Http.Resource
         public static ParameterResolver<T> Body<T>(System.Type bodyClass)
             => Body<T>(DefaultMediaTypeMapper.Instance);
 
-        public static ParameterResolver<T> Body<T>(System.Type bodyClass, IMapper mapper)
+        public static ParameterResolver<T> Body<T>(IMapper mapper)
             => ParameterResolver<T>.Create(
                 Type.BODY,
-                (request, mappedParameters) => (T)mapper.From(request?.Body?.ToString(), bodyClass)!);
+                (request, mappedParameters) => (T)mapper.From(request?.Body?.ToString(), typeof(T))!);
 
         public static ParameterResolver<T> Body<T>(MediaTypeMapper mediaTypeMapper)
             => ParameterResolver<T>.Create(

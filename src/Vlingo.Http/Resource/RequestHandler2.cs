@@ -84,28 +84,28 @@ namespace Vlingo.Http.Resource
             return Execute(request, param1, param2, logger);
         }
 
-        public RequestHandler3<T, R, U> Param<U>(Type paramClass)
+        public RequestHandler3<T, R, U> Param<U>()
             => new RequestHandler3<T, R, U>(Method, Path, ResolverParam1, ResolverParam2, ParameterResolver.Path<U>(2), ErrorHandler, MediaTypeMapper);
 
-        public RequestHandler3<T, R, U> Body<U>(Type bodyClass)
+        public RequestHandler3<T, R, U> Body<U>()
             => new RequestHandler3<T, R, U>(Method, Path, ResolverParam1, ResolverParam2, ParameterResolver.Body<U>(MediaTypeMapper), ErrorHandler, MediaTypeMapper);
 
         [Obsolete("Deprecated in favor of using the ContentMediaType method, which handles media types appropriately. Use Body<U>(Type, MediaTypeMapper) or Body<U>(Type).")]
-        public RequestHandler3<T, R, U> Body<U>(Type bodyClass, Type mapperClass)
-            => Body<U>(bodyClass, MapperFrom(mapperClass));
+        public RequestHandler3<T, R, U> Body<U>(Type mapperClass)
+            => Body<U>(MapperFrom(mapperClass));
 
         [Obsolete("Deprecated in favor of using the ContentMediaType method, which handles media types appropriately. Use Body<U>(Type, MediaTypeMapper) or Body<U>(Type).")]
-        public RequestHandler3<T, R, U> Body<U>(Type bodyClass, IMapper mapper)
+        public RequestHandler3<T, R, U> Body<U>(IMapper mapper)
             => new RequestHandler3<T, R, U>(
                 Method, 
                 Path, 
                 ResolverParam1, 
                 ResolverParam2,
-                ParameterResolver.Body<U>(bodyClass, mapper),
+                ParameterResolver.Body<U>(mapper),
                 ErrorHandler,
                 MediaTypeMapper);
 
-        public RequestHandler3<T, R, U> Body<U>(Type bodyClass, MediaTypeMapper mediaTypeMapper)
+        public RequestHandler3<T, R, U> Body<U>(MediaTypeMapper mediaTypeMapper)
         {
             MediaTypeMapper = mediaTypeMapper;
             return new RequestHandler3<T,R,U>(

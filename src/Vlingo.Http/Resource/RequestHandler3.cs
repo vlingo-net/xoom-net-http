@@ -89,7 +89,7 @@ namespace Vlingo.Http.Resource
             return Execute(request, param1, param2, param3, logger);
         }
 
-        public RequestHandler4<T, R, U, I> Param<I>(Type paramClass)
+        public RequestHandler4<T, R, U, I> Param<I>()
             => new RequestHandler4<T, R, U, I>(
                 Method,
                 Path,
@@ -100,7 +100,7 @@ namespace Vlingo.Http.Resource
                 ErrorHandler,
                 MediaTypeMapper);
 
-        public RequestHandler4<T, R, U, I> Body<I>(Type bodyClass)
+        public RequestHandler4<T, R, U, I> Body<I>()
             => new RequestHandler4<T, R, U, I>(
                 Method,
                 Path,
@@ -112,22 +112,22 @@ namespace Vlingo.Http.Resource
                 MediaTypeMapper);
 
         [Obsolete("Deprecated in favor of using the ContentMediaType method, which handles media types appropriately. Use Body<I>(Type, MediaTypeMapper) or Body<I>(Type).")]
-        public RequestHandler4<T, R, U, I> Body<I>(Type bodyClass, Type mapperClass)
-            => Body<I>(bodyClass, MapperFrom(mapperClass));
+        public RequestHandler4<T, R, U, I> Body<I>(Type mapperClass)
+            => Body<I>(MapperFrom(mapperClass));
 
         [Obsolete("Deprecated in favor of using the ContentMediaType method, which handles media types appropriately. Use Body<I>(Type, MediaTypeMapper) or Body<I>(Type).")]
-        public RequestHandler4<T, R, U, I> Body<I>(Type bodyClass, IMapper mapper)
+        public RequestHandler4<T, R, U, I> Body<I>(IMapper mapper)
             => new RequestHandler4<T, R, U, I>(
                 Method,
                 Path,
                 ResolverParam1,
                 ResolverParam2,
                 ResolverParam3,
-                ParameterResolver.Body<I>(bodyClass, mapper),
+                ParameterResolver.Body<I>(mapper),
                 ErrorHandler,
                 MediaTypeMapper);
 
-        public RequestHandler4<T, R, U, I> Body<I>(Type bodyClass, MediaTypeMapper mediaTypeMapper)
+        public RequestHandler4<T, R, U, I> Body<I>(MediaTypeMapper mediaTypeMapper)
         {
             MediaTypeMapper = mediaTypeMapper;
             return new RequestHandler4<T, R, U, I>(

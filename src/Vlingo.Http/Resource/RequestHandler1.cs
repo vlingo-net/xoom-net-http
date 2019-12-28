@@ -68,10 +68,10 @@ namespace Vlingo.Http.Resource
         internal override ICompletes<Response> Execute(Request request, Action.MappedParameters mappedParameters, ILogger logger)
             => Execute(request, Resolver.Apply(request, mappedParameters), logger);
 
-        public RequestHandler2<T, R> Param<R>(Type paramClass)
+        public RequestHandler2<T, R> Param<R>()
             => new RequestHandler2<T, R>(Method, Path, Resolver, ParameterResolver.Path<R>(1), ErrorHandler, MediaTypeMapper);
 
-        public RequestHandler2<T, R> Body<R>(Type bodyClass)
+        public RequestHandler2<T, R> Body<R>()
             => new RequestHandler2<T, R>(
                 Method,
                 Path,
@@ -81,20 +81,20 @@ namespace Vlingo.Http.Resource
                 MediaTypeMapper);
 
         [Obsolete("Deprecated in favor of using the ContentMediaType method, which handles media types appropriately. Use Body<R>(Type, MediaTypeMapper) or Body<R>(Type).")]
-        public RequestHandler2<T, R> Body<R>(Type bodyClass, Type mapperClass)
-            => Body<R>(bodyClass, MapperFrom(mapperClass));
+        public RequestHandler2<T, R> Body<R>(Type mapperClass)
+            => Body<R>(MapperFrom(mapperClass));
 
         [Obsolete("Deprecated in favor of using the ContentMediaType method, which handles media types appropriately. Use Body<R>(Type, MediaTypeMapper) or Body<R>(Type).")]
-        public RequestHandler2<T, R> Body<R>(Type bodyClass, IMapper mapper)
+        public RequestHandler2<T, R> Body<R>(IMapper mapper)
             => new RequestHandler2<T, R>(
                 Method,
                 Path,
                 Resolver,
-                ParameterResolver.Body<R>(bodyClass, mapper),
+                ParameterResolver.Body<R>(mapper),
                 ErrorHandler,
                 MediaTypeMapper);
 
-        public RequestHandler2<T, R> Body<R>(Type bodyClass, MediaTypeMapper mediaTypeMapper)
+        public RequestHandler2<T, R> Body<R>(MediaTypeMapper mediaTypeMapper)
         {
             MediaTypeMapper = mediaTypeMapper;
             return new RequestHandler2<T, R>(

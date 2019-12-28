@@ -74,14 +74,14 @@ namespace Vlingo.Http.Resource
             => new RequestHandler1<T>(Method, Path, ParameterResolver.Body<T>(MediaTypeMapper), ErrorHandler, MediaTypeMapper);
 
         [Obsolete("Deprecated in favor of using the ContentMediaType method, which handles media types appropriately. Use Body<T>(Type, MediaTypeMapper) or Body<T>(Type).")]
-        public RequestHandler1<T> Body<T>(Type paramClass, Type mapperClass)
-            => Body<T>(paramClass, MapperFrom(mapperClass));
+        public RequestHandler1<T> Body<T>(Type mapperClass)
+            => Body<T>(MapperFrom(mapperClass));
 
         [Obsolete("Deprecated in favor of using the ContentMediaType method, which handles media types appropriately. Use Body<T>(Type, MediaTypeMapper) or Body<T>(Type).")]
-        public RequestHandler1<T> Body<T>(Type paramClass, IMapper mapper)
-            => new RequestHandler1<T>(Method, Path, ParameterResolver.Body<T>(paramClass, mapper), ErrorHandler, MediaTypeMapper);
+        public RequestHandler1<T> Body<T>(IMapper mapper)
+            => new RequestHandler1<T>(Method, Path, ParameterResolver.Body<T>(mapper), ErrorHandler, MediaTypeMapper);
 
-        public RequestHandler1<T> Body<T>(Type paramClass, MediaTypeMapper mediaTypeMapper)
+        public RequestHandler1<T> Body<T>(MediaTypeMapper mediaTypeMapper)
         {
             MediaTypeMapper = mediaTypeMapper;
             return new RequestHandler1<T>(Method, Path, ParameterResolver.Body<T>(mediaTypeMapper), ErrorHandler, mediaTypeMapper);

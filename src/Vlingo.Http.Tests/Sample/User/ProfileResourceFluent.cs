@@ -60,7 +60,7 @@ namespace Vlingo.Http.Tests.Sample.User
             return ResourceBuilder.Resource("profile resource fluent api",
                     ResourceBuilder.Put("/users/{userId}/profile")
                         .Param<string>()
-                        .Body<ProfileData>(typeof(ProfileData))
+                        .Body<ProfileData>()
                 .Handle(Define),
                     ResourceBuilder.Get("/users/{userId}/profile")
                 .Param<string>()
