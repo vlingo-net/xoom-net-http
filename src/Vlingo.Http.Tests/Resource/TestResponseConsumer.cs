@@ -16,19 +16,19 @@ namespace Vlingo.Http.Tests.Resource
     public class TestResponseConsumer
     {
         private readonly ITestOutputHelper _logger;
-        private readonly Dictionary<string, int> clientCounts = new Dictionary<string, int>();
-        private AccessSafely access;
+        private readonly Dictionary<string, int> _clientCounts = new Dictionary<string, int>();
+        private AccessSafely _access;
 
         public TestResponseConsumer(ITestOutputHelper logger)
         {
             _logger = logger;
-            access = AfterCompleting(0);
+            _access = AfterCompleting(0);
         }
 
         public AccessSafely AfterCompleting(int happenings) {
-            access = AccessSafely.AfterCompleting(happenings);
+            _access = AccessSafely.AfterCompleting(happenings);
 
-            access.WritingWith<Response>("response", response => {
+            _access.WritingWith<Response>("response", response => {
                 var testId = response.HeaderValueOr(Client.ClientIdCustomHeader, "");
 
                 _logger.WriteLine("ID: {0}", testId);
@@ -40,27 +40,27 @@ namespace Vlingo.Http.Tests.Resource
                 }
 
                 int existingCount = 0;
-                if (clientCounts.ContainsKey(testId))
+                if (_clientCounts.ContainsKey(testId))
                 {
-                    existingCount = clientCounts[testId];
+                    existingCount = _clientCounts[testId];
                 }
 
                 ResponseHolder.Set(response);
 
-                clientCounts.Add(testId, existingCount + 1);
+                _clientCounts.Add(testId, existingCount + 1);
 
                 ResponseCount.IncrementAndGet();
             });
-            access.ReadingWith("response", () => ResponseHolder.Get());
-            access.ReadingWith("responseCount", () => ResponseCount.Get());
-            access.ReadingWith("responseClientCounts", () => clientCounts);
+            _access.ReadingWith("response", () => ResponseHolder.Get());
+            _access.ReadingWith("responseCount", () => ResponseCount.Get());
+            _access.ReadingWith("responseClientCounts", () => _clientCounts);
 
-            access.WritingWith<int>("unknownResponseCount", increment => UnknownResponseCount.IncrementAndGet());
-            access.ReadingWith("unknownResponseCount", () => UnknownResponseCount.Get());
+            _access.WritingWith<int>("unknownResponseCount", increment => UnknownResponseCount.IncrementAndGet());
+            _access.ReadingWith("unknownResponseCount", () => UnknownResponseCount.Get());
 
-            access.ReadingWith("totalAllResponseCount", () => ResponseCount.Get() + UnknownResponseCount.Get());
+            _access.ReadingWith("totalAllResponseCount", () => ResponseCount.Get() + UnknownResponseCount.Get());
 
-            return access;
+            return _access;
         }
         
         public AtomicReference<Response> ResponseHolder { get; } = new AtomicReference<Response>();
@@ -68,5 +68,32 @@ namespace Vlingo.Http.Tests.Resource
         public AtomicInteger ResponseCount { get; } = new AtomicInteger(0);
         
         public AtomicInteger UnknownResponseCount { get; } = new AtomicInteger(0);
+    }
+    
+    public sealed class KnownResponseConsumer : IResponseConsumer
+    {
+        private readonly AccessSafely _access;
+
+        public KnownResponseConsumer(AccessSafely access) => _access = access;
+
+        public void Consume(Response response) => _access.WriteUsing("response", response);
+    }
+    
+    public sealed class UnknownResponseConsumer : IResponseConsumer
+    {
+        private readonly AccessSafely _access;
+        private readonly ITestOutputHelper _logger;
+
+        public UnknownResponseConsumer(AccessSafely access, ITestOutputHelper logger)
+        {
+            _access = access;
+            _logger = logger;
+        }
+
+        public void Consume(Response response)
+        {
+            _logger.WriteLine("UNKNOWN RESPONSE:\n{0}", response);
+            _access.WriteUsing("unknownResponseCount", 1);
+        }
     }
 }
