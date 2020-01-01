@@ -5,10 +5,134 @@
 // was not distributed with this file, You can obtain
 // one at https://mozilla.org/MPL/2.0/.
 
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
+using Vlingo.Actors;
+using Vlingo.Actors.TestKit;
+using Vlingo.Common;
+using Vlingo.Http.Resource;
+using Vlingo.Wire.Channel;
+using Vlingo.Wire.Fdx.Bidirectional;
+using Vlingo.Wire.Message;
+using Vlingo.Wire.Node;
+using Xunit;
+using Xunit.Abstractions;
+
 namespace Vlingo.Http.Tests.Resource
 {
     public class StaticFilesResourceTest
     {
+        private static AtomicInteger baseServerPort = new AtomicInteger(19001);
+
+        private MemoryStream buffer = new MemoryStream(65535);
+        private IClientRequestResponseChannel client;
+        private IResponseChannelConsumer consumer;
+        private string contentRoot;
+        private Progress progress;
+        private HttpProperties properties;
+        private IServer server;
+        private int serverPort;
+        private World world;
         
+        private string GetRequest(string filePath) => $"GET {filePath} HTTP/1.1\nHost: vlingo.io\n\n";
+        
+        [Fact(Skip = "ConfigurationResource needs refactoring to interface.")]
+        public void TestThatServesRootStaticFile()
+        {
+            var resource = "/index.html";
+            var content = ReadTextFile(contentRoot + resource);
+            var request = GetRequest(resource);
+            client.RequestWith(ToByteBuffer(request));
+
+            var consumeCalls = progress.ExpectConsumeTimes(1);
+            while (consumeCalls.TotalWrites < 1)
+            {
+                client.ProbeChannel();
+            }
+            
+            consumeCalls.ReadFrom<int>("completed");
+
+            progress.Responses.TryDequeue(out var contentResponse);
+
+            Assert.Equal(1, progress.ConsumeCount.Get());
+            Assert.Equal(Response.ResponseStatus.Ok, contentResponse.Status);
+            Assert.Equal(content, contentResponse.Entity.Content);
+        }
+
+        public StaticFilesResourceTest(ITestOutputHelper output)
+        {
+            var converter = new Converter(output);
+            Console.SetOut(converter);
+            
+            world = World.StartWithDefaults("static-file-resources");
+
+            serverPort = baseServerPort.GetAndIncrement();
+            
+            var properties = new Dictionary<string, string>();
+            
+            properties.Add("server.http.port", serverPort.ToString());
+            properties.Add("server.dispatcher.pool", "10");
+            properties.Add("server.buffer.pool.size", "100");
+            properties.Add("server.message.buffer.size", "65535");
+            properties.Add("server.probe.interval", "2");
+            properties.Add("server.probe.timeout", "2");
+            properties.Add("server.processor.pool.size", "10");
+            properties.Add("server.request.missing.content.timeout", "100");
+
+            properties.Add("static.files.resource.pool", "5");
+            contentRoot = $"{Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)}/src/Vlingo.Http.Tests/Content";
+            properties.Add("static.files.resource.root", contentRoot);
+            properties.Add("static.files.resource.subpaths", "[/, /css, /js, /views]");
+
+            properties.Add("feed.producer.name.events", "/feeds/events");
+            properties.Add("feed.producer.events.class", "Vlingo.Http.Tests.Resource.Feed.EventsFeedProducerActor");
+            properties.Add("feed.producer.events.payload", "20");
+            properties.Add("feed.producer.events.pool", "10");
+
+            properties.Add("sse.stream.name.all", "/eventstreams/all");
+            properties.Add("sse.stream.all.feed.class", "Vlingo.Http.Tests.Sample.User.AllSseFeedActor");
+            properties.Add("sse.stream.all.feed.payload", "50");
+            properties.Add("sse.stream.all.feed.interval", "1000");
+            properties.Add("sse.stream.all.feed.default.id", "-1");
+            properties.Add("sse.stream.all.pool", "10");
+
+            properties.Add("resource.name.profile", "[define, query]");
+
+            properties.Add("resource.profile.handler", "Vlingo.Http.Tests.Sample.User.ProfileResource");
+            properties.Add("resource.profile.pool", "5");
+            properties.Add("resource.profile.disallowPathParametersWithSlash", "false");
+
+            properties.Add("action.profile.define.method", "PUT");
+            properties.Add("action.profile.define.uri", "/users/{userId}/profile");
+            properties.Add("action.profile.define.to", "define(string userId, body:Vlingo.Http.Tests.Sample.User.ProfileData profileData)");
+            properties.Add("action.profile.define.mapper", "Vlingo.Http.Tests.Sample.User.ProfileDataMapper");
+
+            properties.Add("action.profile.query.method", "GET");
+            properties.Add("action.profile.query.uri", "/users/{userId}/profile");
+            properties.Add("action.profile.query.to", "query(string userId)");
+            properties.Add("action.profile.query.mapper", "Vlingo.Http.Tests.Sample.User.ProfileDataMapper");
+            
+            var httpProperties = HttpProperties.Instance;
+            httpProperties.SetCustomProperties(properties);
+            
+            server = ServerFactory.StartWith(world.Stage, httpProperties);
+            Assert.True(server.StartUp().Await(TimeSpan.FromMilliseconds(500L)));
+
+            progress = new Progress();
+            consumer = world.ActorFor<IResponseChannelConsumer>(Definition.Has<TestResponseChannelConsumer>(Definition.Parameters(progress)));
+            client = new BasicClientRequestResponseChannel(Address.From(Host.Of("localhost"), serverPort, AddressType.None), consumer, 100, 10240, world.DefaultLogger);
+        }
+
+        private string ReadTextFile(string path) => File.ReadAllText(path);
+
+        private byte[] ToByteBuffer(string requestContent)
+        {
+            buffer.Clear();
+            buffer.Write(Converters.TextToBytes(requestContent));
+            buffer.Flip();
+            return buffer.GetBuffer();
+        }
     }
 }
