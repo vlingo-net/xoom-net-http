@@ -17,7 +17,7 @@ using static Vlingo.Common.Compiler.DynaFile;
 
 namespace Vlingo.Http.Resource
 {
-    public abstract class ConfigurationResource<T> : Resource
+    public abstract class ConfigurationResource<T> : Resource where T : ResourceHandler
     {
         public const string DispatcherSuffix = "Dispatcher";
 
@@ -90,7 +90,7 @@ namespace Vlingo.Http.Resource
         {
             try
             {
-                Type? resourceHandlerClass = Type.GetType(resourceHandlerTypeName);
+                var resourceHandlerClass = TypeLoader.Load(resourceHandlerTypeName);
                 if (resourceHandlerClass == null)
                 {
                     if (TryLoadAlreadyGeneratedAssembly(resourceHandlerTypeName, out var assembly))
