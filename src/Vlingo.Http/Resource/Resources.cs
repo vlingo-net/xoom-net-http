@@ -14,9 +14,9 @@ namespace Vlingo.Http.Resource
 {
     public class Resources
     {
-        private readonly IDictionary<string, Resource> _namedResources;
+        private readonly IDictionary<string, IResource> _namedResources;
 
-        public static Resources Are(params Resource[] resources)
+        public static Resources Are(params IResource[] resources)
         {
             var all = new Resources();
             foreach(var resource in resources)
@@ -29,23 +29,23 @@ namespace Vlingo.Http.Resource
 
         private Resources()
         {
-            _namedResources = new Dictionary<string, Resource>();
+            _namedResources = new Dictionary<string, IResource>();
         }
 
-        internal Resources(IDictionary<string, Resource> namedResource)
+        internal Resources(IDictionary<string, IResource> namedResource)
         {
-            _namedResources = new ReadOnlyDictionary<string, Resource>(namedResource);
+            _namedResources = new ReadOnlyDictionary<string, IResource>(namedResource);
         }
 
         internal Resources(Resource resource)
         {
-            _namedResources = new Dictionary<string, Resource>();
+            _namedResources = new Dictionary<string, IResource>();
             _namedResources[resource.Name] = resource;
         }
 
-        public IEnumerable<Resource> ResourceHandlers => _namedResources.Values;
+        public IEnumerable<IResource> ResourceHandlers => _namedResources.Values;
         
-        public IDictionary<string, Resource> NamedResources => _namedResources;
+        public IDictionary<string, IResource> NamedResources => _namedResources;
 
         public override string ToString()
             => $"Resources[namedResource={_namedResources}]";

@@ -16,33 +16,33 @@ namespace Vlingo.Http.Resource
 {
     public static class Loader
     {
-        private const string resourceNamePrefix = "resource.name.";
-        private const string ssePublisherFeedClassnameParameter = "Type feedClass";
-        private const string ssePublisherFeedDefaultId = "string feedDefaultId";
-        private const string ssePublisherFeedIntervalParameter = "int feedInterval";
-        private const string ssePublisherFeedPayloadParameter = "int feedPayload";
-        private const string ssePublisherIdPathParameter = "{id}";
-        private const string ssePublisherNamePrefix = "sse.stream.name.";
-        private const string ssePublisherNamePathParameter = "{streamName}";
-        private const string ssePublisherSubscribeTo =
+        private const string ResourceNamePrefix = "resource.name.";
+        private const string SsePublisherFeedClassnameParameter = "Type feedClass";
+        private const string SsePublisherFeedDefaultId = "string feedDefaultId";
+        private const string SsePublisherFeedIntervalParameter = "int feedInterval";
+        private const string SsePublisherFeedPayloadParameter = "int feedPayload";
+        private const string SsePublisherIdPathParameter = "{id}";
+        private const string SsePublisherNamePrefix = "sse.stream.name.";
+        private const string SsePublisherNamePathParameter = "{streamName}";
+        private const string SsePublisherSubscribeTo =
             "SubscribeToStream(string streamName, " +
-                    ssePublisherFeedClassnameParameter + ", " +
-                    ssePublisherFeedPayloadParameter + ", " +
-                    ssePublisherFeedIntervalParameter + ", " +
-                    ssePublisherFeedDefaultId + ")";
-        private const string ssePublisherUnsubscribeTo = "UnsubscribeFromStream(string streamName, string id)";
-        private const string staticFilesResource = "static.files";
-        private const string staticFilesResourcePool = "static.files.resource.pool";
-        private const string staticFilesResourceRoot = "static.files.resource.root";
-        private const string staticFilesResourceSubPaths = "static.files.resource.subpaths";
-        private const string staticFilesResourceServeFile = "ServeFile(string contentFile, string root, string validSubPaths)";
-        private const string staticFilesResourcePathParameter = "{contentFile}";
+                    SsePublisherFeedClassnameParameter + ", " +
+                    SsePublisherFeedPayloadParameter + ", " +
+                    SsePublisherFeedIntervalParameter + ", " +
+                    SsePublisherFeedDefaultId + ")";
+        private const string SsePublisherUnsubscribeTo = "UnsubscribeFromStream(string streamName, string id)";
+        private const string StaticFilesResource = "static.files";
+        private const string StaticFilesResourcePool = "static.files.resource.pool";
+        private const string StaticFilesResourceRoot = "static.files.resource.root";
+        private const string StaticFilesResourceSubPaths = "static.files.resource.subpaths";
+        private const string StaticFilesResourceServeFile = "ServeFile(string contentFile, string root, string validSubPaths)";
+        private const string StaticFilesResourcePathParameter = "{contentFile}";
 
         public static Resources LoadResources(HttpProperties properties)
         {
-            var namedResources = new Dictionary<string, Resource>();
+            var namedResources = new Dictionary<string, IResource>();
 
-            foreach (var resource in FindResources(properties, resourceNamePrefix))
+            foreach (var resource in FindResources(properties, ResourceNamePrefix))
             {
                 var loaded = LoadResource(properties, resource);
 
@@ -74,9 +74,9 @@ namespace Vlingo.Http.Resource
             return resource;
         }
 
-        private static ConfigurationResource<ResourceHandler> LoadResource(HttpProperties properties, string resourceNameKey)
+        private static IConfigurationResource LoadResource(HttpProperties properties, string resourceNameKey)
         {
-            var resourceName = resourceNameKey.Substring(resourceNamePrefix.Length);
+            var resourceName = resourceNameKey.Substring(ResourceNamePrefix.Length);
             var resourceActionNames = ActionNamesFrom(properties.GetProperty(resourceNameKey), resourceNameKey);
             var resourceHandlerKey = $"resource.{resourceName}.handler";
             var resourceHandlerClassname = properties.GetProperty(resourceHandlerKey);
@@ -99,14 +99,14 @@ namespace Vlingo.Http.Resource
             }
         }
 
-        private static IDictionary<string, ConfigurationResource<ResourceHandler>> LoadSseResources(HttpProperties properties)
+        private static IDictionary<string, IConfigurationResource> LoadSseResources(HttpProperties properties)
         {
-            var sseResourceActions = new Dictionary<string, ConfigurationResource<ResourceHandler>>();
+            var sseResourceActions = new Dictionary<string, IConfigurationResource>();
 
-            foreach (var streamResourceName in FindResources(properties, ssePublisherNamePrefix))
+            foreach (var streamResourceName in FindResources(properties, SsePublisherNamePrefix))
             {
-                var streamURI = properties.GetProperty(streamResourceName);
-                var resourceName = streamResourceName.Substring(ssePublisherNamePrefix.Length);
+                var streamUri = properties.GetProperty(streamResourceName);
+                var resourceName = streamResourceName.Substring(SsePublisherNamePrefix.Length);
                 var feedClassnameKey = $"sse.stream.{resourceName}.feed.class";
                 var feedClassname = properties.GetProperty(feedClassnameKey);
                 var feedPayloadKey = "sse.stream." + resourceName + ".feed.payload";
@@ -120,8 +120,8 @@ namespace Vlingo.Http.Resource
                 var poolKey = $"sse.stream.{resourceName}.pool";
                 var maybePoolSize = int.Parse(properties.GetProperty(poolKey, "1"));
                 var handlerPoolSize = maybePoolSize <= 0 ? 1 : maybePoolSize;
-                var subscribeURI = streamURI?.Replace(resourceName, ssePublisherNamePathParameter);
-                var unsubscribeURI = subscribeURI + "/" + ssePublisherIdPathParameter;
+                var subscribeUri = streamUri?.Replace(resourceName, SsePublisherNamePathParameter);
+                var unsubscribeUri = subscribeUri + "/" + SsePublisherIdPathParameter;
 
                 try
                 {
@@ -133,8 +133,8 @@ namespace Vlingo.Http.Resource
 
                     var actions = new List<Action>(2);
                     var additionalParameters = new List<Action.MappedParameter> { mappedParameterClass, mappedParameterPayload, mappedParameterInterval, mappedParameterDefaultId };
-                    actions.Add(new Action(0, Method.Get.Name, subscribeURI, ssePublisherSubscribeTo, null, additionalParameters));
-                    actions.Add(new Action(1, Method.Delete.Name, unsubscribeURI, ssePublisherUnsubscribeTo, null));
+                    actions.Add(new Action(0, Method.Get.Name, subscribeUri, SsePublisherSubscribeTo, null, additionalParameters));
+                    actions.Add(new Action(1, Method.Delete.Name, unsubscribeUri, SsePublisherUnsubscribeTo, null));
                     var resource = ResourceFor(resourceName, typeof(SseStreamResource), handlerPoolSize, actions);
                     sseResourceActions[resourceName] = resource;
                 }
@@ -149,21 +149,20 @@ namespace Vlingo.Http.Resource
             return sseResourceActions;
         }
 
-
-        private static IDictionary<string, ConfigurationResource<ResourceHandler>> LoadStaticFilesResource(HttpProperties properties)
+        private static IDictionary<string, IConfigurationResource> LoadStaticFilesResource(HttpProperties properties)
         {
-            var staticFilesResourceActions = new Dictionary<string, ConfigurationResource<ResourceHandler>>();
+            var staticFilesResourceActions = new Dictionary<string, IConfigurationResource>();
 
-            var root = properties.GetProperty(staticFilesResourceRoot);
+            var root = properties.GetProperty(StaticFilesResourceRoot);
 
             if (root == null)
             {
                 return staticFilesResourceActions;
             }
 
-            var poolSize = properties.GetProperty(staticFilesResourcePool, "5");
-            var validSubPaths = properties.GetProperty(staticFilesResourceSubPaths);
-            var actionSubPaths = ActionNamesFrom(validSubPaths, staticFilesResourceSubPaths).OrderByDescending(x => x.Length);
+            var poolSize = properties.GetProperty(StaticFilesResourcePool, "5");
+            var validSubPaths = properties.GetProperty(StaticFilesResourceSubPaths);
+            var actionSubPaths = ActionNamesFrom(validSubPaths, StaticFilesResourceSubPaths).OrderByDescending(x => x.Length);
 
             try
             {
@@ -175,18 +174,18 @@ namespace Vlingo.Http.Resource
                     var mappedParameterValidSubPaths = new Action.MappedParameter("string", validSubPaths);
 
                     var slash = actionSubPath.EndsWith("/") ? "" : "/";
-                    var resourceName = staticFilesResource + resourceSequence++;
+                    var resourceName = StaticFilesResource + resourceSequence++;
 
                     var actions = new List<Action>(1);
                     var additionalParameters = new List<Action.MappedParameter> { mappedParameterRoot, mappedParameterValidSubPaths };
-                    actions.Add(new Action(0, Method.Get.Name, actionSubPath + slash + staticFilesResourcePathParameter, staticFilesResourceServeFile, null, additionalParameters));
+                    actions.Add(new Action(0, Method.Get.Name, actionSubPath + slash + StaticFilesResourcePathParameter, StaticFilesResourceServeFile, null, additionalParameters));
                     var resource = ResourceFor(resourceName, typeof(StaticFilesResource), int.Parse(poolSize), actions);
                     staticFilesResourceActions[resourceName] = resource;
                 }
             }
             catch (Exception e)
             {
-                Console.WriteLine("vlingo-net/http: Failed to load static files resource: " + staticFilesResource + " because: " + e.Message);
+                Console.WriteLine("vlingo-net/http: Failed to load static files resource: " + StaticFilesResource + " because: " + e.Message);
                 Console.WriteLine(e.StackTrace);
                 throw e;
             }
@@ -194,7 +193,7 @@ namespace Vlingo.Http.Resource
             return staticFilesResourceActions;
         }
 
-        private static ConfigurationResource<ResourceHandler> ResourceFor(
+        private static IConfigurationResource ResourceFor(
             string resourceName,
             Type resourceHandlerClass,
             int handlerPoolSize,

@@ -17,7 +17,7 @@ using static Vlingo.Common.Compiler.DynaFile;
 
 namespace Vlingo.Http.Resource
 {
-    public abstract class ConfigurationResource<T> : Resource where T : ResourceHandler
+    public abstract class ConfigurationResource<T> : Resource, IConfigurationResource where T : ResourceHandler
     {
         public const string DispatcherSuffix = "Dispatcher";
 
@@ -25,16 +25,16 @@ namespace Vlingo.Http.Resource
         private static readonly DynaCompiler DynaCompiler = new DynaCompiler();
 
         public Type ResourceHandlerClass { get; }
-        internal IReadOnlyList<Action> Actions { get; }
+        public IReadOnlyList<Action> Actions { get; }
 
-        public static ConfigurationResource<T> Defining(
+        public static IConfigurationResource Defining(
             string resourceName,
             Type resourceHandlerClass,
             int handlerPoolSize,
             IList<Action> actions)
             => NewResourceFor(resourceName, resourceHandlerClass, handlerPoolSize, actions);
 
-        internal static ConfigurationResource<T> NewResourceFor(
+        internal static IConfigurationResource NewResourceFor(
             string resourceName,
             Type resourceHandlerType,
             int handlerPoolSize,
@@ -74,7 +74,7 @@ namespace Vlingo.Http.Resource
                 {
                     if (ctor.GetParameters().Length == ctorParams.Length)
                     {
-                        var resourceDispatcher = (ConfigurationResource<T>)ctor.Invoke(ctorParams);
+                        var resourceDispatcher = (IConfigurationResource)ctor.Invoke(ctorParams);
                         return resourceDispatcher;
                     }
                 }
@@ -90,7 +90,7 @@ namespace Vlingo.Http.Resource
         {
             try
             {
-                var resourceHandlerClass = TypeLoader.Load(resourceHandlerTypeName);
+                Type? resourceHandlerClass = TypeLoader.Load(resourceHandlerTypeName);
                 if (resourceHandlerClass == null)
                 {
                     if (TryLoadAlreadyGeneratedAssembly(resourceHandlerTypeName, out var assembly))
@@ -118,7 +118,7 @@ namespace Vlingo.Http.Resource
             }
         }
 
-        internal override void Log(ILogger logger)
+        public override void Log(ILogger logger)
         {
             logger.Info($"Resource: {Name}");
 
@@ -244,7 +244,7 @@ namespace Vlingo.Http.Resource
             }
         }
 
-        internal override Action.MatchResults MatchWith(Method? method, Uri? uri)
+        public override Action.MatchResults MatchWith(Method? method, Uri? uri)
         {
             foreach (var action in Actions)
             {
@@ -265,7 +265,7 @@ namespace Vlingo.Http.Resource
             Actions = new ArraySegment<Action>(actions.ToArray());
         }
 
-        protected override ResourceHandler ResourceHandlerInstance(Stage stage)
+        public override ResourceHandler ResourceHandlerInstance(Stage stage)
         {
             try
             {

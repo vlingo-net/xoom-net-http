@@ -12,13 +12,18 @@ namespace Vlingo.Http.Resource
 {
     public static class TypeLoader
     {
-        public static Type Load(string className)
+        public static Type Load(string? className)
         {
+            if (string.IsNullOrEmpty(className))
+            {
+                throw new ArgumentNullException(nameof(className), "Cannot load type for empty type name");
+            }
+            
             var classType = Type.GetType(className);
             if (classType == null)
             {
                 // tires to load type with assembly name
-                var classNameParts = className.Split('.');
+                var classNameParts = className!.Split('.');
                 for (var i = 0; i < classNameParts.Length; i++)
                 {
                     var potentialAssemblyName = string.Join("." ,classNameParts.Take(i + 1));

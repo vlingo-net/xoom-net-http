@@ -50,7 +50,7 @@ namespace Vlingo.Http.Resource
             }
         }
 
-        internal override void Log(ILogger logger)
+        public override void Log(ILogger logger)
         {
             logger.Info($"Resource: {Name}");
 
@@ -64,7 +64,7 @@ namespace Vlingo.Http.Resource
             }
         }
 
-        internal override Action.MatchResults MatchWith(Method? method, Uri? uri)
+        public override Action.MatchResults MatchWith(Method? method, Uri? uri)
         {
             if (Actions != null)
             {
@@ -81,7 +81,7 @@ namespace Vlingo.Http.Resource
             return Action.UnmatchedResults;
         }
 
-        protected override ResourceHandler ResourceHandlerInstance(Stage stage)
+        public override ResourceHandler ResourceHandlerInstance(Stage stage)
             => new SpecificResourceHandler(stage);
 
         private IList<RequestHandler> SortHandlersBySlashes(IList<RequestHandler> unsortedHandlers)

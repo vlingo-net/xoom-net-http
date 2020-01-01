@@ -29,7 +29,7 @@ namespace Vlingo.Http.Tests.Resource
             var completes = new MockCompletesEventuallyResponse();
 
             var withCalls = completes.ExpectWithTimes(1);
-            _dispatcher.DispatchFor(new Context(request, completes));
+            Dispatcher.DispatchFor(new Context(request, completes));
             withCalls.ReadFrom<int>("completed");
 
             Assert.NotNull(completes.Response);
@@ -54,7 +54,7 @@ namespace Vlingo.Http.Tests.Resource
             var postRequest = Request.From(Encoding.UTF8.GetBytes(PostJohnDoeUserMessage));
             var postCompletes = new MockCompletesEventuallyResponse();
             var postCompletesWithCalls = postCompletes.ExpectWithTimes(1);
-            _dispatcher.DispatchFor(new Context(postRequest, postCompletes));
+            Dispatcher.DispatchFor(new Context(postRequest, postCompletes));
             postCompletesWithCalls.ReadFrom<int>("completed");
             Assert.NotNull(postCompletes.Response);
 
@@ -62,7 +62,7 @@ namespace Vlingo.Http.Tests.Resource
             var getRequest = Request.From(Encoding.UTF8.GetBytes(getUserMessage));
             var getCompletes = new MockCompletesEventuallyResponse();
             var getCompletesWithCalls = getCompletes.ExpectWithTimes(1);
-            _dispatcher.DispatchFor(new Context(getRequest, getCompletes));
+            Dispatcher.DispatchFor(new Context(getRequest, getCompletes));
             getCompletesWithCalls.ReadFrom<int>("completed");
             Assert.NotNull(getCompletes.Response);
             Assert.Equal(Response.ResponseStatus.Ok, getCompletes.Response.Status);
@@ -81,7 +81,7 @@ namespace Vlingo.Http.Tests.Resource
             var postCompletes1 = new MockCompletesEventuallyResponse();
 
             var postCompletes1WithCalls = postCompletes1.ExpectWithTimes(1);
-            _dispatcher.DispatchFor(new Context(postRequest1, postCompletes1));
+            Dispatcher.DispatchFor(new Context(postRequest1, postCompletes1));
             postCompletes1WithCalls.ReadFrom<int>("completed");
 
             Assert.NotNull(postCompletes1.Response);
@@ -89,7 +89,7 @@ namespace Vlingo.Http.Tests.Resource
             var postCompletes2 = new MockCompletesEventuallyResponse();
 
             var postCompletes2WithCalls = postCompletes2.ExpectWithTimes(1);
-            _dispatcher.DispatchFor(new Context(postRequest2, postCompletes2));
+            Dispatcher.DispatchFor(new Context(postRequest2, postCompletes2));
             postCompletes2WithCalls.ReadFrom<int>("completed");
 
             Assert.NotNull(postCompletes2.Response);
@@ -99,7 +99,7 @@ namespace Vlingo.Http.Tests.Resource
             var getCompletes = new MockCompletesEventuallyResponse();
 
             var getCompletesWithCalls = getCompletes.ExpectWithTimes(1);
-            _dispatcher.DispatchFor(new Context(getRequest, getCompletes));
+            Dispatcher.DispatchFor(new Context(getRequest, getCompletes));
             getCompletesWithCalls.ReadFrom<int>("completed");
 
             Assert.NotNull(getCompletes.Response);
@@ -129,7 +129,7 @@ namespace Vlingo.Http.Tests.Resource
             var postRequest1 = Request.From(Encoding.UTF8.GetBytes(PostJohnDoeUserMessage));
             var postCompletes1 = new MockCompletesEventuallyResponse();
             var postCompletes1WithCalls = postCompletes1.ExpectWithTimes(1);
-            _dispatcher.DispatchFor(new Context(postRequest1, postCompletes1));
+            Dispatcher.DispatchFor(new Context(postRequest1, postCompletes1));
             postCompletes1WithCalls.ReadFrom<int>("completed");
 
             Assert.NotNull(postCompletes1.Response);
@@ -139,7 +139,7 @@ namespace Vlingo.Http.Tests.Resource
             var postCompletes2 = new MockCompletesEventuallyResponse();
 
             var postCompletes2WithCalls = postCompletes2.ExpectWithTimes(1);
-            _dispatcher.DispatchFor(new Context(postRequest2, postCompletes2));
+            Dispatcher.DispatchFor(new Context(postRequest2, postCompletes2));
             postCompletes2WithCalls.ReadFrom<int>("completed");
 
             Assert.NotNull(postCompletes2.Response);
@@ -158,7 +158,7 @@ namespace Vlingo.Http.Tests.Resource
             var patchCompletes1 = new MockCompletesEventuallyResponse();
 
             var patchCompletes1WithCalls = patchCompletes1.ExpectWithTimes(1);
-            _dispatcher.DispatchFor(new Context(patchRequest1, patchCompletes1));
+            Dispatcher.DispatchFor(new Context(patchRequest1, patchCompletes1));
             patchCompletes1WithCalls.ReadFrom<int>("completed");
 
             Assert.NotNull(patchCompletes1.Response);
@@ -180,7 +180,7 @@ namespace Vlingo.Http.Tests.Resource
             var patchCompletes2 = new MockCompletesEventuallyResponse();
 
             var patchCompletes2WithCalls = patchCompletes2.ExpectWithTimes(1);
-            _dispatcher.DispatchFor(new Context(patchRequest2, patchCompletes2));
+            Dispatcher.DispatchFor(new Context(patchRequest2, patchCompletes2));
             patchCompletes2WithCalls.ReadFrom<int>("completed");
 
             Assert.NotNull(patchCompletes2.Response);
@@ -195,31 +195,31 @@ namespace Vlingo.Http.Tests.Resource
         [Fact]
         public void TestThatAllWellOrderedActionHaveMatches()
         {
-            var actionGetUsersMatch = _resource.MatchWith(Method.Get, "/users".ToMatchableUri());
+            var actionGetUsersMatch = Resource.MatchWith(Method.Get, "/users".ToMatchableUri());
             Assert.True(actionGetUsersMatch.IsMatched);
-            Assert.Equal(_actionGetUsers, actionGetUsersMatch.Action);
+            Assert.Equal(ActionGetUsers, actionGetUsersMatch.Action);
 
-            var actionGetUserMatch = _resource.MatchWith(Method.Get, "/users/1234567".ToMatchableUri());
+            var actionGetUserMatch = Resource.MatchWith(Method.Get, "/users/1234567".ToMatchableUri());
             Assert.True(actionGetUserMatch.IsMatched);
-            Assert.Equal(_actionGetUser, actionGetUserMatch.Action);
+            Assert.Equal(ActionGetUser, actionGetUserMatch.Action);
 
-            var actionPatchUserNameMatch = _resource.MatchWith(Method.Patch, "/users/1234567/name".ToMatchableUri());
+            var actionPatchUserNameMatch = Resource.MatchWith(Method.Patch, "/users/1234567/name".ToMatchableUri());
             Assert.True(actionPatchUserNameMatch.IsMatched);
-            Assert.Equal(_actionPatchUserName, actionPatchUserNameMatch.Action);
+            Assert.Equal(ActionPatchUserName, actionPatchUserNameMatch.Action);
 
-            var actionPostUserMatch = _resource.MatchWith(Method.Post, "/users".ToMatchableUri());
+            var actionPostUserMatch = Resource.MatchWith(Method.Post, "/users".ToMatchableUri());
             Assert.True(actionPostUserMatch.IsMatched);
-            Assert.Equal(_actionPostUser, actionPostUserMatch.Action);
+            Assert.Equal(ActionPostUser, actionPostUserMatch.Action);
         }
         
         [Fact]
         public void TestThatAllPoorlyOrderedActionHaveMatches()
         {
-            _actionPostUser = new Action(0, "POST", "/users", "register(body:Vlingo.Http.Tests.Sample.User.UserData userData)", null);
-            _actionPatchUserContact = new Action(1, "PATCH", "/users/{userId}/contact", "changeContact(string userId, body:Vlingo.Http.Tests.Sample.User.ContactData contactData)", null);
-            _actionPatchUserName = new Action(2, "PATCH", "/users/{userId}/name", "changeName(string userId, body:Vlingo.Http.Tests.Sample.User.NameData nameData)", null);
-            _actionGetUsers = new Action(3, "GET", "/users", "queryUsers()", null);
-            _actionGetUser = new Action(4, "GET", "/users/{userId}", "queryUser(string userId)", null);
+            ActionPostUser = new Action(0, "POST", "/users", "register(body:Vlingo.Http.Tests.Sample.User.UserData userData)", null);
+            ActionPatchUserContact = new Action(1, "PATCH", "/users/{userId}/contact", "changeContact(string userId, body:Vlingo.Http.Tests.Sample.User.ContactData contactData)", null);
+            ActionPatchUserName = new Action(2, "PATCH", "/users/{userId}/name", "changeName(string userId, body:Vlingo.Http.Tests.Sample.User.NameData nameData)", null);
+            ActionGetUsers = new Action(3, "GET", "/users", "queryUsers()", null);
+            ActionGetUser = new Action(4, "GET", "/users/{userId}", "queryUser(string userId)", null);
             var actionGetUserEmailAddress = new Action(5, "GET", "/users/{userId}/emailAddresses/{emailAddressId}", "queryUserEmailAddress(string userId, string emailAddressId)", null);
 
             //=============================================================
@@ -238,23 +238,23 @@ namespace Vlingo.Http.Tests.Resource
 
             var actions = new List<Action>
                                 {
-                                    _actionPostUser,
-                                    _actionPatchUserContact,
-                                    _actionPatchUserName,
-                                    _actionGetUsers, // order is problematic unless parameter matching short circuit used
-                                    _actionGetUser,
+                                    ActionPostUser,
+                                    ActionPatchUserContact,
+                                    ActionPatchUserName,
+                                    ActionGetUsers, // order is problematic unless parameter matching short circuit used
+                                    ActionGetUser,
                                     actionGetUserEmailAddress
                                 };
 
-            var resource = ConfigurationResource<UserResource>.NewResourceFor("user", _resourceHandlerType, 5, actions);
+            var resource = ConfigurationResource<UserResource>.NewResourceFor("user", ResourceHandlerType, 5, actions);
 
             var actionGetUsersMatch = resource.MatchWith(Method.Get, "/users".ToMatchableUri());
             Assert.True(actionGetUsersMatch.IsMatched);
-            Assert.Equal(_actionGetUsers, actionGetUsersMatch.Action);
+            Assert.Equal(ActionGetUsers, actionGetUsersMatch.Action);
 
             var actionGetUserMatch = resource.MatchWith(Method.Get, "/users/1234567".ToMatchableUri());
             Assert.True(actionGetUserMatch.IsMatched);
-            Assert.Equal(_actionGetUser, actionGetUserMatch.Action);
+            Assert.Equal(ActionGetUser, actionGetUserMatch.Action);
 
             var actionGetUserEmailAddressMatch = resource.MatchWith(Method.Get, "/users/1234567/emailAddresses/890".ToMatchableUri());
             Assert.True(actionGetUserEmailAddressMatch.IsMatched);
@@ -262,11 +262,11 @@ namespace Vlingo.Http.Tests.Resource
 
             var actionPatchUserNameMatch = resource.MatchWith(Method.Patch, "/users/1234567/name".ToMatchableUri());
             Assert.True(actionPatchUserNameMatch.IsMatched);
-            Assert.Equal(_actionPatchUserName, actionPatchUserNameMatch.Action);
+            Assert.Equal(ActionPatchUserName, actionPatchUserNameMatch.Action);
 
             var actionPostUserMatch = resource.MatchWith(Method.Post, "/users".ToMatchableUri());
             Assert.True(actionPostUserMatch.IsMatched);
-            Assert.Equal(_actionPostUser, actionPostUserMatch.Action);
+            Assert.Equal(ActionPostUser, actionPostUserMatch.Action);
         }
         
         public ConfigurationResourceTest(ITestOutputHelper output) : base(output)

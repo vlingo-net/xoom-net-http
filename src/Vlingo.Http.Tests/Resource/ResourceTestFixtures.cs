@@ -8,14 +8,11 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 using Vlingo.Actors;
 using Vlingo.Http.Resource;
 using Vlingo.Http.Resource.Serialization;
 using Vlingo.Http.Tests.Sample.User;
 using Vlingo.Http.Tests.Sample.User.Model;
-using Vlingo.Http.Tests.Sample.User.Serialization;
 using Vlingo.Wire.Channel;
 using Vlingo.Wire.Message;
 using Xunit.Abstractions;
@@ -27,18 +24,18 @@ namespace Vlingo.Http.Tests.Resource
     public abstract class ResourceTestFixtures : IDisposable
     {
         public const string WorldName = "resource-test";
-        protected Action _actionPostUser;
-        protected Action _actionPatchUserContact;
-        protected Action _actionPatchUserName;
-        protected Action _actionGetUser;
-        protected Action _actionGetUsers;
-        protected Action _actionGetUserError;
+        protected Action ActionPostUser;
+        protected Action ActionPatchUserContact;
+        protected Action ActionPatchUserName;
+        protected Action ActionGetUser;
+        protected Action ActionGetUsers;
+        protected readonly Action ActionGetUserError;
         
-        protected ConfigurationResource<UserResource> _resource;
-        protected Type _resourceHandlerType;
-        protected Resources _resources;
-        protected IDispatcher _dispatcher;
-        protected World _world;
+        protected readonly IConfigurationResource Resource;
+        protected readonly Type ResourceHandlerType;
+        protected readonly Resources Resources;
+        protected readonly IDispatcher Dispatcher;
+        protected readonly World World;
         
         protected UserData JohnDoeUserData { get; } = UserData.From(NameData.From("John", "Doe"), ContactData.From("john.doe@vlingo.io", "+1 212-555-1212"));
 
@@ -118,41 +115,41 @@ namespace Vlingo.Http.Tests.Resource
             var converter = new Converter(output);
             Console.SetOut(converter);
 
-            _world = World.Start(WorldName);
+            World = World.Start(WorldName);
 
-            _actionPostUser = new Action(0, "POST", "/users", "Register(body:Vlingo.Http.Tests.Sample.User.UserData userData)", "Vlingo.Http.Tests.Sample.User.UserDataMapper");
-            _actionPatchUserContact = new Action(1, "PATCH", "/users/{userId}/contact", "changeContact(string userId, body:Vlingo.Http.Tests.Sample.User.ContactData contactData)", "Vlingo.Http.Tests.Sample.User.UserDataMapper");
-            _actionPatchUserName = new Action(2, "PATCH", "/users/{userId}/name", "changeName(string userId, body:Vlingo.Http.Tests.Sample.User.NameData nameData)", "Vlingo.Http.Tests.Sample.User.UserDataMapper");
-            _actionGetUser = new Action(3, "GET", "/users/{userId}", "queryUser(string userId)", "Vlingo.Http.Tests.Sample.User.UserDataMapper");
-            _actionGetUsers = new Action(4, "GET", "/users", "queryUsers()", "Vlingo.Http.Tests.Sample.User.UserDataMapper");
-            _actionGetUserError = new Action(5, "GET", "/users/{userId}/error", "queryUserError(string userId)", "Vlingo.Http.Tests.Sample.User.UserDataMapper");
+            ActionPostUser = new Action(0, "POST", "/users", "Register(body:Vlingo.Http.Tests.Sample.User.UserData userData)", "Vlingo.Http.Tests.Sample.User.UserDataMapper");
+            ActionPatchUserContact = new Action(1, "PATCH", "/users/{userId}/contact", "changeContact(string userId, body:Vlingo.Http.Tests.Sample.User.ContactData contactData)", "Vlingo.Http.Tests.Sample.User.UserDataMapper");
+            ActionPatchUserName = new Action(2, "PATCH", "/users/{userId}/name", "changeName(string userId, body:Vlingo.Http.Tests.Sample.User.NameData nameData)", "Vlingo.Http.Tests.Sample.User.UserDataMapper");
+            ActionGetUser = new Action(3, "GET", "/users/{userId}", "queryUser(string userId)", "Vlingo.Http.Tests.Sample.User.UserDataMapper");
+            ActionGetUsers = new Action(4, "GET", "/users", "queryUsers()", "Vlingo.Http.Tests.Sample.User.UserDataMapper");
+            ActionGetUserError = new Action(5, "GET", "/users/{userId}/error", "queryUserError(string userId)", "Vlingo.Http.Tests.Sample.User.UserDataMapper");
 
 
             var actions = new List<Action> {
-                _actionPostUser,
-                _actionPatchUserContact,
-                _actionPatchUserName,
-                _actionGetUser,
-                _actionGetUsers,
-                _actionGetUserError};
+                ActionPostUser,
+                ActionPatchUserContact,
+                ActionPatchUserName,
+                ActionGetUser,
+                ActionGetUsers,
+                ActionGetUserError};
 
-            _resourceHandlerType = ConfigurationResource<UserResource>.NewResourceHandlerTypeFor("Vlingo.Http.Tests.Sample.User.UserResource");
+            ResourceHandlerType = ConfigurationResource<UserResource>.NewResourceHandlerTypeFor("Vlingo.Http.Tests.Sample.User.UserResource");
 
-            _resource = ConfigurationResource<UserResource>.NewResourceFor("user", _resourceHandlerType, 6, actions);
+            Resource = ConfigurationResource<UserResource>.NewResourceFor("user", ResourceHandlerType, 6, actions);
 
-            _resource.AllocateHandlerPool(_world.Stage);
+            Resource.AllocateHandlerPool(World.Stage);
 
-            var oneResource = new Dictionary<string, Http.Resource.Resource>(1);
+            var oneResource = new Dictionary<string, IResource>(1);
 
-            oneResource.Add(_resource.Name, _resource);
+            oneResource.Add(Resource.Name, Resource);
 
-            _resources = new Resources(oneResource);
-            _dispatcher = new TestDispatcher(_resources, _world.DefaultLogger);
+            Resources = new Resources(oneResource);
+            Dispatcher = new TestDispatcher(Resources, World.DefaultLogger);
         }
 
         public void Dispose()
         {
-            _world.Terminate();
+            World.Terminate();
 
             UserRepository.Reset();
         }

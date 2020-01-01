@@ -11,11 +11,8 @@ using Vlingo.Common;
 
 namespace Vlingo.Http.Resource
 {
-    public abstract class Resource
+    public abstract class Resource : IResource
     {
-        public string Name { get; }
-        public int HandlerPoolSize { get; }
-
         private readonly IResourceRequestHandler[] _handlerPool;
         private readonly AtomicLong _handlerPoolIndex;
 
@@ -26,14 +23,17 @@ namespace Vlingo.Http.Resource
             _handlerPool = new IResourceRequestHandler[handlerPoolSize];
             _handlerPoolIndex = new AtomicLong(0);
         }
+        
+        public string Name { get; }
+        public int HandlerPoolSize { get; }
 
         public abstract void DispatchToHandlerWith(Context context, Action.MappedParameters? mappedParameters);
-        internal abstract Action.MatchResults MatchWith(Method? method, Uri? uri);
-        internal abstract void Log(ILogger logger);
-        
-        protected abstract ResourceHandler ResourceHandlerInstance(Stage stage);
+        public abstract Action.MatchResults MatchWith(Method? method, Uri? uri);
+        public abstract void Log(ILogger logger);
 
-        internal void AllocateHandlerPool(Stage stage)
+        public abstract ResourceHandler ResourceHandlerInstance(Stage stage);
+
+        public void AllocateHandlerPool(Stage stage)
         {
             for (var i = 0; i < HandlerPoolSize; ++i)
             {
@@ -43,7 +43,7 @@ namespace Vlingo.Http.Resource
             }
         }
 
-        protected IResourceRequestHandler PooledHandler
+        public IResourceRequestHandler PooledHandler
         {
             get
             {

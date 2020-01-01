@@ -18,7 +18,7 @@ namespace Vlingo.Http.Tests.Resource
     public class ResourceDispatcherGeneratorTest
     {
         private readonly List<Action> _actions;
-        private ConfigurationResource<UserResource> _resource;
+        private readonly IConfigurationResource _resource;
 
         [Fact]
         public void TestSourceCodeGeneration()
