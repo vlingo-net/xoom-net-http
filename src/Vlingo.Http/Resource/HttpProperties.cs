@@ -39,6 +39,8 @@ namespace Vlingo.Http.Resource
                 return SingleInstance.Value;
             }
         }
+        
+        public void SetCustomProperties(IDictionary<string, string> properties) => _properties = properties;
 
         private HttpProperties(IDictionary<string, string> properties)
         {

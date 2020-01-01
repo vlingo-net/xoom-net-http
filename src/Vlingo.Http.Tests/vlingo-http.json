@@ -47,7 +47,7 @@
       }
     },
     "name": {
-      "user": "[Register, Contact, Name, QueryUser, QueryUsers, QueryUserError]",
+      "user": "[register, contact, name, queryUser, queryUsers, queryUserError]",
       "profile": "[Define, Query]"
     },
     "user": {
@@ -112,12 +112,12 @@
       "contact": {
         "method": "PATCH",
         "uri": "/users/{userId}/contact",
-        "to": "ChangeContact(string userId, body:iVlingo.Http.Tests.Sample.User.ContactData contactData)"
+        "to": "ChangeContact(string userId, body:Vlingo.Http.Tests.Sample.User.ContactData contactData)"
       },
       "name": {
         "method": "PATCH",
         "uri": "/users/{userId}/name",
-        "to": "ChangeName(string userId, body:io.Vlingo.Http.Tests.Sample.User.NameData nameData)"
+        "to": "ChangeName(string userId, body:Vlingo.Http.Tests.Sample.User.NameData nameData)"
       },
       "queryUser": {
         "method": "GET",
