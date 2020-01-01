@@ -221,7 +221,7 @@ namespace Vlingo.Http.Resource
                 throw new IndexOutOfRangeException("Cannot load action names for resource: " + key);
             }
 
-            var actionNames = Regex.Split(actionNamesProperty?.Substring(open.Value + 1, close.Value).Trim(), ",\\s?");
+            var actionNames = Regex.Split(actionNamesProperty?.Substring(open.Value + 1, close.Value - 1).Trim(), ",\\s?");
 
             if (actionNames.Length == 0)
             {
@@ -244,7 +244,7 @@ namespace Vlingo.Http.Resource
                 {
                     var keyPrefix = "action." + resourceName + "." + actionName + ".";
 
-                    var actionId = resourceActions.Capacity;
+                    var actionId = resourceActions.Count;
                     var method = properties.GetProperty(keyPrefix + "method", null);
                     var uri = properties.GetProperty(keyPrefix + "uri", null);
                     var to = properties.GetProperty(keyPrefix + "to", null);
