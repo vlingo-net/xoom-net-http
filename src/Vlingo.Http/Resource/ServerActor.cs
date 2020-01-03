@@ -238,18 +238,18 @@ namespace Vlingo.Http.Resource
                 _dispatcher = dispatcher;
             }
             
-            public void CloseWith<T>(RequestResponseContext<T> requestResponseContext, object? data)
+            public void CloseWith(RequestResponseContext requestResponseContext, object? data)
             {
                 if (data != null)
                 {
                     var request = _serverActor._filters.Process((Request) data);
-                    var completes = new ResponseCompletes(_serverActor, (RequestResponseContext<Response>)(object) requestResponseContext, request.Headers.HeaderOf(RequestHeader.XCorrelationID));
-                    var context = new Context((RequestResponseContext<object>)(object) requestResponseContext, request, _serverActor._world.CompletesFor(completes));
+                    var completes = new ResponseCompletes(_serverActor, requestResponseContext, request.Headers.HeaderOf(RequestHeader.XCorrelationID));
+                    var context = new Context(requestResponseContext, request, _serverActor._world.CompletesFor(completes));
                     _dispatcher.DispatchFor(context);
                 }
             }
 
-            public void Consume<T>(RequestResponseContext<T> requestResponseContext, IConsumerByteBuffer buffer)
+            public void Consume(RequestResponseContext requestResponseContext, IConsumerByteBuffer buffer)
             {
                 try
                 {
@@ -273,8 +273,8 @@ namespace Vlingo.Http.Resource
                     while (parser.HasFullRequest())
                     {
                         var request = _serverActor._filters.Process(parser.FullRequest());
-                        var completes = new ResponseCompletes(_serverActor, (RequestResponseContext<Response>)(object)requestResponseContext, request.Headers.HeaderOf(RequestHeader.XCorrelationID));
-                        context = new Context((RequestResponseContext<object>)(object)requestResponseContext, request, _serverActor._world.CompletesFor(completes));
+                        var completes = new ResponseCompletes(_serverActor, requestResponseContext, request.Headers.HeaderOf(RequestHeader.XCorrelationID));
+                        context = new Context(requestResponseContext, request, _serverActor._world.CompletesFor(completes));
                         _dispatcher.DispatchFor(context);
                         if (wasIncompleteContent)
                         {
@@ -286,17 +286,17 @@ namespace Vlingo.Http.Resource
                     {
                         if (context == null)
                         {
-                            var completes = new ResponseCompletes(_serverActor, (RequestResponseContext<Response>)(object)requestResponseContext);
+                            var completes = new ResponseCompletes(_serverActor, requestResponseContext);
                             context = new Context(_serverActor._world.CompletesFor(completes));
                         }
-                        _serverActor._requestsMissingContent.Add(requestResponseContext.Id, new RequestResponseHttpContext((RequestResponseContext<object>)(object)requestResponseContext, context));
+                        _serverActor._requestsMissingContent.Add(requestResponseContext.Id, new RequestResponseHttpContext(requestResponseContext, context));
                     }
 
                 }
                 catch (Exception e)
                 {
                     _serverActor.Logger.Error("Request parsing failed.", e);
-                    new ResponseCompletes(_serverActor, (RequestResponseContext<Response>)(object)requestResponseContext, null).With(Response.Of(Response.ResponseStatus.BadRequest, e.Message));
+                    new ResponseCompletes(_serverActor, requestResponseContext, null).With(Response.Of(Response.ResponseStatus.BadRequest, e.Message));
                 }
                 finally
                 {
@@ -312,9 +312,9 @@ namespace Vlingo.Http.Resource
         private class RequestResponseHttpContext
         {
             public Context HttpContext { get; }
-            public RequestResponseContext<object> RequestResponseContext { get; }
+            public RequestResponseContext RequestResponseContext { get; }
 
-            public RequestResponseHttpContext(RequestResponseContext<object> requestResponseContext, Context httpContext)
+            public RequestResponseHttpContext(RequestResponseContext requestResponseContext, Context httpContext)
             {
                 RequestResponseContext = requestResponseContext;
                 HttpContext = httpContext;
@@ -325,24 +325,24 @@ namespace Vlingo.Http.Resource
         // ResponseCompletes
         //=========================================
         
-        private class ResponseCompletes : BasicCompletes<Response>
+        private class ResponseCompletes : BasicCompletes<object>
         {
             private readonly Header? _correlationId;
             private readonly ServerActor _serverActor;
-            private readonly RequestResponseContext<Response> _requestResponseContext;
+            private readonly RequestResponseContext _requestResponseContext;
 
-            internal ResponseCompletes(ServerActor serverActor, RequestResponseContext<Response> requestResponseContext, Header? correlationId) : base(serverActor.Stage.Scheduler)
+            internal ResponseCompletes(ServerActor serverActor, RequestResponseContext requestResponseContext, Header? correlationId) : base(serverActor.Stage.Scheduler)
             {
                 _serverActor = serverActor;
                 _requestResponseContext = requestResponseContext;
                 _correlationId = correlationId;
             }
 
-            internal ResponseCompletes(ServerActor serverActor, RequestResponseContext<Response> requestResponseContext) : this(serverActor, requestResponseContext, null)
+            internal ResponseCompletes(ServerActor serverActor, RequestResponseContext requestResponseContext) : this(serverActor, requestResponseContext, null)
             {
             }
             
-            public new ICompletes<T> With<T>(T response)
+            public override ICompletes<T> With<T>(T response)
             {
                 var filtered = _serverActor._filters.Process((Response)(object) response!);
                 var buffer = BufferFor(filtered);

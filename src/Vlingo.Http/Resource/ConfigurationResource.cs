@@ -78,7 +78,7 @@ namespace Vlingo.Http.Resource
                         return resourceDispatcher;
                     }
                 }
-                return (ConfigurationResource<T>)Activator.CreateInstance(resourceClass);
+                return (IConfigurationResource)Activator.CreateInstance(resourceClass);
             }
             catch (Exception e)
             {

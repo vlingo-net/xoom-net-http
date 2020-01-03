@@ -12,7 +12,7 @@ using Vlingo.Wire.Message;
 
 namespace Vlingo.Http.Tests.Resource.Sse
 {
-    public class MockResponseSenderChannel : IResponseSenderChannel<object>
+    public class MockResponseSenderChannel : IResponseSenderChannel
     {
         public AtomicInteger AbandonCount { get; }
         public AtomicReference<Response> EventsResponse { get; }
@@ -34,13 +34,13 @@ namespace Vlingo.Http.Tests.Resource.Sse
             _receivedStatus = false;
         }
         
-        public void Abandon(RequestResponseContext<object> context)
+        public void Abandon(RequestResponseContext context)
         {
             var count = AbandonCount.IncrementAndGet();
             _abandonSafely.WriteUsing("count", count);
         }
 
-        public void RespondWith(RequestResponseContext<object> context, IConsumerByteBuffer buffer)
+        public void RespondWith(RequestResponseContext context, IConsumerByteBuffer buffer)
         {
             var parser = _receivedStatus ?
                 ResponseParser.ParserForBodyOnly(buffer.ToArray()) :

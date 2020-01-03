@@ -29,10 +29,10 @@ namespace Vlingo.Http.Resource.Sse
         }
 
         private readonly StringBuilder _builder;
-        private readonly RequestResponseContext<object>? _context;
+        private readonly RequestResponseContext? _context;
         private readonly int _maxMessageSize;
 
-        public SseClient(RequestResponseContext<object>? context)
+        public SseClient(RequestResponseContext? context)
         {
             _context = context;
             _builder = new StringBuilder();

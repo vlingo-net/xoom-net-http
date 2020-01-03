@@ -14,10 +14,6 @@ namespace Vlingo.Http.Resource
     {
         private string? _rootPath;
 
-        public StaticFilesResource()
-        {
-        }
-
         public void ServeFile(string contentFile, string root, string validSubPaths)
         {
             if (_rootPath == null)
@@ -26,7 +22,7 @@ namespace Vlingo.Http.Resource
                 _rootPath = root + slash;
             }
 
-            var contentPath = _rootPath + Context?.Request?.Uri;
+            var contentPath = _rootPath + Context?.Request?.Uri?.AbsolutePath;
 
             try
             {
