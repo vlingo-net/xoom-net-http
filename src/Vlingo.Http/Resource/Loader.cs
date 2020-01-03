@@ -265,7 +265,7 @@ namespace Vlingo.Http.Resource
         {
             try
             {
-                var actorClass = Type.GetType(actorClassname);
+                var actorClass = TypeLoader.Load(actorClassname);
                 AssertActorWithProtocol(actorClass, protocolClass);
                 return actorClass;
             }
