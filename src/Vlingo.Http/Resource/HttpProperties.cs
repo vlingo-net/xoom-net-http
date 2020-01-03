@@ -40,7 +40,11 @@ namespace Vlingo.Http.Resource
             }
         }
         
-        public void SetCustomProperties(IDictionary<string, string> properties) => _properties = properties;
+        public void SetCustomProperties(IDictionary<string, string> properties)
+        {
+            _properties = properties;
+            UpdateCustomProperties(_properties);
+        }
 
         private HttpProperties(IDictionary<string, string> properties)
         {
