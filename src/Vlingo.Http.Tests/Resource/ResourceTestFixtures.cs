@@ -147,7 +147,7 @@ namespace Vlingo.Http.Tests.Resource
             Dispatcher = new TestDispatcher(Resources, World.DefaultLogger);
         }
 
-        public void Dispose()
+        public virtual void Dispose()
         {
             World.Terminate();
 
