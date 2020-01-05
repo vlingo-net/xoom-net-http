@@ -21,54 +21,126 @@ namespace Vlingo.Http.Tests.Resource
 {
     public class ServerTest : ResourceTestFixtures
     {
-        private static int TOTAL_REQUESTS_RESPONSES = 1_000;
+        private readonly ITestOutputHelper _output;
+        private static readonly int TotalRequestsResponses = 1_000;
 
-        private static AtomicInteger baseServerPort = new AtomicInteger(18080);
+        private static readonly AtomicInteger BaseServerPort = new AtomicInteger(18080);
 
-        private IClientRequestResponseChannel client;
-        private IResponseChannelConsumer consumer;
-        private int serverPort;
-        private Progress progress;
-        private IServer server;
+        private readonly IClientRequestResponseChannel _client;
+        private readonly Progress _progress;
+        private readonly IServer _server;
         
         [Fact]
         public void TestThatServerHandlesThrowables()
         {
             var request = GetExceptionRequest("1");
-            client.RequestWith(ToStream(request).ToArray());
+            _client.RequestWith(ToStream(request).ToArray());
 
-            var consumeCalls = progress.ExpectConsumeTimes(1);
+            var consumeCalls = _progress.ExpectConsumeTimes(1);
             while (consumeCalls.TotalWrites < 1)
             {
-                client.ProbeChannel();
+                _client.ProbeChannel();
             }
             consumeCalls.ReadFrom<int>("completed");
 
-            progress.Responses.TryDequeue(out var createdResponse);
+            _progress.Responses.TryDequeue(out var createdResponse);
 
-            Assert.Equal(1, progress.ConsumeCount.Get());
+            Assert.Equal(1, _progress.ConsumeCount.Get());
             Assert.Equal(Response.ResponseStatus.InternalServerError, createdResponse.Status);
+        }
+        
+        [Fact]
+        public void TestThatServerDispatchesRequests()
+        {
+            var request = PostRequest(UniqueJohnDoe());
+            _client.RequestWith(ToStream(request).ToArray());
+
+            var consumeCalls = _progress.ExpectConsumeTimes(1);
+            while (consumeCalls.TotalWrites < 1)
+            {
+                _client.ProbeChannel();
+            }
+            consumeCalls.ReadFrom<int>("completed");
+
+            _progress.Responses.TryDequeue(out var createdResponse);
+
+            Assert.Equal(1, _progress.ConsumeCount.Get());
+            Assert.NotNull(createdResponse.Headers.HeaderOf(ResponseHeader.Location));
+
+            var getUserMessage = $"GET {createdResponse.HeaderOf(ResponseHeader.Location).Value} HTTP/1.1\nHost: vlingo.io\n\n";
+
+            _client.RequestWith(ToStream(getUserMessage).ToArray());
+
+            var moreConsumeCalls = _progress.ExpectConsumeTimes(1);
+            while (moreConsumeCalls.TotalWrites < 1)
+            {
+                _client.ProbeChannel();
+            }
+            moreConsumeCalls.ReadFrom<int>("completed");
+
+            _progress.Responses.TryDequeue(out var getResponse);
+
+            Assert.Equal(2, _progress.ConsumeCount.Get());
+            Assert.Equal(Response.ResponseStatus.Ok, getResponse.Status);
+            Assert.NotNull(getResponse.Entity);
+            Assert.NotNull(getResponse.Entity.Content);
+            Assert.True(getResponse.Entity.HasContent);
+        }
+        
+        [Fact]
+        public void TestThatServerDispatchesManyRequests()
+        {
+            var startTime = DateExtensions.GetCurrentMillis();
+
+            var consumeCalls = _progress.ExpectConsumeTimes(TotalRequestsResponses);
+            var totalPairs = TotalRequestsResponses / 2;
+            var currentConsumeCount = 0;
+            for (var idx = 0; idx < totalPairs; ++idx)
+            {
+                _client.RequestWith(ToStream(PostRequest(UniqueJohnDoe())).ToArray());
+                _client.RequestWith(ToStream(PostRequest(UniqueJaneDoe())).ToArray());
+                var expected = currentConsumeCount + 2;
+                while (consumeCalls.TotalWrites < expected)
+                {
+                    _client.ProbeChannel();
+                }
+                currentConsumeCount = expected;
+            }
+
+            while (consumeCalls.TotalWrites < TotalRequestsResponses)
+            {
+                _client.ProbeChannel();
+            }
+
+            consumeCalls.ReadFrom<int>("completed");
+
+            _output.WriteLine("TOTAL REQUESTS-RESPONSES: {0} TIME: {1} ms", TotalRequestsResponses, (DateExtensions.GetCurrentMillis() - startTime));
+
+            Assert.Equal(TotalRequestsResponses, _progress.ConsumeCount.Get());
+            _progress.Responses.TryPeek(out var createdResponse);
+            Assert.NotNull(createdResponse.Headers.HeaderOf(ResponseHeader.Location));
         }
         
         public ServerTest(ITestOutputHelper output) : base(output)
         {
+            _output = output;
             UserStateFactory.ResetId();
 
-            serverPort = baseServerPort.GetAndIncrement();
-            server = ServerFactory.StartWith(World.Stage, Resources, serverPort, new Configuration.SizingConf(1, 1, 100, 10240), new Configuration.TimingConf(1, 1, 100));
-            Assert.True(server.StartUp().Await(TimeSpan.FromMilliseconds(500L)));
+            var serverPort = BaseServerPort.GetAndIncrement();
+            _server = ServerFactory.StartWith(World.Stage, Resources, serverPort, new Configuration.SizingConf(1, 1, 100, 10240), new Configuration.TimingConf(1, 1, 100));
+            Assert.True(_server.StartUp().Await(TimeSpan.FromMilliseconds(500L)));
 
-            progress = new Progress();
+            _progress = new Progress();
 
-            consumer = World.ActorFor<IResponseChannelConsumer>(Definition.Has<TestResponseChannelConsumer>(Definition.Parameters(progress)));
+            var consumer = World.ActorFor<IResponseChannelConsumer>(Definition.Has<TestResponseChannelConsumer>(Definition.Parameters(_progress)));
 
-            client = new BasicClientRequestResponseChannel(Address.From(Host.Of("localhost"), serverPort, AddressType.None), consumer, 100, 10240, World.DefaultLogger);
+            _client = new BasicClientRequestResponseChannel(Address.From(Host.Of("localhost"), serverPort, AddressType.None), consumer, 100, 10240, World.DefaultLogger);
         }
 
         public override void Dispose()
         {
-            client.Close();
-            server.ShutDown();
+            _client.Close();
+            _server.ShutDown();
             
             base.Dispose();
         }
