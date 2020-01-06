@@ -58,7 +58,7 @@ namespace Vlingo.Http
             private int _contentLength;
             private bool _continuation;
             private Step _currentStep;
-            private List<Request> _fullRequests;
+            private readonly List<Request> _fullRequests;
             private List<Request>.Enumerator _fullRequestsIterator;
             private bool _availableNext;
             private Headers<RequestHeader> _headers;
@@ -89,12 +89,18 @@ namespace Vlingo.Http
                 if (_availableNext)
                 {
                     _availableNext = false;
-                    return _fullRequestsIterator.Current;
+                    var request = _fullRequestsIterator.Current;
+                    _fullRequests.Remove(request);
+                    _fullRequestsIterator = _fullRequests.GetEnumerator();
+                    return request;
                 }
 
                 if (_fullRequestsIterator.MoveNext())
                 {
-                    return _fullRequestsIterator.Current;
+                    var request = _fullRequestsIterator.Current;
+                    _fullRequests.Remove(request);
+                    _fullRequestsIterator = _fullRequests.GetEnumerator();
+                    return request;
                 }
 
                 _fullRequestsIterator.Dispose();

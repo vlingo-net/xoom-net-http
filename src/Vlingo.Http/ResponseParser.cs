@@ -114,12 +114,18 @@ namespace Vlingo.Http
                 if (_availableNext)
                 {
                     _availableNext = false;
-                    return _fullResponsesIterator.Current;
+                    var response = _fullResponsesIterator.Current;
+                    _fullResponses.Remove(response);
+                    _fullResponsesIterator = _fullResponses.GetEnumerator();
+                    return response;
                 }
 
                 if (_fullResponsesIterator.MoveNext())
                 {
-                    return _fullResponsesIterator.Current;
+                    var response = _fullResponsesIterator.Current;
+                    _fullResponses.Remove(response);
+                    _fullResponsesIterator = _fullResponses.GetEnumerator();
+                    return response;
                 }
 
                 _fullResponsesIterator.Dispose();
