@@ -245,7 +245,7 @@ namespace Vlingo.Http
             private string NextLine(bool mayBeBlank, string? errorMessage)
             {
                 var possibleCarriageReturnIndex = -1;
-                var lineBreak = _responseText.IndexOf("\n", _position, StringComparison.InvariantCultureIgnoreCase);
+                var lineBreak = _responseText.IndexOf("\n", _position, StringComparison.OrdinalIgnoreCase);
                 if (lineBreak < 0)
                 {
                     if (_contentQueue.Count == 0)
