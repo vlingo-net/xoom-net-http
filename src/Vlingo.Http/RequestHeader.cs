@@ -81,6 +81,8 @@ namespace Vlingo.Http
 
         public static RequestHeader WithCacheControl(string option) => new RequestHeader(CacheControl, option);
 
+        public static RequestHeader WithConnection(string value) => new RequestHeader(Connection, value);
+        
         public static RequestHeader WithContentLength(int length) => new RequestHeader(ContentLength, length.ToString());
 
         public static RequestHeader WithContentLength(string body) => new RequestHeader(ContentLength, body.Length.ToString());

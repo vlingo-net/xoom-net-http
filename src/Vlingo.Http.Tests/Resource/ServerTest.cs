@@ -127,7 +127,7 @@ namespace Vlingo.Http.Tests.Resource
             UserStateFactory.ResetId();
 
             var serverPort = BaseServerPort.GetAndIncrement();
-            _server = ServerFactory.StartWith(World.Stage, Resources, serverPort, new Configuration.SizingConf(1, 1, 100, 10240), new Configuration.TimingConf(10, 1, 100));
+            _server = ServerFactory.StartWith(World.Stage, Resources, serverPort, new Configuration.SizingConf(1, 1, 100, 10240), new Configuration.TimingConf(5, 1, 100));
             Assert.True(_server.StartUp().Await(TimeSpan.FromMilliseconds(500L)));
 
             _progress = new Progress();

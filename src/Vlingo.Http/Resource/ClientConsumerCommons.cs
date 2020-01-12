@@ -27,15 +27,13 @@ namespace Vlingo.Http.Resource
                   configuration.ReadBufferSize,
                   logger);
             }
-            else
-            {
-                return new BasicClientRequestResponseChannel(
-                  configuration.AddressOfHost,
-                  consumer,
-                  configuration.ReadBufferPoolSize,
-                  configuration.ReadBufferSize,
-                  logger);
-            }
+
+            return new BasicClientRequestResponseChannel(
+                configuration.AddressOfHost,
+                consumer,
+                configuration.ReadBufferPoolSize,
+                configuration.ReadBufferSize,
+                logger);
         }
     }
 }

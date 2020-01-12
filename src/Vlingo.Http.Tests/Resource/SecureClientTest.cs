@@ -1,0 +1,168 @@
+// Copyright © 2012-2020 Vaughn Vernon. All rights reserved.
+//
+// This Source Code Form is subject to the terms of the
+// Mozilla Public License, v. 2.0. If a copy of the MPL
+// was not distributed with this file, You can obtain
+// one at https://mozilla.org/MPL/2.0/.
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using Vlingo.Actors;
+using Vlingo.Actors.TestKit;
+using Vlingo.Common;
+using Vlingo.Http.Resource;
+using Vlingo.Wire.Channel;
+using Vlingo.Wire.Message;
+using Vlingo.Wire.Node;
+using Xunit;
+using Xunit.Abstractions;
+
+namespace Vlingo.Http.Tests.Resource
+{
+    public class SecureClientTest : IDisposable
+    {
+        private readonly ITestOutputHelper _output;
+        private string _responseContent;
+        private readonly World _world;
+
+        [Fact]
+        public void TestThatSecureClientReceivesResponse()
+        {
+            var responseConsumer = new TestResponseConsumer(_output);
+            var access = responseConsumer.AfterCompleting(1);
+            var unknown = new UnknownResponseConsumer(access, _output);
+
+            var config =
+                Client.Configuration.Secure(
+                    _world.Stage,
+                    Address.From(Host.Of("postb.in"), 443, AddressType.None),
+                    unknown,
+                    false,
+                    10,
+                    65535,
+                    10,
+                    65535);
+
+            config.TestInfo(true);
+
+            var client =
+                Client.Using(
+                    config,
+                    Client.ClientConsumerType.RoundRobin,
+                    5);
+
+            var request =
+                Request
+                    .Has(Method.Get)
+                    .And(new Uri("1578827705270-4593926446978", UriKind.Relative))
+                    .And(RequestHeader.WithHost("postb.in"))
+                    .And(RequestHeader.WithConnection("close"))
+                    .And(RequestHeader.WithContentType("text/html"));
+
+            var response = client.RequestWith(request);
+
+            response.AndThenConsume(res => {
+                _responseContent = res.Entity.Content;
+                access.WriteUsing("response", res);
+            });
+
+
+            Assert.Equal(1, access.ReadFrom<int>("responseCount"));
+
+            var accessResponse = access.ReadFrom<Response>("response");
+            
+            Assert.Equal(_responseContent, accessResponse.Entity.Content);
+        }
+        
+        [Fact]
+        public void TestThatSecureClientReceivesResponseFromRequestProbeActor()
+        {
+            var clientConsumer = new TestSecureResponseChannelConsumer();
+            var access = clientConsumer.AfterCompleting(1);
+            var unknown = new UnknownResponseConsumer(access, _output);
+
+            var config =
+                Client.Configuration.Secure(
+                    _world.Stage,
+                    Address.From(Host.Of("webhook.site"), 443, AddressType.None),
+                    unknown,
+                    false,
+                    10,
+                    65535,
+                    10,
+                    65535);
+
+            config.TestInfo(true);
+
+            var definition = Definition.Has<RequestSenderProbeActor>(Definition.Parameters(config, clientConsumer, "1"));
+
+            var requestSender = _world.Stage.ActorFor<IRequestSender>(definition);
+
+            var get = "GET /4f0931bb-1c2f-4786-a703-a8b86419c03d HTTP/1.1\nHost: webhook.site\nConnection: close\n\n";
+            var buffer = BasicConsumerByteBuffer.Allocate(1, 1000);
+            buffer.Put(Encoding.UTF8.GetBytes(get));
+            buffer.Flip();
+            
+            requestSender.SendRequest(Request.From(buffer.ToArray()));
+
+            Assert.Equal(1, access.ReadFrom<int>("consumeCount"));
+
+            Assert.Contains("webhook.site", clientConsumer.GetResponses().First());
+        }
+
+        public SecureClientTest(ITestOutputHelper output)
+        {
+            _output = output;
+            var converter = new Converter(output);
+            Console.SetOut(converter);
+            
+            _world = World.StartWithDefaults("secure-client");
+        }
+
+        public void Dispose()
+        {
+            _world?.Terminate();
+        }
+    }
+
+    public class TestSecureResponseChannelConsumer : IResponseChannelConsumer
+    {
+        private AccessSafely _access;
+        private readonly List<string> _responses = new List<string>();
+
+        public int CurrentExpectedResponseLength { get; set; }
+
+        public IEnumerable<string> Responses => _responses;
+
+        public AtomicInteger ConsumeCount { get; } = new AtomicInteger(0);
+        
+        public int TotalWrites => _access.TotalWrites;
+        
+        public void Consume(IConsumerByteBuffer buffer)
+        {
+            var responsePart = buffer.ToArray().BytesToText(0, (int)buffer.Limit());
+            buffer.Release();
+            _access.WriteUsing("responses", responsePart);
+        }
+        
+        public int GetConsumeCount() => _access.ReadFrom<int>("consumeCount");
+
+        public IEnumerable<string> GetResponses() => _access.ReadFrom<IEnumerable<string>>("responses");
+        public AccessSafely AfterCompleting(int times)
+        {
+            _access = AccessSafely.AfterCompleting(times);
+
+            _access.WritingWith<string>("responses", (response) => {
+                _responses.Add(response);
+                ConsumeCount.IncrementAndGet();
+            });
+
+            _access.ReadingWith<IEnumerable<string>>("responses", () => _responses);
+            _access.ReadingWith("consumeCount", () => ConsumeCount.Get());
+
+            return _access;
+        }
+    }
+}
