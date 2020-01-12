@@ -5,6 +5,7 @@
 // was not distributed with this file, You can obtain
 // one at https://mozilla.org/MPL/2.0/.
 
+using System;
 using Vlingo.Actors;
 using Vlingo.Common;
 using Vlingo.Wire.Message;
@@ -16,23 +17,34 @@ namespace Vlingo.Http.Resource
     /// </summary>
     public class RoundRobinClientRequestConsumerActor : RoundRobinRouter<IClientConsumer>, IClientConsumer
     {
-        public RoundRobinClientRequestConsumerActor(RouterSpecification<IClientConsumer> specification) : base(specification)
+        private const string ErrorMessage = "RoundRobinClientRequestConsumerActor: Should not be reached. Message: ";
+        
+        /// <summary>
+        /// Constructs my default state.
+        /// </summary>
+        /// <param name="configuration">The <see cref="Configuration"/></param>
+        /// <param name="specification">The <see cref="RouterSpecification{T}"/></param>
+        /// <exception cref="Exception">When the router cannot be initialized</exception>
+        public RoundRobinClientRequestConsumerActor(Client.Configuration configuration, RouterSpecification<IClientConsumer> specification) : base(specification)
         {
         }
 
         public void Consume(IConsumerByteBuffer buffer)
         {
-            throw new System.NotImplementedException();
+            const string message = ErrorMessage + "Consume()";
+            Logger.Error(message, new InvalidOperationException(message));
         }
 
         public void IntervalSignal(IScheduled<object> scheduled, object data)
         {
-            throw new System.NotImplementedException();
+            const string message = ErrorMessage + "IntervalSignal()";
+            Logger.Error(message, new InvalidOperationException(message));
         }
 
         public ICompletes<Response> RequestWith(Request request, ICompletes<Response> completes)
         {
-            throw new System.NotImplementedException();
+            DispatchCommand((consumer, r, c) => consumer.RequestWith(r, c), request, completes);
+            return completes;
         }
     }
 }
