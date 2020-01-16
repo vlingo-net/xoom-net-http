@@ -109,7 +109,7 @@ namespace Vlingo.Http.Tests.Resource
 
             Assert.Equal(1, access.ReadFrom<int>("consumeCount"));
 
-            Assert.Contains("webhook.site", clientConsumer.GetResponses().First());
+            Assert.Contains("HTTP/1.1 200 OK", clientConsumer.GetResponses().First());
         }
 
         public SecureClientTest(ITestOutputHelper output)
