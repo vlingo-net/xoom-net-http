@@ -17,7 +17,7 @@ namespace Vlingo.Http.Tests.Resource
 {
     public class ResourcesTest
     {
-        private Resources _resources = Loader.LoadResources(HttpProperties.Instance);
+        private readonly Resources _resources = Loader.LoadResources(HttpProperties.Instance);
         
         [Fact]
         public void TestLoadResources()
