@@ -26,6 +26,8 @@ namespace Vlingo.Http.Resource
 
         internal int Id { get; }
 
+        public IMapper Mapper => _mapper;
+
         public Method Method => _method;
 
         public string? Uri => _uri;

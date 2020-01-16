@@ -43,6 +43,8 @@ namespace Vlingo.Http.Resource
             _namedResources[resource.Name] = resource;
         }
 
+        public IResource ResourceOf(string name) => _namedResources[name];
+
         public IEnumerable<IResource> ResourceHandlers => _namedResources.Values;
         
         public IDictionary<string, IResource> NamedResources => _namedResources;

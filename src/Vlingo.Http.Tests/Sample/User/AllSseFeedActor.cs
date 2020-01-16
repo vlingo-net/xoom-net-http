@@ -15,18 +15,17 @@ namespace Vlingo.Http.Tests.Sample.User
     {
         private int _retryThreshold = 3000;
 
-        private SseEvent.Builder _builder;
-        private int _currentStreamId;
-        private int _defaultId;
-        private int _feedPayload;
+        private readonly SseEvent.Builder _builder;
+        private readonly int _defaultId;
+        private readonly int _feedPayload;
         private string _streamName;
 
         public AllSseFeedActor(string streamName, int feedPayload, string feedDefaultId)
         {
             _streamName = streamName;
             _feedPayload = feedPayload;
-            _currentStreamId = 1;
-            _defaultId = DefaultId(feedDefaultId, _currentStreamId);
+            var currentStreamId = 1;
+            _defaultId = DefaultId(feedDefaultId, currentStreamId);
             _builder = SseEvent.Builder.Instance;
             Logger.Info($"SseFeed started for stream: {streamName}");
         }

@@ -95,7 +95,7 @@ namespace Vlingo.Http.Resource
             catch (Exception e)
             {
                 Console.WriteLine("vlingo-net/http: Failed to load resource: " + resourceName + " because: " + e.Message);
-                throw e;
+                throw;
             }
         }
 
@@ -241,20 +241,20 @@ namespace Vlingo.Http.Resource
             {
                 try
                 {
-                    var keyPrefix = "action." + resourceName + "." + actionName + ".";
+                    var keyPrefix = $"action.{resourceName}.{actionName}.";
 
                     var actionId = resourceActions.Count;
-                    var method = properties.GetProperty(keyPrefix + "method", null);
-                    var uri = properties.GetProperty(keyPrefix + "uri", null);
-                    var to = properties.GetProperty(keyPrefix + "to", null);
-                    var mapper = properties.GetProperty(keyPrefix + "mapper", null);
+                    var method = properties.GetProperty($"{keyPrefix}method", null);
+                    var uri = properties.GetProperty($"{keyPrefix}uri", null);
+                    var to = properties.GetProperty($"{keyPrefix}to", null);
+                    var mapper = properties.GetProperty($"{keyPrefix}mapper", null);
 
                     resourceActions.Add(new Action(actionId, method, uri, to, mapper));
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine("vlingo-net/http: Failed to load resource: " + resourceName + " action:" + actionName + " because: " + e.Message);
-                    throw e;
+                    Console.WriteLine($"vlingo-net/http: Failed to load resource: {resourceName} action:{actionName} because: {e.Message}");
+                    throw;
                 }
             }
 
