@@ -132,13 +132,7 @@ namespace Vlingo.Http.Tests.Resource
         private AccessSafely _access;
         private readonly List<string> _responses = new List<string>();
 
-        public int CurrentExpectedResponseLength { get; set; }
-
-        public IEnumerable<string> Responses => _responses;
-
         public AtomicInteger ConsumeCount { get; } = new AtomicInteger(0);
-        
-        public int TotalWrites => _access.TotalWrites;
         
         public void Consume(IConsumerByteBuffer buffer)
         {
@@ -147,8 +141,6 @@ namespace Vlingo.Http.Tests.Resource
             _access.WriteUsing("responses", responsePart);
         }
         
-        public int GetConsumeCount() => _access.ReadFrom<int>("consumeCount");
-
         public IEnumerable<string> GetResponses() => _access.ReadFrom<IEnumerable<string>>("responses");
         public AccessSafely AfterCompleting(int times)
         {
