@@ -51,7 +51,7 @@ namespace Vlingo.Http.Tests.Resource
             _client.RequestWith(request).AndThenConsume(response => {
                 ++_count;
                 _response = response;
-            }).Await(TimeSpan.FromMilliseconds(1000));
+            }).Await();
 
             Assert.Equal(1, _count);
 
