@@ -15,7 +15,7 @@ namespace Vlingo.Http.Resource
     public class DynamicResource : Resource
     {
         internal IList<RequestHandler> Handlers { get; }
-        public IList<Action>? Actions { get; } = new List<Action>();
+        public IList<Action> Actions { get; } = new List<Action>();
 
         public DynamicResource(string name, int handlerPoolSize, IList<RequestHandler> unsortedHandlers)
             : base(name, handlerPoolSize)
@@ -24,11 +24,11 @@ namespace Vlingo.Http.Resource
             var currentId = 0;
             foreach (var predicate in Handlers)
             {
-                Actions?.Add(new Action(
+                Actions.Add(new Action(
                     currentId++,
                     predicate.Method.ToString(),
                     predicate.Path,
-                    "Dynamic" + currentId + "(" + predicate.ActionSignature + ")",
+                    $"Dynamic{currentId}({predicate.ActionSignature})",
                     null));
             }
         }
@@ -53,29 +53,23 @@ namespace Vlingo.Http.Resource
         public override void Log(ILogger logger)
         {
             logger.Info($"Resource: {Name}");
-
-            if (Actions != null)
+            
+            foreach (var action in Actions)
             {
-                foreach (var action in Actions)
-                {
-                    logger.Info(
-                        $"Action: id={action.Id}, method={action.Method}, uri={action.Uri}, to={action.To.Signature}");
-                }
+                logger.Info(
+                    $"Action: id={action.Id}, method={action.Method}, uri={action.Uri}, to={action.To.Signature}");
             }
         }
 
         public override Action.MatchResults MatchWith(Method? method, Uri? uri)
         {
-            if (Actions != null)
+            foreach (var action in Actions)
             {
-                foreach (var action in Actions)
+                var matchResults = action.MatchWith(method, uri);
+                if (matchResults.IsMatched)
                 {
-                    var matchResults = action.MatchWith(method, uri);
-                    if (matchResults.IsMatched)
-                    {
-                        return matchResults;
-                    }
-                }    
+                    return matchResults;
+                }
             }
             
             return Action.UnmatchedResults;
