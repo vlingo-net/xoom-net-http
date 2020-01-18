@@ -15,7 +15,7 @@ namespace Vlingo.Http.Resource
     public class DynamicResource : Resource
     {
         internal IList<RequestHandler> Handlers { get; }
-        public IList<Action>? Actions { get; }
+        public IList<Action>? Actions { get; } = new List<Action>();
 
         public DynamicResource(string name, int handlerPoolSize, IList<RequestHandler> unsortedHandlers)
             : base(name, handlerPoolSize)
