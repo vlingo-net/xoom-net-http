@@ -58,7 +58,7 @@ namespace Vlingo.Http.Resource
                     throw new ArgumentException("Value " + value + " is of mimeType " + mappedParameters.Mapped[position].Type + " instead of " + typeof(T).Name);
                 });
 
-        public static ParameterResolver<T> Body<T>(System.Type bodyClass)
+        public static ParameterResolver<T> Body<T>()
             => Body<T>(DefaultMediaTypeMapper.Instance);
 
         public static ParameterResolver<T> Body<T>(IMapper mapper)
