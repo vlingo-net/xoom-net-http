@@ -31,7 +31,7 @@ namespace Vlingo.Http.Resource
             throw new MediaTypeNotSupportedException(contentMediaType.ToString());
         }
 
-        public string From<T>(T data, ContentMediaType contentMediaType, Type type)
+        public string From<T>(T data, ContentMediaType contentMediaType)
         {
             var baseType = contentMediaType.ToBaseType();
             if (_mappersByContentType.ContainsKey(baseType))
