@@ -17,7 +17,9 @@ namespace Vlingo.Http.Resource
         private ParamExecutor0? _executor;
 
         public delegate ICompletes<Response> Handler0();
+        
         public delegate ICompletes<IObjectResponse> ObjectHandler0();
+        
         internal delegate ICompletes<Response> ParamExecutor0(
             Request request,
             MediaTypeMapper mediaTypeMapper,

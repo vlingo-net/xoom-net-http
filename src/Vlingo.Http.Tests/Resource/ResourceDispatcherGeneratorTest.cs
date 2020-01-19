@@ -53,6 +53,7 @@ namespace Vlingo.Http.Tests.Resource
         public ResourceDispatcherGeneratorTest(ITestOutputHelper output)
         {
             var converter = new Converter(output);
+            
             Console.SetOut(converter);
             
             var actionPostUser = new Action(0, "POST", "/users", "register(body:Vlingo.Http.Tests.Sample.User.UserData userData)", null);
