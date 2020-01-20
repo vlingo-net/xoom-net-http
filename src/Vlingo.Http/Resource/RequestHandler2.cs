@@ -122,7 +122,7 @@ namespace Vlingo.Http.Resource
             => Query<string>(name, typeof(string));
 
         public RequestHandler3<T, R, U> Query<U>(string name, Type queryClass)
-            => new RequestHandler3<T,R,U>(Method, Path, ResolverParam1, ResolverParam2, ParameterResolver.Query<U>(name, queryClass), ErrorHandler, MediaTypeMapper);
+            => new RequestHandler3<T,R,U>(Method, Path, ResolverParam1, ResolverParam2, ParameterResolver.Query<U>(name), ErrorHandler, MediaTypeMapper);
 
         public RequestHandler3<T, R, Header> Header(string name)
             => new RequestHandler3<T, R, Header>(Method, Path, ResolverParam1, ResolverParam2, ParameterResolver.Header(name), ErrorHandler, MediaTypeMapper);

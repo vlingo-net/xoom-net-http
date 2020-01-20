@@ -90,13 +90,13 @@ namespace Vlingo.Http.Resource
         }
 
         public RequestHandler1<string> Query(string name)
-            => Query<string>(name, typeof(string));
+            => Query<string>(name);
 
-        public RequestHandler1<T> Query<T>(string name, Type type)
-            => Query(name, type, default(T)!);
+        public RequestHandler1<T> Query<T>(string name)
+            => Query(name, default(T)!);
 
-        public RequestHandler1<T> Query<T>(string name, Type type, T defaultValue)
-            => new RequestHandler1<T>(Method, Path, ParameterResolver.Query(name, type, defaultValue), ErrorHandler, MediaTypeMapper);
+        public RequestHandler1<T> Query<T>(string name, T defaultValue)
+            => new RequestHandler1<T>(Method, Path, ParameterResolver.Query(name, defaultValue), ErrorHandler, MediaTypeMapper);
 
         public RequestHandler1<Header> Header(string name)
             => new RequestHandler1<Header>(Method, Path, ParameterResolver.Header(name), ErrorHandler, MediaTypeMapper);

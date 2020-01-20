@@ -82,12 +82,9 @@ namespace Vlingo.Http.Resource
                 (request, mappedParameters) => request.HeaderOf(headerName)!);
 
         public static ParameterResolver<T> Query<T>(string name)
-            => Query(name, typeof(string), default(T)!);
+            => Query(name, default(T)!);
 
-        public static ParameterResolver<T> Query<T>(string name, System.Type type)
-            => Query(name, type, default(T)!);
-
-        public static ParameterResolver<T> Query<T>(string name, System.Type type, T defaultValue)
+        public static ParameterResolver<T> Query<T>(string name, T defaultValue)
             => ParameterResolver<T>.Create(
                 Type.QUERY,
                 (request, mappedParameters) =>
@@ -95,7 +92,7 @@ namespace Vlingo.Http.Resource
                     string? value;
                     try
                     {
-                        value = request.QueryParameters.ValuesOf(name)?[0];
+                        value = request.QueryParameters.ValuesOf(name)![0];
                     }
                     catch (ArgumentException)
                     {
@@ -106,35 +103,35 @@ namespace Vlingo.Http.Resource
                         return defaultValue;
                     }
 
-                    if (type == typeof(int))
+                    if (typeof(T) == typeof(int))
                     {
                         return (T)(object)int.Parse(value);
                     }
-                    else if (type == typeof(string))
+                    else if (typeof(T) == typeof(string))
                     {
                         return (T)(object)value!;
                     }
-                    else if (type == typeof(float))
+                    else if (typeof(T) == typeof(float))
                     {
                         return (T)(object)float.Parse(value);
                     }
-                    else if (type == typeof(long))
+                    else if (typeof(T) == typeof(long))
                     {
                         return (T)(object)long.Parse(value);
                     }
-                    else if (type == typeof(bool))
+                    else if (typeof(T) == typeof(bool))
                     {
                         return (T)(object)bool.Parse(value);
                     }
-                    else if (type == typeof(short))
+                    else if (typeof(T) == typeof(short))
                     {
                         return (T)(object)short.Parse(value);
                     }
-                    else if (type == typeof(byte))
+                    else if (typeof(T) == typeof(byte))
                     {
                         return (T)(object)byte.Parse(value);
                     }
-                    throw new ArgumentException("unknown mimeType " + type.Name);
+                    throw new ArgumentException("unknown mimeType " + typeof(T).Name);
                 });
 
         internal enum Type

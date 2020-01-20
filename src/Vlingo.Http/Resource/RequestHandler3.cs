@@ -151,7 +151,7 @@ namespace Vlingo.Http.Resource
                 ResolverParam1,
                 ResolverParam2,
                 ResolverParam3,
-                ParameterResolver.Query<I>(name, queryClass),
+                ParameterResolver.Query<I>(name),
                 ErrorHandler,
                 MediaTypeMapper);
 
