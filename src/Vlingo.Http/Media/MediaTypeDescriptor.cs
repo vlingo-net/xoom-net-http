@@ -84,50 +84,49 @@ namespace Vlingo.Http.Media
 
         public override int GetHashCode()
         {
-            unchecked
+            var hash = MimeType.GetHashCode() * 31 + MimeSubType.GetHashCode();
+            foreach (var parameter in Parameters)
             {
-                int hash = 17;
-                hash = hash * 23 + (MimeType?.GetHashCode() ?? 0);
-                hash = hash * 23 + (MimeSubType?.GetHashCode() ?? 0);
-                hash = hash * 23 + (Parameters?.GetHashCode() ?? 0);
-                return hash;
+                hash += parameter.GetHashCode();
             }
+
+            return hash;
         }
 
         public class Builder<T>
         {
-            protected string _mimeType;
-            protected string _mimeSubType;
-            protected IDictionary<string, string> _parameters;
-            protected readonly Func<string, string, IDictionary<string,string>, T> _supplier;
+            protected string MimeType;
+            protected string MimeSubType;
+            protected readonly IDictionary<string, string> Parameters;
+            protected readonly Func<string, string, IDictionary<string,string>, T> Supplier;
 
             public Builder(Func<string, string, IDictionary<string, string>, T> supplier)
             {
-                _supplier = supplier;
-                _parameters = new Dictionary<string, string>();
-                _mimeType = string.Empty;
-                _mimeSubType = string.Empty;
+                Supplier = supplier;
+                Parameters = new Dictionary<string, string>();
+                MimeType = string.Empty;
+                MimeSubType = string.Empty;
             }
 
             public Builder<T> WithMimeType(string mimeType)
             {
-                _mimeType = mimeType;
+                MimeType = mimeType;
                 return this;
             }
 
             public Builder<T> WithMimeSubType(string mimeSubType)
             {
-                _mimeSubType = mimeSubType;
+                MimeSubType = mimeSubType;
                 return this;
             }
 
             public Builder<T> WithParameter(string paramName, string paramValue)
             {
-                _parameters[paramName] = paramValue;
+                Parameters[paramName] = paramValue;
                 return this;
             }
 
-            public T Build() => _supplier.Invoke(_mimeType, _mimeSubType, _parameters);
+            public T Build() => Supplier.Invoke(MimeType, MimeSubType, Parameters);
         }
     }
 }
