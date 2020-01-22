@@ -46,7 +46,7 @@ namespace Vlingo.Http.Resource
     {
         public static ParameterResolver<T> Path<T>(int position)
             => ParameterResolver<T>.Create(
-                Type.PATH,
+                Type.Path,
                 (request, mappedParameters) =>
                 {
                     var value = mappedParameters.Mapped[position].Value;
@@ -64,12 +64,12 @@ namespace Vlingo.Http.Resource
 
         public static ParameterResolver<T> Body<T>(IMapper mapper)
             => ParameterResolver<T>.Create(
-                Type.BODY,
+                Type.Body,
                 (request, mappedParameters) => (T)mapper.From(request?.Body?.ToString(), typeof(T))!);
 
         public static ParameterResolver<T> Body<T>(MediaTypeMapper mediaTypeMapper)
             => ParameterResolver<T>.Create(
-                Type.BODY,
+                Type.Body,
                 (request, mappedParameters) =>
                 {
                     var assumedBodyContentType = ContentMediaType.Json.ToString();
@@ -79,7 +79,7 @@ namespace Vlingo.Http.Resource
 
         public static ParameterResolver<Header> Header(string headerName)
             => ParameterResolver<Header>.Create(
-                Type.HEADER,
+                Type.Header,
                 (request, mappedParameters) => request.HeaderOf(headerName)!);
 
         public static ParameterResolver<T> Query<T>(string name)
@@ -87,7 +87,7 @@ namespace Vlingo.Http.Resource
 
         public static ParameterResolver<T> Query<T>(string name, T defaultValue)
             => ParameterResolver<T>.Create(
-                Type.QUERY,
+                Type.Query,
                 (request, mappedParameters) =>
                 {
                     string? value;
@@ -137,10 +137,10 @@ namespace Vlingo.Http.Resource
 
         internal enum Type
         {
-            PATH,
-            BODY,
-            HEADER,
-            QUERY
+            Path,
+            Body,
+            Header,
+            Query
         }
     }
 }

@@ -74,7 +74,7 @@ namespace Vlingo.Http.Resource
             var first = true;
             foreach (var resolver in parameterResolvers)
             {
-                if (resolver.Type == ParameterResolver.Type.PATH)
+                if (resolver.Type == ParameterResolver.Type.Path)
                 {
                     if (first)
                     {
@@ -96,11 +96,11 @@ namespace Vlingo.Http.Resource
             var firstNonPathResolver = false;
             foreach (var resolver in parameterResolvers)
             {
-                if (resolver.Type != ParameterResolver.Type.PATH)
+                if (resolver.Type != ParameterResolver.Type.Path)
                 {
                     firstNonPathResolver = true;
                 }
-                if (firstNonPathResolver && resolver.Type == ParameterResolver.Type.PATH)
+                if (firstNonPathResolver && resolver.Type == ParameterResolver.Type.Path)
                 {
                     throw new ArgumentException("Path parameters are unsorted");
                 }
