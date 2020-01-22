@@ -194,12 +194,14 @@ namespace Vlingo.Http.Tests.Resource
                 {
                     new Action.MappedParameter("String", "admin")
                 });
-
+            
+#pragma warning disable 618
             var handler = CreateRequestHandler(
                     Method.Post,
                     "/user/{userId}/picture/{pictureId}",
                     ParameterResolver.Path<string>(0))
                 .Body<NameData>(typeof(TestMapper));
+#pragma warning restore 618
 
             AssertResolvesAreEquals(ParameterResolver.Body<NameData>(), handler.ResolverParam2);
             Assert.Equal(new NameData("John", "Doe"), handler.ResolverParam2.Apply(request, mappedParameters));

@@ -171,6 +171,7 @@ namespace Vlingo.Http.Tests.Resource
                     new Action.MappedParameter("String", "my-comment")   
                 });
 
+#pragma warning disable 618
             var handler = CreateRequestHandler(
                     Method.Post,
                     "/posts/{postId}/comment/{commentId}",
@@ -178,6 +179,7 @@ namespace Vlingo.Http.Tests.Resource
                     ParameterResolver.Path<string>(1),
                     ParameterResolver.Path<int>(2))
                 .Body<NameData>(typeof(TestMapper));
+#pragma warning restore 618
 
             AssertResolvesAreEquals(ParameterResolver.Body<NameData>(), handler.ResolverParam4);
             Assert.Equal(new NameData("John", "Doe"), handler.ResolverParam4.Apply(request, mappedParameters));
