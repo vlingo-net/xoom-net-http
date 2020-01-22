@@ -55,7 +55,8 @@ namespace Vlingo.Http.Resource
                         return (T)value!;
                     }
 
-                    throw new ArgumentException("Value " + value + " is of mimeType " + mappedParameters.Mapped[position].Type + " instead of " + typeof(T).Name);
+                    throw new ArgumentException(
+                        $"Value {value} is of mimeType {mappedParameters.Mapped[position].Type} instead of {typeof(T).Name}");
                 });
 
         public static ParameterResolver<T> Body<T>()

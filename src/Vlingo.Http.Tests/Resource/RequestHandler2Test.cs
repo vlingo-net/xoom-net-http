@@ -17,7 +17,7 @@ using Action = Vlingo.Http.Resource.Action;
 
 namespace Vlingo.Http.Tests.Resource
 {
-    public class RequestHandler3Test : RequestHandlerTestBase
+    public class RequestHandler2Test : RequestHandlerTestBase
     {
         [Fact]
         public void HandlerWithOneParam()
@@ -26,14 +26,13 @@ namespace Vlingo.Http.Tests.Resource
                     Method.Get,
                     "/posts/{postId}/comment/{commentId}",
                     ParameterResolver.Path<string>(0),
-                    ParameterResolver.Path<string>(1),
-                    ParameterResolver.Query("page", 10))
-                .Handle((postId, commentId, page) =>
+                    ParameterResolver.Path<string>(1))
+                .Handle((postId, commentId) =>
                     Completes.WithSuccess(Response.Of(Response.ResponseStatus.Ok, JsonSerialization.Serialized(
                         $"{postId} {commentId}"))));
 
             var response = handler
-                .Execute(Request.WithMethod(Method.Get), "my-post", "my-comment", 10, Logger).Outcome;
+                .Execute(Request.WithMethod(Method.Get), "my-post", "my-comment", Logger).Outcome;
 
             Assert.NotNull(handler);
             Assert.Equal(Method.Get, handler.Method);
@@ -51,12 +50,11 @@ namespace Vlingo.Http.Tests.Resource
                 Method.Get,
                 "/posts/{postId}/comment/{commentId}",
                 ParameterResolver.Path<string>(0),
-                ParameterResolver.Path<string>(1),
-                ParameterResolver.Query("page", 10));
+                ParameterResolver.Path<string>(1));
 
             var exception = Assert.Throws<HandlerMissingException>(() => handler.Execute(Request.WithMethod(Method.Get),
                 "my-post",
-                "my-comment", 10, Logger));
+                "my-comment", Logger));
             Assert.Equal("No handler defined for GET /posts/{postId}/comment/{commentId}",
                 exception.Message);
         }
@@ -66,10 +64,9 @@ namespace Vlingo.Http.Tests.Resource
         {
             var handler = CreateRequestHandler(
                 Method.Get,
-                "/posts/{postId}/comment/{commentId}/user/{userId}",
+                "/posts/{postId}/comment/{commentId}",
                 ParameterResolver.Path<string>(0),
-                ParameterResolver.Path<string>(1),
-                ParameterResolver.Query("page", 10));
+                ParameterResolver.Path<string>(1));
 
             Assert.Equal("String postId, String commentId", handler.ActionSignature);
         }
@@ -88,11 +85,10 @@ namespace Vlingo.Http.Tests.Resource
                 });
             var handler = CreateRequestHandler(
                     Method.Get,
-                    "/posts/{postId}/comment/{commentId}/user/{userId}",
+                    "/posts/{postId}/comment/{commentId}",
                     ParameterResolver.Path<string>(0),
-                    ParameterResolver.Path<string>(1),
-                    ParameterResolver.Query("page", 10))
-                .Handle((postId, commentId, page)
+                    ParameterResolver.Path<string>(1))
+                .Handle((postId, commentId)
                     => Completes.WithSuccess(Response.Of(Response.ResponseStatus.Ok, JsonSerialization.Serialized(
                         $"{postId} {commentId}"))));
 
@@ -107,28 +103,26 @@ namespace Vlingo.Http.Tests.Resource
         public void AddingHandlerParam()
         {
             var request = Request.Has(Method.Get)
-                .And("/posts/my-post/comment/my-comment/votes/10/user/admin".ToMatchableUri())
+                .And("/posts/my-post/comment/my-comment/votes/10".ToMatchableUri())
                 .And(Version.Http1_1);
             var mappedParameters =
                 new Action.MappedParameters(1, Method.Get, "ignored", new List<Action.MappedParameter>
                 {
                     new Action.MappedParameter("String", "my-post"),
                     new Action.MappedParameter("String", "my-comment"),
-                    new Action.MappedParameter("String", 10),
-                    new Action.MappedParameter("String", "admin"),
+                    new Action.MappedParameter("int", 10)
                 });
 
             var
             handler = CreateRequestHandler(
                     Method.Get,
-                    "/posts/{postId}/comment/{commentId}/votes/{votesNumber}/user/{userId}",
+                    "/posts/{postId}/comment/{commentId}/votes/{votesNumber}",
                     ParameterResolver.Path<string>(0),
-                    ParameterResolver.Path<string>(1),
-                    ParameterResolver.Path<int>(2))
-                .Param<string>();
+                    ParameterResolver.Path<string>(1))
+                .Param<int>();
 
-            AssertResolvesAreEquals(ParameterResolver.Path<string>(3), handler.ResolverParam4);
-            Assert.Equal("admin", handler.ResolverParam4.Apply(request, mappedParameters));
+            AssertResolvesAreEquals(ParameterResolver.Path<int>(2), handler.ResolverParam3);
+            Assert.Equal(10, handler.ResolverParam3.Apply(request, mappedParameters));
         }
 
         [Fact]
@@ -149,12 +143,11 @@ namespace Vlingo.Http.Tests.Resource
                     Method.Post,
                     "/posts/{postId}/comment/{commentId}",
                     ParameterResolver.Path<string>(0),
-                    ParameterResolver.Path<string>(1),
-                    ParameterResolver.Path<int>(2))
+                    ParameterResolver.Path<string>(1))
                 .Body<NameData>();
 
-            AssertResolvesAreEquals(ParameterResolver.Body<NameData>(), handler.ResolverParam4);
-            Assert.Equal(new NameData("John", "Doe"), handler.ResolverParam4.Apply(request, mappedParameters));
+            AssertResolvesAreEquals(ParameterResolver.Body<NameData>(), handler.ResolverParam3);
+            Assert.Equal(new NameData("John", "Doe"), handler.ResolverParam3.Apply(request, mappedParameters));
         }
 
         [Fact]
@@ -175,12 +168,11 @@ namespace Vlingo.Http.Tests.Resource
                     Method.Post,
                     "/posts/{postId}/comment/{commentId}",
                     ParameterResolver.Path<string>(0),
-                    ParameterResolver.Path<string>(1),
-                    ParameterResolver.Path<int>(2))
+                    ParameterResolver.Path<string>(1))
                 .Body<NameData>(typeof(TestMapper));
 
-            AssertResolvesAreEquals(ParameterResolver.Body<NameData>(), handler.ResolverParam4);
-            Assert.Equal(new NameData("John", "Doe"), handler.ResolverParam4.Apply(request, mappedParameters));
+            AssertResolvesAreEquals(ParameterResolver.Body<NameData>(), handler.ResolverParam3);
+            Assert.Equal(new NameData("John", "Doe"), handler.ResolverParam3.Apply(request, mappedParameters));
         }
 
         [Fact]
@@ -196,12 +188,11 @@ namespace Vlingo.Http.Tests.Resource
                     Method.Get,
                     "/posts/{postId}/comment/{commentId}",
                     ParameterResolver.Path<string>(0),
-                    ParameterResolver.Path<string>(1),
-                    ParameterResolver.Path<string>(2))
+                    ParameterResolver.Path<string>(1))
                 .Query("filter");
 
-            AssertResolvesAreEquals(ParameterResolver.Query<string>("filter"), handler.ResolverParam4);
-            Assert.Equal("abc", handler.ResolverParam4.Apply(request, mappedParameters));
+            AssertResolvesAreEquals(ParameterResolver.Query<string>("filter"), handler.ResolverParam3);
+            Assert.Equal("abc", handler.ResolverParam3.Apply(request, mappedParameters));
         }
 
 
@@ -220,30 +211,27 @@ namespace Vlingo.Http.Tests.Resource
                     Method.Get,
                     "/posts/{postId}/comment/{commentId}",
                     ParameterResolver.Path<string>(0),
-                    ParameterResolver.Path<string>(1),
-                    ParameterResolver.Path<string>(2))
+                    ParameterResolver.Path<string>(1))
                 .Header("Host");
 
-            AssertResolvesAreEquals(ParameterResolver.Header("Host"), handler.ResolverParam4);
-            Assert.Equal(hostHeader, handler.ResolverParam4.Apply(request, mappedParameters));
+            AssertResolvesAreEquals(ParameterResolver.Header("Host"), handler.ResolverParam3);
+            Assert.Equal(hostHeader, handler.ResolverParam3.Apply(request, mappedParameters));
         }
 
-        public RequestHandler3Test(ITestOutputHelper output) : base(output)
+        public RequestHandler2Test(ITestOutputHelper output) : base(output)
         {
         }
 
-        private RequestHandler3<T, R, U> CreateRequestHandler<T, R, U>(Method method,
+        private RequestHandler2<T, R> CreateRequestHandler<T, R>(Method method,
             string path,
             ParameterResolver<T> parameterResolver1,
-            ParameterResolver<R> parameterResolver2,
-            ParameterResolver<U> parameterResolver3)
+            ParameterResolver<R> parameterResolver2)
         {
-            return new RequestHandler3<T, R, U>(
+            return new RequestHandler2<T, R>(
                 method,
                 path,
                 parameterResolver1,
                 parameterResolver2,
-                parameterResolver3,
                 ErrorHandler.HandleAllWith(Response.ResponseStatus.InternalServerError),
                 DefaultMediaTypeMapper.Instance);
         }
