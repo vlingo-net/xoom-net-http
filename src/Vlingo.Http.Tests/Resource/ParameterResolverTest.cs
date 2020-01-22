@@ -16,8 +16,8 @@ namespace Vlingo.Http.Tests.Resource
 {
     public class ParameterResolverTest
     {
-        private Request request;
-        private Action.MappedParameters mappedParameters;
+        private readonly Request _request;
+        private readonly Action.MappedParameters _mappedParameters;
 
         [Fact]
 
@@ -25,7 +25,7 @@ namespace Vlingo.Http.Tests.Resource
         {
             var resolver = ParameterResolver.Path<string>(0);
 
-            var result = resolver.Apply(request, mappedParameters);
+            var result = resolver.Apply(_request, _mappedParameters);
 
             Assert.Equal("my-post", result);
             Assert.Equal(ParameterResolver.Type.Path, resolver.Type);
@@ -36,7 +36,7 @@ namespace Vlingo.Http.Tests.Resource
         {
             var resolver = ParameterResolver.Body<NameData>();
 
-            var result = resolver.Apply(request, mappedParameters);
+            var result = resolver.Apply(_request, _mappedParameters);
             var expected = new NameData("John", "Doe");
 
             Assert.Equal(expected.ToString(), result.ToString());
@@ -52,7 +52,7 @@ namespace Vlingo.Http.Tests.Resource
 
             var resolver = ParameterResolver.Body<NameData>(mediaTypeMapper);
 
-            var result = resolver.Apply(request, mappedParameters);
+            var result = resolver.Apply(_request, _mappedParameters);
             var expected = new NameData("John", "Doe");
 
             Assert.Equal(expected.ToString(), result.ToString());
@@ -64,7 +64,7 @@ namespace Vlingo.Http.Tests.Resource
         {
             var resolver = ParameterResolver.Header("Host");
 
-            var result = resolver.Apply(request, mappedParameters);
+            var result = resolver.Apply(_request, _mappedParameters);
 
             Assert.Equal("Host", result.Name);
             Assert.Equal("www.vlingo.io", result.Value);
@@ -76,7 +76,7 @@ namespace Vlingo.Http.Tests.Resource
         {
             var resolver = ParameterResolver.Query<string>("page");
 
-            var result = resolver.Apply(request, mappedParameters);
+            var result = resolver.Apply(_request, _mappedParameters);
 
             Assert.Equal("10", result);
             Assert.Equal(ParameterResolver.Type.Query, resolver.Type);
@@ -88,7 +88,7 @@ namespace Vlingo.Http.Tests.Resource
         {
             var resolver = ParameterResolver.Query<int>("page");
 
-            var result = resolver.Apply(request, mappedParameters);
+            var result = resolver.Apply(_request, _mappedParameters);
 
             Assert.Equal(10, result);
             Assert.Equal(ParameterResolver.Type.Query, resolver.Type);
@@ -100,7 +100,7 @@ namespace Vlingo.Http.Tests.Resource
         {
             var resolver = ParameterResolver.Query<int>("pageSize", 50);
 
-            var result = resolver.Apply(request, mappedParameters);
+            var result = resolver.Apply(_request, _mappedParameters);
 
             Assert.Equal(50, result);
             Assert.Equal(ParameterResolver.Type.Query, resolver.Type);
@@ -108,13 +108,13 @@ namespace Vlingo.Http.Tests.Resource
 
         public ParameterResolverTest()
         {
-            request = Request.Has(Method.Post)
+            _request = Request.Has(Method.Post)
                 .And(Version.Http1_1)
                 .And("/user/my-post?page=10".ToMatchableUri())
                 .And(RequestHeader.FromString("Host:www.vlingo.io"))
                 .And(Http.Body.From("{\"given\":\"John\",\"family\":\"Doe\"}"));
 
-            mappedParameters = new Action.MappedParameters(1, Method.Get, "ignored", new List<Action.MappedParameter>
+            _mappedParameters = new Action.MappedParameters(1, Method.Get, "ignored", new List<Action.MappedParameter>
             {
                 new Action.MappedParameter("String", "my-post")
             });
