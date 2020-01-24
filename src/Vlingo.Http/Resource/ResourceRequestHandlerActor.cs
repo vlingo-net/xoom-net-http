@@ -33,5 +33,23 @@ namespace Vlingo.Http.Resource
                 context.Completes.With(Response.Of(Response.ResponseStatus.InternalServerError));
             }
         }
+
+        public void HandleFor(Context context, Action.MappedParameters mappedParameters, RequestHandler handler)
+        {
+            Action<ResourceHandler> consumer = resource =>
+                handler
+                .Execute(context.Request!, mappedParameters, resource.Logger!)
+                .AndThen(outcome => RespondWith(context, outcome))
+                .Otherwise<Response>(failure => RespondWith(context, failure))
+                .RecoverFrom(exception => Response.Of(Response.ResponseStatus.BadRequest, exception.Message));
+
+            HandleFor(context, consumer);
+        }
+        
+        private Response RespondWith(Context context, Response response)
+        {
+            context.Completes.With(response);
+            return response;
+        }
     }
 }

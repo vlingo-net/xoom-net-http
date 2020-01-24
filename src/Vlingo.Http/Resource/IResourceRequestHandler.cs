@@ -12,5 +12,7 @@ namespace Vlingo.Http.Resource
     public interface IResourceRequestHandler
     {
         void HandleFor<T>(Context context, Action<T>? consumer) where T : ResourceHandler;
+        
+        void HandleFor(Context context, Action.MappedParameters mappedParameters, RequestHandler handler);
     }
 }

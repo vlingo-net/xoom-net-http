@@ -9,6 +9,7 @@ namespace Vlingo.Http.Resource
     public class ResourceRequestHandler__Proxy : Vlingo.Http.Resource.IResourceRequestHandler
     {
         private const string HandleForRepresentation1 = "HandleFor<T>(Vlingo.Http.Context, Action<T>)";
+        private const string HandleForRepresentation2 = "HandleFor(Vlingo.Http.Context, Action.MappedParameters, RequestHandler)";
 
         private readonly Actor actor;
         private readonly IMailbox mailbox;
@@ -40,6 +41,28 @@ namespace Vlingo.Http.Resource
             else
             {
                 this.actor.DeadLetters.FailedDelivery(new DeadLetter(this.actor, HandleForRepresentation1));
+            }
+        }
+
+        public void HandleFor(Context context, Action.MappedParameters mappedParameters, RequestHandler handler)
+        {
+            if (!this.actor.IsStopped)
+            {
+                Action<Vlingo.Http.Resource.IResourceRequestHandler> cons128873 = __ => __.HandleFor(context, mappedParameters, handler);
+                if (this.mailbox.IsPreallocated)
+                {
+                    this.mailbox.Send(this.actor, cons128873, null, HandleForRepresentation2);
+                }
+                else
+                {
+                    this.mailbox.Send(
+                        new LocalMessage<Vlingo.Http.Resource.IResourceRequestHandler>(this.actor, cons128873,
+                            HandleForRepresentation2));
+                }
+            }
+            else
+            {
+                this.actor.DeadLetters.FailedDelivery(new DeadLetter(this.actor, HandleForRepresentation2));
             }
         }
     }
