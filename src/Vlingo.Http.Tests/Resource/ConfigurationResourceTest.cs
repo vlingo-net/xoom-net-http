@@ -34,13 +34,13 @@ namespace Vlingo.Http.Tests.Resource
 
             Assert.NotNull(completes.Response);
 
-            Assert.Equal(Response.ResponseStatus.Created, completes.Response.Status);
-            Assert.Equal(2, completes.Response.Headers.Count);
-            Assert.Equal(ResponseHeader.Location, completes.Response.Headers[0].Name);
-            Assert.StartsWith("/users/", completes.Response.HeaderOf(ResponseHeader.Location).Value);
-            Assert.NotNull(completes.Response.Entity);
+            Assert.Equal(Response.ResponseStatus.Created, completes.Response.Get().Status);
+            Assert.Equal(2, completes.Response.Get().Headers.Count);
+            Assert.Equal(ResponseHeader.Location, completes.Response.Get().Headers[0].Name);
+            Assert.StartsWith("/users/", completes.Response.Get().HeaderOf(ResponseHeader.Location).Value);
+            Assert.NotNull(completes.Response.Get().Entity);
 
-            var createdUserData = (UserData)JsonSerialization.Deserialized(completes.Response.Entity.Content, typeof(UserData), _settings);
+            var createdUserData = (UserData)JsonSerialization.Deserialized(completes.Response.Get().Entity.Content, typeof(UserData), _settings);
             Assert.NotNull(createdUserData);
             Assert.Equal(JohnDoeUserData.NameData.Given, createdUserData.NameData.Given);
             Assert.Equal(JohnDoeUserData.NameData.Family, createdUserData.NameData.Family);
@@ -58,15 +58,15 @@ namespace Vlingo.Http.Tests.Resource
             postCompletesWithCalls.ReadFrom<int>("completed");
             Assert.NotNull(postCompletes.Response);
 
-            var getUserMessage = $"GET {postCompletes.Response.HeaderOf(ResponseHeader.Location).Value} HTTP/1.1\nHost: vlingo.io\n\n";
+            var getUserMessage = $"GET {postCompletes.Response.Get().HeaderOf(ResponseHeader.Location).Value} HTTP/1.1\nHost: vlingo.io\n\n";
             var getRequest = Request.From(Encoding.UTF8.GetBytes(getUserMessage));
             var getCompletes = new MockCompletesEventuallyResponse();
             var getCompletesWithCalls = getCompletes.ExpectWithTimes(1);
             Dispatcher.DispatchFor(new Context(getRequest, getCompletes));
             getCompletesWithCalls.ReadFrom<int>("completed");
             Assert.NotNull(getCompletes.Response);
-            Assert.Equal(Response.ResponseStatus.Ok, getCompletes.Response.Status);
-            var getUserData = JsonSerialization.Deserialized<UserData>(getCompletes.Response.Entity.Content, _settings);
+            Assert.Equal(Response.ResponseStatus.Ok, getCompletes.Response.Get().Status);
+            var getUserData = JsonSerialization.Deserialized<UserData>(getCompletes.Response.Get().Entity.Content, _settings);
             Assert.NotNull(getUserData);
             Assert.Equal(JohnDoeUserData.NameData.Given, getUserData.NameData.Given);
             Assert.Equal(JohnDoeUserData.NameData.Family, getUserData.NameData.Family);
@@ -103,18 +103,18 @@ namespace Vlingo.Http.Tests.Resource
             getCompletesWithCalls.ReadFrom<int>("completed");
 
             Assert.NotNull(getCompletes.Response);
-            Assert.Equal(Response.ResponseStatus.Ok, getCompletes.Response.Status);
-            var getUserData = JsonSerialization.DeserializedList<UserData>(getCompletes.Response.Entity.Content, _settings);
+            Assert.Equal(Response.ResponseStatus.Ok, getCompletes.Response.Get().Status);
+            var getUserData = JsonSerialization.DeserializedList<UserData>(getCompletes.Response.Get().Entity.Content, _settings);
             Assert.NotNull(getUserData);
 
-            var johnUserData = UserData.UserAt(postCompletes1.Response.HeaderOf(ResponseHeader.Location).Value, getUserData);
+            var johnUserData = UserData.UserAt(postCompletes1.Response.Get().HeaderOf(ResponseHeader.Location).Value, getUserData);
 
             Assert.Equal(JohnDoeUserData.NameData.Given, johnUserData.NameData.Given);
             Assert.Equal(JohnDoeUserData.NameData.Family, johnUserData.NameData.Family);
             Assert.Equal(JohnDoeUserData.ContactData.EmailAddress, johnUserData.ContactData.EmailAddress);
             Assert.Equal(JohnDoeUserData.ContactData.TelephoneNumber, johnUserData.ContactData.TelephoneNumber);
 
-            var janeUserData = UserData.UserAt(postCompletes2.Response.HeaderOf(ResponseHeader.Location).Value, getUserData);
+            var janeUserData = UserData.UserAt(postCompletes2.Response.Get().HeaderOf(ResponseHeader.Location).Value, getUserData);
 
             Assert.Equal(JaneDoeUserData.NameData.Given, janeUserData.NameData.Given);
             Assert.Equal(JaneDoeUserData.NameData.Family, janeUserData.NameData.Family);
@@ -149,7 +149,7 @@ namespace Vlingo.Http.Tests.Resource
             var johnNameData = NameData.From("John", "Doe-Doe");
             var johnNameSerialized = JsonSerialization.Serialized(johnNameData);
             var patchJohnDoeUserMessage =
-                $"PATCH {postCompletes1.Response.HeaderOf(ResponseHeader.Location).Value}" +
+                $"PATCH {postCompletes1.Response.Get().HeaderOf(ResponseHeader.Location).Value}" +
                 $"/name HTTP/1.1\nHost: vlingo.io\nContent-Length: {johnNameSerialized.Length}" +
                 $"\n\n{johnNameSerialized}";
 
@@ -162,8 +162,8 @@ namespace Vlingo.Http.Tests.Resource
             patchCompletes1WithCalls.ReadFrom<int>("completed");
 
             Assert.NotNull(patchCompletes1.Response);
-            Assert.Equal(Response.ResponseStatus.Ok, patchCompletes1.Response.Status);
-            var getJohnDoeDoeUserData = JsonSerialization.Deserialized<UserData>(patchCompletes1.Response.Entity.Content, _settings);
+            Assert.Equal(Response.ResponseStatus.Ok, patchCompletes1.Response.Get().Status);
+            var getJohnDoeDoeUserData = JsonSerialization.Deserialized<UserData>(patchCompletes1.Response.Get().Entity.Content, _settings);
             Assert.Equal(johnNameData.Given, getJohnDoeDoeUserData.NameData.Given);
             Assert.Equal(johnNameData.Family, getJohnDoeDoeUserData.NameData.Family);
             Assert.Equal(JohnDoeUserData.ContactData.EmailAddress, getJohnDoeDoeUserData.ContactData.EmailAddress);
@@ -172,7 +172,7 @@ namespace Vlingo.Http.Tests.Resource
             var janeNameData = NameData.From("Jane", "Doe-Doe");
             var janeNameSerialized = JsonSerialization.Serialized(janeNameData);
             var patchJaneDoeUserMessage =
-                $"PATCH {postCompletes2.Response.HeaderOf(ResponseHeader.Location).Value}" +
+                $"PATCH {postCompletes2.Response.Get().HeaderOf(ResponseHeader.Location).Value}" +
                 $"/name HTTP/1.1\nHost: vlingo.io\nContent-Length: {janeNameSerialized.Length}" +
                 $"\n\n{janeNameSerialized}";
 
@@ -184,8 +184,8 @@ namespace Vlingo.Http.Tests.Resource
             patchCompletes2WithCalls.ReadFrom<int>("completed");
 
             Assert.NotNull(patchCompletes2.Response);
-            Assert.Equal(Response.ResponseStatus.Ok, patchCompletes2.Response.Status);
-            var getJaneDoeDoeUserData = JsonSerialization.Deserialized<UserData>(patchCompletes2.Response.Entity.Content);
+            Assert.Equal(Response.ResponseStatus.Ok, patchCompletes2.Response.Get().Status);
+            var getJaneDoeDoeUserData = JsonSerialization.Deserialized<UserData>(patchCompletes2.Response.Get().Entity.Content);
             Assert.Equal(janeNameData.Given, getJaneDoeDoeUserData.NameData.Given);
             Assert.Equal(janeNameData.Family, getJaneDoeDoeUserData.NameData.Family);
             Assert.Equal(JaneDoeUserData.ContactData.EmailAddress, getJaneDoeDoeUserData.ContactData.EmailAddress);

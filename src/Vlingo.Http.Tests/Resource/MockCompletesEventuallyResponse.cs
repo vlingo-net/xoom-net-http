@@ -7,15 +7,16 @@
 
 using Vlingo.Actors;
 using Vlingo.Actors.TestKit;
+using Vlingo.Common;
 
 namespace Vlingo.Http.Tests.Resource
 {
     public class MockCompletesEventuallyResponse : ICompletesEventually
     {
         private AccessSafely _withCalls = AccessSafely.AfterCompleting(0);
-
-        public Response Response { get; private set; }
         
+        public AtomicReference<Response> Response { get; } = new AtomicReference<Response>();
+
         /// <summary>
         /// Answer with an AccessSafely which writes nulls to "with" and reads the write count from the "completed".
         /// </summary>
@@ -25,8 +26,9 @@ namespace Vlingo.Http.Tests.Resource
         public AccessSafely ExpectWithTimes(int n)
         {
             _withCalls = AccessSafely.AfterCompleting(n)
-                .WritingWith<object>("with", x => {})
-                .ReadingWith("completed", () => _withCalls.TotalWrites);
+                .WritingWith<Response>("with", r => Response.Set(r))
+                .ReadingWith("completed", () => _withCalls.TotalWrites)
+                .ReadingWith("response", () => Response.Get());
             return _withCalls;
         }
         public void Conclude()
@@ -40,8 +42,7 @@ namespace Vlingo.Http.Tests.Resource
         public bool IsStopped => false;
         public void With(object outcome)
         {
-            Response = (Response) outcome;
-            _withCalls.WriteUsing<object>("with", null);
+            _withCalls.WriteUsing("with", (Response)outcome);
         }
 
         public IAddress Address => null;
