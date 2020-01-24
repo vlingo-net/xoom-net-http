@@ -37,12 +37,8 @@ namespace Vlingo.Http.Resource
         {
             try
             {
-                Action<ResourceHandler> consumer = resource =>
-                    Handlers[mappedParameters!.ActionId]
-                    .Execute(context.Request!, mappedParameters, resource.Logger!)
-                    .AndThenConsume(context.Completes.With);
-
-                PooledHandler.HandleFor(context, consumer);
+                var handler = Handlers[mappedParameters!.ActionId];
+                PooledHandler.HandleFor(context, mappedParameters, handler);
             }
             catch
             {
@@ -76,16 +72,19 @@ namespace Vlingo.Http.Resource
         }
 
         public override ResourceHandler ResourceHandlerInstance(Stage stage)
-            => new SpecificResourceHandler(stage);
+            => new PooledDynamicResourceHandler(stage, this);
 
         private IList<RequestHandler> SortHandlersBySlashes(IList<RequestHandler> unsortedHandlers)
             => unsortedHandlers.OrderBy(x => x.Path.LongCount(c => c == '/')).ToList();
 
 
-        private sealed class SpecificResourceHandler : ResourceHandler
+        private sealed class PooledDynamicResourceHandler : ResourceHandler
         {
-            public SpecificResourceHandler(Stage stage)
+            private readonly DynamicResource _resource;
+
+            public PooledDynamicResourceHandler(Stage stage, DynamicResource resource)
             {
+                _resource = resource;
                 Stage = stage;
             }
         }
