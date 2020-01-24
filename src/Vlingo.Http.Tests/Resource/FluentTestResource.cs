@@ -6,7 +6,7 @@
 // one at https://mozilla.org/MPL/2.0/.
 
 using System.Collections.Concurrent;
-using System.Threading;
+using Newtonsoft.Json;
 using Vlingo.Actors;
 using Vlingo.Common;
 using Vlingo.Http.Resource;
@@ -17,6 +17,7 @@ namespace Vlingo.Http.Tests.Resource
     public class FluentTestResource : ResourceHandler
     {
         private readonly ConcurrentDictionary<string, Data> _entities;
+        private static readonly AtomicInteger NextId = new AtomicInteger(0);
 
         public FluentTestResource(World world)
         {
@@ -25,7 +26,7 @@ namespace Vlingo.Http.Tests.Resource
 
         public ICompletes<Response> DefineWith(Data data)
         {
-            var taggedData = new Data(data, Thread.CurrentThread.ManagedThreadId);
+            var taggedData = new Data(data, NextId.IncrementAndGet());
 
             _entities.AddOrUpdate(data.Id, taggedData, (k, value) => value);
 
@@ -68,6 +69,7 @@ namespace Vlingo.Http.Tests.Resource
         {
         }
 
+        [JsonConstructor]
         public Data(string id, string name, string description, long resourceHandlerId)
         {
             Id = id;
