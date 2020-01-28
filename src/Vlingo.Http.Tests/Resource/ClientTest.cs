@@ -8,9 +8,9 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
-using Vlingo.Common;
 using Vlingo.Http.Resource;
 using Vlingo.Http.Tests.Sample.User.Model;
+using Vlingo.Wire.Node;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -68,7 +68,13 @@ namespace Vlingo.Http.Tests.Resource
             var unknown = new UnknownResponseConsumer(access, _output);
             var known = new KnownResponseConsumer(access);
 
-            var config = Client.Configuration.DefaultedExceptFor(World.Stage, unknown);
+            //var config = Client.Configuration.DefaultedExceptFor(World.Stage, unknown);
+            var config = Client.Configuration.Has(World.Stage, Address.From(Host.Of("localhost"), 8080, AddressType.None), unknown,
+                false,
+                25,
+                10240,
+                10,
+                10240);
             config.TestInfo(true);
 
             _client =
@@ -90,7 +96,7 @@ namespace Vlingo.Http.Tests.Resource
                     .AndThenConsume(response => known.Consume(response));
             }
 
-            var responseCount = access.ReadFromExpecting("responseCount", 100);
+            var responseCount = access.ReadFromExpecting("responseCount", 100, 2000);
             var total = access.ReadFrom<int>("totalAllResponseCount");
             var unknownResponseCount = access.ReadFrom<int>("unknownResponseCount");
             var clientCounts = access.ReadFrom<Dictionary<string, int>>("responseClientCounts");
@@ -136,7 +142,7 @@ namespace Vlingo.Http.Tests.Resource
                     .AndThenConsume(response => known.Consume(response));
             }
 
-            var responseCount = access.ReadFromExpecting("responseCount", 100);
+            var responseCount = access.ReadFromExpecting("responseCount", 100, 2000);
             var total = access.ReadFrom<int>("totalAllResponseCount");
             var unknownResponseCount = access.ReadFrom<int>("unknownResponseCount");
             var clientCounts = access.ReadFrom<Dictionary<string, int>>("responseClientCounts");
@@ -161,7 +167,7 @@ namespace Vlingo.Http.Tests.Resource
             UserStateFactory.ResetId();
 
             _server = ServerFactory.StartWith(World.Stage, Resources, 8080,
-                new Configuration.SizingConf(1, 10, 100, 10240), new Configuration.TimingConf(100, 2, 100));
+                new Configuration.SizingConf(1, 10, 100, 10240), new Configuration.TimingConf(25, 2, 100));
 
             Thread.Sleep(10); // delay for server startup
         }
