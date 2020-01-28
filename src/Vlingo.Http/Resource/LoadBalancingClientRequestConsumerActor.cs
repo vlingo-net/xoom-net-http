@@ -32,12 +32,6 @@ namespace Vlingo.Http.Resource
             Logger.Error(message, new NotSupportedException(message));
         }
 
-        /*public void Consume(ReadOnlySequence<byte> buffer)
-        {
-            var message = $"{ErrorMessage} Consume()";
-            Logger.Error(message, new NotSupportedException(message));
-        }*/
-
         public void IntervalSignal(IScheduled<object> scheduled, object data)
         {
             var message = $"{ErrorMessage} IntervalSignal()";

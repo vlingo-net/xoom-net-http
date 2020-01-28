@@ -71,7 +71,7 @@ namespace Vlingo.Http.Tests.Resource
             //var config = Client.Configuration.DefaultedExceptFor(World.Stage, unknown);
             var config = Client.Configuration.Has(World.Stage, Address.From(Host.Of("localhost"), 8080, AddressType.None), unknown,
                 false,
-                25,
+                50,
                 10240,
                 10,
                 10240);
@@ -123,7 +123,7 @@ namespace Vlingo.Http.Tests.Resource
             // var config = Client.Configuration.DefaultedExceptFor(World.Stage, unknown);
             var config = Client.Configuration.Has(World.Stage, Address.From(Host.Of("localhost"), 8080, AddressType.None), unknown,
                 false,
-                25,
+                50,
                 10240,
                 10,
                 10240);
@@ -173,7 +173,7 @@ namespace Vlingo.Http.Tests.Resource
             UserStateFactory.ResetId();
 
             _server = ServerFactory.StartWith(World.Stage, Resources, 8080,
-                new Configuration.SizingConf(1, 10, 100, 10240), new Configuration.TimingConf(25, 2, 100));
+                new Configuration.SizingConf(1, 10, 100, 10240), new Configuration.TimingConf(10, 2, 100));
 
             Thread.Sleep(10); // delay for server startup
         }
