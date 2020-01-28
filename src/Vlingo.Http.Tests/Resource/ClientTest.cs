@@ -8,6 +8,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using Vlingo.Common;
 using Vlingo.Http.Resource;
 using Vlingo.Http.Tests.Sample.User.Model;
 using Xunit;
@@ -160,7 +161,7 @@ namespace Vlingo.Http.Tests.Resource
             UserStateFactory.ResetId();
 
             _server = ServerFactory.StartWith(World.Stage, Resources, 8080,
-                new Configuration.SizingConf(1, 10, 100, 10240), new Configuration.TimingConf(100, 2, 100));
+                new Configuration.SizingConf(1, 10, 100, 10240), new Configuration.TimingConf(80, 2, 100));
 
             Thread.Sleep(10); // delay for server startup
         }
