@@ -22,8 +22,8 @@ namespace Vlingo.Http.Resource
 
         public enum ClientConsumerType { Correlating, LoadBalancing, RoundRobin };
 
-        private readonly Configuration configuration;
-        private readonly IClientConsumer consumer;
+        private readonly Configuration _configuration;
+        private readonly IClientConsumer _consumer;
 
         /// <summary>
         /// Answers a new <code>Client</code> from the <paramref name="configuration"/>.
@@ -52,7 +52,7 @@ namespace Vlingo.Http.Resource
         /// <param name="poolSize">The size of the pool of workers.</param>
         public Client(Configuration configuration, ClientConsumerType type, int poolSize)
         {
-            this.configuration = configuration;
+            _configuration = configuration;
 
             Type clientConsumerType;
             List<object> parameters;
@@ -79,7 +79,7 @@ namespace Vlingo.Http.Resource
                     throw new ArgumentException($"ClientConsumerType is not mapped: {type}");
             }
 
-            consumer = configuration.Stage.ActorFor<IClientConsumer>(Definition.Has(clientConsumerType, parameters));
+            _consumer = configuration.Stage.ActorFor<IClientConsumer>(Definition.Has(clientConsumerType, parameters));
         }
 
         public Client(Configuration configuration)
@@ -87,14 +87,14 @@ namespace Vlingo.Http.Resource
         {
         }
 
-        public void Stop() => consumer.Stop();
+        public void Close() => _consumer.Stop();
 
         public ICompletes<Response> RequestWith(Request request)
         {
-            var completes = configuration.KeepAlive
-                ? Completes.RepeatableUsing<Response>(configuration.Stage.Scheduler)
-                : Completes.Using<Response>(configuration.Stage.Scheduler);
-            consumer.RequestWith(request, completes);
+            var completes = _configuration.KeepAlive
+                ? Completes.RepeatableUsing<Response>(_configuration.Stage.Scheduler)
+                : Completes.Using<Response>(_configuration.Stage.Scheduler);
+            _consumer.RequestWith(request, completes);
             return completes;
         }
 
