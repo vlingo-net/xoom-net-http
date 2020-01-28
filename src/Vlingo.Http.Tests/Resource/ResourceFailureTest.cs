@@ -33,7 +33,7 @@ namespace Vlingo.Http.Tests.Resource
         private readonly World _world;
 
         [Fact]
-        public void TestBasicFailire()
+        public void TestBasicFailure()
         {
             var consumer = new TestResponseConsumer(_output);
             var access = consumer.AfterCompleting(1);
