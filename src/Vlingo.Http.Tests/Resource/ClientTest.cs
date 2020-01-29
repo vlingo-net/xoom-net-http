@@ -59,7 +59,7 @@ namespace Vlingo.Http.Tests.Resource
             Assert.Equal(0, unknownResponseCount);
         }
 
-        [Fact(Skip = "CI Freeze")]
+        [Fact]
         public void TestThatRoundRobinClientDelivers()
         {
             var safely = new TestResponseConsumer(_output);
@@ -89,7 +89,7 @@ namespace Vlingo.Http.Tests.Resource
                     .AndThenConsume(response => known.Consume(response));
             }
 
-            var responseCount = access.ReadFromExpecting("responseCount", 100, 2000);
+            var responseCount = access.ReadFromExpecting("responseCount", 100);
             var total = access.ReadFrom<int>("totalAllResponseCount");
             var unknownResponseCount = access.ReadFrom<int>("unknownResponseCount");
             var clientCounts = access.ReadFrom<Dictionary<string, int>>("responseClientCounts");
@@ -160,7 +160,7 @@ namespace Vlingo.Http.Tests.Resource
             UserStateFactory.ResetId();
 
             _server = ServerFactory.StartWith(World.Stage, Resources, 8080,
-                new Configuration.SizingConf(1, 10, 100, 10240), new Configuration.TimingConf(20, 2, 100));
+                new Configuration.SizingConf(1, 10, 100, 10240), new Configuration.TimingConf(100, 2, 100));
 
             Thread.Sleep(10); // delay for server startup
         }
