@@ -37,7 +37,6 @@ namespace Vlingo.Http.Tests.Resource
                 if (string.IsNullOrEmpty(testId))
                 {
                     _logger.WriteLine("Expected header missing: {0}", Client.ClientIdCustomHeader);
-                    //throw new IllegalStateException("Expected header missing: " + Client.ClientIdCustomHeader);
                 }
 
                 if (_clientCounts.ContainsKey(testId))
