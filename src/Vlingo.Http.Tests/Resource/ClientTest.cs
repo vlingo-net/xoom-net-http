@@ -76,7 +76,7 @@ namespace Vlingo.Http.Tests.Resource
                 Client.ClientConsumerType.RoundRobin,
                 5);
 
-            for (var count = 0; count < 25; ++count)
+            for (var count = 0; count < 100; ++count)
             {
                 var user = count % 2 == 0 ? UniqueJohnDoe() : UniqueJaneDoe();
                 _client.RequestWith(
@@ -89,19 +89,31 @@ namespace Vlingo.Http.Tests.Resource
                     .AndThenConsume(response => known.Consume(response));
             }
 
-            var responseCount = access.ReadFromExpecting("responseCount", 25);
+            var counter = 0;
+            while (access.ReadFrom<int>("responseCount") < 100)
+            {
+                if (counter > 100)
+                {
+                    break;
+                }
+                Thread.Sleep(10);
+                counter++;
+            }
+
+            //var responseCount = access.ReadFromExpecting("responseCount", 100, 2000);
+            var responseCount = access.ReadFrom<int>("responseCount");
             var total = access.ReadFrom<int>("totalAllResponseCount");
             var unknownResponseCount = access.ReadFrom<int>("unknownResponseCount");
             var clientCounts = access.ReadFrom<Dictionary<string, int>>("responseClientCounts");
             
-            Assert.Equal(25, total);
-            Assert.Equal(25, responseCount);
+            Assert.Equal(100, total);
+            Assert.Equal(100, responseCount);
             Assert.Equal(0, unknownResponseCount);
             
             foreach (var id in clientCounts.Keys)
             {
                 var clientCount = clientCounts[id];
-                Assert.Equal(5, clientCount);
+                Assert.Equal(20, clientCount);
             }
         }
 
@@ -160,7 +172,7 @@ namespace Vlingo.Http.Tests.Resource
             UserStateFactory.ResetId();
 
             _server = ServerFactory.StartWith(World.Stage, Resources, 8080,
-                new Configuration.SizingConf(1, 10, 100, 10240), new Configuration.TimingConf(50, 2, 100));
+                new Configuration.SizingConf(1, 10, 100, 10240), new Configuration.TimingConf(20, 2, 100));
 
             Thread.Sleep(10); // delay for server startup
         }
