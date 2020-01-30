@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Threading;
 using Vlingo.Http.Resource;
 using Vlingo.Http.Tests.Sample.User.Model;
+using Vlingo.Wire.Node;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -67,7 +68,13 @@ namespace Vlingo.Http.Tests.Resource
             var unknown = new UnknownResponseConsumer(access, _output);
             var known = new KnownResponseConsumer(access);
 
-            var config = Client.Configuration.DefaultedExceptFor(World.Stage, unknown);
+            //var config = Client.Configuration.DefaultedExceptFor(World.Stage, unknown);
+            var config = Client.Configuration.Has(World.Stage, Address.From(Host.Of("localhost"), 8080, AddressType.None), unknown,
+                false,
+                25,
+                10240,
+                10,
+                10240);
             config.TestInfo(true);
 
             _client =
@@ -113,7 +120,13 @@ namespace Vlingo.Http.Tests.Resource
             var unknown = new UnknownResponseConsumer(access, _output);
             var known = new KnownResponseConsumer(access);
 
-            var config = Client.Configuration.DefaultedExceptFor(World.Stage, unknown);
+            //var config = Client.Configuration.DefaultedExceptFor(World.Stage, unknown);
+            var config = Client.Configuration.Has(World.Stage, Address.From(Host.Of("localhost"), 8080, AddressType.None), unknown,
+                false,
+                25,
+                10240,
+                10,
+                10240);
             config.TestInfo(true);
 
             _client =
@@ -159,7 +172,7 @@ namespace Vlingo.Http.Tests.Resource
             _output = output;
             UserStateFactory.ResetId();
 
-            _server = ServerFactory.StartWith(World.Stage, Resources, 8080, new Configuration.SizingConf(1, 10, 100, 10240), new Configuration.TimingConf(25 /*should be 10 but actor mailbox gets overflooded */, 2, 100));
+            _server = ServerFactory.StartWith(World.Stage, Resources, 8080, new Configuration.SizingConf(1, 10, 100, 10240), new Configuration.TimingConf(20 /*should be 10 but actor mailbox gets overflooded */, 2, 100));
 
             Thread.Sleep(100); // delay for server startup
         }
