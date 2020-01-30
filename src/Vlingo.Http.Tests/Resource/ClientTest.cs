@@ -173,6 +173,7 @@ namespace Vlingo.Http.Tests.Resource
             UserStateFactory.ResetId();
 
             _server = ServerFactory.StartWith(World.Stage, Resources, 8080, new Configuration.SizingConf(1, 10, 100, 10240), new Configuration.TimingConf(20 /*should be 10 but actor mailbox gets overflooded */, 2, 100));
+            Assert.True(_server.StartUp().Await(TimeSpan.FromMilliseconds(500L)));
         }
 
         public override void Dispose()
