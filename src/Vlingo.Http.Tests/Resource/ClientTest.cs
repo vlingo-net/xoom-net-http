@@ -89,19 +89,7 @@ namespace Vlingo.Http.Tests.Resource
                     .AndThenConsume(response => known.Consume(response));
             }
 
-            var counter = 0;
-            while (access.ReadFrom<int>("responseCount") < 100)
-            {
-                if (counter > 100)
-                {
-                    break;
-                }
-                Thread.Sleep(10);
-                counter++;
-            }
-
-            //var responseCount = access.ReadFromExpecting("responseCount", 100, 2000);
-            var responseCount = access.ReadFrom<int>("responseCount");
+            var responseCount = access.ReadFromExpecting("responseCount", 100, 2000);
             var total = access.ReadFrom<int>("totalAllResponseCount");
             var unknownResponseCount = access.ReadFrom<int>("unknownResponseCount");
             var clientCounts = access.ReadFrom<Dictionary<string, int>>("responseClientCounts");
@@ -117,7 +105,7 @@ namespace Vlingo.Http.Tests.Resource
             }
         }
 
-        [Fact(Skip = "CI Freeze")]
+        [Fact]
         public void TestThatLoadBalancingClientDelivers()
         {
             var safely = new TestResponseConsumer(_output);
