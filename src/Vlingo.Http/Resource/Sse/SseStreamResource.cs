@@ -47,10 +47,7 @@ namespace Vlingo.Http.Resource.Sse
         {
             if (Publishers.TryGetValue(streamName, out var publisher))
             {
-                if (publisher != null)
-                {
-                    publisher.Unsubscribe(new SseSubscriber(streamName, new SseClient(Context?.ClientContext)));
-                }
+                publisher.Unsubscribe(new SseSubscriber(streamName, new SseClient(Context?.ClientContext)));
             }
 
             Completes?.With(Response.Of(Response.ResponseStatus.Ok));
@@ -58,23 +55,21 @@ namespace Vlingo.Http.Resource.Sse
 
         private ISsePublisher PublisherFor(string streamName, Type feedClass, int feedPayload, int feedInterval, string feedDefaultId)
         {
-            if (Publishers.TryGetValue(streamName, out var publisher))
+            if (!Publishers.TryGetValue(streamName, out var publisher))
             {
-                if (publisher == null)
-                {
-                    publisher = _world.ActorFor<ISsePublisher>(
-                        Definition.Has<SsePublisherActor>(
-                            Definition.Parameters(streamName, feedClass, feedPayload, feedInterval, feedDefaultId)));
+                publisher = _world.ActorFor<ISsePublisher>(
+                    Definition.Has<SsePublisherActor>(
+                        Definition.Parameters(streamName, feedClass, feedPayload, feedInterval, feedDefaultId)));
 
-                    if (Publishers.TryGetValue(streamName, out var presentPublisher) && presentPublisher != null)
-                    {
-                        publisher.Stop();
-                        publisher = presentPublisher;
-                    }
-                    else
-                    {
-                        Publishers.Add(streamName, publisher);
-                    }
+                if (Publishers.ContainsKey(streamName))
+                {
+                    var presentPublisher = Publishers[streamName];
+                    publisher.Stop();
+                    publisher = presentPublisher;
+                }
+                else
+                {
+                    Publishers.Add(streamName, publisher);
                 }
             }
             return publisher;
@@ -97,12 +92,10 @@ namespace Vlingo.Http.Resource.Sse
         {
             private readonly ICancellable _cancellable;
             private readonly ISseFeed _feed;
-            private readonly string _streamName;
             private readonly IDictionary<string, SseSubscriber> _subscribers;
 
             public SsePublisherActor(string streamName, Type feedClass, int feedPayload, int feedInterval, string feedDefaultId)
             {
-                _streamName = streamName;
                 _feed = Stage.ActorFor<ISseFeed>(Definition.Has(feedClass, Definition.Parameters(streamName, feedPayload, feedDefaultId)));
                 _subscribers = new Dictionary<string, SseSubscriber>();
                 _cancellable = Stage.Scheduler.Schedule(
@@ -111,7 +104,7 @@ namespace Vlingo.Http.Resource.Sse
                     TimeSpan.FromMilliseconds(10),
                     TimeSpan.FromMilliseconds(feedInterval));
 
-                Logger.Info($"SsePublisher started for: {_streamName}");
+                Logger.Info($"SsePublisher started for: {streamName}");
             }
 
             public void Subscribe(SseSubscriber subscriber)
