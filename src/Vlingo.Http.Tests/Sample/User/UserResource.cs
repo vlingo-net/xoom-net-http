@@ -16,7 +16,7 @@ namespace Vlingo.Http.Tests.Sample.User
 {
     public sealed class UserResource : ResourceHandler
     {
-        private UserRepository _repository = UserRepository.Instance();
+        private readonly UserRepository _repository = UserRepository.Instance();
 
         public UserResource(World world) => Stage = world.StageNamed("service");
         

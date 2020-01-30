@@ -13,7 +13,7 @@ namespace Vlingo.Http.Tests.Sample.User.Model
     {
         private static UserRepository _instance;
         
-        private Dictionary<string, UserState> _users;
+        private readonly Dictionary<string, UserState> _users;
         
         private static volatile object _lockSync = new object();
 
