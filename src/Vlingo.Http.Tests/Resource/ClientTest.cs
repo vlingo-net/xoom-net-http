@@ -159,10 +159,9 @@ namespace Vlingo.Http.Tests.Resource
             _output = output;
             UserStateFactory.ResetId();
 
-            _server = ServerFactory.StartWith(World.Stage, Resources, 8080,
-                new Configuration.SizingConf(1, 10, 100, 10240), new Configuration.TimingConf(20 /*should be 10 but actor mailbox gets overflooded */, 2, 100));
+            _server = ServerFactory.StartWith(World.Stage, Resources, 8080, new Configuration.SizingConf(1, 10, 100, 10240), new Configuration.TimingConf(25 /*should be 10 but actor mailbox gets overflooded */, 2, 100));
 
-            Thread.Sleep(10); // delay for server startup
+            Thread.Sleep(100); // delay for server startup
         }
 
         public override void Dispose()
@@ -170,7 +169,7 @@ namespace Vlingo.Http.Tests.Resource
             _client?.Close();
             _server?.Stop();
 
-            //base.Dispose();
+            base.Dispose();
         }
     }
 }
