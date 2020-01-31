@@ -58,7 +58,7 @@ namespace Vlingo.Http.Tests.Resource
             Assert.Equal(0, unknownResponseCount);
         }
 
-        [Fact]
+        [Fact(Skip = "Under investigation https://github.com/vlingo-net/vlingo-net-http/issues/2")]
         public void TestThatRoundRobinClientDelivers()
         {
             var safely = new TestResponseConsumer(_output);
@@ -104,7 +104,7 @@ namespace Vlingo.Http.Tests.Resource
             }
         }
 
-        [Fact]
+        [Fact(Skip = "Under investigation https://github.com/vlingo-net/vlingo-net-http/issues/2")]
         public void TestThatLoadBalancingClientDelivers()
         {
             var safely = new TestResponseConsumer(_output);
