@@ -5,6 +5,7 @@
 // was not distributed with this file, You can obtain
 // one at https://mozilla.org/MPL/2.0/.
 
+using System;
 using Vlingo.Actors;
 
 namespace Vlingo.Http.Resource.Feed
@@ -27,10 +28,10 @@ namespace Vlingo.Http.Resource.Feed
         /// Answer a new <see cref="IFeedProducer"/>
         /// </summary>
         /// <param name="stage">The Stage in which the FeedProducer is created</param>
+        /// <param name="Type">Type of the feed producer actor to create</param>
         /// <param name="feedProducerClass">feedProducerClass</param>
-        /// <typeparam name="T">Type of the feed producer actor to create</typeparam>
         /// <returns>FeedProducer</returns>
-        public static IFeedProducer Using<T>(Stage stage, T feedProducerClass) where T : Actor
-            => stage.ActorFor<IFeedProducer>(typeof(T), feedProducerClass);
+        public static IFeedProducer Using(Stage stage, Type feedProducerClass)
+            => stage.ActorFor<IFeedProducer>(feedProducerClass);
     }
 }

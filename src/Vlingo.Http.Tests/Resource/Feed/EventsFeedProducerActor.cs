@@ -22,7 +22,7 @@ namespace Vlingo.Http.Tests.Resource.Feed
                     .Append(request.FeedProductId)
                     .Append(":");
             
-            for (int count = 1; count <= request.FeedProductElements; ++count)
+            for (var count = 1; count <= request.FeedProductElements; ++count)
             {
                 body.Append(count).Append("\n");
             }
