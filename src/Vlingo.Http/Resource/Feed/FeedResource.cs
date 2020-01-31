@@ -34,7 +34,7 @@ namespace Vlingo.Http.Resource.Feed
             var producer = FeedProducer(feedName, feedProducerClass);
             if (producer == null)
             {
-                Completes.With(Response.Of(Response.ResponseStatus.NotFound, $"Feed '{feedName}' does not exist."));
+                Completes?.With(Response.Of(Response.ResponseStatus.NotFound, $"Feed '{feedName}' does not exist."));
             }
             else
             {

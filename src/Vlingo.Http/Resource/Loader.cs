@@ -130,7 +130,7 @@ namespace Vlingo.Http.Resource
                 var maybePoolSize = int.Parse(properties.GetProperty(poolKey, "1"));
                 int handlerPoolSize = maybePoolSize <= 0 ? 1 : maybePoolSize;
                 var feedRequestUri =
-                    $"{feedUri.Replace(resourceName, FeedNamePathParameter)}/{FeedProductIdPathParameter}";
+                    $"{feedUri?.Replace(resourceName, FeedNamePathParameter)}/{FeedProductIdPathParameter}";
 
                 try
                 {

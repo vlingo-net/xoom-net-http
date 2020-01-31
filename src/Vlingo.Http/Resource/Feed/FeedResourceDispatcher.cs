@@ -24,13 +24,13 @@ namespace Vlingo.Http.Resource.Feed
 
             try
             {
-                switch (mappedParameters.ActionId)
+                switch (mappedParameters?.ActionId)
                 {
                     case 0
                         : // GET /feeds/{feedName}/{feedItemId} feed(String feedName, String feedProductId, Class<? extends Actor> feedProducerClass, int feedProductElements)
-                        consumer = handler => handler.Feed((string) mappedParameters.Mapped[0].Value,
-                            (string) mappedParameters.Mapped[1].Value, (Type) mappedParameters.Mapped[2].Value,
-                            (int) mappedParameters.Mapped[3].Value);
+                        consumer = handler => handler.Feed((string) mappedParameters.Mapped[0].Value!,
+                            (string) mappedParameters.Mapped[1].Value!, (Type) mappedParameters.Mapped[2].Value!,
+                            (int) mappedParameters.Mapped[3].Value!);
                         PooledHandler.HandleFor(context, consumer);
                         break;
                 }
