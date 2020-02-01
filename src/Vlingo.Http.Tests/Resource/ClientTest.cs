@@ -7,8 +7,10 @@
 
 using System;
 using System.Collections.Generic;
+using Vlingo.Common;
 using Vlingo.Http.Resource;
 using Vlingo.Http.Tests.Sample.User.Model;
+using Vlingo.Wire.Node;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -16,6 +18,8 @@ namespace Vlingo.Http.Tests.Resource
 {
     public class ClientTest : ResourceTestFixtures
     {
+        private static readonly AtomicInteger NextPort = new AtomicInteger(8087);
+        
         private readonly ITestOutputHelper _output;
         private Client _client;
         private int _expectedHeaderCount;
@@ -33,7 +37,13 @@ namespace Vlingo.Http.Tests.Resource
             var unknown = new UnknownResponseConsumer(access, _output);
             var known = new KnownResponseConsumer(access);
 
-            _client = Client.Using(Client.Configuration.DefaultedExceptFor(World.Stage, unknown)) ;
+            var config = Client.Configuration.Has(World.Stage, Address.From(Host.Of("localhost"), NextPort.Get(), AddressType.None), unknown,
+                false,
+                10,
+                10240,
+                10,
+                10240);
+            _client = Client.Using(config) ;
 
             _client.RequestWith(
                     Request
@@ -67,7 +77,13 @@ namespace Vlingo.Http.Tests.Resource
             var unknown = new UnknownResponseConsumer(access, _output);
             var known = new KnownResponseConsumer(access);
 
-            var config = Client.Configuration.DefaultedExceptFor(World.Stage, unknown);
+            //var config = Client.Configuration.DefaultedExceptFor(World.Stage, unknown);
+            var config = Client.Configuration.Has(World.Stage, Address.From(Host.Of("localhost"), NextPort.Get(), AddressType.None), unknown,
+                false,
+                10,
+                10240,
+                10,
+                10240);
             config.TestInfo(true);
 
             _client =
@@ -161,7 +177,7 @@ namespace Vlingo.Http.Tests.Resource
             _output = output;
             UserStateFactory.ResetId();
 
-            _server = ServerFactory.StartWith(World.Stage, Resources, 8080, new Configuration.SizingConf(1, 10, 100, 10240), new Configuration.TimingConf(30 /*should be 10 but actor mailbox gets overflooded */, 2, 100));
+            _server = ServerFactory.StartWith(World.Stage, Resources, NextPort.IncrementAndGet(), new Configuration.SizingConf(1, 10, 100, 10240), new Configuration.TimingConf(20 /*should be 10 but actor mailbox gets overflooded */, 2, 100));
             Assert.True(_server.StartUp().Await(TimeSpan.FromMilliseconds(500L)));
         }
 
