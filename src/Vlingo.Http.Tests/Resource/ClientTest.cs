@@ -80,7 +80,7 @@ namespace Vlingo.Http.Tests.Resource
             //var config = Client.Configuration.DefaultedExceptFor(World.Stage, unknown);
             var config = Client.Configuration.Has(World.Stage, Address.From(Host.Of("localhost"), NextPort.Get(), AddressType.None), unknown,
                 false,
-                60,
+                50,
                 10240,
                 10,
                 10240);
@@ -107,7 +107,7 @@ namespace Vlingo.Http.Tests.Resource
             
             _output.WriteLine("Test finished");
             
-            var responseCount = access.ReadFromExpecting("responseCount", 100, 20000);
+            var responseCount = access.ReadFromExpecting("responseCount", 100, 10000);
             var total = access.ReadFrom<int>("totalAllResponseCount");
             var unknownResponseCount = access.ReadFrom<int>("unknownResponseCount");
             var clientCounts = access.ReadFrom<Dictionary<string, int>>("responseClientCounts");
@@ -135,7 +135,7 @@ namespace Vlingo.Http.Tests.Resource
             //var config = Client.Configuration.DefaultedExceptFor(World.Stage, unknown);
             var config = Client.Configuration.Has(World.Stage, Address.From(Host.Of("localhost"), NextPort.Get(), AddressType.None), unknown,
                 false,
-                60,
+                50,
                 10240,
                 10,
                 10240);
@@ -161,7 +161,7 @@ namespace Vlingo.Http.Tests.Resource
                     .AndThenConsume(response => known.Consume(response));
             }
 
-            var responseCount = access.ReadFromExpecting("responseCount", 100, 20000);
+            var responseCount = access.ReadFromExpecting("responseCount", 100, 10000);
             var total = access.ReadFrom<int>("totalAllResponseCount");
             var unknownResponseCount = access.ReadFrom<int>("unknownResponseCount");
             var clientCounts = access.ReadFrom<Dictionary<string, int>>("responseClientCounts");
@@ -185,7 +185,7 @@ namespace Vlingo.Http.Tests.Resource
             _output = output;
             UserStateFactory.ResetId();
 
-            _server = ServerFactory.StartWith(World.Stage, Resources, NextPort.IncrementAndGet(), new Configuration.SizingConf(1, 10, 100, 10240), new Configuration.TimingConf(50 /*should be 10 but actor mailbox gets overflooded */, 2, 100));
+            _server = ServerFactory.StartWith(World.Stage, Resources, NextPort.IncrementAndGet(), new Configuration.SizingConf(1, 10, 100, 10240), new Configuration.TimingConf(60 /*should be 10 but actor mailbox gets overflooded */, 2, 100));
             Assert.True(_server.StartUp().Await(TimeSpan.FromMilliseconds(500L)));
         }
 
