@@ -91,7 +91,7 @@ namespace Vlingo.Http.Tests.Resource
             
             _output.WriteLine("Test finished");
             
-            var responseCount = access.ReadFromExpecting("responseCount", 100, 2000);
+            var responseCount = access.ReadFromExpecting("responseCount", 100, 20000);
             var total = access.ReadFrom<int>("totalAllResponseCount");
             var unknownResponseCount = access.ReadFrom<int>("unknownResponseCount");
             var clientCounts = access.ReadFrom<Dictionary<string, int>>("responseClientCounts");
@@ -161,7 +161,7 @@ namespace Vlingo.Http.Tests.Resource
             _output = output;
             UserStateFactory.ResetId();
 
-            _server = ServerFactory.StartWith(World.Stage, Resources, 8080, new Configuration.SizingConf(1, 10, 100, 10240), new Configuration.TimingConf(25 /*should be 10 but actor mailbox gets overflooded */, 2, 100));
+            _server = ServerFactory.StartWith(World.Stage, Resources, 8080, new Configuration.SizingConf(1, 10, 100, 10240), new Configuration.TimingConf(30 /*should be 10 but actor mailbox gets overflooded */, 2, 100));
             Assert.True(_server.StartUp().Await(TimeSpan.FromMilliseconds(500L)));
         }
 
