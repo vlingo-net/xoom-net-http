@@ -91,20 +91,20 @@ namespace Vlingo.Http.Tests.Resource
             
             _output.WriteLine("Test finished");
             
-            // var responseCount = access.ReadFromExpecting("responseCount", 100, 2000);
-            // var total = access.ReadFrom<int>("totalAllResponseCount");
-            // var unknownResponseCount = access.ReadFrom<int>("unknownResponseCount");
-            // var clientCounts = access.ReadFrom<Dictionary<string, int>>("responseClientCounts");
-            //
-            // Assert.Equal(100, total);
-            // Assert.Equal(100, responseCount);
-            // Assert.Equal(0, unknownResponseCount);
-            //
-            // foreach (var id in clientCounts.Keys)
-            // {
-            //     var clientCount = clientCounts[id];
-            //     Assert.Equal(20, clientCount);
-            // }
+            var responseCount = access.ReadFromExpecting("responseCount", 100, 2000);
+            var total = access.ReadFrom<int>("totalAllResponseCount");
+            var unknownResponseCount = access.ReadFrom<int>("unknownResponseCount");
+            var clientCounts = access.ReadFrom<Dictionary<string, int>>("responseClientCounts");
+            
+            Assert.Equal(100, total);
+            Assert.Equal(100, responseCount);
+            Assert.Equal(0, unknownResponseCount);
+            
+            foreach (var id in clientCounts.Keys)
+            {
+                var clientCount = clientCounts[id];
+                Assert.Equal(20, clientCount);
+            }
         }
 
         [Fact(Skip = "Under investigation https://github.com/vlingo-net/vlingo-net-http/issues/2")]
