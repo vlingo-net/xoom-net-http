@@ -123,7 +123,8 @@ namespace Vlingo.Http.Tests.Resource
             }
         }
 
-        [Fact(Skip = "Under investigation https://github.com/vlingo-net/vlingo-net-http/issues/2")]
+        //[Fact(Skip = "Under investigation https://github.com/vlingo-net/vlingo-net-http/issues/2")]
+        [Fact]
         public void TestThatLoadBalancingClientDelivers()
         {
             var safely = new TestResponseConsumer(_output);
@@ -131,7 +132,14 @@ namespace Vlingo.Http.Tests.Resource
             var unknown = new UnknownResponseConsumer(access, _output);
             var known = new KnownResponseConsumer(access);
 
-            var config = Client.Configuration.DefaultedExceptFor(World.Stage, unknown);
+            //var config = Client.Configuration.DefaultedExceptFor(World.Stage, unknown);
+            var config = Client.Configuration.Has(World.Stage, Address.From(Host.Of("localhost"), NextPort.Get(), AddressType.None), unknown,
+                false,
+                20,
+                10240,
+                10,
+                10240);
+            config.TestInfo(true);
             config.TestInfo(true);
 
             _client =
@@ -153,7 +161,7 @@ namespace Vlingo.Http.Tests.Resource
                     .AndThenConsume(response => known.Consume(response));
             }
 
-            var responseCount = access.ReadFromExpecting("responseCount", 100, 2000);
+            var responseCount = access.ReadFromExpecting("responseCount", 100, 20000);
             var total = access.ReadFrom<int>("totalAllResponseCount");
             var unknownResponseCount = access.ReadFrom<int>("unknownResponseCount");
             var clientCounts = access.ReadFrom<Dictionary<string, int>>("responseClientCounts");
