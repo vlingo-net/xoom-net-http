@@ -1,9 +1,13 @@
 version: 0.0.{build}
 image:
-  - Previous Visual Studio 2019
+  - Visual Studio 2019
   - Ubuntu
   - macos
   - macos-mojave
+
+matrix:
+  allow_failures:
+    - image: Visual Studio 2019
 configuration: Release
 skip_commits:
   message: /.*\[ci\-skip\].*/ 
