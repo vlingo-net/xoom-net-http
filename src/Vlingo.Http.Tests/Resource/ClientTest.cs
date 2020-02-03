@@ -105,8 +105,6 @@ namespace Vlingo.Http.Tests.Resource
                     .AndThenConsume(response => known.Consume(response));
             }
             
-            _output.WriteLine("Test finished");
-            
             var responseCount = access.ReadFromExpecting("responseCount", 100, 10000);
             var total = access.ReadFrom<int>("totalAllResponseCount");
             var unknownResponseCount = access.ReadFrom<int>("unknownResponseCount");
