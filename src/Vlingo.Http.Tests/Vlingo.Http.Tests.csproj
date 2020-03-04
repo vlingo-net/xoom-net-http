@@ -6,6 +6,7 @@
 
     <IsPackable>false</IsPackable>
     <StartupObject>Vlingo.Http.Tests.Resource.ServerBootstrap</StartupObject>
+    <Configurations>Debug;Release;Debug With Project References</Configurations>
   </PropertyGroup>
 
   <ItemGroup>
