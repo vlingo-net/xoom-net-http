@@ -69,7 +69,7 @@ namespace Vlingo.Http.Tests.Resource
         }
 
         //[Fact(Skip = "Under investigation https://github.com/vlingo-net/vlingo-net-http/issues/2")]
-        [Fact]
+        [Fact, Trait("Category", "FailsOnWindows")]
         public void TestThatRoundRobinClientDelivers()
         {
             var safely = new TestResponseConsumer(_output);
@@ -122,7 +122,7 @@ namespace Vlingo.Http.Tests.Resource
         }
 
         //[Fact(Skip = "Under investigation https://github.com/vlingo-net/vlingo-net-http/issues/2")]
-        [Fact]
+        [Fact, Trait("Category", "FailsOnWindows")]
         public void TestThatLoadBalancingClientDelivers()
         {
             var safely = new TestResponseConsumer(_output);
