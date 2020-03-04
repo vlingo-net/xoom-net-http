@@ -40,7 +40,7 @@ namespace Vlingo.Http.Resource.Sse
 
         public bool EndOfStream => Id != null && string.Equals(Id, string.Empty);
 
-        public bool HasId => string.IsNullOrEmpty(Id);
+        public bool HasId => !string.IsNullOrEmpty(Id);
 
         public string Sendable() => ToString();
 

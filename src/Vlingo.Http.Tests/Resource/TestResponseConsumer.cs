@@ -25,7 +25,8 @@ namespace Vlingo.Http.Tests.Resource
             _access = AfterCompleting(0);
         }
 
-        public AccessSafely AfterCompleting(int happenings) {
+        public AccessSafely AfterCompleting(int happenings)
+        {
             _access = AccessSafely.AfterCompleting(happenings);
 
             _access.WritingWith<Response>("response", response => {
@@ -36,18 +37,18 @@ namespace Vlingo.Http.Tests.Resource
                 if (string.IsNullOrEmpty(testId))
                 {
                     _logger.WriteLine("Expected header missing: {0}", Client.ClientIdCustomHeader);
-                    //throw new IllegalStateException("Expected header missing: " + Client.ClientIdCustomHeader);
                 }
 
-                int existingCount = 0;
                 if (_clientCounts.ContainsKey(testId))
                 {
-                    existingCount = _clientCounts[testId];
+                    _clientCounts[testId] += 1;
+                }
+                else
+                {
+                    _clientCounts.Add(testId, 1);
                 }
 
                 ResponseHolder.Set(response);
-
-                _clientCounts.Add(testId, existingCount + 1);
 
                 ResponseCount.IncrementAndGet();
             });

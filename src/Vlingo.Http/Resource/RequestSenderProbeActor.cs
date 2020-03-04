@@ -15,7 +15,7 @@ using Vlingo.Wire.Message;
 
 namespace Vlingo.Http.Resource
 {
-    public class RequestSenderProbeActor : Actor, IRequestSender, IScheduled<object>
+    public sealed class RequestSenderProbeActor : Actor, IRequestSender, IScheduled<object>
     {
         private readonly MemoryStream _buffer;
         private readonly IClientRequestResponseChannel _channel;
@@ -38,11 +38,10 @@ namespace Vlingo.Http.Resource
         public void SendRequest(Request request)
         {
             _buffer.Clear();
-            _buffer.Seek(0, SeekOrigin.Begin);
             var array = Converters.TextToBytes(request.ToString());
             _buffer.Write(array, 0, array.Length);
             _buffer.Flip();
-            _channel.RequestWith(_buffer.GetBuffer());
+            _channel.RequestWith(_buffer.ToArray());
         }
 
         public override void Stop()

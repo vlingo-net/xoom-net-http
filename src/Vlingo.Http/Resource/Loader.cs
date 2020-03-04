@@ -10,12 +10,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Vlingo.Actors;
+using Vlingo.Http.Resource.Feed;
 using Vlingo.Http.Resource.Sse;
 
 namespace Vlingo.Http.Resource
 {
     public static class Loader
     {
+        private const string FeedProducerNamePrefix = "feed.resource.name.";
+        private const string FeedNamePathParameter = "{feedName}";
+        private const string FeedProductIdPathParameter = "{feedProductId}";
+        private const string FeedProducerClassnameParameter = "Type feedProducerClass";
+        private const string FeedProducerProductElementsParameter = "int feedProductElements";
+        private const string FeedProducerFeed =
+            "feed(string feedName, string feedProductId, " + FeedProducerClassnameParameter + ", " + FeedProducerProductElementsParameter + ")";
+            
         private const string ResourceNamePrefix = "resource.name.";
         private const string SsePublisherFeedClassnameParameter = "Type feedClass";
         private const string SsePublisherFeedDefaultId = "string feedDefaultId";
@@ -50,6 +59,11 @@ namespace Vlingo.Http.Resource
             }
 
             foreach (var item in LoadSseResources(properties))
+            {
+                namedResources[item.Key] = item.Value;
+            }
+            
+            foreach (var item in LoadFeedResources(properties))
             {
                 namedResources[item.Key] = item.Value;
             }
@@ -97,6 +111,48 @@ namespace Vlingo.Http.Resource
                 Console.WriteLine("vlingo-net/http: Failed to load resource: " + resourceName + " because: " + e.Message);
                 throw;
             }
+        }
+
+        private static IDictionary<string, IConfigurationResource> LoadFeedResources(HttpProperties properties)
+        {
+            var feedResourceActions = new Dictionary<string, IConfigurationResource>();
+
+            foreach (var feedResourceName in FindResources(properties, FeedProducerNamePrefix))
+            {
+                var feedUri = properties.GetProperty(feedResourceName);
+                var resourceName = feedResourceName.Substring(FeedProducerNamePrefix.Length);
+                var feedProducerClassnameKey = $"feed.resource.{resourceName}.producer.class";
+                var feedProducerClassname = properties.GetProperty(feedProducerClassnameKey);
+                var feedElementsKey = $"feed.resource.{resourceName}.elements";
+                var maybeFeedElements = int.Parse(properties.GetProperty(feedElementsKey, "20"));
+                var feedElements = maybeFeedElements <= 0 ? 20 : maybeFeedElements;
+                var poolKey = $"feed.resource.{resourceName}.pool";
+                var maybePoolSize = int.Parse(properties.GetProperty(poolKey, "1"));
+                int handlerPoolSize = maybePoolSize <= 0 ? 1 : maybePoolSize;
+                var feedRequestUri =
+                    $"{feedUri?.Replace(resourceName, FeedNamePathParameter)}/{FeedProductIdPathParameter}";
+
+                try
+                {
+                    var feedClass = ActorClassWithProtocol(feedProducerClassname, typeof(IFeedProducer));
+                    var mappedParameterProducerClass = new Action.MappedParameter("Type", feedClass);
+                    var mappedParameterProductElements = new Action.MappedParameter("int", feedElements);
+
+                    var actions = new List<Action>(1);
+                    var additionalParameters = new List<Action.MappedParameter> { mappedParameterProducerClass, mappedParameterProductElements };
+                    actions.Add(new Action(0, Method.Get.Name, feedRequestUri, FeedProducerFeed, null, additionalParameters));
+                    var resource = ResourceFor(resourceName, typeof(FeedResource), handlerPoolSize, actions);
+                    feedResourceActions.Add(resourceName, resource);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine($"vlingo/http: Failed to load feed resource: {resourceName} because: {e.Message}");
+                    Console.WriteLine(e.StackTrace);
+                    throw e;
+                }   
+            }
+
+            return feedResourceActions;
         }
 
         private static IDictionary<string, IConfigurationResource> LoadSseResources(HttpProperties properties)
