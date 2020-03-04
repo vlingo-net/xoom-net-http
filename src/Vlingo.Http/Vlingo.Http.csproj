@@ -36,9 +36,9 @@
     </When>
     <Otherwise>
       <ItemGroup>
-        <PackageReference Include="Vlingo.Actors" Version="0.6.4.1" />
-        <PackageReference Include="Vlingo.Common" Version="0.6.4.1" />
-        <PackageReference Include="Vlingo.Wire" Version="0.6.4.1" />
+        <PackageReference Include="Vlingo.Actors" Version="$(VlingoVersion)" />
+        <PackageReference Include="Vlingo.Common" Version="$(VlingoVersion)" />
+        <PackageReference Include="Vlingo.Wire" Version="$(VlingoVersion)" />
       </ItemGroup>
     </Otherwise>
   </Choose>
