@@ -18,6 +18,7 @@
     <PackageProjectUrl>https://github.com/vlingo-net/vlingo-net-http</PackageProjectUrl>
     <PackageIcon>vlingo-64x64.png</PackageIcon>
     <RepositoryUrl>https://github.com/vlingo-net/vlingo-net-http</RepositoryUrl>
+    <Configurations>Debug;Release;Debug With Project References</Configurations>
   </PropertyGroup>
   <ItemGroup>
     <None Include="..\..\LICENSE" Pack="true" PackagePath="" />
@@ -28,10 +29,18 @@
       <_Parameter1>$(MSBuildProjectName).Tests</_Parameter1>
     </AssemblyAttribute>
   </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="Vlingo.Actors" Version="0.6.4.6" />
-    <PackageReference Include="Vlingo.Common" Version="0.6.4.6" />
-    <PackageReference Include="Vlingo.Wire" Version="0.6.4.6" />
-  </ItemGroup>
-
+  <Choose>
+    <When Condition="'$(Configuration)' == 'Debug With Project References'">
+      <ItemGroup>
+        <ProjectReference Include="..\..\..\vlingo-net-wire\src\Vlingo.Wire\Vlingo.Wire.csproj" />
+      </ItemGroup>
+    </When>
+    <Otherwise>
+      <ItemGroup>
+        <PackageReference Include="Vlingo.Actors" Version="$(VlingoVersion)" />
+        <PackageReference Include="Vlingo.Common" Version="$(VlingoVersion)" />
+        <PackageReference Include="Vlingo.Wire" Version="$(VlingoVersion)" />
+      </ItemGroup>
+    </Otherwise>
+  </Choose>
 </Project>
