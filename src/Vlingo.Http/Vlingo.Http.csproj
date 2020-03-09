@@ -7,7 +7,7 @@
 
     <!-- NuGet Metadata -->
     <IsPackable>true</IsPackable>
-    <PackageVersion>0.6.4.6</PackageVersion>
+    <PackageVersion>$(VlingoVersion)</PackageVersion>
     <PackageId>Vlingo.Http</PackageId>
     <Authors>Vlingo</Authors>
     <Description>
