@@ -6,7 +6,7 @@
 // one at https://mozilla.org/MPL/2.0/.
 
 using System;
-using Vlingo.Http.Resource.Serialization;
+using Vlingo.Common.Serialization;
 
 namespace Vlingo.Http.Resource
 {

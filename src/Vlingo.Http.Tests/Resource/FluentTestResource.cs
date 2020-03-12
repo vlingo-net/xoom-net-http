@@ -9,8 +9,8 @@ using System.Collections.Concurrent;
 using Newtonsoft.Json;
 using Vlingo.Actors;
 using Vlingo.Common;
+using Vlingo.Common.Serialization;
 using Vlingo.Http.Resource;
-using Vlingo.Http.Resource.Serialization;
 
 namespace Vlingo.Http.Tests.Resource
 {

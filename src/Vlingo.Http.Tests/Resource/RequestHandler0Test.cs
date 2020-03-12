@@ -5,12 +5,9 @@
 // was not distributed with this file, You can obtain
 // one at https://mozilla.org/MPL/2.0/.
 
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using Vlingo.Common;
 using Vlingo.Http.Resource;
-using Vlingo.Http.Resource.Serialization;
 using Vlingo.Http.Tests.Sample.User;
 using Xunit;
 using Xunit.Abstractions;

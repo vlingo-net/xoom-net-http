@@ -7,8 +7,8 @@
 
 using System.Collections.Generic;
 using Vlingo.Common;
+using Vlingo.Common.Serialization;
 using Vlingo.Http.Resource;
-using Vlingo.Http.Resource.Serialization;
 using Xunit;
 using Xunit.Abstractions;
 using Action = Vlingo.Http.Resource.Action;

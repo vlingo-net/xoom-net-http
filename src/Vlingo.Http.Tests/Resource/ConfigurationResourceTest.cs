@@ -8,8 +8,8 @@
 using System.Collections.Generic;
 using System.Text;
 using Newtonsoft.Json;
+using Vlingo.Common.Serialization;
 using Vlingo.Http.Resource;
-using Vlingo.Http.Resource.Serialization;
 using Vlingo.Http.Tests.Sample.User;
 using Vlingo.Http.Tests.Sample.User.Serialization;
 using Xunit;

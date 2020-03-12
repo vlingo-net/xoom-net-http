@@ -8,8 +8,8 @@
 using System;
 using System.IO;
 using Vlingo.Actors;
+using Vlingo.Common.Serialization;
 using Vlingo.Http.Resource;
-using Vlingo.Http.Resource.Serialization;
 using Vlingo.Wire.Channel;
 using Vlingo.Wire.Message;
 using Xunit;

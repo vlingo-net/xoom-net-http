@@ -8,8 +8,8 @@
 using System;
 using System.Collections.Generic;
 using Vlingo.Actors;
+using Vlingo.Common.Serialization;
 using Vlingo.Http.Resource;
-using Vlingo.Http.Resource.Serialization;
 using Vlingo.Http.Tests.Sample.User.Model;
 
 namespace Vlingo.Http.Tests.Sample.User
