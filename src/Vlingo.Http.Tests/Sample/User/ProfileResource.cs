@@ -36,7 +36,7 @@ namespace Vlingo.Http.Tests.Sample.User
                         profileData.LinkedInAccount,
                         profileData.Website);
   
-                Stage.ActorFor<IProfile>(Definition.Has<ProfileActor>(Definition.Parameters(profileState)));
+                Stage.ActorFor<IProfile>(() => new ProfileActor(profileState));
   
                 _repository.Save(profileState);
                 Completes.With(Response.Of(Response.ResponseStatus.Created, JsonSerialization.Serialized(ProfileData.From(profileState))));

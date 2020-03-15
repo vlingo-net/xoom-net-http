@@ -184,7 +184,7 @@ namespace Vlingo.Http.Tests.Resource
 
             _progress = new Progress();
             var consumer = world.ActorFor<IResponseChannelConsumer>(
-                Definition.Has<TestResponseChannelConsumer>(Definition.Parameters(_progress)));
+                () => new TestResponseChannelConsumer(_progress));
             _client = new BasicClientRequestResponseChannel(
                 Address.From(Host.Of("localhost"), serverPort, AddressType.None), consumer, 100, 10240,
                 world.DefaultLogger);

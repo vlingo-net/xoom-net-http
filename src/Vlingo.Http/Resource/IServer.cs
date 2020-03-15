@@ -91,12 +91,9 @@ namespace Vlingo.Http.Resource
         public static IServer StartWith(Stage stage, Resources resources, Filters filters, int port, Configuration.SizingConf sizing, Configuration.TimingConf timing, string severMailboxTypeName, string channelMailboxTypeName)
         {
             var server = stage.ActorFor<IServer>(
-                             Definition.Has<ServerActor>(
-                                Definition.Parameters(resources, filters, port, sizing, timing, channelMailboxTypeName),
-                                severMailboxTypeName, 
-                                ServerActor.ServerName), 
-                             stage.World.AddressFactory.WithHighId(), 
-                             stage.World.DefaultLogger);
+                () => new ServerActor(resources, filters, port, sizing, timing, channelMailboxTypeName),
+                severMailboxTypeName, ServerActor.ServerName, stage.World.AddressFactory.WithHighId(),
+                stage.World.DefaultLogger);
 
             server.StartUp();
 

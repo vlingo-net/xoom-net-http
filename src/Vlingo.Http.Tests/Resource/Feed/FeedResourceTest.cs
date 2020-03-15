@@ -83,7 +83,7 @@ namespace Vlingo.Http.Tests.Resource.Feed
             Assert.True(server.StartUp().Await(TimeSpan.FromMilliseconds(500)));
 
             _progress = new Progress();
-            var consumer = world.ActorFor<IResponseChannelConsumer>(Definition.Has<TestResponseChannelConsumer>(Definition.Parameters(_progress)));
+            var consumer = world.ActorFor<IResponseChannelConsumer>(() => new TestResponseChannelConsumer(_progress));
             _client = new BasicClientRequestResponseChannel(Address.From(Host.Of("localhost"), testServerPort, AddressType.None), consumer, 100, 10240, world.DefaultLogger);
         }
         

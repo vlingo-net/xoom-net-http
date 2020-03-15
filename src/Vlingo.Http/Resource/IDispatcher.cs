@@ -17,8 +17,6 @@ namespace Vlingo.Http.Resource
     public static class Dispatcher
     {
         public static IDispatcher StartWith(Stage stage, Resources resources)
-            => stage.ActorFor<IDispatcher>(
-                Definition.Has<DispatcherActor>(
-                    Definition.Parameters(resources)));
+            => stage.ActorFor<IDispatcher>(() => new DispatcherActor(resources));
     }
 }

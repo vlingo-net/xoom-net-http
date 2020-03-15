@@ -96,9 +96,7 @@ namespace Vlingo.Http.Tests.Resource
 
             config.TestInfo(true);
 
-            var definition = Definition.Has<RequestSenderProbeActor>(Definition.Parameters(config, clientConsumer, "1"));
-
-            var requestSender = _world.Stage.ActorFor<IRequestSender>(definition);
+            var requestSender = _world.Stage.ActorFor<IRequestSender>(() => new RequestSenderProbeActor(config, clientConsumer, "1"));
 
             var get = "GET /4f0931bb-1c2f-4786-a703-a8b86419c03d HTTP/1.1\nHost: webhook.site\nConnection: close\n\n";
             var buffer = BasicConsumerByteBuffer.Allocate(1, 1000);

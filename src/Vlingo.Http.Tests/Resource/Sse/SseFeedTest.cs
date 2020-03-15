@@ -27,7 +27,7 @@ namespace Vlingo.Http.Tests.Resource.Sse
         {
             var respondWithSafely = _context.Channel.ExpectRespondWith(1);
 
-            _feed = _world.ActorFor<ISseFeed>(Definition.Has<AllSseFeedActor>(Definition.Parameters("all", 10, "1")));
+            _feed = _world.ActorFor<ISseFeed>(() => new AllSseFeedActor("all", 10, "1"));
 
             var subscriber = new SseSubscriber("all", _client, "ABC123", "42");
 
@@ -47,7 +47,7 @@ namespace Vlingo.Http.Tests.Resource.Sse
         [Fact]
         public void TestThatFeedFeedsMultipleSubscribers()
         {
-            _feed = _world.ActorFor<ISseFeed>(Definition.Has<AllSseFeedActor>(Definition.Parameters("all", 10, "1")));
+            _feed = _world.ActorFor<ISseFeed>(() => new AllSseFeedActor("all", 10, "1"));
 
             var subscriber1 = new SseSubscriber("all", _client, "ABC123", "41");
             var subscriber2 = new SseSubscriber("all", _client, "ABC456", "42");

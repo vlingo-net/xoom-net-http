@@ -96,10 +96,8 @@ namespace Vlingo.Http.Resource
         private IRequestSender StartRequestSender(Client.Configuration configuration)
         {
             var self = SelfAs<IResponseChannelConsumer>();
-
-            var definition = Definition.Has<RequestSenderProbeActor>(Definition.Parameters(configuration, self, _testId));
-
-            var requestSender = ChildActorFor<IRequestSender>(definition);
+            
+            var requestSender = ChildActorFor<IRequestSender>(() => new RequestSenderProbeActor(configuration, self, _testId));
 
             return requestSender;
         }

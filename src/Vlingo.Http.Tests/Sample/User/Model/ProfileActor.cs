@@ -13,7 +13,9 @@ namespace Vlingo.Http.Tests.Sample.User.Model
     public class ProfileActor : Actor, IProfile
     {
         private ProfileState _state;
-        
+
+        public ProfileActor(ProfileState profileState) => _state = profileState;
+
         public ICompletes<ProfileState> WithTwitterAccount(string twitterAccount)
         {
             _state = _state.WithTwitterAccount(twitterAccount);

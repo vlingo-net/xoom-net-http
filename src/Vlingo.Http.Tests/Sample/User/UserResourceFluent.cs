@@ -35,7 +35,7 @@ namespace Vlingo.Http.Tests.Sample.User
                     Name.From(userData.NameData.Given, userData.NameData.Family),
                     Contact.From(userData.ContactData.EmailAddress, userData.ContactData.TelephoneNumber));
 
-            _stage.ActorFor<IUser>(Definition.Has<UserActor>(Definition.Parameters(userState)), userAddress);
+            _stage.ActorFor<IUser>(() => new UserActor(userState), userAddress);
 
             _repository.Save(userState);
 

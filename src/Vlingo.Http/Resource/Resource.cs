@@ -38,8 +38,7 @@ namespace Vlingo.Http.Resource
             for (var i = 0; i < HandlerPoolSize; ++i)
             {
                 _handlerPool[i] = stage.ActorFor<IResourceRequestHandler>(
-                    Definition.Has<ResourceRequestHandlerActor>(
-                        Definition.Parameters(ResourceHandlerInstance(stage))));
+                    () => new ResourceRequestHandlerActor(ResourceHandlerInstance(stage)));
             }
         }
 

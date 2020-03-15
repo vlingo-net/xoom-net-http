@@ -58,8 +58,7 @@ namespace Vlingo.Http.Resource.Sse
             if (!Publishers.TryGetValue(streamName, out var publisher))
             {
                 publisher = _world.ActorFor<ISsePublisher>(
-                    Definition.Has<SsePublisherActor>(
-                        Definition.Parameters(streamName, feedClass, feedPayload, feedInterval, feedDefaultId)));
+                    () => new SsePublisherActor(streamName, feedClass, feedPayload, feedInterval, feedDefaultId));
 
                 if (Publishers.ContainsKey(streamName))
                 {
