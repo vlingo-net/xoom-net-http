@@ -55,7 +55,7 @@ namespace Vlingo.Http.Resource
             _configuration = configuration;
 
             Type clientConsumerType;
-            List<object> parameters;
+            IEnumerable<object> parameters;
 
             switch (type)
             {
