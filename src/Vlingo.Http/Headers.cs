@@ -23,7 +23,7 @@ namespace Vlingo.Http
         {
             foreach(var header in _list)
             {
-                if(string.Equals(name, header.Name, StringComparison.InvariantCultureIgnoreCase))
+                if(header.MatchesNameOf(name))
                 {
                     return header;
                 }

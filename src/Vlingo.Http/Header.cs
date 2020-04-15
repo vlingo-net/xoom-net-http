@@ -20,8 +20,17 @@ namespace Vlingo.Http
         internal string Name { get; }
         internal string? Value { get; }
 
-        public bool MatchesName(Header header)
+        public bool MatchesNameOf(Header header)
             => string.Equals(Name, header.Name, StringComparison.InvariantCultureIgnoreCase);
+        
+        public bool MatchesNameOf(string name)
+            => string.Equals(Name, name, StringComparison.InvariantCultureIgnoreCase);
+        
+        public bool MatchesValueOf(Header header)
+            => string.Equals(Value, header.Value, StringComparison.InvariantCultureIgnoreCase);
+        
+        public bool MatchesValueOf(string value)
+            => string.Equals(Value, value, StringComparison.InvariantCultureIgnoreCase);
 
         public override bool Equals(object obj)
         {
@@ -31,8 +40,7 @@ namespace Vlingo.Http
                 return false;
             }
 
-            return string.Equals(Name, other.Name, StringComparison.InvariantCultureIgnoreCase)
-                && string.Equals(Value, other.Value);
+            return MatchesNameOf(other) && MatchesValueOf(other);
         }
 
         public override int GetHashCode()
