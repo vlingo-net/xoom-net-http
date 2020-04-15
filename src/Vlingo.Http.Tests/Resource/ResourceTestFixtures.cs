@@ -25,6 +25,7 @@ namespace Vlingo.Http.Tests.Resource
     {
         public const string WorldName = "resource-test";
         protected Action ActionPostUser;
+        protected Action ActionPutUser;
         protected Action ActionPatchUserContact;
         protected Action ActionPatchUserName;
         protected Action ActionGetUser;
@@ -63,6 +64,8 @@ namespace Vlingo.Http.Tests.Resource
         protected string CreatedResponse(string body) => $"HTTP/1.1 201 CREATED\nContent-Length: {body.Length}\n\n{body}";
 
         protected string PostRequest(string body) => $"POST /users HTTP/1.1\nHost: vlingo.io\nContent-Length: {body.Length}\n\n{body}";
+        
+        protected string PutRequest(string userId, string body) => $"PUT /users{userId} HTTP/1.1\nHost: vlingo.io\nContent-Length: {body.Length}\n\n{body}";
 
         protected string GetExceptionRequest(string userId) => $"GET /users/{userId}/error HTTP/1.1\nHost: vlingo.io\n\n";
         
@@ -123,6 +126,7 @@ namespace Vlingo.Http.Tests.Resource
             ActionGetUser = new Action(3, "GET", "/users/{userId}", "queryUser(string userId)", "Vlingo.Http.Tests.Sample.User.UserDataMapper");
             ActionGetUsers = new Action(4, "GET", "/users", "queryUsers()", "Vlingo.Http.Tests.Sample.User.UserDataMapper");
             ActionGetUserError = new Action(5, "GET", "/users/{userId}/error", "queryUserError(string userId)", "Vlingo.Http.Tests.Sample.User.UserDataMapper");
+            ActionPutUser = new Action(6, "PUT", "/users/{userId}", "changeUser(string userId, body:Vlingo.Http.Tests.Sample.User.UserData userData)", "Vlingo.Http.Tests.Sample.User.UserDataMapper");
 
 
             var actions = new List<Action> {
@@ -131,11 +135,13 @@ namespace Vlingo.Http.Tests.Resource
                 ActionPatchUserName,
                 ActionGetUser,
                 ActionGetUsers,
-                ActionGetUserError};
+                ActionGetUserError,
+                ActionPutUser
+            };
 
             ResourceHandlerType = ConfigurationResource<UserResource>.NewResourceHandlerTypeFor("Vlingo.Http.Tests.Sample.User.UserResource");
 
-            Resource = ConfigurationResource<UserResource>.NewResourceFor("user", ResourceHandlerType, 6, actions);
+            Resource = ConfigurationResource<UserResource>.NewResourceFor("user", ResourceHandlerType, 7, actions);
 
             Resource.AllocateHandlerPool(World.Stage);
 
