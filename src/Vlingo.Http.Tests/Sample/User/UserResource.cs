@@ -44,6 +44,18 @@ namespace Vlingo.Http.Tests.Sample.User
                 JsonSerialization.Serialized(UserData.From(userState))));
         }
         
+        public void ChangeUser(string userId, UserData userData)
+        {
+            if (userId.EndsWith("123"))
+            {
+                Completes.With(Response.Of(Response.ResponseStatus.PermanentRedirect, "/"));
+            } 
+            else
+            {
+                Completes.With(Response.Of(Response.ResponseStatus.Ok, "/"));
+            }
+        }
+        
         public void ChangeContact(string userId, ContactData contactData)
         {
             Stage.ActorOf<IUser>(_addressFactory.From(userId))

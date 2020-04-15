@@ -46,6 +46,9 @@ namespace Vlingo.Http.Tests.Sample.User
                         ResponseHeader.Of(ResponseHeader.Location, UserLocation(userState.Id))),
                     JsonSerialization.Serialized(UserData.From(userState))));
         }
+        
+        public ICompletes<Response> ChangeUser(string userId, UserData userData) 
+            => Vlingo.Common.Completes.WithSuccess(Response.Of(Response.ResponseStatus.Ok));
 
         public ICompletes<Response> ChangeContact(string userId, ContactData contactData)
         {
@@ -95,6 +98,10 @@ namespace Vlingo.Http.Tests.Sample.User
                     ResourceBuilder.Post("/users")
                         .Body<UserData>()
                         .Handle(Register),
+                ResourceBuilder.Put("/users/{userId}")
+                    .Param<string>()
+                    .Body<UserData>()
+                    .Handle(ChangeUser),
                     ResourceBuilder.Patch("/users/{userId}/contact")
                 .Param<string>()
                 .Body<ContactData>()
