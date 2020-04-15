@@ -17,12 +17,17 @@ namespace Vlingo.Http.Tests.Sample.User
     public sealed class UserResource : ResourceHandler
     {
         private readonly UserRepository _repository = UserRepository.Instance();
+        private readonly IAddressFactory _addressFactory;
 
-        public UserResource(World world) => Stage = world.StageNamed("service");
-        
+        public UserResource(World world)
+        {
+            Stage = world.StageNamed("service");
+            _addressFactory = Stage.AddressFactory;
+        }
+
         public void Register(UserData userData)
         {
-            var userAddress = Stage.World.AddressFactory.UniquePrefixedWith("u-");
+            var userAddress = _addressFactory.UniquePrefixedWith("u-");
             var userState =
                 UserStateFactory.From(
                     userAddress.IdString,
@@ -41,7 +46,7 @@ namespace Vlingo.Http.Tests.Sample.User
         
         public void ChangeContact(string userId, ContactData contactData)
         {
-            Stage.ActorOf<IUser>(Stage.World.AddressFactory.From(userId))
+            Stage.ActorOf<IUser>(_addressFactory.From(userId))
                 .AndThenTo(user => user.WithContact(new Contact(contactData.EmailAddress, contactData.TelephoneNumber)))
                 .OtherwiseConsume(noUser => Completes.With(Response.Of(Response.ResponseStatus.NotFound, UserLocation(userId))))
                 .AndThenConsume(userState => Response.Of(Response.ResponseStatus.Ok, JsonSerialization.Serialized(UserData.From(userState))));
@@ -49,7 +54,7 @@ namespace Vlingo.Http.Tests.Sample.User
 
         public void ChangeName(string userId, NameData nameData)
         {
-            Stage.ActorOf<IUser>(Stage.World.AddressFactory.From(userId))
+            Stage.ActorOf<IUser>(_addressFactory.From(userId))
                 .AndThenTo(user => user.WithName(new Name(nameData.Given, nameData.Family)))
                 .OtherwiseConsume(noUser => Completes.With(Response.Of(Response.ResponseStatus.NotFound, UserLocation(userId))))
                 .AndThenConsume(userState => {
@@ -64,16 +69,14 @@ namespace Vlingo.Http.Tests.Sample.User
             if (userState.DoesNotExist())
             {
                 Completes.With(Response.Of(Response.ResponseStatus.NotFound, UserLocation(userId)));
-            } else
+            }
+            else
             {
                 Completes.With(Response.Of(Response.ResponseStatus.Ok, JsonSerialization.Serialized(UserData.From(userState))));
             }
         }
 
-        public void QueryUserError(string userId)
-        {
-            throw new Exception("Test exception");
-        }
+        public void QueryUserError(string userId) => throw new Exception("Test exception");
 
         public void QueryUsers()
         {
@@ -86,9 +89,6 @@ namespace Vlingo.Http.Tests.Sample.User
             Completes.With(Response.Of(Response.ResponseStatus.Ok, JsonSerialization.Serialized(users)));
         }
         
-        private string UserLocation(string userId)
-        {
-            return "/users/" + userId;
-        }
+        private string UserLocation(string userId) => $"/users/{userId}";
     }
 }
