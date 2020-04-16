@@ -46,6 +46,8 @@ namespace Vlingo.Http.Resource
             MediaTypeMapper = mediaTypeMapper;
         }
 
+        protected ContentType ContentType => ContentType.Of("text/plain", "us-ascii");
+
         protected internal ICompletes<Response> RunParamExecutor(object? paramExecutor, Func<ICompletes<Response>?> executeRequest)
         {
             if (paramExecutor == null)
