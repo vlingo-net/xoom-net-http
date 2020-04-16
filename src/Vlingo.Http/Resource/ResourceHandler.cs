@@ -27,6 +27,8 @@ namespace Vlingo.Http.Resource
             get => _context;
             set => _context = value;
         }
+        
+        protected ContentType ContentType => ContentType.Of("text/plain", "us-ascii");
 
         protected internal virtual ILogger? Logger => _stage?.World.DefaultLogger;
 

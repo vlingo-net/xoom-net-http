@@ -7,6 +7,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using Vlingo.Actors;
@@ -19,6 +20,11 @@ namespace Vlingo.Http.Resource
         public Method Method { get; }
         public string Path { get; }
         public string ActionSignature { get; }
+        
+        public string ContentSignature { get; }
+        
+        public Type BodyType { get; }
+        
         private readonly Regex _pattern = new Regex("\\{(.*?)\\}", RegexOptions.Compiled);
         protected MediaTypeMapper MediaTypeMapper { get; set; }
         protected IErrorHandler ErrorHandler { get; set; }
@@ -28,6 +34,8 @@ namespace Vlingo.Http.Resource
             Method = method;
             Path = path;
             ActionSignature = GenerateActionSignature(parameterResolvers);
+            ContentSignature = DetectRequestBodyType(parameterResolvers).Map(p => p?.Name!).OrElse(null!);
+            BodyType = DetectRequestBodyType(parameterResolvers).OrElse(null!);
             ErrorHandler = DefaultErrorHandler.Instance;
             MediaTypeMapper = DefaultMediaTypeMapper.Instance;
         }
@@ -42,11 +50,11 @@ namespace Vlingo.Http.Resource
             Method = method;
             Path = path;
             ActionSignature = GenerateActionSignature(parameterResolvers);
+            ContentSignature = DetectRequestBodyType(parameterResolvers).Map(p => p?.Name!).OrElse(null!);
+            BodyType = DetectRequestBodyType(parameterResolvers).OrElse(null!);
             ErrorHandler = errorHandler;
             MediaTypeMapper = mediaTypeMapper;
         }
-
-        protected ContentType ContentType => ContentType.Of("text/plain", "us-ascii");
 
         protected internal ICompletes<Response> RunParamExecutor(object? paramExecutor, Func<ICompletes<Response>?> executeRequest)
         {
@@ -61,6 +69,9 @@ namespace Vlingo.Http.Resource
             Request request, 
             Action.MappedParameters mappedParameters,
             ILogger logger);
+        
+        private Optional<Type> DetectRequestBodyType(IEnumerable<IParameterResolver> parameterResolvers) =>
+            Optional.Of(parameterResolvers.FirstOrDefault(parameterResolver => parameterResolver.Type == ParameterResolver.Type.Body)?.ParamClass!);
 
         private string GenerateActionSignature(IList<IParameterResolver> parameterResolvers)
         {
