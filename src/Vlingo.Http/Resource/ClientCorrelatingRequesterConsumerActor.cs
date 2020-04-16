@@ -41,48 +41,53 @@ namespace Vlingo.Http.Resource
 
         public void Consume(IConsumerByteBuffer buffer)
         {
-            if (_state.Parser == null)
+            try
             {
-                _state.Parser = ResponseParser.ParserFor(buffer.ToArray());
-            }
-            else
-            {
-                _state.Parser.ParseNext(buffer.ToArray());
-            }
-
-            buffer.Release();
-
-            while (_state.Parser.HasFullResponse())
-            {
-                var response = _state.Parser.FullResponse();
-                var correlationId = response.Headers.HeaderOf(ResponseHeader.XCorrelationID);
-                if (correlationId == null)
+                if (_state.Parser == null)
                 {
-                    Logger.Warn("Client Consumer: Cannot complete response because no correlation id.");
-                    _state.Configuration.ConsumerOfUnknownResponses.Consume(response);
+                    _state.Parser = ResponseParser.ParserFor(buffer.ToArray());
                 }
                 else
                 {
-                    ICompletesEventually completes;
-                    if (_completables.TryGetValue(correlationId?.Value!, out completes))
-                    {
-                        if (!_state.Configuration.KeepAlive)
-                        {
-                            _completables.Remove(correlationId?.Value!);
-                        }
-                    }
+                    _state.Parser.ParseNext(buffer.ToArray());
+                }
 
-                    if (completes == null)
+                while (_state.Parser.HasFullResponse())
+                {
+                    var response = _state.Parser.FullResponse();
+                    var correlationId = response.Headers.HeaderOf(ResponseHeader.XCorrelationID);
+                    if (correlationId == null)
                     {
-                        _state.Configuration.Stage.World.DefaultLogger.Warn(
-                                $"Client Consumer: Cannot complete response because mismatched correlation id: {correlationId?.Value}");
+                        Logger.Warn("Client Consumer: Cannot complete response because no correlation id.");
                         _state.Configuration.ConsumerOfUnknownResponses.Consume(response);
                     }
                     else
                     {
-                        completes.With(response);
+                        ICompletesEventually completes;
+                        if (_completables.TryGetValue(correlationId?.Value!, out completes))
+                        {
+                            if (!_state.Configuration.KeepAlive)
+                            {
+                                _completables.Remove(correlationId?.Value!);
+                            }
+                        }
+
+                        if (completes == null)
+                        {
+                            _state.Configuration.Stage.World.DefaultLogger.Warn(
+                                $"Client Consumer: Cannot complete response because mismatched correlation id: {correlationId?.Value}");
+                            _state.Configuration.ConsumerOfUnknownResponses.Consume(response);
+                        }
+                        else
+                        {
+                            completes.With(response);
+                        }
                     }
                 }
+            }
+            finally
+            {
+                buffer.Release();
             }
         }
 
