@@ -48,11 +48,11 @@ namespace Vlingo.Http.Tests.Sample.User
         {
             if (userId.EndsWith("123"))
             {
-                Completes.With(Response.Of(Response.ResponseStatus.PermanentRedirect, "/"));
+                Completes.With(Response.Of(Response.ResponseStatus.PermanentRedirect, Headers.Of(ResponseHeader.Of(ResponseHeader.Location, "/"))));
             } 
             else
             {
-                Completes.With(Response.Of(Response.ResponseStatus.Ok, "/"));
+                Completes.With(Response.Of(Response.ResponseStatus.Ok));
             }
         }
         

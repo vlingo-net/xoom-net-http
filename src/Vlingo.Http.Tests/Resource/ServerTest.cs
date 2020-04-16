@@ -6,7 +6,9 @@
 // one at https://mozilla.org/MPL/2.0/.
 
 using System;
+using System.Linq;
 using Vlingo.Actors;
+using Vlingo.Actors.TestKit;
 using Vlingo.Common;
 using Vlingo.Http.Resource;
 using Vlingo.Http.Tests.Sample.User.Model;
@@ -119,6 +121,46 @@ namespace Vlingo.Http.Tests.Resource
             Assert.Equal(TotalRequestsResponses, _progress.ConsumeCount.Get());
             _progress.Responses.TryPeek(out var createdResponse);
             Assert.NotNull(createdResponse.Headers.HeaderOf(ResponseHeader.Location));
+        }
+        
+        [Fact]
+        public void TestThatServerRespondsPermanentRedirectWithNoContentLengthHeader()
+        {
+            var request = PutRequest("u-123", UniqueJohnDoe());
+            _client.RequestWith(ToStream(request).ToArray());
+
+            var consumeCalls = _progress.ExpectConsumeTimes(1);
+            while (consumeCalls.TotalWrites < 1)
+            {
+                _client.ProbeChannel();
+            }
+            consumeCalls.ReadFrom<int>("completed");
+
+            _progress.Responses.TryPeek(out var response);
+
+            Assert.NotNull(response);
+            Assert.Equal(Response.ResponseStatus.PermanentRedirect, response.Status);
+            Assert.Equal(1, _progress.ConsumeCount.Get());
+        }
+
+        [Fact]
+        public void TestThatServerRespondsOkWithNoContentLengthHeader()
+        {
+            var request = PutRequest("u-456", UniqueJohnDoe());
+            _client.RequestWith(ToStream(request).ToArray());
+
+            var consumeCalls = _progress.ExpectConsumeTimes(1);
+            while (consumeCalls.TotalWrites < 1)
+            {
+                _client.ProbeChannel();
+            }
+            consumeCalls.ReadFrom<int>("completed");
+
+            _progress.Responses.TryPeek(out var response);
+
+            Assert.NotNull(response);
+            Assert.Equal(Response.ResponseStatus.Ok, response.Status);
+            Assert.Equal(1, _progress.ConsumeCount.Get());
         }
         
         public ServerTest(ITestOutputHelper output) : base(output)
