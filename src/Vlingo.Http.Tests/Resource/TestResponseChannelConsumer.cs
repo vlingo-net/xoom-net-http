@@ -61,8 +61,8 @@ namespace Vlingo.Http.Tests.Resource
         /// <remarks>Clients can replace the default lambdas with their own via readingWith/writingWith.</remarks>
         public AccessSafely ExpectConsumeTimes(int n)
         {
-            ConsumeCalls = AccessSafely.AfterCompleting(n)
-                .WritingWith<Response>("consume", response =>
+            ConsumeCalls = AccessSafely.AfterCompleting(n);
+            ConsumeCalls.WritingWith<Response>("consume", response =>
                 {
                     Responses.Enqueue(response);
                     ConsumeCount.IncrementAndGet();
