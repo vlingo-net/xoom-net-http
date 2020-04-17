@@ -21,7 +21,7 @@ using Xunit.Abstractions;
 
 namespace Vlingo.Http.Tests.Resource
 {
-    public class StaticFilesResourceTest
+    public class StaticFilesResourceTest : IDisposable
     {
         private static readonly AtomicInteger BaseServerPort = new AtomicInteger(19001);
 
@@ -29,6 +29,7 @@ namespace Vlingo.Http.Tests.Resource
         private readonly IClientRequestResponseChannel _client;
         private readonly string _contentRoot;
         private readonly Progress _progress;
+        private World _world;
 
         private string GetRequest(string filePath) => $"GET {filePath} HTTP/1.1\nHost: vlingo.io\n\n";
 
@@ -127,7 +128,7 @@ namespace Vlingo.Http.Tests.Resource
             var converter = new Converter(output);
             Console.SetOut(converter);
 
-            var world = World.StartWithDefaults("static-file-resources");
+            _world = World.StartWithDefaults("static-file-resources");
 
             var serverPort = BaseServerPort.GetAndIncrement();
 
@@ -179,15 +180,15 @@ namespace Vlingo.Http.Tests.Resource
             var httpProperties = HttpProperties.Instance;
             httpProperties.SetCustomProperties(properties);
 
-            var server = ServerFactory.StartWith(world.Stage, httpProperties);
+            var server = ServerFactory.StartWith(_world.Stage, httpProperties);
             Assert.True(server.StartUp().Await(TimeSpan.FromMilliseconds(500L)));
 
             _progress = new Progress();
-            var consumer = world.ActorFor<IResponseChannelConsumer>(
+            var consumer = _world.ActorFor<IResponseChannelConsumer>(
                 () => new TestResponseChannelConsumer(_progress));
             _client = new BasicClientRequestResponseChannel(
                 Address.From(Host.Of("localhost"), serverPort, AddressType.None), consumer, 100, 10240,
-                world.DefaultLogger);
+                _world.DefaultLogger);
         }
 
         private string ReadTextFile(string path) => File.ReadAllText(path);
@@ -198,6 +199,13 @@ namespace Vlingo.Http.Tests.Resource
             _buffer.Write(Converters.TextToBytes(requestContent));
             _buffer.Flip();
             return _buffer.ToArray();
+        }
+
+        public void Dispose()
+        {
+            _client.Close();
+            _buffer?.Dispose();
+            _world.Terminate();
         }
     }
 }

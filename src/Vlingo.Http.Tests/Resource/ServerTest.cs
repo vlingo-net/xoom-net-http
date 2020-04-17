@@ -6,9 +6,6 @@
 // one at https://mozilla.org/MPL/2.0/.
 
 using System;
-using System.Linq;
-using Vlingo.Actors;
-using Vlingo.Actors.TestKit;
 using Vlingo.Common;
 using Vlingo.Http.Resource;
 using Vlingo.Http.Tests.Sample.User.Model;

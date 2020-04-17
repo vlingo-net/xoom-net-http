@@ -81,6 +81,7 @@ namespace Vlingo.Http.Tests.Resource
 
         public void Dispose()
         {
+            _client.Close();
             _buffer?.Dispose();
             _server?.ShutDown();
             _world?.Terminate();
