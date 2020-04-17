@@ -11,6 +11,17 @@ namespace Vlingo.Http
 {
     public class Header
     {
+        public static string ValueWildcardAny { get; } = "*";
+        public static string ValueBr { get; } = "br";
+        public static string ValueClose { get; } = "close";
+        public static string ValueCompress { get; } = "compress";
+        public static string ValueDeflate { get; } = "deflate";
+        public static string ValueGZip { get; } = "gzip";
+        public static string ValueIdentity { get; } = "identity";
+        public static string ValueISO_8859_15 { get; } = "iso-8859-15";
+        public static string ValueKeepAlive { get; } = "keep-alive";
+        public static string ValueUTF_8 { get; } = "utf-8";
+            
         protected Header(string name, string? value)
         {
             Name = name;
