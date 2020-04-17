@@ -70,6 +70,12 @@ namespace Vlingo.Http
 
         public Header? HeaderOf(string name) => Headers.HeaderOf(name);
 
+        public bool HeaderMatches(string name, string value)
+        {
+            var header = HeaderOf(name);
+            return header?.MatchesValueOf(value) ?? false;
+        }
+        
         public string HeaderValueOr(string name, string defaultValue) => HeaderOf(name)?.Value ?? defaultValue;
 
         public QueryParameters QueryParameters => new QueryParameters(Uri?.Query);
