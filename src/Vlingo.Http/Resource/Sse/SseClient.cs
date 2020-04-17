@@ -5,6 +5,7 @@
 // was not distributed with this file, You can obtain
 // one at https://mozilla.org/MPL/2.0/.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,17 +16,14 @@ namespace Vlingo.Http.Resource.Sse
 {
     public class SseClient
     {
-        private static readonly ResponseHeader CacheControl;
-        private static readonly ResponseHeader Connection;
-        private static readonly ResponseHeader ContentType;
         private static readonly Headers<ResponseHeader> Headers;
 
         static SseClient()
         {
-            CacheControl = ResponseHeader.Of(ResponseHeader.CacheControl, "no-cache");
-            Connection = ResponseHeader.Of(ResponseHeader.Connection, "keep-alive");
-            ContentType = ResponseHeader.Of(ResponseHeader.ContentType, "text/event-stream;charset=utf-8");
-            Headers = Http.Headers.Empty<ResponseHeader>().And(Connection).And(ContentType).And(CacheControl);
+            var cacheControl = ResponseHeader.Of(ResponseHeader.CacheControl, "no-cache");
+            var connection = ResponseHeader.Of(ResponseHeader.Connection, "keep-alive");
+            var contentType = ResponseHeader.Of(ResponseHeader.ContentType, "text/event-stream;charset=utf-8");
+            Headers = Http.Headers.Empty<ResponseHeader>().And(connection).And(contentType).And(cacheControl);
         }
 
         private readonly StringBuilder _builder;
@@ -63,9 +61,18 @@ namespace Vlingo.Http.Resource.Sse
         
         private void SendInitialResponse()
         {
-            var response = Response.Of(Response.ResponseStatus.Ok, Headers.Copy());
-            var buffer = BasicConsumerByteBuffer.Allocate(1, _maxMessageSize);
-            _context?.RespondWith(response.Into(buffer));
+            try
+            {
+                var response = Response.Of(Response.ResponseStatus.Ok, Headers.Copy());
+                var buffer = BasicConsumerByteBuffer.Allocate(1, _maxMessageSize);
+                _context?.RespondWith(response.Into(buffer));
+            }
+            catch
+            {
+                // it's possible that I am being used for an unsubscribe
+                // where the client has already disconnected and this
+                // attempt will fail; ignore it and return.
+            }
         }
 
         private string Flatten(IEnumerable<SseEvent> events)
