@@ -34,18 +34,38 @@ namespace Vlingo.Http
 
         public Headers<T> And(Headers<T> headers)
         {
-            _list.AddRange(headers);
+            foreach (var header in headers)
+            {
+                And(header);
+            }
             return this;
         }
 
         public Headers<T> And(T header)
         {
-            _list.Add(header);
+            Header? modified = null;
+            var size = Count;
+            for (int index = 0; index < size; ++index)
+            {
+                if (this[index].MatchesNameOf(header))
+                {
+                    this[index] = header;
+                    modified = header;
+                    break;
+                }
+            }
+
+            if (modified == null)
+            { 
+                Add(header);
+            }
+
             return this;
         }
 
         public Headers<T> And(string name, string value)
         {
+            // we need this because we don't know the type of header T, it could be RequestHeader.
             var cInfos = typeof(T).GetConstructors(BindingFlags.NonPublic | BindingFlags.Instance);
             var header = (T)cInfos[0].Invoke(new object[] {name, value});            
             return And(header);
