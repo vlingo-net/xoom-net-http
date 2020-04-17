@@ -25,7 +25,7 @@ namespace Vlingo.Http.Resource
         private readonly int _maxMessageSize;
         private readonly Dictionary<string, RequestResponseHttpContext> _requestsMissingContent;
         private readonly long _requestMissingContentTimeout;
-        private readonly IResourcePool<IConsumerByteBuffer, Nothing> _responseBufferPool;
+        private readonly ConsumerByteBufferPool _responseBufferPool;
         private readonly World _world;
 
         public ServerActor(
@@ -47,7 +47,7 @@ namespace Vlingo.Http.Resource
             try
             {
                 _responseBufferPool = new ConsumerByteBufferPool(
-                    ElasticResourcePool<IConsumerByteBuffer, Nothing>.Config.Of(sizing.MaxBufferPoolSize),
+                    ElasticResourcePool<IConsumerByteBuffer, string>.Config.Of(sizing.MaxBufferPoolSize),
                     sizing.MaxMessageSize);
             
                 _dispatcherPool = new IDispatcher[sizing.DispatcherPoolSize];
@@ -356,7 +356,7 @@ namespace Vlingo.Http.Resource
                 var size = response.Size;
                 if (size < _serverActor._maxMessageSize)
                 {
-                    return _serverActor._responseBufferPool.Acquire();
+                    return _serverActor._responseBufferPool.Acquire("ServerActor.BasicCompletedBasedResponseCompletes.BufferFor");
                 }
 
                 return BasicConsumerByteBuffer.Allocate(0, size + 1024);
