@@ -5,6 +5,8 @@
 // was not distributed with this file, You can obtain
 // one at https://mozilla.org/MPL/2.0/.
 
+using System.Text;
+
 namespace Vlingo.Http.Resource.Sse
 {
     public class SseSubscriber
@@ -36,5 +38,25 @@ namespace Vlingo.Http.Resource.Sse
         public bool HasCurrentEventId => !string.IsNullOrEmpty(CurrentEventId);
 
         public string? Id => Client?.Id;
+        
+        public override string ToString()
+        {
+            var sb = new StringBuilder("SseSubscriber [");
+            sb.Append("stream='").Append(StreamName).Append('\'');
+            if (HasCorrelationId)
+            {
+                sb.Append(", correlationId='").Append(CorrelationId).Append('\'');
+            }
+            if (HasCurrentEventId)
+            {
+                sb.Append(", currentEventId='").Append(CurrentEventId).Append('\'');
+            }
+            if (Client?.Id != null)
+            {
+                sb.Append(", client=").Append(Client.Id);
+            }
+            sb.Append(']');
+            return sb.ToString();
+        }
     }
 }
