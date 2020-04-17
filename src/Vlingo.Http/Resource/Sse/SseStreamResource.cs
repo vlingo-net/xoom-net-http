@@ -111,8 +111,10 @@ namespace Vlingo.Http.Resource.Sse
 
             public void Unsubscribe(SseSubscriber subscriber)
             {
-                subscriber.Close();
-                _subscribers.Remove(subscriber.Id!);
+                if (_subscribers.Remove(subscriber.Id!))
+                {
+                    subscriber.Close();
+                }
             }
 
             public void IntervalSignal(IScheduled<object> scheduled, object data)
