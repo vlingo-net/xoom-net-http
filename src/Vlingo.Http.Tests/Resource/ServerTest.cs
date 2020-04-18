@@ -51,7 +51,7 @@ namespace Vlingo.Http.Tests.Resource
         [Fact]
         public void TestThatServerDispatchesRequests()
         {
-            var request = PostRequest(UniqueJohnDoe());
+            var request = PostRequestCloseFollowing(UniqueJohnDoe());
             _client.RequestWith(ToStream(request).ToArray());
 
             var consumeCalls = _progress.ExpectConsumeTimes(1);
@@ -96,8 +96,8 @@ namespace Vlingo.Http.Tests.Resource
             var currentConsumeCount = 0;
             for (var idx = 0; idx < totalPairs; ++idx)
             {
-                _client.RequestWith(ToStream(PostRequest(UniqueJohnDoe())).ToArray());
-                _client.RequestWith(ToStream(PostRequest(UniqueJaneDoe())).ToArray());
+                _client.RequestWith(ToStream(PostRequestCloseFollowing(UniqueJohnDoe())).ToArray());
+                _client.RequestWith(ToStream(PostRequestCloseFollowing(UniqueJaneDoe())).ToArray());
                 var expected = currentConsumeCount + 2;
                 while (consumeCalls.TotalWrites < expected)
                 {

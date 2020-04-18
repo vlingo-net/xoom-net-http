@@ -128,7 +128,7 @@ namespace Vlingo.Http.Tests
             {
                 var body = (idx % 2 == 0) ? UniqueJaneDoe() : UniqueJohnDoe();
                 _uniqueBodies.Add(body);
-                builder.Append(PostRequest(body));
+                builder.Append(PostRequestCloseFollowing(body));
             }
 
             return builder.ToString();

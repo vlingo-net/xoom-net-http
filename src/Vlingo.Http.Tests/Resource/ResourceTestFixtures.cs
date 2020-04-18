@@ -63,11 +63,13 @@ namespace Vlingo.Http.Tests.Resource
         
         protected string CreatedResponse(string body) => $"HTTP/1.1 201 CREATED\nContent-Length: {body.Length}\n\n{body}";
 
-        protected string PostRequest(string body) => $"POST /users HTTP/1.1\nHost: vlingo.io\nContent-Length: {body.Length}\n\n{body}";
+        protected string PostRequestCloseFollowing(string body) => $"POST /users HTTP/1.1\nHost: vlingo.io\nContent-Length: {body.Length}\n\n{body}";
         
-        protected string PutRequest(string userId, string body) => $"PUT /users/{userId} HTTP/1.1\nHost: vlingo.io\nContent-Length: {body.Length}\n\n{body}";
+        protected string PostRequest(string body) => $"POST /users HTTP/1.1\nHost: vlingo.io\nConnection: keep-alive\nContent-Length: {body.Length}\n\n{body}";
+        
+        protected string PutRequest(string userId, string body) => $"PUT /users/{userId} HTTP/1.1\nHost: vlingo.io\nConnection: keep-alive\nContent-Length: {body.Length}\n\n{body}";
 
-        protected string GetExceptionRequest(string userId) => $"GET /users/{userId}/error HTTP/1.1\nHost: vlingo.io\n\n";
+        protected string GetExceptionRequest(string userId) => $"GET /users/{userId}/error HTTP/1.1\nHost: vlingo.io\nConnection: keep-alive\n\n";
         
         protected string JaneDoeCreated() => CreatedResponse(JaneDoeUserSerialized);
 
@@ -88,7 +90,7 @@ namespace Vlingo.Http.Tests.Resource
         
         protected string UniqueJaneDoePostCreated() => CreatedResponse(UniqueJaneDoe());
 
-        protected string UniqueJaneDoePostRequest() => PostRequest(UniqueJaneDoe());
+        protected string UniqueJaneDoePostRequest() => PostRequestCloseFollowing(UniqueJaneDoe());
 
         protected string UniqueJohnDoe() {
             var id = "" + _uniqueId;
@@ -111,7 +113,7 @@ namespace Vlingo.Http.Tests.Resource
 
         protected string UniqueJohnDoePostCreated() => CreatedResponse(UniqueJohnDoe());
 
-        protected string UniqueJohnDoePostRequest() => PostRequest(UniqueJohnDoe());
+        protected string UniqueJohnDoePostRequest() => PostRequestCloseFollowing(UniqueJohnDoe());
 
         public ResourceTestFixtures(ITestOutputHelper output)
         {
