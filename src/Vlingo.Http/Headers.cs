@@ -90,7 +90,7 @@ namespace Vlingo.Http
             _list = new List<T>(capacity);
         }
 
-        public T this[int index] { get => _list[index]; set => throw new NotSupportedException(); }
+        public T this[int index] { get => _list[index]; set => _list[index] = value; }
 
         public int Count => _list.Count;
 

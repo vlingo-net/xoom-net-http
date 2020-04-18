@@ -94,6 +94,7 @@ namespace Vlingo.Http.Resource
             var completes = _configuration.KeepAlive
                 ? Completes.RepeatableUsing<Response>(_configuration.Stage.Scheduler)
                 : Completes.Using<Response>(_configuration.Stage.Scheduler);
+            request.Headers.And(RequestHeader.Connection, _configuration.KeepAlive ? Header.ValueKeepAlive : Header.ValueClose);
             _consumer.RequestWith(request, completes);
             return completes;
         }
