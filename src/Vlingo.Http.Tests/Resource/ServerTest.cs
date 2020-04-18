@@ -6,6 +6,8 @@
 // one at https://mozilla.org/MPL/2.0/.
 
 using System;
+using System.Linq;
+using Vlingo.Actors.TestKit;
 using Vlingo.Common;
 using Vlingo.Http.Resource;
 using Vlingo.Http.Tests.Sample.User.Model;
@@ -24,8 +26,10 @@ namespace Vlingo.Http.Tests.Resource
         private static readonly int TotalRequestsResponses = 1_000;
 
         private static readonly AtomicInteger BaseServerPort = new AtomicInteger(18080);
+        private readonly int _serverPort;
 
-        private readonly IClientRequestResponseChannel _client;
+        private readonly IResponseChannelConsumer _consumer;
+        private IClientRequestResponseChannel _client;
         private readonly Progress _progress;
         private readonly IServer _server;
         
@@ -66,7 +70,7 @@ namespace Vlingo.Http.Tests.Resource
             Assert.Equal(1, _progress.ConsumeCount.Get());
             Assert.NotNull(createdResponse.Headers.HeaderOf(ResponseHeader.Location));
 
-            var getUserMessage = $"GET {createdResponse.HeaderOf(ResponseHeader.Location).Value} HTTP/1.1\nHost: vlingo.io\n\n";
+            var getUserMessage = $"GET {createdResponse.HeaderOf(ResponseHeader.Location).Value} HTTP/1.1\nHost: vlingo.io\nConnection: keep-alive\n\n";
 
             _client.RequestWith(ToStream(getUserMessage).ToArray());
 
@@ -113,7 +117,7 @@ namespace Vlingo.Http.Tests.Resource
 
             consumeCalls.ReadFrom<int>("completed");
 
-            _output.WriteLine("TOTAL REQUESTS-RESPONSES: {0} TIME: {1} ms", TotalRequestsResponses, (DateExtensions.GetCurrentMillis() - startTime));
+            _output.WriteLine("TOTAL REQUESTS-RESPONSES: {0} TIME: {1} ms", TotalRequestsResponses, DateExtensions.GetCurrentMillis() - startTime);
 
             Assert.Equal(TotalRequestsResponses, _progress.ConsumeCount.Get());
             _progress.Responses.TryPeek(out var createdResponse);
@@ -160,20 +164,51 @@ namespace Vlingo.Http.Tests.Resource
             Assert.Equal(1, _progress.ConsumeCount.Get());
         }
         
+        [Fact]
+        public void TestThatServerClosesChannelAfterSingleRequest()
+        {
+            var totalResponses = 0;
+            var maxRequests = 10;
+
+            for (var count = 0; count < maxRequests; ++count)
+            {
+                var consumeCalls = _progress.ExpectConsumeTimes(1);
+                if (count % 2 == 0)
+                {
+                    _client.RequestWith(ToStream(PostRequestCloseFollowing(UniqueJohnDoe())).ToArray());
+                }
+                else
+                {
+                    _client.RequestWith(ToStream(PostRequestCloseFollowing(UniqueJaneDoe())).ToArray());
+                }
+                while (consumeCalls.TotalWrites < 1)
+                {
+                    _client.ProbeChannel();
+                }
+                totalResponses += consumeCalls.ReadFrom<int>("completed");
+
+                _client.Close();
+                
+                _client = new BasicClientRequestResponseChannel(Address.From(Host.Of("localhost"), _serverPort, AddressType.None), _consumer, 100, 10240, World.DefaultLogger);
+            }
+
+            Assert.Equal(maxRequests, totalResponses);
+        }
+        
         public ServerTest(ITestOutputHelper output) : base(output)
         {
             _output = output;
             UserStateFactory.ResetId();
 
-            var serverPort = BaseServerPort.GetAndIncrement();
-            _server = ServerFactory.StartWith(World.Stage, Resources, serverPort, new Configuration.SizingConf(1, 1, 100, 10240), new Configuration.TimingConf(25, 1, 100));
+            _serverPort = BaseServerPort.GetAndIncrement();
+            _server = ServerFactory.StartWith(World.Stage, Resources, _serverPort, new Configuration.SizingConf(1, 1, 100, 10240), new Configuration.TimingConf(25, 1, 1000));
             Assert.True(_server.StartUp().Await(TimeSpan.FromMilliseconds(500L)));
 
             _progress = new Progress();
 
-            var consumer = World.ActorFor<IResponseChannelConsumer>(() => new TestResponseChannelConsumer(_progress));
+            _consumer = World.ActorFor<IResponseChannelConsumer>(() => new TestResponseChannelConsumer(_progress));
 
-            _client = new BasicClientRequestResponseChannel(Address.From(Host.Of("localhost"), serverPort, AddressType.None), consumer, 100, 10240, World.DefaultLogger);
+            _client = new BasicClientRequestResponseChannel(Address.From(Host.Of("localhost"), _serverPort, AddressType.None), _consumer, 100, 10240, World.DefaultLogger);
         }
 
         public override void Dispose()
