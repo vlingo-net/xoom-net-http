@@ -5,6 +5,7 @@
 // was not distributed with this file, You can obtain
 // one at https://mozilla.org/MPL/2.0/.
 
+using System;
 using System.Collections.Generic;
 using System.Text;
 using Vlingo.Http.Tests.Resource;
@@ -70,18 +71,20 @@ namespace Vlingo.Http.Tests
         }
 
         [Fact]
-        public void TestThatTwoHundredResponsesParseParseNextSucceeds()
+        public void TestThatTwoHundredResponsesParseNextSucceeds()
         {
             var manyRequests = MultipleRequestBuilder(200);
 
             var totalLength = manyRequests.Length;
+            var random = new Random();
             var alteringEndIndex = 1024;
             var parser = RequestParser.ParserFor(ToStream(manyRequests.Substring(0, alteringEndIndex)).ToArray());
             var startingIndex = alteringEndIndex;
 
             while (startingIndex < totalLength)
             {
-                alteringEndIndex = startingIndex + 1024 + (int)(DateExtensions.GetCurrentMillis() % startingIndex);
+                var randomLength = random.Next(512) + 1;
+                alteringEndIndex = startingIndex + randomLength + (int)(DateExtensions.GetCurrentMillis() % startingIndex);
                 if (alteringEndIndex > totalLength)
                 {
                     alteringEndIndex = totalLength;
