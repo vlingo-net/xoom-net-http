@@ -94,6 +94,8 @@ namespace Vlingo.Http
         public static RequestHeader WithCorrelationId(string correlationId) => new RequestHeader(XCorrelationID, correlationId);
 
         public static RequestHeader WithHost(string host) => new RequestHeader(Host, host);
+        
+        public static RequestHeader WithKeepAlive() => new RequestHeader(Connection, ValueKeepAlive);
 
         public static RequestHeader Of(string name, string value) => new RequestHeader(name, value);
 
