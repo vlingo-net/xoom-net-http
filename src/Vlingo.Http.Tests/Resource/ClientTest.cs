@@ -51,6 +51,7 @@ namespace Vlingo.Http.Tests.Resource
                         .And("/users".ToMatchableUri())
                         .And(RequestHeader.WithHost("localhost"))
                         .And(RequestHeader.WithContentLength(user))
+                        .And(RequestHeader.WithKeepAlive())
                         .And(Body.From(user)))
                 .AndThenConsume(TimeSpan.FromMilliseconds(5000), Response.Of(Response.ResponseStatus.RequestTimeout), response => _expectedResponse = response)
                 .AndThenConsume(response => _expectedHeaderCount = response.Headers.Count)
@@ -101,6 +102,7 @@ namespace Vlingo.Http.Tests.Resource
                             .And("/users".ToMatchableUri())
                             .And(RequestHeader.WithHost("localhost"))
                             .And(RequestHeader.WithContentLength(user))
+                            .And(RequestHeader.WithKeepAlive())
                             .And(Body.From(user)))
                     .AndThenConsume(response => known.Consume(response));
             }
@@ -138,7 +140,6 @@ namespace Vlingo.Http.Tests.Resource
                 10,
                 10240);
             config.TestInfo(true);
-            config.TestInfo(true);
 
             _client =
                 Client.Using(
@@ -155,6 +156,7 @@ namespace Vlingo.Http.Tests.Resource
                             .And("/users".ToMatchableUri())
                             .And(RequestHeader.WithHost("localhost"))
                             .And(RequestHeader.WithContentLength(user))
+                            .And(RequestHeader.WithKeepAlive())
                             .And(Body.From(user)))
                     .AndThenConsume(response => known.Consume(response));
             }
