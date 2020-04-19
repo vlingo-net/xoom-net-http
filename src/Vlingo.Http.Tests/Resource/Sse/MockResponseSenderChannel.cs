@@ -40,10 +40,6 @@ namespace Vlingo.Http.Tests.Resource.Sse
             _abandonSafely.WriteUsing("count", count);
         }
 
-        public void ExplicitClose(RequestResponseContext context, bool option)
-        {
-        }
-
         public void RespondWith(RequestResponseContext context, IConsumerByteBuffer buffer)
         {
             var parser = _receivedStatus ?
