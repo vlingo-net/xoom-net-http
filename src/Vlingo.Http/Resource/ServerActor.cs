@@ -254,7 +254,7 @@ namespace Vlingo.Http.Resource
                 try
                 {
                     RequestParser parser;
-                    bool wasIncompleteContent = false;
+                    var wasIncompleteContent = false;
 
                     if (!requestResponseContext.HasConsumerData)
                     {
