@@ -11,6 +11,7 @@ using Vlingo.Http.Resource;
 using Vlingo.Http.Tests.Sample.User.Model;
 using Vlingo.Wire.Channel;
 using Vlingo.Wire.Fdx.Bidirectional;
+using Vlingo.Wire.Fdx.Bidirectional.Netty.Client;
 using Vlingo.Wire.Node;
 using Xunit;
 using Xunit.Abstractions;
@@ -187,7 +188,7 @@ namespace Vlingo.Http.Tests.Resource
 
                 _client.Close();
                 
-                _client = new BasicClientRequestResponseChannel(Address.From(Host.Of("localhost"), _serverPort, AddressType.None), _consumer, 100, 10240, World.DefaultLogger);
+                _client = new NettyClientRequestResponseChannel(Address.From(Host.Of("localhost"), _serverPort, AddressType.None), _consumer, 100, 10240, World.DefaultLogger);
             }
 
             Assert.Equal(maxRequests, totalResponses);
@@ -206,7 +207,7 @@ namespace Vlingo.Http.Tests.Resource
 
             _consumer = World.ActorFor<IResponseChannelConsumer>(() => new TestResponseChannelConsumer(_progress));
 
-            _client = new BasicClientRequestResponseChannel(Address.From(Host.Of("localhost"), _serverPort, AddressType.None), _consumer, 100, 10240, World.DefaultLogger);
+            _client = new NettyClientRequestResponseChannel(Address.From(Host.Of("localhost"), _serverPort, AddressType.None), _consumer, 100, 10240, World.DefaultLogger);
         }
 
         public override void Dispose()
