@@ -15,7 +15,7 @@ namespace Vlingo.Http.Resource
     public class ClientConsumerWorkerActor : Actor, IClientConsumer
     {
         private const string EmptyTestId = "";
-        private readonly static AtomicInteger TestIdGenerator = new AtomicInteger(0);
+        private static readonly AtomicInteger TestIdGenerator = new AtomicInteger(0);
 
         private readonly string _testId;
         private readonly IRequestSender _requestSender;
