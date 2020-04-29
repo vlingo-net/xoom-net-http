@@ -40,8 +40,35 @@ namespace Vlingo.Http.Tests.Resource.Sse
             _abandonSafely.WriteUsing("count", count);
         }
 
-        public void RespondWith(RequestResponseContext context, IConsumerByteBuffer buffer)
+        public void RespondWith(RequestResponseContext context, IConsumerByteBuffer buffer) =>
+            RespondWith(context, buffer, false);
+
+        public void RespondWith(RequestResponseContext context, IConsumerByteBuffer buffer, bool closeFollowing)
         {
+            var parser = _receivedStatus ?
+                ResponseParser.ParserForBodyOnly(buffer.ToArray()) :
+                ResponseParser.ParserFor(buffer.ToArray());
+
+            if (!_receivedStatus)
+            {
+                Response.Set(parser.FullResponse());
+            }
+            else
+            {
+                _respondWithSafely.WriteUsing("events", parser.FullResponse());
+            }
+            
+            _receivedStatus = true;
+        }
+
+        public void RespondWith(RequestResponseContext context, object response, bool closeFollowing)
+        {
+            var textResponse = response.ToString();
+
+            var buffer =
+                new BasicConsumerByteBuffer(0, textResponse!.Length + 1024)
+                    .Put(Converters.TextToBytes(textResponse)).Flip();
+
             var parser = _receivedStatus ?
                 ResponseParser.ParserForBodyOnly(buffer.ToArray()) :
                 ResponseParser.ParserFor(buffer.ToArray());
