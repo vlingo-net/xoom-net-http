@@ -42,7 +42,8 @@ namespace Vlingo.Http.Tests.Resource
                 10,
                 10240,
                 10,
-                10240);
+                10240,
+                TimeSpan.FromMilliseconds(1000));
             _client = Client.Using(config) ;
 
             _client.RequestWith(
@@ -84,7 +85,8 @@ namespace Vlingo.Http.Tests.Resource
                 30,
                 10240,
                 10,
-                10240);
+                10240,
+                TimeSpan.FromMilliseconds(1000));
             config.TestInfo(true);
 
             _client =
@@ -138,7 +140,8 @@ namespace Vlingo.Http.Tests.Resource
                 30,
                 10240,
                 10,
-                10240);
+                10240,
+                TimeSpan.FromMilliseconds(1000));
             config.TestInfo(true);
 
             _client =

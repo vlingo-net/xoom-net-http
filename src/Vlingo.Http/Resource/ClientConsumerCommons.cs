@@ -35,6 +35,7 @@ namespace Vlingo.Http.Resource
                 consumer,
                 configuration.ReadBufferPoolSize,
                 configuration.ReadBufferSize,
+                configuration.ClientConnectionTimeout,
                 logger);
         }
     }

@@ -187,8 +187,10 @@ namespace Vlingo.Http.Tests.Resource
                 totalResponses += consumeCalls.ReadFrom<int>("completed");
 
                 _client.Close();
-                
-                _client = new NettyClientRequestResponseChannel(Address.From(Host.Of("localhost"), _serverPort, AddressType.None), _consumer, 100, 10240, World.DefaultLogger);
+
+                _client = new NettyClientRequestResponseChannel(
+                    Address.From(Host.Of("localhost"), _serverPort, AddressType.None), _consumer, 100, 10240,
+                    TimeSpan.FromMilliseconds(1000), World.DefaultLogger);
             }
 
             Assert.Equal(maxRequests, totalResponses);

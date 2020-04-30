@@ -107,6 +107,8 @@ namespace Vlingo.Http.Resource
         {
             public Address AddressOfHost { get; }
             public IResponseConsumer ConsumerOfUnknownResponses { get; }
+            
+            public TimeSpan ClientConnectionTimeout { get; }
             public bool KeepAlive { get; }
             public long ProbeInterval { get; }
             public int ReadBufferSize { get; }
@@ -150,7 +152,8 @@ namespace Vlingo.Http.Resource
                     10,
                     10240,
                     10,
-                    10240);
+                    10240,
+                    TimeSpan.FromMilliseconds(1000));
 
             /// <summary>
             /// Answer the <code>Configuration</code> with defaults except for the 
@@ -163,13 +166,15 @@ namespace Vlingo.Http.Resource
             /// <param name="consumerOfUnknownResponses">The ResponseConsumer of responses that cannot be associated with a given consumer.</param>
             /// <param name="writeBufferSize">The int size of the write buffer.</param>
             /// <param name="readBufferSize">The int size of the read buffer.</param>
+            /// <param name="clientConnectionTimeout">The timeout for a client to establish connection.</param>
             /// <returns></returns>
             public static Configuration DefaultedExceptFor(
                 Stage stage,
                 Address addressOfHost,
                 IResponseConsumer consumerOfUnknownResponses,
                 int writeBufferSize,
-                int readBufferSize)
+                int readBufferSize,
+                TimeSpan clientConnectionTimeout)
                 => Has(
                     stage,
                     addressOfHost,
@@ -178,7 +183,8 @@ namespace Vlingo.Http.Resource
                     10,
                     writeBufferSize,
                     10,
-                    readBufferSize);
+                    readBufferSize,
+                    clientConnectionTimeout);
 
             /// <summary>
             /// Answer the <code>Configuration</code> with for keep-alive mode with defaults 
@@ -200,7 +206,8 @@ namespace Vlingo.Http.Resource
                     10,
                     10240,
                     10,
-                    10240);
+                    10240,
+                    TimeSpan.FromMilliseconds(1000));
 
             /// <summary>
             /// Answer the <code>Configuration</code> with the given options.
@@ -213,6 +220,7 @@ namespace Vlingo.Http.Resource
             /// <param name="writeBufferSize">The int size of the buffer used for writes/sends.</param>
             /// <param name="readBufferPoolSize">The int number of read buffers in the pool.</param>
             /// <param name="readBufferSize">The int size of the buffer used for reads/receives.</param>
+            /// <param name="clientConnectionTimeout">The timeout for a client to establish connection.</param>
             /// <returns></returns>
             public static Configuration Has(
                 Stage stage,
@@ -222,7 +230,8 @@ namespace Vlingo.Http.Resource
                 long probeInterval,
                 int writeBufferSize,
                 int readBufferPoolSize,
-                int readBufferSize)
+                int readBufferSize,
+                TimeSpan clientConnectionTimeout)
                 => new Configuration(
                     stage,
                     addressOfHost,
@@ -232,6 +241,7 @@ namespace Vlingo.Http.Resource
                     writeBufferSize,
                     readBufferPoolSize,
                     readBufferSize,
+                    clientConnectionTimeout,
                     false);
 
             /// <summary>
@@ -264,6 +274,7 @@ namespace Vlingo.Http.Resource
                     writeBufferSize,
                     readBufferPoolSize,
                     readBufferSize,
+                    TimeSpan.FromMilliseconds(1000), 
                     true);
 
             /// <summary>
@@ -277,6 +288,7 @@ namespace Vlingo.Http.Resource
             /// <param name="writeBufferSize">The int size of the buffer used for writes/sends.</param>
             /// <param name="readBufferPoolSize">The int number of read buffers in the pool.</param>
             /// <param name="readBufferSize">The int size of the buffer used for reads/receives.</param>
+            /// <param name="clientConnectionTimeout">The timeout for a client to establish connection.</param>
             /// <param name="secure">The boolean indicating whether the connection should be secure.</param>
             public Configuration(
                 Stage stage,
@@ -287,6 +299,7 @@ namespace Vlingo.Http.Resource
                 int writeBufferSize,
                 int readBufferPoolSize,
                 int readBufferSize,
+                TimeSpan clientConnectionTimeout,
                 bool secure)
             {
                 Stage = stage;
@@ -297,6 +310,7 @@ namespace Vlingo.Http.Resource
                 WriteBufferSize = writeBufferSize;
                 ReadBufferPoolSize = readBufferPoolSize;
                 ReadBufferSize = readBufferSize;
+                ClientConnectionTimeout = clientConnectionTimeout;
                 IsSecure = secure;
             }
 
