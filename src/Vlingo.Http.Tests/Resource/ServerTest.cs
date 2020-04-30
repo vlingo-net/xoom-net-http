@@ -207,7 +207,7 @@ namespace Vlingo.Http.Tests.Resource
 
             _consumer = World.ActorFor<IResponseChannelConsumer>(() => new TestResponseChannelConsumer(_progress));
 
-            _client = new NettyClientRequestResponseChannel(Address.From(Host.Of("localhost"), _serverPort, AddressType.None), _consumer, 100, 10240, World.DefaultLogger);
+            _client = new BasicClientRequestResponseChannel(Address.From(Host.Of("localhost"), _serverPort, AddressType.None), _consumer, 100, 10240, World.DefaultLogger);
         }
 
         public override void Dispose()
