@@ -185,7 +185,7 @@ namespace Vlingo.Http.Tests.Resource
             _output = output;
             UserStateFactory.ResetId();
 
-            _server = ServerFactory.StartWith(World.Stage, Resources, NextPort.IncrementAndGet(), new Configuration.SizingConf(1, 10, 100, 10240), new Configuration.TimingConf(100 /*should be 10 but actor mailbox gets overflooded */, 2, 100));
+            _server = ServerFactory.StartWith(World.Stage, Resources, NextPort.IncrementAndGet(), new Configuration.SizingConf(1, 10, 100, 10240), new Configuration.TimingConf(10, 2, 100));
             Assert.True(_server.StartUp().Await(TimeSpan.FromMilliseconds(500L)));
         }
 
