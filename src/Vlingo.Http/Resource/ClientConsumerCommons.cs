@@ -8,7 +8,6 @@
 using Vlingo.Actors;
 using Vlingo.Wire.Channel;
 using Vlingo.Wire.Fdx.Bidirectional;
-using Vlingo.Wire.Fdx.Bidirectional.Netty.Client;
 
 namespace Vlingo.Http.Resource
 {
@@ -29,13 +28,11 @@ namespace Vlingo.Http.Resource
                   logger);
             }
 
-            //return new BasicClientRequestResponseChannel(
-            return new NettyClientRequestResponseChannel(
+            return new BasicClientRequestResponseChannel(
                 configuration.AddressOfHost,
                 consumer,
                 configuration.ReadBufferPoolSize,
                 configuration.ReadBufferSize,
-                configuration.ClientConnectionTimeout,
                 logger);
         }
     }

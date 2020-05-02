@@ -58,8 +58,7 @@ namespace Vlingo.Http.Resource
                 }
             
                 _channel =
-                    // ServerRequestResponseChannelFactory.Start(
-                    ServerRequestResponseChannelFactory.StartNetty(
+                    ServerRequestResponseChannelFactory.Start(
                         Stage,
                         Stage.World.AddressFactory.WithHighId(ChannelName),
                         channelMailboxTypeName,

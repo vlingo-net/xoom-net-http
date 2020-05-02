@@ -70,7 +70,7 @@ namespace Vlingo.Http.Tests.Resource
             Assert.Equal(0, unknownResponseCount);
         }
 
-        //[Fact(Skip = "Under investigation https://github.com/vlingo-net/vlingo-net-http/issues/2")]
+        // "Under investigation https://github.com/vlingo-net/vlingo-net-http/issues/2"
         [Fact, Trait("Category", "FailsOnWindows")]
         public void TestThatRoundRobinClientDelivers()
         {
@@ -125,7 +125,7 @@ namespace Vlingo.Http.Tests.Resource
             }
         }
 
-        //[Fact(Skip = "Under investigation https://github.com/vlingo-net/vlingo-net-http/issues/2")]
+        // "Under investigation https://github.com/vlingo-net/vlingo-net-http/issues/2"
         [Fact, Trait("Category", "FailsOnWindows")]
         public void TestThatLoadBalancingClientDelivers()
         {
