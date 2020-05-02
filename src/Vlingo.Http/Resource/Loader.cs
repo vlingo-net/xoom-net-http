@@ -47,28 +47,28 @@ namespace Vlingo.Http.Resource
         private const string StaticFilesResourceServeFile = "ServeFile(string contentFile, string root, string validSubPaths)";
         private const string StaticFilesResourcePathParameter = "{contentFile}";
 
-        public static Resources LoadResources(HttpProperties properties)
+        public static Resources LoadResources(HttpProperties properties, ILogger logger)
         {
             var namedResources = new Dictionary<string, IResource>();
 
             foreach (var resource in FindResources(properties, ResourceNamePrefix))
             {
-                var loaded = LoadResource(properties, resource);
+                var loaded = LoadResource(properties, resource, logger);
 
                 namedResources[loaded.Name] = loaded;
             }
 
-            foreach (var item in LoadSseResources(properties))
+            foreach (var item in LoadSseResources(properties, logger))
             {
                 namedResources[item.Key] = item.Value;
             }
             
-            foreach (var item in LoadFeedResources(properties))
+            foreach (var item in LoadFeedResources(properties, logger))
             {
                 namedResources[item.Key] = item.Value;
             }
 
-            foreach (var item in LoadStaticFilesResource(properties))
+            foreach (var item in LoadStaticFilesResource(properties, logger))
             {
                 namedResources[item.Key] = item.Value;
             }
@@ -88,7 +88,7 @@ namespace Vlingo.Http.Resource
             return resource;
         }
 
-        private static IConfigurationResource LoadResource(HttpProperties properties, string resourceNameKey)
+        private static IConfigurationResource LoadResource(HttpProperties properties, string resourceNameKey, ILogger logger)
         {
             var resourceName = resourceNameKey.Substring(ResourceNamePrefix.Length);
             var resourceActionNames = ActionNamesFrom(properties.GetProperty(resourceNameKey), resourceNameKey);
@@ -102,9 +102,9 @@ namespace Vlingo.Http.Resource
             {
                 var resourceActions = ResourceActionsOf(properties, resourceName, resourceActionNames);
 
-                var resourceHandlerClass = ConfigurationResource<ResourceHandler>.NewResourceHandlerTypeFor(resourceHandlerClassname);
+                var resourceHandlerClass = ConfigurationResource.NewResourceHandlerTypeFor(resourceHandlerClassname);
 
-                return ResourceFor(resourceName, resourceHandlerClass!, handlerPoolSize, resourceActions);
+                return ResourceFor(resourceName, resourceHandlerClass!, handlerPoolSize, resourceActions, logger);
             }
             catch (Exception e)
             {
@@ -113,7 +113,7 @@ namespace Vlingo.Http.Resource
             }
         }
 
-        private static IDictionary<string, IConfigurationResource> LoadFeedResources(HttpProperties properties)
+        private static IDictionary<string, IConfigurationResource> LoadFeedResources(HttpProperties properties, ILogger logger)
         {
             var feedResourceActions = new Dictionary<string, IConfigurationResource>();
 
@@ -141,21 +141,21 @@ namespace Vlingo.Http.Resource
                     var actions = new List<Action>(1);
                     var additionalParameters = new List<Action.MappedParameter> { mappedParameterProducerClass, mappedParameterProductElements };
                     actions.Add(new Action(0, Method.Get.Name, feedRequestUri, FeedProducerFeed, null, additionalParameters));
-                    var resource = ResourceFor(resourceName, typeof(FeedResource), handlerPoolSize, actions);
+                    var resource = ResourceFor(resourceName, typeof(FeedResource), handlerPoolSize, actions, logger);
                     feedResourceActions.Add(resourceName, resource);
                 }
                 catch (Exception e)
                 {
                     Console.WriteLine($"vlingo/http: Failed to load feed resource: {resourceName} because: {e.Message}");
                     Console.WriteLine(e.StackTrace);
-                    throw e;
+                    throw;
                 }   
             }
 
             return feedResourceActions;
         }
 
-        private static IDictionary<string, IConfigurationResource> LoadSseResources(HttpProperties properties)
+        private static IDictionary<string, IConfigurationResource> LoadSseResources(HttpProperties properties, ILogger logger)
         {
             var sseResourceActions = new Dictionary<string, IConfigurationResource>();
 
@@ -191,21 +191,21 @@ namespace Vlingo.Http.Resource
                     var additionalParameters = new List<Action.MappedParameter> { mappedParameterClass, mappedParameterPayload, mappedParameterInterval, mappedParameterDefaultId };
                     actions.Add(new Action(0, Method.Get.Name, subscribeUri, SsePublisherSubscribeTo, null, additionalParameters));
                     actions.Add(new Action(1, Method.Delete.Name, unsubscribeUri, SsePublisherUnsubscribeTo, null));
-                    var resource = ResourceFor(resourceName, typeof(SseStreamResource), handlerPoolSize, actions);
+                    var resource = ResourceFor(resourceName, typeof(SseStreamResource), handlerPoolSize, actions, logger);
                     sseResourceActions[resourceName] = resource;
                 }
                 catch (Exception e)
                 {
                     Console.WriteLine("vlingo-net/http: Failed to load SSE resource: " + streamResourceName + " because: " + e.Message);
                     Console.WriteLine(e.StackTrace);
-                    throw e;
+                    throw;
                 }
             }
 
             return sseResourceActions;
         }
 
-        private static IDictionary<string, IConfigurationResource> LoadStaticFilesResource(HttpProperties properties)
+        private static IDictionary<string, IConfigurationResource> LoadStaticFilesResource(HttpProperties properties, ILogger logger)
         {
             var staticFilesResourceActions = new Dictionary<string, IConfigurationResource>();
 
@@ -235,7 +235,7 @@ namespace Vlingo.Http.Resource
                     var actions = new List<Action>(1);
                     var additionalParameters = new List<Action.MappedParameter> { mappedParameterRoot, mappedParameterValidSubPaths };
                     actions.Add(new Action(0, Method.Get.Name, actionSubPath + slash + StaticFilesResourcePathParameter, StaticFilesResourceServeFile, null, additionalParameters));
-                    var resource = ResourceFor(resourceName, typeof(StaticFilesResource), int.Parse(poolSize), actions);
+                    var resource = ResourceFor(resourceName, typeof(StaticFilesResource), int.Parse(poolSize), actions, logger);
                     staticFilesResourceActions[resourceName] = resource;
                 }
             }
@@ -243,7 +243,7 @@ namespace Vlingo.Http.Resource
             {
                 Console.WriteLine("vlingo-net/http: Failed to load static files resource: " + StaticFilesResource + " because: " + e.Message);
                 Console.WriteLine(e.StackTrace);
-                throw e;
+                throw;
             }
 
             return staticFilesResourceActions;
@@ -253,11 +253,12 @@ namespace Vlingo.Http.Resource
             string resourceName,
             Type resourceHandlerClass,
             int handlerPoolSize,
-            IList<Action> resourceActions)
+            IList<Action> resourceActions,
+            ILogger logger)
         {
             try
             {
-                var resource = ConfigurationResource<ResourceHandler>.NewResourceFor(resourceName, resourceHandlerClass, handlerPoolSize, resourceActions);
+                var resource = ConfigurationResource.NewResourceFor(resourceName, resourceHandlerClass, handlerPoolSize, resourceActions, logger);
                 return resource;
             }
             catch (Exception e)

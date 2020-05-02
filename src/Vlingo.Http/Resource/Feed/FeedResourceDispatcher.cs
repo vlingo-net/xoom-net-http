@@ -7,11 +7,10 @@
 
 using System;
 using System.Collections.Generic;
-using Vlingo.Http.Resource.Sse;
 
 namespace Vlingo.Http.Resource.Feed
 {
-    public class FeedResourceDispatcher : ConfigurationResource<SseStreamResource>
+    public class FeedResourceDispatcher : ConfigurationResource
     {
         public FeedResourceDispatcher(string name, Type resourceHandlerClass, int handlerPoolSize,
             IList<Action> actions) : base(name, resourceHandlerClass, handlerPoolSize, actions)

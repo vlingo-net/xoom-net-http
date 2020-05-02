@@ -7,8 +7,8 @@
 
 using System;
 using System.Collections.Generic;
+using Vlingo.Actors.Plugin.Logging.Console;
 using Vlingo.Http.Resource;
-using Vlingo.Http.Tests.Sample.User;
 using Xunit;
 using Xunit.Abstractions;
 using Action = Vlingo.Http.Resource.Action;
@@ -23,7 +23,7 @@ namespace Vlingo.Http.Tests.Resource
         [Fact]
         public void TestSourceCodeGeneration()
         {
-            var generator = ResourceDispatcherGenerator.ForTest(_actions, false);
+            var generator = ResourceDispatcherGenerator.ForTest(_actions, false, ConsoleLogger.TestInstance());
 
             var result = generator.GenerateFor(_resource.ResourceHandlerClass);
 
@@ -38,7 +38,7 @@ namespace Vlingo.Http.Tests.Resource
         [Fact]
         public void TestSourceCodeGenerationWithPersistence()
         {
-            var generator = ResourceDispatcherGenerator.ForTest(_actions, true);
+            var generator = ResourceDispatcherGenerator.ForTest(_actions, true, ConsoleLogger.TestInstance());
 
             var result = generator.GenerateFor(_resource.ResourceHandlerClass);
 
@@ -53,7 +53,6 @@ namespace Vlingo.Http.Tests.Resource
         public ResourceDispatcherGeneratorTest(ITestOutputHelper output)
         {
             var converter = new Converter(output);
-            
             Console.SetOut(converter);
             
             var actionPostUser = new Action(0, "POST", "/users", "register(body:Vlingo.Http.Tests.Sample.User.UserData userData)", null);
@@ -81,10 +80,10 @@ namespace Vlingo.Http.Tests.Resource
             }
             catch (Exception)
             {
-                resourceHandlerClass = ConfigurationResource<UserResource>.NewResourceHandlerTypeFor("Vlingo.Http.Tests.Sample.User.UserResource");
+                resourceHandlerClass = ConfigurationResource.NewResourceHandlerTypeFor("Vlingo.Http.Tests.Sample.User.UserResource");
             }
             
-            _resource = ConfigurationResource<UserResource>.NewResourceFor("user", resourceHandlerClass, 5, _actions);
+            _resource = ConfigurationResource.NewResourceFor("user", resourceHandlerClass, 5, _actions, ConsoleLogger.TestInstance());
         }
     }
 }

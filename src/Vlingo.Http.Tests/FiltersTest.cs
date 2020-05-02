@@ -83,10 +83,9 @@ namespace Vlingo.Http.Tests
             var world = World.StartWithDefaults("filters");
 
             var resource =
-                ConfigurationResource<ProfileResource>.Defining("profile", typeof(ProfileResource), 5,
+                ConfigurationResource.Defining("profile", typeof(ProfileResource), 5,
                     Actions.CanBe("PUT", "/users/{userId}/profile", "define(string userId, body:Vlingo.Http.Tests.Sample.User.ProfileData profileData)", "Vlingo.Http.Tests.Sample.User.ProfileDataMapper")
-                        .Also("GET", "/users/{userId}/profile", "query(string userId)", "Vlingo.Http.Tests.Sample.User.ProfileDataMapper")
-                        .ThatsAll());
+                        .Also("GET", "/users/{userId}/profile", "query(string userId)", "Vlingo.Http.Tests.Sample.User.ProfileDataMapper").ThatsAll(), world.DefaultLogger);
 
             var server =
                 ServerFactory.StartWith(

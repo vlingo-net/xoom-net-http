@@ -17,7 +17,7 @@ using static Vlingo.Common.Compiler.DynaFile;
 
 namespace Vlingo.Http.Resource
 {
-    public abstract class ConfigurationResource<T> : Resource, IConfigurationResource where T : ResourceHandler
+    public abstract class ConfigurationResource : Resource, IConfigurationResource
     {
         public const string DispatcherSuffix = "Dispatcher";
 
@@ -31,14 +31,16 @@ namespace Vlingo.Http.Resource
             string resourceName,
             Type resourceHandlerClass,
             int handlerPoolSize,
-            IList<Action> actions)
-            => NewResourceFor(resourceName, resourceHandlerClass, handlerPoolSize, actions);
+            IList<Action> actions,
+            ILogger logger)
+            => NewResourceFor(resourceName, resourceHandlerClass, handlerPoolSize, actions, logger);
 
         internal static IConfigurationResource NewResourceFor(
             string resourceName,
             Type resourceHandlerType,
             int handlerPoolSize,
-            IList<Action> actions)
+            IList<Action> actions,
+            ILogger logger)
         {
             AssertSaneActions(actions);
 
@@ -66,7 +68,7 @@ namespace Vlingo.Http.Resource
                 }
                 catch
                 {
-                    resourceClass = TryGenerateCompile(resourceHandlerType, fullyQualifiedTypeName, lookupTypeName, actions);
+                    resourceClass = TryGenerateCompile(resourceHandlerType, fullyQualifiedTypeName, lookupTypeName, actions, logger);
                 }
 
                 var ctorParams = new object[] { resourceName, resourceHandlerType, handlerPoolSize, actions };
@@ -198,13 +200,14 @@ namespace Vlingo.Http.Resource
             Type resourceHandlerClass,
             string fullyQualifiedClassName,
             string lookupTypeName,
-            IList<Action> actions)
+            IList<Action> actions,
+            ILogger logger)
         {
             try
             {
                 return TryGenerateCompile(
                     resourceHandlerClass,
-                    ResourceDispatcherGenerator.ForMain(actions, true),
+                    ResourceDispatcherGenerator.ForMain(actions, true, logger),
                     fullyQualifiedClassName,
                     lookupTypeName);
             }
@@ -214,7 +217,7 @@ namespace Vlingo.Http.Resource
                 {
                     return TryGenerateCompile(
                         resourceHandlerClass,
-                        ResourceDispatcherGenerator.ForTest(actions, true),
+                        ResourceDispatcherGenerator.ForTest(actions, true, logger),
                         fullyQualifiedClassName,
                         lookupTypeName);
                 }

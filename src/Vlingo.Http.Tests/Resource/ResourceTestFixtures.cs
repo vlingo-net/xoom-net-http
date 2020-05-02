@@ -141,9 +141,9 @@ namespace Vlingo.Http.Tests.Resource
                 ActionPutUser
             };
 
-            ResourceHandlerType = ConfigurationResource<UserResource>.NewResourceHandlerTypeFor("Vlingo.Http.Tests.Sample.User.UserResource");
+            ResourceHandlerType = ConfigurationResource.NewResourceHandlerTypeFor("Vlingo.Http.Tests.Sample.User.UserResource");
 
-            Resource = ConfigurationResource<UserResource>.NewResourceFor("user", ResourceHandlerType, 7, actions);
+            Resource = ConfigurationResource.NewResourceFor("user", ResourceHandlerType, 7, actions, World.DefaultLogger);
 
             Resource.AllocateHandlerPool(World.Stage);
 

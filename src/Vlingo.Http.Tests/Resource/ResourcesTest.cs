@@ -7,8 +7,8 @@
 
 using System;
 using System.Collections.Generic;
+using Vlingo.Actors.Plugin.Logging.Console;
 using Vlingo.Http.Resource;
-using Vlingo.Http.Resource.Sse;
 using Vlingo.Http.Tests.Sample.User;
 using Xunit;
 using Action = Vlingo.Http.Resource.Action;
@@ -17,12 +17,12 @@ namespace Vlingo.Http.Tests.Resource
 {
     public class ResourcesTest
     {
-        private readonly Resources _resources = Loader.LoadResources(HttpProperties.Instance);
+        private readonly Resources _resources = Loader.LoadResources(HttpProperties.Instance, ConsoleLogger.TestInstance());
         
         [Fact]
         public void TestLoadResources()
         {
-            var user = (ConfigurationResource<UserResource>)_resources.ResourceOf("user");
+            var user = (ConfigurationResource)_resources.ResourceOf("user");
     
             Assert.NotNull(user);
             Assert.Equal("user", user.Name);
@@ -45,7 +45,7 @@ namespace Vlingo.Http.Tests.Resource
 
             Assert.Equal(6, countUserActions);
     
-            var profile = (ConfigurationResource<ProfileResource>) _resources.ResourceOf("profile");
+            var profile = (ConfigurationResource) _resources.ResourceOf("profile");
     
             Assert.NotNull(profile);
             Assert.Equal("profile", profile.Name);
@@ -72,7 +72,7 @@ namespace Vlingo.Http.Tests.Resource
         [Fact]
         public void TestLoadSseResources()
         {
-            var allStream = (ConfigurationResource<SseStreamResource>)_resources.ResourceOf("all");
+            var allStream = (ConfigurationResource)_resources.ResourceOf("all");
     
             Assert.NotNull(allStream);
             Assert.Equal("all", allStream.Name);
@@ -98,17 +98,17 @@ namespace Vlingo.Http.Tests.Resource
         {
             var resources =
                 Resources
-                    .Are(ConfigurationResource<UserResource>.Defining("user", typeof(UserResource), 10,
+                    .Are(ConfigurationResource.Defining("user", typeof(UserResource), 10,
             Actions.CanBe("POST", "/users", "register(body:Vlingo.Http.Tests.Sample.User.UserData userData)")
                 .Also("PATCH", "/users/{userId}/contact", "changeContact(string userId, body:Vlingo.Http.Tests.Sample.User.ContactData contactData)")
                 .Also("PATCH", "/users/{userId}/name", "changeName(string userId, body:Vlingo.Http.Tests.Sample.User.NameData nameData)")
                 .Also("GET", "/users/{userId}", "queryUser(string userId)")
                 .Also("GET", "/users", "queryUsers()")
-                .ThatsAll()),
-            ConfigurationResource<ProfileResource>.Defining("profile", typeof(ProfileResource), 5,
+                .ThatsAll(), ConsoleLogger.TestInstance()),
+            ConfigurationResource.Defining("profile", typeof(ProfileResource), 5,
             Actions.CanBe("PUT", "/users/{userId}/profile", "define(string userId, body:Vlingo.Http.Tests.Sample.User.ProfileData profileData)", "Vlingo.Http.Tests.Sample.User.ProfileDataMapper")
                 .Also("GET", "/users/{userId}/profile", "query(string userId)", "Vlingo.Http.Tests.Sample.User.ProfileDataMapper")
-                .ThatsAll()));
+                .ThatsAll(), ConsoleLogger.TestInstance()));
 
             Assert.NotNull(resources.ResourceOf("user"));
             Assert.NotNull(resources.ResourceOf("profile"));
@@ -122,9 +122,9 @@ namespace Vlingo.Http.Tests.Resource
 
             var actions = new List<Action> {actionPostUser, actionPatchUserContact};
 
-            var resourceHandlerClass = ConfigurationResource<UserResource>.NewResourceHandlerTypeFor("Vlingo.Http.Tests.Sample.User.UserResource");
+            var resourceHandlerClass = ConfigurationResource.NewResourceHandlerTypeFor("Vlingo.Http.Tests.Sample.User.UserResource");
     
-            Assert.Throws<ArgumentException>(() => ConfigurationResource<UserResource>.NewResourceFor("user", resourceHandlerClass, 5, actions));
+            Assert.Throws<ArgumentException>(() => ConfigurationResource.NewResourceFor("user", resourceHandlerClass, 5, actions, ConsoleLogger.TestInstance()));
         }
         
         [Fact]
@@ -135,9 +135,9 @@ namespace Vlingo.Http.Tests.Resource
 
             var actions = new List<Action> {actionPostUser, actionPatchUserContact};
 
-            var resourceHandlerClass = ConfigurationResource<UserResource>.NewResourceHandlerTypeFor("Vlingo.Http.Tests.Sample.User.UserResource");
+            var resourceHandlerClass = ConfigurationResource.NewResourceHandlerTypeFor("Vlingo.Http.Tests.Sample.User.UserResource");
     
-            Assert.Throws<ArgumentException>(() => ConfigurationResource<UserResource>.NewResourceFor("user", resourceHandlerClass, 5, actions));
+            Assert.Throws<ArgumentException>(() => ConfigurationResource.NewResourceFor("user", resourceHandlerClass, 5, actions, ConsoleLogger.TestInstance()));
         }
     }
 }

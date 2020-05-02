@@ -10,7 +10,7 @@ using System.Collections.Generic;
 
 namespace Vlingo.Http.Resource.Sse
 {
-    public class SseStreamResourceDispatcher : ConfigurationResource<SseStreamResource>
+    public class SseStreamResourceDispatcher : ConfigurationResource
     {
         public SseStreamResourceDispatcher(
           string name,

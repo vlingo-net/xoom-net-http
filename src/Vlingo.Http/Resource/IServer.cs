@@ -72,7 +72,7 @@ namespace Vlingo.Http.Resource
         {
             var configuration = Configuration.DefineWith(properties);
 
-            var resources = Loader.LoadResources(properties);
+            var resources = Loader.LoadResources(properties, stage.World.DefaultLogger);
 
             return StartWith(
                 stage,

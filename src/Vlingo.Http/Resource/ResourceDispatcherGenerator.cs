@@ -41,31 +41,31 @@ namespace Vlingo.Http.Resource
             public FileInfo SourceFile { get; }
         }
         
-        //private readonly ILogger _logger;
+        private readonly ILogger _logger;
         private readonly bool _persist;
         private readonly IList<Action> _actions;
+        // TODO: investigate if this has to be kept or can be safely removed
         private readonly FileInfo _rootOfClasses;
         private readonly DirectoryInfo _rootOfGenerated;
-        private readonly AppDomain _currentDomain = AppDomain.CurrentDomain;
 
         internal DynaType Type { get; }
 
-        public static ResourceDispatcherGenerator ForMain(IList<Action> actions, bool persist/*, ILogger logger*/)
+        public static ResourceDispatcherGenerator ForMain(IList<Action> actions, bool persist, ILogger logger)
         {
             var classPath = new FileInfo(Properties.Instance.GetProperty("resource.dispatcher.generated.classes.main", RootOfMainClasses));
             var type = DynaType.Main;
             var rootOfGenerated = RootOfGeneratedSources(type);
 
-            return new ResourceDispatcherGenerator(actions, classPath, rootOfGenerated, type, persist/*, logger*/);
+            return new ResourceDispatcherGenerator(actions, classPath, rootOfGenerated, type, persist, logger);
         }
 
-        public static ResourceDispatcherGenerator ForTest(IList<Action> actions, bool persist/*, ILogger logger*/)
+        public static ResourceDispatcherGenerator ForTest(IList<Action> actions, bool persist, ILogger logger)
         {
             var classPath = new FileInfo(Properties.Instance.GetProperty("resource.dispatcher.generated.classes.test", RootOfTestClasses));
             var type = DynaType.Test;
             var rootOfGenerated = RootOfGeneratedSources(type);
 
-            return new ResourceDispatcherGenerator(actions, classPath, rootOfGenerated, type, persist/*, logger*/);
+            return new ResourceDispatcherGenerator(actions, classPath, rootOfGenerated, type, persist, logger);
         }
 
         public Result GenerateFor(Type handlerProtocol)
@@ -74,13 +74,13 @@ namespace Vlingo.Http.Resource
             try
             {
                 var dispatcherClassSource = DispatcherClassSource(handlerProtocol);
-                var fullyQualifiedClassName = FullyQualifiedClassNameFor(handlerProtocol, ConfigurationResource<ResourceHandler>.DispatcherSuffix);
+                var fullyQualifiedClassName = FullyQualifiedClassNameFor(handlerProtocol, ConfigurationResource.DispatcherSuffix);
                 var relativeTargetFile = ToFullPath(fullyQualifiedClassName);
                 var sourceFile = _persist ?
                     PersistProxyClassSource(fullyQualifiedClassName, relativeTargetFile, dispatcherClassSource) :
                     new FileInfo(relativeTargetFile);
 
-                return new Result(fullyQualifiedClassName, ClassNameFor(handlerProtocol, ConfigurationResource<ResourceHandler>.DispatcherSuffix), dispatcherClassSource, sourceFile);
+                return new Result(fullyQualifiedClassName, ClassNameFor(handlerProtocol, ConfigurationResource.DispatcherSuffix), dispatcherClassSource, sourceFile);
             }
             catch (Exception ex)
             {
@@ -93,26 +93,25 @@ namespace Vlingo.Http.Resource
                 new DirectoryInfo(Properties.Instance.GetProperty("resource.dispatcher.generated.sources.main", GeneratedSources)) :
                 new DirectoryInfo(Properties.Instance.GetProperty("resource.dispatcher.generated.sources.test", GeneratedTestSources));
 
-        private ResourceDispatcherGenerator(IList<Action> actions, FileInfo rootOfClasses, DirectoryInfo rootOfGenerated, DynaType type, bool persist/*, ILogger logger*/)
+        private ResourceDispatcherGenerator(IList<Action> actions, FileInfo rootOfClasses, DirectoryInfo rootOfGenerated, DynaType type, bool persist, ILogger logger)
         {
             _actions = actions;
             _rootOfClasses = rootOfClasses;
             _rootOfGenerated = rootOfGenerated;
             Type = type;
             _persist = persist;
-            // _logger = logger;
+            _logger = logger;
         }
 
         private string ClassStatement(Type handlerInterface)
-            => string.Format("public class {0} : ConfigurationResource<{1}>\n{{",
-                ClassNameFor(handlerInterface, ConfigurationResource<ResourceHandler>.DispatcherSuffix),
-                GetSimpleTypeName(handlerInterface));
+            => string.Format("public class {0} : ConfigurationResource\n{{",
+                ClassNameFor(handlerInterface, ConfigurationResource.DispatcherSuffix));
 
         private string Constructor(Type protocolInterface)
         {
             var builder = new StringBuilder();
 
-            var constructorName = ClassNameFor(protocolInterface, ConfigurationResource<ResourceHandler>.DispatcherSuffix);
+            var constructorName = ClassNameFor(protocolInterface, ConfigurationResource.DispatcherSuffix);
             if (protocolInterface.IsGenericType)
             {
                 constructorName = constructorName.Substring(0, constructorName.IndexOf('<'));

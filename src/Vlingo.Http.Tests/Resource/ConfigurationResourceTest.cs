@@ -8,6 +8,7 @@
 using System.Collections.Generic;
 using System.Text;
 using Newtonsoft.Json;
+using Vlingo.Actors.Plugin.Logging.Console;
 using Vlingo.Common.Serialization;
 using Vlingo.Http.Resource;
 using Vlingo.Http.Tests.Sample.User;
@@ -21,7 +22,7 @@ namespace Vlingo.Http.Tests.Resource
     public class ConfigurationResourceTest : ResourceTestFixtures
     {
         private readonly ITestOutputHelper _output;
-        private JsonSerializerSettings _settings;
+        private readonly JsonSerializerSettings _settings;
 
         [Fact]
         public void TestThatPostRegisterUserDispatches() {
@@ -246,7 +247,7 @@ namespace Vlingo.Http.Tests.Resource
                                     actionGetUserEmailAddress
                                 };
 
-            var resource = ConfigurationResource<UserResource>.NewResourceFor("user", ResourceHandlerType, 5, actions);
+            var resource = ConfigurationResource.NewResourceFor("user", ResourceHandlerType, 5, actions, ConsoleLogger.TestInstance());
 
             var actionGetUsersMatch = resource.MatchWith(Method.Get, "/users".ToMatchableUri());
             Assert.True(actionGetUsersMatch.IsMatched);
