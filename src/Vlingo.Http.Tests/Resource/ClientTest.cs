@@ -80,7 +80,7 @@ namespace Vlingo.Http.Tests.Resource
             var known = new KnownResponseConsumer(access);
 
             //var config = Client.Configuration.DefaultedExceptFor(World.Stage, unknown);
-            var config = Client.Configuration.Has(World.Stage, Address.From(Host.Of("127.0.0.1"), NextPort.Get(), AddressType.None), unknown,
+            var config = Client.Configuration.Has(World.Stage, Address.From(Host.Of("localhost"), NextPort.Get(), AddressType.None), unknown,
                 false,
                 30,
                 10240,
@@ -135,7 +135,7 @@ namespace Vlingo.Http.Tests.Resource
             var known = new KnownResponseConsumer(access);
 
             //var config = Client.Configuration.DefaultedExceptFor(World.Stage, unknown);
-            var config = Client.Configuration.Has(World.Stage, Address.From(Host.Of("127.0.0.1"), NextPort.Get(), AddressType.None), unknown,
+            var config = Client.Configuration.Has(World.Stage, Address.From(Host.Of("localhost"), NextPort.Get(), AddressType.None), unknown,
                 false,
                 30,
                 10240,
