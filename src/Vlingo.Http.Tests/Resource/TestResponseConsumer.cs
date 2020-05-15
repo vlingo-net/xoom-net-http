@@ -5,6 +5,7 @@
 // was not distributed with this file, You can obtain
 // one at https://mozilla.org/MPL/2.0/.
 
+using System;
 using System.Collections.Generic;
 using Vlingo.Actors.TestKit;
 using Vlingo.Common;
@@ -32,7 +33,7 @@ namespace Vlingo.Http.Tests.Resource
             _access.WritingWith<Response>("response", response => {
                 var testId = response.HeaderValueOr(Client.ClientIdCustomHeader, "");
 
-                _logger.WriteLine("ID: {0}", testId);
+                _logger.WriteLine("{0} ID: {1}", DateTimeOffset.Now, testId);
 
                 if (string.IsNullOrEmpty(testId))
                 {
