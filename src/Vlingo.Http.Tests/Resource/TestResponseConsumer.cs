@@ -33,7 +33,7 @@ namespace Vlingo.Http.Tests.Resource
             _access.WritingWith<Response>("response", response => {
                 var testId = response.HeaderValueOr(Client.ClientIdCustomHeader, "");
 
-                _logger.WriteLine("{0} ID: {1}", DateTimeOffset.Now, testId);
+                _logger.WriteLine("{0:MM/dd/yyyy hh:mm:ss.fff} ID: {1}", DateTimeOffset.Now, testId);
 
                 if (string.IsNullOrEmpty(testId))
                 {
