@@ -17,6 +17,14 @@ build:
   project: src/Vlingo.Http.sln
   verbosity: minimal
   publish_nuget: true
+for:
+  - matrix:
+      only:
+        - image: Visual Studio 2019
+    before_test:
+      - ps: Set-NetFirewallProfile -Profile Domain,Public,Private -Enabled False
+    after_test:
+      - ps: Set-NetFirewallProfile -Profile Domain,Public,Private -Enabled True
 test_script:
 - dotnet test src/Vlingo.Http.Tests
 deploy:
