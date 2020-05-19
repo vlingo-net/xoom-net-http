@@ -39,9 +39,9 @@ namespace Vlingo.Http.Tests.Resource
 
             var config = Client.Configuration.Has(World.Stage, Address.From(Host.Of("localhost"), NextPort.Get(), AddressType.None), unknown,
                 false,
-                50,
+                30,
                 10240,
-                100,
+                10,
                 10240,
                 TimeSpan.FromMilliseconds(1000));
             _client = Client.Using(config) ;
@@ -82,9 +82,9 @@ namespace Vlingo.Http.Tests.Resource
             //var config = Client.Configuration.DefaultedExceptFor(World.Stage, unknown);
             var config = Client.Configuration.Has(World.Stage, Address.From(Host.Of("localhost"), NextPort.Get(), AddressType.None), unknown,
                 false,
-                50,
+                30,
                 10240,
-                100,
+                10,
                 10240,
                 TimeSpan.FromMilliseconds(1000));
             config.TestInfo(true);
@@ -137,9 +137,9 @@ namespace Vlingo.Http.Tests.Resource
             //var config = Client.Configuration.DefaultedExceptFor(World.Stage, unknown);
             var config = Client.Configuration.Has(World.Stage, Address.From(Host.Of("localhost"), NextPort.Get(), AddressType.None), unknown,
                 false,
-                50,
+                30,
                 10240,
-                100,
+                10,
                 10240,
                 TimeSpan.FromMilliseconds(1000));
             config.TestInfo(true);
@@ -188,7 +188,7 @@ namespace Vlingo.Http.Tests.Resource
             _output = output;
             UserStateFactory.ResetId();
 
-            _server = ServerFactory.StartWith(World.Stage, Resources, NextPort.IncrementAndGet(), new Configuration.SizingConf(1, 10, 100, 10240), new Configuration.TimingConf(50, 2, 100));
+            _server = ServerFactory.StartWith(World.Stage, Resources, NextPort.IncrementAndGet(), new Configuration.SizingConf(1, 10, 100, 10240), new Configuration.TimingConf(20, 2, 100));
             Assert.True(_server.StartUp().Await(TimeSpan.FromMilliseconds(500L)));
         }
 
