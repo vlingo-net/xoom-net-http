@@ -27,7 +27,7 @@ for:
     after_test:
       - netsh advfirewall set  currentprofile state on
 test_script:
-- dotnet test src/Vlingo.Http.Tests -c Debug
+- dotnet test src/Vlingo.Http.Tests
 deploy:
 - provider: NuGet
   api_key:
