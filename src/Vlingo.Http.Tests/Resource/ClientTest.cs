@@ -37,13 +37,10 @@ namespace Vlingo.Http.Tests.Resource
             var unknown = new UnknownResponseConsumer(access, _output);
             var known = new KnownResponseConsumer(access);
 
-            var config = Client.Configuration.Has(World.Stage, Address.From(Host.Of("localhost"), NextPort.Get(), AddressType.None), unknown,
-                false,
-                10,
-                10240,
-                10,
-                10240,
-                TimeSpan.FromMilliseconds(1000));
+            var config = Client.Configuration.DefaultedExceptFor(
+                World.Stage,
+                Address.From(Host.Of("localhost"),NextPort.Get(), AddressType.None),
+                unknown);
             _client = Client.Using(config) ;
 
             _client.RequestWith(
@@ -69,9 +66,8 @@ namespace Vlingo.Http.Tests.Resource
             Assert.NotNull(_location);
             Assert.Equal(0, unknownResponseCount);
         }
-
-        // "Under investigation https://github.com/vlingo-net/vlingo-net-http/issues/2"
-        [Fact, Trait("Category", "FailsOnWindows")]
+        
+        [Fact]
         public void TestThatRoundRobinClientDelivers()
         {
             var safely = new TestResponseConsumer(_output);
@@ -79,14 +75,10 @@ namespace Vlingo.Http.Tests.Resource
             var unknown = new UnknownResponseConsumer(access, _output);
             var known = new KnownResponseConsumer(access);
 
-            //var config = Client.Configuration.DefaultedExceptFor(World.Stage, unknown);
-            var config = Client.Configuration.Has(World.Stage, Address.From(Host.Of("localhost"), NextPort.Get(), AddressType.None), unknown,
-                false,
-                10,
-                10240,
-                10,
-                10240,
-                TimeSpan.FromMilliseconds(1000));
+            var config = Client.Configuration.DefaultedExceptFor(
+                World.Stage,
+                Address.From(Host.Of("localhost"),NextPort.Get(), AddressType.None),
+                unknown);
             config.TestInfo(true);
 
             _client =
@@ -124,9 +116,8 @@ namespace Vlingo.Http.Tests.Resource
                 Assert.Equal(20, clientCount);
             }
         }
-
-        // "Under investigation https://github.com/vlingo-net/vlingo-net-http/issues/2"
-        [Fact, Trait("Category", "FailsOnWindows")]
+        
+        [Fact]
         public void TestThatLoadBalancingClientDelivers()
         {
             var safely = new TestResponseConsumer(_output);
@@ -134,14 +125,10 @@ namespace Vlingo.Http.Tests.Resource
             var unknown = new UnknownResponseConsumer(access, _output);
             var known = new KnownResponseConsumer(access);
 
-            //var config = Client.Configuration.DefaultedExceptFor(World.Stage, unknown);
-            var config = Client.Configuration.Has(World.Stage, Address.From(Host.Of("localhost"), NextPort.Get(), AddressType.None), unknown,
-                false,
-                10,
-                10240,
-                10,
-                10240,
-                TimeSpan.FromMilliseconds(1000));
+            var config = Client.Configuration.DefaultedExceptFor(
+                World.Stage,
+                Address.From(Host.Of("localhost"),NextPort.Get(), AddressType.None),
+                unknown);
             config.TestInfo(true);
 
             _client =

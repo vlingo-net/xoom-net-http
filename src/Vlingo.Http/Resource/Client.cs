@@ -118,12 +118,12 @@ namespace Vlingo.Http.Resource
             private object? _testInfo;
 
             /// <summary>
-            /// Answer the <code>Configuration</code> with defaults except for the <paramref name="addressOfHost"/>.
+            /// Answer the <code>Configuration</code> with defaults.
             /// </summary>
             /// <param name="stage">The Stage to host the Client.</param>
             /// <param name="consumerOfUnknownResponses">The ResponseConsumer of responses that cannot be associated with a given consumer.</param>
             /// <returns></returns>
-            public static Configuration DefaultedExceptFor(
+            public static Configuration DefaultedFor(
                 Stage stage,
                 IResponseConsumer consumerOfUnknownResponses)
                 => DefaultedExceptFor(
