@@ -4,10 +4,6 @@ image:
   - Ubuntu
   - macos
   - macos-mojave
-matrix:
-  allow_failures:
-    - test_category: FailsOnWindows
-    - image: Visual Studio 2019
 configuration: Release
 skip_commits:
   message: /.*\[ci\-skip\].*/ 
