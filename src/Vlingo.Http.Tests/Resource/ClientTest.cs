@@ -39,7 +39,7 @@ namespace Vlingo.Http.Tests.Resource
 
             var config = Client.Configuration.DefaultedExceptFor(
                 World.Stage,
-                Address.From(Host.Of("localhost"),NextPort.Get(), AddressType.None),
+                Address.From(Host.Of("localhost"), NextPort.Get(), AddressType.None),
                 unknown);
             _client = Client.Using(config) ;
 
@@ -77,7 +77,7 @@ namespace Vlingo.Http.Tests.Resource
 
             var config = Client.Configuration.DefaultedExceptFor(
                 World.Stage,
-                Address.From(Host.Of("localhost"),NextPort.Get(), AddressType.None),
+                Address.From(Host.Of("localhost"), NextPort.Get(), AddressType.None),
                 unknown);
             config.TestInfo(true);
 
@@ -127,7 +127,7 @@ namespace Vlingo.Http.Tests.Resource
 
             var config = Client.Configuration.DefaultedExceptFor(
                 World.Stage,
-                Address.From(Host.Of("localhost"),NextPort.Get(), AddressType.None),
+                Address.From(Host.Of("localhost"), NextPort.Get(), AddressType.None),
                 unknown);
             config.TestInfo(true);
 
