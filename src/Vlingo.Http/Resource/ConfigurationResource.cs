@@ -99,16 +99,16 @@ namespace Vlingo.Http.Resource
                     {
                         try
                         {
-                            resourceHandlerClass = assembly?.GetType(resourceHandlerTypeName, true);
+                            resourceHandlerClass = assembly?.GetType(resourceHandlerTypeName!, true);
                         }
                         catch (Exception)
                         {
-                            resourceHandlerClass = Assembly.GetCallingAssembly().GetType(resourceHandlerTypeName, true);
+                            resourceHandlerClass = Assembly.GetCallingAssembly().GetType(resourceHandlerTypeName!, true);
                         }
                     }
                     else
                     {
-                        resourceHandlerClass = Assembly.GetCallingAssembly().GetType(resourceHandlerTypeName, true);
+                        resourceHandlerClass = Assembly.GetCallingAssembly().GetType(resourceHandlerTypeName!, true);
                     }
                 }
                 ConfirmResourceHandler(resourceHandlerClass);
@@ -161,11 +161,10 @@ namespace Vlingo.Http.Resource
         {
             try
             {
-                var classPath = new FileInfo(HttpProperties.Instance.GetProperty("resource.dispatcher.generated.classes.main", RootOfMainClasses));
-                var resourcePath = resourceHandlerType.FullName
-                    .Substring(0, resourceHandlerType.FullName.LastIndexOf('.'))
+                var classPath = new FileInfo(HttpProperties.Instance.GetProperty("resource.dispatcher.generated.classes.main", RootOfMainClasses)!);
+                var resourcePath = resourceHandlerType.FullName?.Substring(0, resourceHandlerType.FullName.LastIndexOf('.'))
                     .Replace('.', Path.DirectorySeparatorChar);
-                var filePath = Path.Combine(classPath.DirectoryName, resourcePath, resourceHandlerType.Name + DispatcherSuffix + ".dll");
+                var filePath = Path.Combine(classPath.DirectoryName!, resourcePath!, resourceHandlerType.Name + DispatcherSuffix + ".dll");
                 assembly = Assembly.LoadFrom(filePath);
                 return true;
             }
@@ -180,12 +179,12 @@ namespace Vlingo.Http.Resource
         {
             try
             {
-                var classPath = new FileInfo(HttpProperties.Instance.GetProperty("resource.dispatcher.generated.classes.main", RootOfMainClasses));
+                var classPath = new FileInfo(HttpProperties.Instance.GetProperty("resource.dispatcher.generated.classes.main", RootOfMainClasses)!);
                 var resourcePath = resourceHandlerTypeName?
                     .Substring(0, resourceHandlerTypeName.LastIndexOf('.'))
                     .Replace('.', Path.DirectorySeparatorChar);
                 var resourceHandlerName = resourceHandlerTypeName?.Substring(resourceHandlerTypeName.LastIndexOf('.') + 1);
-                var filePath = Path.Combine(classPath.DirectoryName, resourcePath, resourceHandlerName + DispatcherSuffix + ".dll");
+                var filePath = Path.Combine(classPath.DirectoryName!, resourcePath!, resourceHandlerName + DispatcherSuffix + ".dll");
                 assembly = Assembly.LoadFrom(filePath);
                 return true;
             }
@@ -196,7 +195,7 @@ namespace Vlingo.Http.Resource
             }
         }
 
-        private static Type TryGenerateCompile(
+        private static Type? TryGenerateCompile(
             Type resourceHandlerClass,
             string fullyQualifiedClassName,
             string lookupTypeName,
@@ -228,7 +227,7 @@ namespace Vlingo.Http.Resource
             }
         }
 
-        private static Type TryGenerateCompile(
+        private static Type? TryGenerateCompile(
             Type resourceHandlerClass,
             ResourceDispatcherGenerator generator,
             string fullyQualifiedClassName,
