@@ -1,39 +1,44 @@
+// Copyright © 2012-2020 VLINGO LABS. All rights reserved.
+//
+// This Source Code Form is subject to the terms of the
+// Mozilla Public License, v. 2.0. If a copy of the MPL
+// was not distributed with this file, You can obtain
+// one at https://mozilla.org/MPL/2.0/.
+
 using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using Vlingo.Actors;
 using Vlingo.Common;
 
 namespace Vlingo.Http.Tests.Sample.User.Model
 {
-    public class User__Proxy : Vlingo.Http.Tests.Sample.User.Model.IUser
+    public class User__Proxy : IUser
     {
         private const string WithContactRepresentation1 = "WithContact(Vlingo.Http.Tests.Sample.User.Model.Contact)";
         private const string WithNameRepresentation2 = "WithName(Vlingo.Http.Tests.Sample.User.Model.Name)";
 
-        private readonly Actor actor;
-        private readonly IMailbox mailbox;
+        private readonly Actor _actor;
+        private readonly IMailbox _mailbox;
 
         public User__Proxy(Actor actor, IMailbox mailbox)
         {
-            this.actor = actor;
-            this.mailbox = mailbox;
+            _actor = actor;
+            _mailbox = mailbox;
         }
 
-        public Vlingo.Common.ICompletes<Vlingo.Http.Tests.Sample.User.Model.UserState> WithContact(
-            Vlingo.Http.Tests.Sample.User.Model.Contact contact)
+        public ICompletes<UserState> WithContact(
+            Contact contact)
         {
-            if (!this.actor.IsStopped)
+            if (!_actor.IsStopped)
             {
-                Action<Vlingo.Http.Tests.Sample.User.Model.IUser> cons128873 = __ => __.WithContact(contact);
-                var completes = new BasicCompletes<Vlingo.Http.Tests.Sample.User.Model.UserState>(this.actor.Scheduler);
-                if (this.mailbox.IsPreallocated)
+                Action<IUser> cons128873 = __ => __.WithContact(contact);
+                var completes = new BasicCompletes<UserState>(_actor.Scheduler);
+                if (_mailbox.IsPreallocated)
                 {
-                    this.mailbox.Send(this.actor, cons128873, completes, WithContactRepresentation1);
+                    _mailbox.Send(_actor, cons128873, completes, WithContactRepresentation1);
                 }
                 else
                 {
-                    this.mailbox.Send(new LocalMessage<Vlingo.Http.Tests.Sample.User.Model.IUser>(this.actor,
+                    _mailbox.Send(new LocalMessage<IUser>(_actor,
                         cons128873, completes, WithContactRepresentation1));
                 }
 
@@ -41,26 +46,26 @@ namespace Vlingo.Http.Tests.Sample.User.Model
             }
             else
             {
-                this.actor.DeadLetters.FailedDelivery(new DeadLetter(this.actor, WithContactRepresentation1));
+                _actor.DeadLetters?.FailedDelivery(new DeadLetter(_actor, WithContactRepresentation1));
             }
 
             return null;
         }
 
-        public Vlingo.Common.ICompletes<Vlingo.Http.Tests.Sample.User.Model.UserState> WithName(
-            Vlingo.Http.Tests.Sample.User.Model.Name name)
+        public ICompletes<UserState> WithName(
+            Name name)
         {
-            if (!this.actor.IsStopped)
+            if (!_actor.IsStopped)
             {
-                Action<Vlingo.Http.Tests.Sample.User.Model.IUser> cons128873 = __ => __.WithName(name);
-                var completes = new BasicCompletes<Vlingo.Http.Tests.Sample.User.Model.UserState>(this.actor.Scheduler);
-                if (this.mailbox.IsPreallocated)
+                Action<IUser> cons128873 = __ => __.WithName(name);
+                var completes = new BasicCompletes<UserState>(_actor.Scheduler);
+                if (_mailbox.IsPreallocated)
                 {
-                    this.mailbox.Send(this.actor, cons128873, completes, WithNameRepresentation2);
+                    _mailbox.Send(_actor, cons128873, completes, WithNameRepresentation2);
                 }
                 else
                 {
-                    this.mailbox.Send(new LocalMessage<Vlingo.Http.Tests.Sample.User.Model.IUser>(this.actor,
+                    _mailbox.Send(new LocalMessage<IUser>(_actor,
                         cons128873, completes, WithNameRepresentation2));
                 }
 
@@ -68,7 +73,7 @@ namespace Vlingo.Http.Tests.Sample.User.Model
             }
             else
             {
-                this.actor.DeadLetters.FailedDelivery(new DeadLetter(this.actor, WithNameRepresentation2));
+                _actor.DeadLetters?.FailedDelivery(new DeadLetter(_actor, WithNameRepresentation2));
             }
 
             return null;

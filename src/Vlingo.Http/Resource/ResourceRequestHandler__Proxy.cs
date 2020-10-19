@@ -1,68 +1,72 @@
+// Copyright © 2012-2020 VLINGO LABS. All rights reserved.
+//
+// This Source Code Form is subject to the terms of the
+// Mozilla Public License, v. 2.0. If a copy of the MPL
+// was not distributed with this file, You can obtain
+// one at https://mozilla.org/MPL/2.0/.
+
 using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using Vlingo.Actors;
-using Vlingo.Common;
 
 namespace Vlingo.Http.Resource
 {
-    public class ResourceRequestHandler__Proxy : Vlingo.Http.Resource.IResourceRequestHandler
+    public class ResourceRequestHandler__Proxy : IResourceRequestHandler
     {
         private const string HandleForRepresentation1 = "HandleFor<T>(Vlingo.Http.Context, Action<T>)";
         private const string HandleForRepresentation2 = "HandleFor(Vlingo.Http.Context, Action.MappedParameters, RequestHandler)";
 
-        private readonly Actor actor;
-        private readonly IMailbox mailbox;
+        private readonly Actor _actor;
+        private readonly IMailbox _mailbox;
 
         public ResourceRequestHandler__Proxy(Actor actor, IMailbox mailbox)
         {
-            this.actor = actor;
-            this.mailbox = mailbox;
+            _actor = actor;
+            _mailbox = mailbox;
         }
 
-        public void HandleFor<T>(Vlingo.Http.Context context, Action<T>? consumer)
-            where T : Vlingo.Http.Resource.ResourceHandler
+        public void HandleFor<T>(Context context, Action<T>? consumer)
+            where T : ResourceHandler
         {
-            if (!this.actor.IsStopped)
+            if (!_actor.IsStopped)
             {
-                Action<Vlingo.Http.Resource.IResourceRequestHandler> cons128873 = __ =>
+                Action<IResourceRequestHandler> cons128873 = __ =>
                     __.HandleFor<T>(context, consumer);
-                if (this.mailbox.IsPreallocated)
+                if (_mailbox.IsPreallocated)
                 {
-                    this.mailbox.Send(this.actor, cons128873, null, HandleForRepresentation1);
+                    _mailbox.Send(_actor, cons128873, null, HandleForRepresentation1);
                 }
                 else
                 {
-                    this.mailbox.Send(
-                        new LocalMessage<Vlingo.Http.Resource.IResourceRequestHandler>(this.actor, cons128873,
+                    _mailbox.Send(
+                        new LocalMessage<IResourceRequestHandler>(_actor, cons128873,
                             HandleForRepresentation1));
                 }
             }
             else
             {
-                this.actor.DeadLetters.FailedDelivery(new DeadLetter(this.actor, HandleForRepresentation1));
+                _actor.DeadLetters?.FailedDelivery(new DeadLetter(_actor, HandleForRepresentation1));
             }
         }
 
         public void HandleFor(Context context, Action.MappedParameters mappedParameters, RequestHandler handler)
         {
-            if (!this.actor.IsStopped)
+            if (!_actor.IsStopped)
             {
-                Action<Vlingo.Http.Resource.IResourceRequestHandler> cons128873 = __ => __.HandleFor(context, mappedParameters, handler);
-                if (this.mailbox.IsPreallocated)
+                Action<IResourceRequestHandler> cons128873 = __ => __.HandleFor(context, mappedParameters, handler);
+                if (_mailbox.IsPreallocated)
                 {
-                    this.mailbox.Send(this.actor, cons128873, null, HandleForRepresentation2);
+                    _mailbox.Send(_actor, cons128873, null, HandleForRepresentation2);
                 }
                 else
                 {
-                    this.mailbox.Send(
-                        new LocalMessage<Vlingo.Http.Resource.IResourceRequestHandler>(this.actor, cons128873,
+                    _mailbox.Send(
+                        new LocalMessage<IResourceRequestHandler>(_actor, cons128873,
                             HandleForRepresentation2));
                 }
             }
             else
             {
-                this.actor.DeadLetters.FailedDelivery(new DeadLetter(this.actor, HandleForRepresentation2));
+                _actor.DeadLetters?.FailedDelivery(new DeadLetter(_actor, HandleForRepresentation2));
             }
         }
     }

@@ -43,7 +43,7 @@ namespace Vlingo.Http.Resource
             }
             else
             {
-                _actor.DeadLetters.FailedDelivery(new DeadLetter(_actor, DispatchForRepresentation1));
+                _actor.DeadLetters?.FailedDelivery(new DeadLetter(_actor, DispatchForRepresentation1));
             }
         }
 
@@ -63,7 +63,7 @@ namespace Vlingo.Http.Resource
             }
             else
             {
-                _actor.DeadLetters.FailedDelivery(new DeadLetter(_actor, StopRepresentation2));
+                _actor.DeadLetters?.FailedDelivery(new DeadLetter(_actor, StopRepresentation2));
             }
         }
         
@@ -83,7 +83,7 @@ namespace Vlingo.Http.Resource
             }
             else
             {
-                _actor.DeadLetters.FailedDelivery(new DeadLetter(_actor, RepresentationConclude0));
+                _actor.DeadLetters?.FailedDelivery(new DeadLetter(_actor, RepresentationConclude0));
             }
         }
     }

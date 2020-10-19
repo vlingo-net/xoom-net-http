@@ -1,12 +1,17 @@
+// Copyright © 2012-2020 VLINGO LABS. All rights reserved.
+//
+// This Source Code Form is subject to the terms of the
+// Mozilla Public License, v. 2.0. If a copy of the MPL
+// was not distributed with this file, You can obtain
+// one at https://mozilla.org/MPL/2.0/.
+
 using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using Vlingo.Actors;
 using Vlingo.Common;
 
 namespace Vlingo.Http.Resource
 {
-    public class Server__Proxy : Vlingo.Http.Resource.IServer
+    public class Server__Proxy : IServer
     {
         private const string StartWithRepresentation1 = "StartWith(Vlingo.Actors.Stage)";
 
@@ -27,156 +32,156 @@ namespace Vlingo.Http.Resource
         private const string ConcludeRepresentation8 = "Conclude()";
         private const string StopRepresentation9 = "Stop()";
 
-        private readonly Actor actor;
-        private readonly IMailbox mailbox;
+        private readonly Actor _actor;
+        private readonly IMailbox _mailbox;
 
         public Server__Proxy(Actor actor, IMailbox mailbox)
         {
-            this.actor = actor;
-            this.mailbox = mailbox;
+            _actor = actor;
+            _mailbox = mailbox;
         }
 
         public bool IsStopped => false;
 
-        public Vlingo.Http.Resource.IServer StartWith(Vlingo.Actors.Stage stage)
+        public IServer StartWith(Stage stage)
         {
-            if (!this.actor.IsStopped)
+            if (!_actor.IsStopped)
             {
-                Action<Vlingo.Http.Resource.IServer> cons128873 = __ => __.StartWith(stage);
-                if (this.mailbox.IsPreallocated)
+                Action<IServer> cons128873 = __ => __.StartWith(stage);
+                if (_mailbox.IsPreallocated)
                 {
-                    this.mailbox.Send(this.actor, cons128873, null, StartWithRepresentation1);
+                    _mailbox.Send(_actor, cons128873, null, StartWithRepresentation1);
                 }
                 else
                 {
-                    this.mailbox.Send(new LocalMessage<Vlingo.Http.Resource.IServer>(this.actor, cons128873,
+                    _mailbox.Send(new LocalMessage<IServer>(_actor, cons128873,
                         StartWithRepresentation1));
                 }
             }
             else
             {
-                this.actor.DeadLetters.FailedDelivery(new DeadLetter(this.actor, StartWithRepresentation1));
+                _actor.DeadLetters?.FailedDelivery(new DeadLetter(_actor, StartWithRepresentation1));
             }
 
             return null!;
         }
 
-        public Vlingo.Http.Resource.IServer StartWith(Vlingo.Actors.Stage stage,
-            Vlingo.Http.Resource.HttpProperties properties)
+        public IServer StartWith(Stage stage,
+            HttpProperties properties)
         {
-            if (!this.actor.IsStopped)
+            if (!_actor.IsStopped)
             {
-                Action<Vlingo.Http.Resource.IServer> cons128873 = __ => __.StartWith(stage, properties);
-                if (this.mailbox.IsPreallocated)
+                Action<IServer> cons128873 = __ => __.StartWith(stage, properties);
+                if (_mailbox.IsPreallocated)
                 {
-                    this.mailbox.Send(this.actor, cons128873, null, StartWithRepresentation2);
+                    _mailbox.Send(_actor, cons128873, null, StartWithRepresentation2);
                 }
                 else
                 {
-                    this.mailbox.Send(new LocalMessage<Vlingo.Http.Resource.IServer>(this.actor, cons128873,
+                    _mailbox.Send(new LocalMessage<IServer>(_actor, cons128873,
                         StartWithRepresentation2));
                 }
             }
             else
             {
-                this.actor.DeadLetters.FailedDelivery(new DeadLetter(this.actor, StartWithRepresentation2));
+                _actor.DeadLetters?.FailedDelivery(new DeadLetter(_actor, StartWithRepresentation2));
             }
 
             return null!;
         }
 
-        public Vlingo.Http.Resource.IServer StartWith(Vlingo.Actors.Stage stage,
-            Vlingo.Http.Resource.Resources resources, int port, Vlingo.Http.Resource.Configuration.SizingConf sizing,
-            Vlingo.Http.Resource.Configuration.TimingConf timing)
+        public IServer StartWith(Stage stage,
+            Resources resources, int port, Configuration.SizingConf sizing,
+            Configuration.TimingConf timing)
         {
-            if (!this.actor.IsStopped)
+            if (!_actor.IsStopped)
             {
-                Action<Vlingo.Http.Resource.IServer> cons128873 = __ =>
+                Action<IServer> cons128873 = __ =>
                     __.StartWith(stage, resources, port, sizing, timing);
-                if (this.mailbox.IsPreallocated)
+                if (_mailbox.IsPreallocated)
                 {
-                    this.mailbox.Send(this.actor, cons128873, null, StartWithRepresentation3);
+                    _mailbox.Send(_actor, cons128873, null, StartWithRepresentation3);
                 }
                 else
                 {
-                    this.mailbox.Send(new LocalMessage<Vlingo.Http.Resource.IServer>(this.actor, cons128873,
+                    _mailbox.Send(new LocalMessage<IServer>(_actor, cons128873,
                         StartWithRepresentation3));
                 }
             }
             else
             {
-                this.actor.DeadLetters.FailedDelivery(new DeadLetter(this.actor, StartWithRepresentation3));
+                _actor.DeadLetters?.FailedDelivery(new DeadLetter(_actor, StartWithRepresentation3));
             }
 
             return null!;
         }
 
-        public Vlingo.Http.Resource.IServer StartWith(Vlingo.Actors.Stage stage,
-            Vlingo.Http.Resource.Resources resources, Vlingo.Http.Filters filters, int port,
-            Vlingo.Http.Resource.Configuration.SizingConf sizing, Vlingo.Http.Resource.Configuration.TimingConf timing)
+        public IServer StartWith(Stage stage,
+            Resources resources, Filters filters, int port,
+            Configuration.SizingConf sizing, Configuration.TimingConf timing)
         {
-            if (!this.actor.IsStopped)
+            if (!_actor.IsStopped)
             {
-                Action<Vlingo.Http.Resource.IServer> cons128873 = __ =>
+                Action<IServer> cons128873 = __ =>
                     __.StartWith(stage, resources, filters, port, sizing, timing);
-                if (this.mailbox.IsPreallocated)
+                if (_mailbox.IsPreallocated)
                 {
-                    this.mailbox.Send(this.actor, cons128873, null, StartWithRepresentation4);
+                    _mailbox.Send(_actor, cons128873, null, StartWithRepresentation4);
                 }
                 else
                 {
-                    this.mailbox.Send(new LocalMessage<Vlingo.Http.Resource.IServer>(this.actor, cons128873,
+                    _mailbox.Send(new LocalMessage<IServer>(_actor, cons128873,
                         StartWithRepresentation4));
                 }
             }
             else
             {
-                this.actor.DeadLetters.FailedDelivery(new DeadLetter(this.actor, StartWithRepresentation4));
+                _actor.DeadLetters?.FailedDelivery(new DeadLetter(_actor, StartWithRepresentation4));
             }
 
             return null!;
         }
 
-        public Vlingo.Http.Resource.IServer StartWith(Vlingo.Actors.Stage stage,
-            Vlingo.Http.Resource.Resources resources, Vlingo.Http.Filters filters, int port,
-            Vlingo.Http.Resource.Configuration.SizingConf sizing, Vlingo.Http.Resource.Configuration.TimingConf timing,
+        public IServer StartWith(Stage stage,
+            Resources resources, Filters filters, int port,
+            Configuration.SizingConf sizing, Configuration.TimingConf timing,
             string severMailboxTypeName, string channelMailboxTypeName)
         {
-            if (!this.actor.IsStopped)
+            if (!_actor.IsStopped)
             {
-                Action<Vlingo.Http.Resource.IServer> cons128873 = __ => __.StartWith(stage, resources, filters, port,
+                Action<IServer> cons128873 = __ => __.StartWith(stage, resources, filters, port,
                     sizing, timing, severMailboxTypeName, channelMailboxTypeName);
-                if (this.mailbox.IsPreallocated)
+                if (_mailbox.IsPreallocated)
                 {
-                    this.mailbox.Send(this.actor, cons128873, null, StartWithRepresentation5);
+                    _mailbox.Send(_actor, cons128873, null, StartWithRepresentation5);
                 }
                 else
                 {
-                    this.mailbox.Send(new LocalMessage<Vlingo.Http.Resource.IServer>(this.actor, cons128873,
+                    _mailbox.Send(new LocalMessage<IServer>(_actor, cons128873,
                         StartWithRepresentation5));
                 }
             }
             else
             {
-                this.actor.DeadLetters.FailedDelivery(new DeadLetter(this.actor, StartWithRepresentation5));
+                _actor.DeadLetters?.FailedDelivery(new DeadLetter(_actor, StartWithRepresentation5));
             }
 
             return null!;
         }
 
-        public Vlingo.Common.ICompletes<bool> ShutDown()
+        public ICompletes<bool> ShutDown()
         {
-            if (!this.actor.IsStopped)
+            if (!_actor.IsStopped)
             {
-                Action<Vlingo.Http.Resource.IServer> cons128873 = __ => __.ShutDown();
-                var completes = new BasicCompletes<bool>(this.actor.Scheduler);
-                if (this.mailbox.IsPreallocated)
+                Action<IServer> cons128873 = __ => __.ShutDown();
+                var completes = new BasicCompletes<bool>(_actor.Scheduler);
+                if (_mailbox.IsPreallocated)
                 {
-                    this.mailbox.Send(this.actor, cons128873, completes, ShutDownRepresentation6);
+                    _mailbox.Send(_actor, cons128873, completes, ShutDownRepresentation6);
                 }
                 else
                 {
-                    this.mailbox.Send(new LocalMessage<Vlingo.Http.Resource.IServer>(this.actor, cons128873, completes,
+                    _mailbox.Send(new LocalMessage<IServer>(_actor, cons128873, completes,
                         ShutDownRepresentation6));
                 }
 
@@ -184,25 +189,25 @@ namespace Vlingo.Http.Resource
             }
             else
             {
-                this.actor.DeadLetters.FailedDelivery(new DeadLetter(this.actor, ShutDownRepresentation6));
+                _actor.DeadLetters?.FailedDelivery(new DeadLetter(_actor, ShutDownRepresentation6));
             }
 
             return null!;
         }
 
-        public Vlingo.Common.ICompletes<bool> StartUp()
+        public ICompletes<bool> StartUp()
         {
-            if (!this.actor.IsStopped)
+            if (!_actor.IsStopped)
             {
-                Action<Vlingo.Http.Resource.IServer> cons128873 = __ => __.StartUp();
-                var completes = new BasicCompletes<bool>(this.actor.Scheduler);
-                if (this.mailbox.IsPreallocated)
+                Action<IServer> cons128873 = __ => __.StartUp();
+                var completes = new BasicCompletes<bool>(_actor.Scheduler);
+                if (_mailbox.IsPreallocated)
                 {
-                    this.mailbox.Send(this.actor, cons128873, completes, StartUpRepresentation7);
+                    _mailbox.Send(_actor, cons128873, completes, StartUpRepresentation7);
                 }
                 else
                 {
-                    this.mailbox.Send(new LocalMessage<Vlingo.Http.Resource.IServer>(this.actor, cons128873, completes,
+                    _mailbox.Send(new LocalMessage<IServer>(_actor, cons128873, completes,
                         StartUpRepresentation7));
                 }
 
@@ -210,7 +215,7 @@ namespace Vlingo.Http.Resource
             }
             else
             {
-                this.actor.DeadLetters.FailedDelivery(new DeadLetter(this.actor, StartUpRepresentation7));
+                _actor.DeadLetters?.FailedDelivery(new DeadLetter(_actor, StartUpRepresentation7));
             }
 
             return null!;
@@ -218,43 +223,43 @@ namespace Vlingo.Http.Resource
 
         public void Conclude()
         {
-            if (!this.actor.IsStopped)
+            if (!_actor.IsStopped)
             {
-                Action<Vlingo.Http.Resource.IServer> cons128873 = __ => __.Conclude();
-                if (this.mailbox.IsPreallocated)
+                Action<IServer> cons128873 = __ => __.Conclude();
+                if (_mailbox.IsPreallocated)
                 {
-                    this.mailbox.Send(this.actor, cons128873, null, ConcludeRepresentation8);
+                    _mailbox.Send(_actor, cons128873, null, ConcludeRepresentation8);
                 }
                 else
                 {
-                    this.mailbox.Send(new LocalMessage<Vlingo.Http.Resource.IServer>(this.actor, cons128873,
+                    _mailbox.Send(new LocalMessage<IServer>(_actor, cons128873,
                         ConcludeRepresentation8));
                 }
             }
             else
             {
-                this.actor.DeadLetters.FailedDelivery(new DeadLetter(this.actor, ConcludeRepresentation8));
+                _actor.DeadLetters?.FailedDelivery(new DeadLetter(_actor, ConcludeRepresentation8));
             }
         }
 
         public void Stop()
         {
-            if (!this.actor.IsStopped)
+            if (!_actor.IsStopped)
             {
-                Action<Vlingo.Http.Resource.IServer> cons128873 = __ => __.Stop();
-                if (this.mailbox.IsPreallocated)
+                Action<IServer> cons128873 = __ => __.Stop();
+                if (_mailbox.IsPreallocated)
                 {
-                    this.mailbox.Send(this.actor, cons128873, null, StopRepresentation9);
+                    _mailbox.Send(_actor, cons128873, null, StopRepresentation9);
                 }
                 else
                 {
-                    this.mailbox.Send(
-                        new LocalMessage<Vlingo.Http.Resource.IServer>(this.actor, cons128873, StopRepresentation9));
+                    _mailbox.Send(
+                        new LocalMessage<IServer>(_actor, cons128873, StopRepresentation9));
                 }
             }
             else
             {
-                this.actor.DeadLetters.FailedDelivery(new DeadLetter(this.actor, StopRepresentation9));
+                _actor.DeadLetters?.FailedDelivery(new DeadLetter(_actor, StopRepresentation9));
             }
         }
     }

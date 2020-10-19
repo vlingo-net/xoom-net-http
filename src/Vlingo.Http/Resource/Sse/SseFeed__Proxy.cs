@@ -39,7 +39,7 @@ namespace Vlingo.Http.Resource.Sse
             }
             else
             {
-                _actor.DeadLetters.FailedDelivery(new DeadLetter(_actor, ToRepresentation));
+                _actor.DeadLetters?.FailedDelivery(new DeadLetter(_actor, ToRepresentation));
             }
         }
     }
