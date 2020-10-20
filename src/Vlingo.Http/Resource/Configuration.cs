@@ -53,14 +53,14 @@ namespace Vlingo.Http.Resource
         private Configuration(HttpProperties properties)
             : this()
         {
-            Port = int.Parse(properties.GetProperty("server.http.port", Port.ToString()));
-            var processorPoolSize = int.Parse(properties.GetProperty("server.processor.pool.size", Sizing.ProcessorPoolSize.ToString()));
-            var dispatcherPoolSize = int.Parse(properties.GetProperty("server.dispatcher.pool", Sizing.DispatcherPoolSize.ToString()));
-            var maxBufferPoolSize = int.Parse(properties.GetProperty("server.buffer.pool.size", Sizing.MaxBufferPoolSize.ToString()));
-            var maxMessageSize = int.Parse(properties.GetProperty("server.message.buffer.size", Sizing.MaxMessageSize.ToString()));
-            var probeInterval = long.Parse(properties.GetProperty("server.probe.interval", Timing.ProbeInterval.ToString()));
-            var probeTimeout = long.Parse(properties.GetProperty("server.probe.timeout", Timing.ProbeInterval.ToString()));
-            var requestMissingContentTimeout = long.Parse(properties.GetProperty("server.request.missing.content.timeout", Timing.RequestMissingContentTimeout.ToString()));
+            Port = int.Parse(properties.GetProperty("server.http.port", Port.ToString())!);
+            var processorPoolSize = int.Parse(properties.GetProperty("server.processor.pool.size", Sizing.ProcessorPoolSize.ToString())!);
+            var dispatcherPoolSize = int.Parse(properties.GetProperty("server.dispatcher.pool", Sizing.DispatcherPoolSize.ToString())!);
+            var maxBufferPoolSize = int.Parse(properties.GetProperty("server.buffer.pool.size", Sizing.MaxBufferPoolSize.ToString())!);
+            var maxMessageSize = int.Parse(properties.GetProperty("server.message.buffer.size", Sizing.MaxMessageSize.ToString())!);
+            var probeInterval = long.Parse(properties.GetProperty("server.probe.interval", Timing.ProbeInterval.ToString())!);
+            var probeTimeout = long.Parse(properties.GetProperty("server.probe.timeout", Timing.ProbeInterval.ToString())!);
+            var requestMissingContentTimeout = long.Parse(properties.GetProperty("server.request.missing.content.timeout", Timing.RequestMissingContentTimeout.ToString())!);
 
             Sizing = new SizingConf(processorPoolSize, dispatcherPoolSize, maxBufferPoolSize, maxMessageSize);
             Timing = new TimingConf(probeInterval, probeTimeout, requestMissingContentTimeout);

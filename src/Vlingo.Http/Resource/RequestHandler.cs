@@ -124,7 +124,7 @@ namespace Vlingo.Http.Resource
         {
             try
             {
-                return (IMapper)Activator.CreateInstance(mapperClass);
+                return (IMapper)Activator.CreateInstance(mapperClass)!;
             }
             catch (Exception)
             {

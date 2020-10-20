@@ -43,7 +43,7 @@ namespace Vlingo.Http
         public bool MatchesValueOf(string value)
             => string.Equals(Value, value, StringComparison.InvariantCultureIgnoreCase);
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             var other = obj as Header;
             if (other == null || GetType() != other.GetType())

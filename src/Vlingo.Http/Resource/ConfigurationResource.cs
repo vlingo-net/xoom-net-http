@@ -80,7 +80,7 @@ namespace Vlingo.Http.Resource
                         return resourceDispatcher;
                     }
                 }
-                return (IConfigurationResource)Activator.CreateInstance(resourceClass);
+                return (IConfigurationResource)Activator.CreateInstance(resourceClass)!;
             }
             catch (Exception e)
             {
@@ -278,7 +278,7 @@ namespace Vlingo.Http.Resource
                         return (ResourceHandler)ctor.Invoke(new object[] { stage.World });
                     }
                 }
-                return (ResourceHandler)Activator.CreateInstance(ResourceHandlerClass);
+                return (ResourceHandler)Activator.CreateInstance(ResourceHandlerClass)!;
             }
             catch
             {

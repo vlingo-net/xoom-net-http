@@ -106,7 +106,7 @@ namespace Vlingo.Http
 
         public int IfContentLength =>
             string.Equals(Name, ContentLength, StringComparison.InvariantCultureIgnoreCase)
-                ? int.Parse(Value)
+                ? Value == null ? -1 : int.Parse(Value)
                 : -1;
 
         public bool IsKeepAliveConnection =>

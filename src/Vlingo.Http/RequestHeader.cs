@@ -101,7 +101,7 @@ namespace Vlingo.Http
 
         internal int IfContentLength
             => Name.Equals(ContentLength, StringComparison.InvariantCultureIgnoreCase)
-                ? int.Parse(Value)
+                ? Value == null ? 0 : int.Parse(Value)
                 : 0;
 
         private RequestHeader(string name, string value)

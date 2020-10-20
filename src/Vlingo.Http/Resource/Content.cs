@@ -20,7 +20,7 @@ namespace Vlingo.Http.Resource
             ContentMediaType = contentMediaType;
         }
 
-        public override bool Equals(object o)
+        public override bool Equals(object? o)
         {
             if (ReferenceEquals(this, o))
             {

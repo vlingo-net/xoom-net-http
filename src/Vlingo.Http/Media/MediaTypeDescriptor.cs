@@ -51,7 +51,7 @@ namespace Vlingo.Http.Media
             return sb.ToString();
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (ReferenceEquals(this, obj))
             {

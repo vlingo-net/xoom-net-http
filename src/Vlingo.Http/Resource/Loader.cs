@@ -95,7 +95,7 @@ namespace Vlingo.Http.Resource
             var resourceHandlerKey = $"resource.{resourceName}.handler";
             var resourceHandlerClassname = properties.GetProperty(resourceHandlerKey);
             var handlerPoolKey = $"resource.{resourceName}.pool";
-            var maybeHandlerPoolSize = int.Parse(properties.GetProperty(handlerPoolKey, "1"));
+            var maybeHandlerPoolSize = int.Parse(properties.GetProperty(handlerPoolKey, "1") ?? "1");
             var handlerPoolSize = maybeHandlerPoolSize <= 0 ? 1 : maybeHandlerPoolSize;
 
             try
@@ -124,10 +124,10 @@ namespace Vlingo.Http.Resource
                 var feedProducerClassnameKey = $"feed.resource.{resourceName}.producer.class";
                 var feedProducerClassname = properties.GetProperty(feedProducerClassnameKey);
                 var feedElementsKey = $"feed.resource.{resourceName}.elements";
-                var maybeFeedElements = int.Parse(properties.GetProperty(feedElementsKey, "20"));
+                var maybeFeedElements = int.Parse(properties.GetProperty(feedElementsKey, "20") ?? "20");
                 var feedElements = maybeFeedElements <= 0 ? 20 : maybeFeedElements;
                 var poolKey = $"feed.resource.{resourceName}.pool";
-                var maybePoolSize = int.Parse(properties.GetProperty(poolKey, "1"));
+                var maybePoolSize = int.Parse(properties.GetProperty(poolKey, "1") ?? "1");
                 int handlerPoolSize = maybePoolSize <= 0 ? 1 : maybePoolSize;
                 var feedRequestUri =
                     $"{feedUri?.Replace(resourceName, FeedNamePathParameter)}/{FeedProductIdPathParameter}";
@@ -166,15 +166,15 @@ namespace Vlingo.Http.Resource
                 var feedClassnameKey = $"sse.stream.{resourceName}.feed.class";
                 var feedClassname = properties.GetProperty(feedClassnameKey);
                 var feedPayloadKey = "sse.stream." + resourceName + ".feed.payload";
-                var maybeFeedPayload = int.Parse(properties.GetProperty(feedPayloadKey, "20"));
+                var maybeFeedPayload = int.Parse(properties.GetProperty(feedPayloadKey, "20") ?? "20");
                 var feedPayload = maybeFeedPayload <= 0 ? 20 : maybeFeedPayload;
                 var feedIntervalKey = $"sse.stream.{resourceName}.feed.interval";
-                var maybeFeedInterval = int.Parse(properties.GetProperty(feedIntervalKey, "1000"));
+                var maybeFeedInterval = int.Parse(properties.GetProperty(feedIntervalKey, "1000") ?? "1000");
                 var feedInterval = maybeFeedInterval <= 0 ? 1000 : maybeFeedInterval;
                 var feedDefaultIdKey = $"sse.stream.{resourceName}.feed.default.id";
                 var feedDefaultId = properties.GetProperty(feedDefaultIdKey, "");
                 var poolKey = $"sse.stream.{resourceName}.pool";
-                var maybePoolSize = int.Parse(properties.GetProperty(poolKey, "1"));
+                var maybePoolSize = int.Parse(properties.GetProperty(poolKey, "1") ?? "1");
                 var handlerPoolSize = maybePoolSize <= 0 ? 1 : maybePoolSize;
                 var subscribeUri = streamUri?.Replace(resourceName, SsePublisherNamePathParameter);
                 var unsubscribeUri = subscribeUri + "/" + SsePublisherIdPathParameter;
@@ -216,7 +216,7 @@ namespace Vlingo.Http.Resource
                 return staticFilesResourceActions;
             }
 
-            var poolSize = properties.GetProperty(StaticFilesResourcePool, "5");
+            var poolSize = properties.GetProperty(StaticFilesResourcePool, "5")!;
             var validSubPaths = properties.GetProperty(StaticFilesResourceSubPaths);
             var actionSubPaths = ActionNamesFrom(validSubPaths, StaticFilesResourceSubPaths).OrderByDescending(x => x.Length);
 
@@ -241,7 +241,7 @@ namespace Vlingo.Http.Resource
             }
             catch (Exception e)
             {
-                Console.WriteLine("vlingo-net/http: Failed to load static files resource: " + StaticFilesResource + " because: " + e.Message);
+                Console.WriteLine($"vlingo-net/http: Failed to load static files resource: {StaticFilesResource} because: {e.Message}");
                 Console.WriteLine(e.StackTrace);
                 throw;
             }
@@ -263,7 +263,7 @@ namespace Vlingo.Http.Resource
             }
             catch (Exception e)
             {
-                throw new InvalidOperationException("ConfigurationResource cannot be created for: " + resourceHandlerClass?.Name, e);
+                throw new InvalidOperationException($"ConfigurationResource cannot be created for: {resourceHandlerClass.Name}", e);
             }
         }
 
@@ -277,11 +277,11 @@ namespace Vlingo.Http.Resource
                 throw new IndexOutOfRangeException("Cannot load action names for resource: " + key);
             }
 
-            var actionNames = Regex.Split(actionNamesProperty?.Substring(open.Value + 1, close.Value - 1).Trim(), ",\\s?");
+            var actionNames = Regex.Split(actionNamesProperty?.Substring(open.Value + 1, close.Value - 1).Trim() ?? string.Empty, ",\\s?");
 
             if (actionNames.Length == 0)
             {
-                throw new InvalidOperationException("Cannot load action names for resource: " + key);
+                throw new InvalidOperationException($"Cannot load action names for resource: {key}");
             }
 
             return actionNames;

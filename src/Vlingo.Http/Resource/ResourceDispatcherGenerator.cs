@@ -133,9 +133,9 @@ namespace Vlingo.Http.Resource
             var namespaces = new HashSet<string>();
             namespaces.Add("System");
             namespaces.Add("System.Collections.Generic");
-            namespaces.Add(typeof(Context).Namespace);
-            namespaces.Add(typeof(ResourceHandler).Namespace);
-            namespaces.Add(typeof(AtomicBoolean).Namespace); // Vlingo.Common
+            namespaces.Add(typeof(Context).Namespace!);
+            namespaces.Add(typeof(ResourceHandler).Namespace!);
+            namespaces.Add(typeof(AtomicBoolean).Namespace!); // Vlingo.Common
 
             return string.Join("\n", namespaces.Select(x => $"using {x};"));
             
@@ -258,14 +258,14 @@ namespace Vlingo.Http.Resource
 
         private string GetSimpleTypeName(Type type)
         {
-            if(SimpleTypeNames.ContainsKey(type))
+            if (SimpleTypeNames.ContainsKey(type))
             {
                 return SimpleTypeNames[type];
             }
 
-            if(Nullable.GetUnderlyingType(type) != null)
+            if (Nullable.GetUnderlyingType(type) != null)
             {
-                return GetSimpleTypeName(Nullable.GetUnderlyingType(type)) + "?";
+                return GetSimpleTypeName(Nullable.GetUnderlyingType(type)!) + "?";
             }
 
             if (type.IsGenericType)

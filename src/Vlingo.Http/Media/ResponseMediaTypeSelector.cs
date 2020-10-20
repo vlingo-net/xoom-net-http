@@ -86,14 +86,21 @@ namespace Vlingo.Http.Media
                 _qualityFactor = qualityFactor;
             }
 
-            public int Compare(AcceptMediaType x, AcceptMediaType y)
-                => CompareForAscendingOrder(x, y);
-            
-            public int CompareTo(AcceptMediaType other) => Compare(this, other);
+            public int Compare(AcceptMediaType? x, AcceptMediaType? y)
+            {
+                if (x == null || y == null)
+                {
+                    return -1;
+                }
+                
+                return CompareForAscendingOrder(x, y);
+            }
+
+            public int CompareTo(AcceptMediaType? other) => Compare(this, other);
 
             private static int CompareForAscendingOrder(AcceptMediaType x, AcceptMediaType y)
             {
-                if (x._qualityFactor == y._qualityFactor)
+                if (Math.Abs(x._qualityFactor - y._qualityFactor) < 0.0001)
                 {
                     if (x.IsGenericType() && !y.IsGenericType())
                     {

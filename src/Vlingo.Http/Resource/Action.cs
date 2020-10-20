@@ -150,7 +150,7 @@ namespace Vlingo.Http.Resource
         public override int GetHashCode()
             => 31 * (_method.GetHashCode() + _uri!.GetHashCode() + _to!.GetHashCode() + _mapper.GetHashCode() + _matchable.GetHashCode());
 
-        public override bool Equals(object other)
+        public override bool Equals(object? other)
         {
             if (other == null || other.GetType() != typeof(Action))
             {
@@ -170,7 +170,7 @@ namespace Vlingo.Http.Resource
             try
             {
                 var mapperClass = TypeLoader.Load(mapper);
-                return (IMapper) Activator.CreateInstance(mapperClass);
+                return (IMapper) Activator.CreateInstance(mapperClass)!;
             }
             catch
             {

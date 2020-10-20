@@ -5,7 +5,6 @@
 // was not distributed with this file, You can obtain
 // one at https://mozilla.org/MPL/2.0/.
 
-using System;
 using System.Collections.Generic;
 using Vlingo.Http.Media;
 using Xunit;
@@ -66,7 +65,7 @@ namespace Vlingo.Http.Tests.Media
         
         private class MediaTypeTest : MediaTypeDescriptor
         {
-            public MediaTypeTest(string mimeType, string mimeSubType, IDictionary<String, String> parameters) 
+            public MediaTypeTest(string mimeType, string mimeSubType, IDictionary<string, string> parameters) 
                 : base(mimeType, mimeSubType, parameters)
             {
             }
