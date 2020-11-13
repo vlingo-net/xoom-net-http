@@ -37,7 +37,7 @@ namespace Vlingo.Http.Tests.Resource
             var config =
                 Client.Configuration.Secure(
                     _world.Stage,
-                    Address.From(Host.Of("postb.in"), 443, AddressType.None),
+                    Address.From(Host.Of("google.com"), 443, AddressType.None),
                     unknown,
                     false,
                     10,
@@ -56,8 +56,8 @@ namespace Vlingo.Http.Tests.Resource
             var request =
                 Request
                     .Has(Method.Get)
-                    .And(new Uri("1578827705270-4593926446978", UriKind.Relative))
-                    .And(RequestHeader.WithHost("postb.in"))
+                    .And(new Uri("/search?q=vlingo", UriKind.Relative))
+                    .And(RequestHeader.WithHost("google.com"))
                     .And(RequestHeader.WithConnection("close"))
                     .And(RequestHeader.WithContentType("text/html"));
 
