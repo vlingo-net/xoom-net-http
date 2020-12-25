@@ -1,6 +1,7 @@
 # vlingo-http
 
-[![Build status](https://ci.appveyor.com/api/projects/status/1c2u6kbrpbvfjxgf/branch/master?svg=true)](https://ci.appveyor.com/project/VlingoNetOwner/vlingo-net-http/branch/master) 
+[![Build status](https://ci.appveyor.com/api/projects/status/1c2u6kbrpbvfjxgf/branch/master?svg=true)](https://ci.appveyor.com/project/VlingoNetOwner/vlingo-net-http/branch/master)
+![Build master](https://github.com/vlingo-net/vlingo-net-http/workflows/.NET/badge.svg)
 [![NuGet](https://img.shields.io/nuget/v/Vlingo.Http.svg)](https://www.nuget.org/packages/Vlingo.Http)
 [![Gitter](https://badges.gitter.im/vlingo-platform-net/community.svg)](https://gitter.im/vlingo-platform-net/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
