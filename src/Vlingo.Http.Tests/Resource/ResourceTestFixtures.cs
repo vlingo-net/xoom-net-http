@@ -37,7 +37,7 @@ namespace Vlingo.Http.Tests.Resource
         protected readonly Resources Resources;
         protected readonly IDispatcher Dispatcher;
         protected readonly World World;
-        
+        protected readonly string NewLineDelimiter = "\n";
         protected UserData JohnDoeUserData { get; } = UserData.From(NameData.From("John", "Doe"), ContactData.From("john.doe@vlingo.io", "+1 212-555-1212"));
 
         protected string JohnDoeUserSerialized => JsonSerialization.Serialized(JohnDoeUserData);
@@ -46,9 +46,9 @@ namespace Vlingo.Http.Tests.Resource
 
         protected string JaneDoeUserSerialized => JsonSerialization.Serialized(JaneDoeUserData);
 
-        protected string PostJohnDoeUserMessage => $"POST /users HTTP/1.1\nHost: vlingo.io\nContent-Length: {JohnDoeUserSerialized.Length}\n\n{JohnDoeUserSerialized}";
+        protected string PostJohnDoeUserMessage => $"POST /users HTTP/1.1{NewLineDelimiter}Host: vlingo.io{NewLineDelimiter}Content-Length: {JohnDoeUserSerialized.Length}{NewLineDelimiter}{NewLineDelimiter}{JohnDoeUserSerialized}";
 
-        protected string PostJaneDoeUserMessage => $"POST /users HTTP/1.1\nHost: vlingo.io\nContent-Length: {JaneDoeUserSerialized.Length}\n\n{JaneDoeUserSerialized}";
+        protected string PostJaneDoeUserMessage => $"POST /users HTTP/1.1{NewLineDelimiter}Host: vlingo.io{NewLineDelimiter}Content-Length: {JaneDoeUserSerialized.Length}{NewLineDelimiter}{NewLineDelimiter}{JaneDoeUserSerialized}";
 
         private MemoryStream _buffer = new MemoryStream(65535);
 
@@ -61,15 +61,15 @@ namespace Vlingo.Http.Tests.Resource
             return _buffer;
         }
         
-        protected string CreatedResponse(string body) => $"HTTP/1.1 201 CREATED\nContent-Length: {body.Length}\n\n{body}";
+        protected string CreatedResponse(string body) => $"HTTP/1.1 201 CREATED{NewLineDelimiter}Content-Length: {body.Length}{NewLineDelimiter}{NewLineDelimiter}{body}";
 
-        protected string PostRequestCloseFollowing(string body) => $"POST /users HTTP/1.1\nHost: vlingo.io\nContent-Length: {body.Length}\n\n{body}";
+        protected string PostRequestCloseFollowing(string body) => $"POST /users HTTP/1.1{NewLineDelimiter}Host: vlingo.io{NewLineDelimiter}Content-Length: {body.Length}{NewLineDelimiter}{NewLineDelimiter}{body}";
         
-        protected string PostRequest(string body) => $"POST /users HTTP/1.1\nHost: vlingo.io\nConnection: keep-alive\nContent-Length: {body.Length}\n\n{body}";
+        protected string PostRequest(string body) => $"POST /users HTTP/1.1{NewLineDelimiter}Host: vlingo.io{NewLineDelimiter}Connection: keep-alive{NewLineDelimiter}Content-Length: {body.Length}{NewLineDelimiter}{NewLineDelimiter}{body}";
         
-        protected string PutRequest(string userId, string body) => $"PUT /users/{userId} HTTP/1.1\nHost: vlingo.io\nConnection: keep-alive\nContent-Length: {body.Length}\n\n{body}";
+        protected string PutRequest(string userId, string body) => $"PUT /users/{userId} HTTP/1.1{NewLineDelimiter}Host: vlingo.io{NewLineDelimiter}Connection: keep-alive{NewLineDelimiter}Content-Length: {body.Length}{NewLineDelimiter}{NewLineDelimiter}{body}";
 
-        protected string GetExceptionRequest(string userId) => $"GET /users/{userId}/error HTTP/1.1\nHost: vlingo.io\nConnection: keep-alive\n\n";
+        protected string GetExceptionRequest(string userId) => $"GET /users/{userId}/error HTTP/1.1{NewLineDelimiter}Host: vlingo.io{NewLineDelimiter}Connection: keep-alive{NewLineDelimiter}{NewLineDelimiter}";
         
         protected string JaneDoeCreated() => CreatedResponse(JaneDoeUserSerialized);
 

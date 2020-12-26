@@ -32,6 +32,8 @@ namespace Vlingo.Http
 
         public void ParseNext(byte[] requestContent) => _virtualStateParser.Includes(requestContent).Parse();
 
+        public static readonly char NewLineDelimiter = '\n';
+
         private RequestParser(byte[] requestContent)
         {
             _virtualStateParser = new VirtualStateParser().Includes(requestContent).Parse();
@@ -221,7 +223,7 @@ namespace Vlingo.Http
             private Optional<string> NextLine(string errorResult, string errorMessage)
             {
                 var possibleCarriageReturnIndex = -1;
-                var lineBreak = _requestText.IndexOf("\n", _position, StringComparison.InvariantCultureIgnoreCase);
+                var lineBreak = _requestText.IndexOf(NewLineDelimiter, _position);
                 if (lineBreak < 0)
                 {
                     if (_contentQueue.Count == 0)
