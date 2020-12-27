@@ -221,7 +221,7 @@ namespace Vlingo.Http
             private Optional<string> NextLine(string errorResult, string errorMessage)
             {
                 var possibleCarriageReturnIndex = -1;
-                var lineBreak = _requestText.IndexOf("\n", _position, StringComparison.InvariantCultureIgnoreCase);
+                var lineBreak = _requestText.IndexOf('\n', _position);
                 if (lineBreak < 0)
                 {
                     if (_contentQueue.Count == 0)
