@@ -29,6 +29,8 @@ namespace Vlingo.Http
             _virtualStateParser.HasMissingContentTimeExpired(timeLimit);
 
         public bool IsMissingContent => _virtualStateParser.IsMissingContent;
+        
+        public string CurrentRequestText => _virtualStateParser.RequestText;
 
         public void ParseNext(byte[] requestContent) => _virtualStateParser.Includes(requestContent).Parse();
 
@@ -172,6 +174,8 @@ namespace Vlingo.Http
             }
 
             internal bool IsMissingContent => _outOfContentTime > 0;
+
+            internal string RequestText => _requestText;
 
             internal VirtualStateParser Parse()
             {
