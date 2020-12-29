@@ -272,7 +272,9 @@ namespace Vlingo.Http.Resource
 
                     while (parser.HasFullRequest())
                     {
-                        var request = _serverActor._filters.Process(parser.FullRequest());
+                        var unfilteredRequest = parser.FullRequest();
+                        DetermineKeepAlive(requestResponseContext, unfilteredRequest);
+                        var request = _serverActor._filters.Process(unfilteredRequest);
                         var completes = new ResponseCompletes(_serverActor, requestResponseContext, request.Headers.HeaderOf(RequestHeader.XCorrelationID));
                         context = new Context(requestResponseContext, request, _serverActor._world.CompletesFor(completes));
                         _dispatcher.DispatchFor(context);
@@ -302,6 +304,12 @@ namespace Vlingo.Http.Resource
                 {
                     buffer.Release();
                 }
+            }
+            
+            private bool DetermineKeepAlive(RequestResponseContext requestResponseContext, Request unfilteredRequest)
+            {
+                var keepAlive = unfilteredRequest.HeaderValueOr(RequestHeader.Connection, Header.ValueKeepAlive).Equals(Header.ValueKeepAlive);
+                return keepAlive;
             }
         }
         
