@@ -298,7 +298,7 @@ namespace Vlingo.Http.Resource
             {
                 try
                 {
-                    var keyPrefix = $"action.{resourceName}.{actionName}.";
+                    var keyPrefix = $"action.{resourceName}.{char.ToLowerInvariant(actionName[0])}{actionName.Substring(1)}.";
 
                     var actionId = resourceActions.Count;
                     var method = properties.GetProperty($"{keyPrefix}method", null);
