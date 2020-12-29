@@ -7,6 +7,7 @@
 
 using System;
 using Vlingo.Actors;
+using Vlingo.Common;
 using Vlingo.Http.Resource;
 using Vlingo.Http.Tests.Sample.User;
 using Configuration = Vlingo.Http.Resource.Configuration;
@@ -15,6 +16,9 @@ namespace Vlingo.Http.Tests.Resource
 {
     public class ServerBootstrap
     {
+        private static readonly Random Random = new Random();
+        private static readonly AtomicInteger PortToUse = new AtomicInteger(Random.Next(32_768, 60_999));
+        
         public static ServerBootstrap Instance { get; private set; }
         
         public World World { get; }
@@ -41,7 +45,7 @@ namespace Vlingo.Http.Tests.Resource
                     World.Stage,
                     resources,
                     Filters.None(),
-                    8081,
+                    PortToUse.IncrementAndGet(),
                     Configuration.SizingConf.DefineWith(4, 10, 100, 10240),
                     Configuration.TimingConf.DefineWith(3, 1, 100),
                     "arrayQueueMailbox",

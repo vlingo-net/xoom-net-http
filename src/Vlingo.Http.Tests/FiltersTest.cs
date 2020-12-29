@@ -7,6 +7,7 @@
 
 using System;
 using Vlingo.Actors;
+using Vlingo.Common;
 using Vlingo.Http.Resource;
 using Vlingo.Http.Tests.Sample.User;
 using Xunit;
@@ -17,6 +18,9 @@ namespace Vlingo.Http.Tests
 {
     public class FiltersTest
     {
+        private static readonly Random Random = new Random();
+        private static readonly AtomicInteger PortToUse = new AtomicInteger(Random.Next(32_768, 60_999));
+        
         [Fact]
         public void TestThatRequestFiltersProcess()
         {
@@ -92,7 +96,7 @@ namespace Vlingo.Http.Tests
                     world.Stage,
                     Resources.Are(resource),
                     Filters.Are(new []{new RequestFilter1()}, Filters.NoResponseFilters()),
-                    8081,
+                    PortToUse.IncrementAndGet(),
                     Configuration.SizingConf.DefineConf(),
                     Configuration.TimingConf.DefineConf());
 
