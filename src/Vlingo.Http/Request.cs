@@ -19,6 +19,9 @@ namespace Vlingo.Http
 
         public static Request From(byte[] requestContent)
             => RequestParser.ParserFor(requestContent).FullRequest();
+        
+        public static Request From(Method method, Uri uri, Version version, Headers<RequestHeader> headers, Body body) 
+            => new Request(method, uri, version, headers, body);
 
         // ===========================================
         // fluent API follows
