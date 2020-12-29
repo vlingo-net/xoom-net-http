@@ -63,7 +63,7 @@ namespace Vlingo.Http.Tests.Resource
         
         protected string CreatedResponse(string body) => $"HTTP/1.1 201 CREATED\nContent-Length: {body.Length}\n\n{body}";
 
-        protected string PostRequestCloseFollowing(string body) => $"POST /users HTTP/1.1\nHost: vlingo.io\nContent-Length: {body.Length}\n\n{body}";
+        protected string PostRequestCloseFollowing(string body) => $"POST /users HTTP/1.1\nHost: vlingo.io\nContent-Length: {body.Length}\nConnection: close\n\n{body}";
         
         protected string PostRequest(string body) => $"POST /users HTTP/1.1\nHost: vlingo.io\nConnection: keep-alive\nContent-Length: {body.Length}\n\n{body}";
         
