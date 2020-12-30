@@ -18,15 +18,46 @@ namespace Vlingo.Http.Resource
 {
     public sealed class ServerActor : Actor, IServer, IRequestChannelConsumerProvider, IScheduled<object?>
     {
-        private readonly IServerRequestResponseChannel _channel;
-        private readonly IDispatcher[] _dispatcherPool;
-        private int _dispatcherPoolIndex;
+        private readonly IServerRequestResponseChannel? _channel;
+        private readonly IDispatcherPool _dispatcherPool;
         private readonly Filters _filters;
         private readonly int _maxMessageSize;
         private readonly Dictionary<string, RequestResponseHttpContext> _requestsMissingContent;
         private readonly long _requestMissingContentTimeout;
-        private readonly ConsumerByteBufferPool _responseBufferPool;
+        private readonly ConsumerByteBufferPool? _responseBufferPool;
         private readonly World _world;
+        
+        public ServerActor(
+            Resources resources,
+            Filters filters,
+            int port,
+            int dispatcherPoolSize)
+        {
+            var start = DateExtensions.GetCurrentMillis();
+
+            _filters = filters;
+            _world = Stage.World;
+            _requestsMissingContent = new Dictionary<string, RequestResponseHttpContext>();
+            _maxMessageSize = 0;
+            
+            try
+            {
+                _dispatcherPool = new AgentDispatcherPool(Stage, resources, dispatcherPoolSize);
+
+                var end = DateExtensions.GetCurrentMillis();
+            
+                Logger.Info($"Server {ServerName} is listening on port: {port} started in {end - start} ms");
+            
+                LogResourceMappings(resources);
+            
+            }
+            catch (Exception e)
+            {
+                var message = $"Failed to start server because: {e.Message}";
+                Logger.Error(message, e);
+                throw new InvalidOperationException(message);
+            }
+        }
 
         public ServerActor(
             Resources resources,
@@ -39,7 +70,6 @@ namespace Vlingo.Http.Resource
             var start = DateExtensions.GetCurrentMillis();
             
             _filters = filters;
-            _dispatcherPoolIndex = 0;
             _world = Stage.World;
             _requestsMissingContent = new Dictionary<string, RequestResponseHttpContext>();
             _maxMessageSize = sizing.MaxMessageSize;
@@ -49,14 +79,9 @@ namespace Vlingo.Http.Resource
                 _responseBufferPool = new ConsumerByteBufferPool(
                     ElasticResourcePool<IConsumerByteBuffer, string>.Config.Of(sizing.MaxBufferPoolSize),
                     sizing.MaxMessageSize);
-            
-                _dispatcherPool = new IDispatcher[sizing.DispatcherPoolSize];
-            
-                for (int idx = 0; idx < sizing.DispatcherPoolSize; ++idx)
-                {
-                    _dispatcherPool[idx] = Dispatcher.StartWith(Stage, resources);
-                }
-            
+
+                _dispatcherPool = new ServerDispatcherPool(Stage, resources, sizing.DispatcherPoolSize);
+
                 _channel =
                     ServerRequestResponseChannelFactory.Start(
                         Stage,
@@ -126,7 +151,8 @@ namespace Vlingo.Http.Resource
         // IRequestChannelConsumerProvider
         //=========================================
 
-        public IRequestChannelConsumer RequestChannelConsumer() => new ServerRequestChannelConsumer(this, PooledDispatcher());
+        public IRequestChannelConsumer RequestChannelConsumer()
+            => new ServerRequestChannelConsumer(this, _dispatcherPool.Dispatcher());
 
         public void IntervalSignal(IScheduled<object?> scheduled, object? data) => FailTimedOutMissingContentRequests();
 
@@ -144,14 +170,11 @@ namespace Vlingo.Http.Resource
 
             FailTimedOutMissingContentRequests();
 
-            _channel.Stop();
-            _channel.Close();
+            _channel?.Stop();
+            _channel?.Close();
 
-            foreach (var dispatcher in _dispatcherPool)
-            {
-                dispatcher.Stop();
-            }
-            
+            _dispatcherPool.Close();
+
             _filters.Stop();
 
             Logger.Info("Server stopped.");
@@ -212,17 +235,26 @@ namespace Vlingo.Http.Resource
                 resources.NamedResources[resourceName].Log(logger);
             }
         }
-        
-        private IDispatcher PooledDispatcher()
+
+        private class ServerDispatcherPool : AbstractDispatcherPool
         {
-            if (_dispatcherPoolIndex >= _dispatcherPool.Length)
+            private int _dispatcherPoolIndex;
+
+            public ServerDispatcherPool(Stage stage, Resources resources, int dispatcherPoolSize)
+                : base(stage, resources, dispatcherPoolSize)
+                    => _dispatcherPoolIndex = 0;
+
+            public override IDispatcher Dispatcher()
             {
-                _dispatcherPoolIndex = 0;
+                if (_dispatcherPoolIndex >= DispatcherPool.Length)
+                {
+                    _dispatcherPoolIndex = 0;
+                }
+
+                return DispatcherPool[_dispatcherPoolIndex++];
             }
-            
-            return _dispatcherPool[_dispatcherPoolIndex++];
         }
-        
+
         //=========================================
         // RequestChannelConsumer
         //=========================================
@@ -355,16 +387,16 @@ namespace Vlingo.Http.Resource
                 var filtered = _serverActor._filters.Process((Response)(object) response!);
                 var buffer = BufferFor(filtered);
                 var completedResponse = filtered.Include(_correlationId!);
-                _requestResponseContext.RespondWith(completedResponse.Into(buffer));
+                _requestResponseContext.RespondWith(completedResponse.Into(buffer ?? BasicConsumerByteBuffer.Empty));
                 return (ICompletes<T>) this;
             }
 
-            private IConsumerByteBuffer BufferFor(Response response)
+            private IConsumerByteBuffer? BufferFor(Response response)
             {
                 var size = response.Size;
                 if (size < _serverActor._maxMessageSize)
                 {
-                    return _serverActor._responseBufferPool.Acquire("ServerActor.BasicCompletedBasedResponseCompletes.BufferFor");
+                    return _serverActor._responseBufferPool?.Acquire("ServerActor.BasicCompletedBasedResponseCompletes.BufferFor");
                 }
 
                 return BasicConsumerByteBuffer.Allocate(0, size + 1024);
