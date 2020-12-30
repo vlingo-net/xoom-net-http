@@ -39,6 +39,8 @@ namespace Vlingo.Http
 
         public bool HasRequest => Request != null;
 
+        public override string ToString() => $"Context [completes={_completes}, request=\n{Request}]";
+
         internal ICompletesEventually Completes => _completes;
     }
 }
