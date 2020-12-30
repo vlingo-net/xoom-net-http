@@ -46,5 +46,8 @@ namespace Vlingo.Http.Tests.Resource
         }
 
         public IAddress Address => null;
+
+        public override string ToString() =>
+            $"MockCompletesEventuallyResponse [response={Response}, withCalls={_withCalls}]";
     }
 }
