@@ -76,7 +76,7 @@ namespace Vlingo.Http.Resource
             if (!_actor.IsStopped)
             {
                 Action<IClientConsumer> consumer = actor => actor.RequestWith(request, completes);
-                var innerCompletes = new BasicCompletes<Response>(_actor.Scheduler);
+                var innerCompletes = Completes.Using<Response>(_actor.Scheduler);
                 if (_mailbox.IsPreallocated)
                 {
                     _mailbox.Send(_actor, consumer, innerCompletes, RequestWithRepresentation1);
