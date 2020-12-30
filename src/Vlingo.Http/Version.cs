@@ -11,7 +11,7 @@ namespace Vlingo.Http
 {
     public class Version
     {
-        private const string HTTP_1_1 = "HTTP/1.1";
+        internal const string HTTP_1_1 = "HTTP/1.1";
         private const string HTTP_2_0 = "HTTP/2.0";
 
         private readonly string _version;
