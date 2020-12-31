@@ -29,7 +29,7 @@ namespace Vlingo.Http.Tests.Resource
         private readonly IClientRequestResponseChannel _client;
         private readonly string _contentRoot;
         private readonly Progress _progress;
-        private World _world;
+        private readonly World _world;
 
         private string GetRequest(string filePath) => $"GET {filePath} HTTP/1.1\nHost: vlingo.io\n\n";
 
