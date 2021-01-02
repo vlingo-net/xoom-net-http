@@ -54,6 +54,28 @@ namespace Vlingo.Http.Tests.Resource
             Assert.Equal(Response.ResponseStatus.Ok, contentResponse.Status);
             Assert.Equal(content, contentResponse.Entity.Content);
         }
+        
+        [Fact]
+        public void TestThatServesDefaultStaticFile()
+        {
+            var resource = "/views/index.html";
+            var content = ReadTextFile(_contentRoot + resource);
+            var request = GetRequest("/views/");
+            _client.RequestWith(ToByteBuffer(request));
+
+            var consumeCalls = _progress.ExpectConsumeTimes(1);
+            while (consumeCalls.TotalWrites < 1)
+            {
+                _client.ProbeChannel();
+            }
+            consumeCalls.ReadFrom<int>("completed");
+
+            _progress.Responses.TryDequeue(out var contentResponse);
+
+            Assert.Equal(1, _progress.ConsumeCount.Get());
+            Assert.Equal(Response.ResponseStatus.Ok, contentResponse.Status);
+            Assert.Equal(content, contentResponse.Entity.Content);
+        }
 
         [Fact]
         public void TestThatServesRootStaticFile()
