@@ -236,7 +236,15 @@ namespace Vlingo.Http.Tests.Resource
                 _world.DefaultLogger);
         }
 
-        private string ReadTextFile(string path) => File.ReadAllText($@"{path}");
+        private string ReadTextFile(string path) => File.ReadAllText(AddQuotesIfRequired(path));
+        
+        private string AddQuotesIfRequired(string path)
+        {
+            return !string.IsNullOrWhiteSpace(path) ? 
+                path.Contains(" ") && (!path.StartsWith("\"") && !path.EndsWith("\"")) ? 
+                    "\"" + path + "\"" : path : 
+                string.Empty;
+        }
 
         private byte[] ToByteBuffer(string requestContent)
         {

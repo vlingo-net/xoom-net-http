@@ -43,7 +43,7 @@ namespace Vlingo.Http.Resource
         
         private string ContentFilePath(string path)
         {
-            var fileSystemPath = $@"{path}";
+            var fileSystemPath = AddQuotesIfRequired(path);
             var maybeContent = File.GetAttributes(fileSystemPath);
 
             if (maybeContent.HasFlag(FileAttributes.Directory))
@@ -62,6 +62,12 @@ namespace Vlingo.Http.Resource
 
             return path;
         }
+        
+        private string AddQuotesIfRequired(string path) =>
+            !string.IsNullOrWhiteSpace(path) ? 
+                path.Contains(" ") && (!path.StartsWith("\"") && !path.EndsWith("\"")) ? 
+                    "\"" + path + "\"" : path : 
+                string.Empty;
 
         private byte[] ReadFile(string? path)
         {
