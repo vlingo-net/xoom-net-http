@@ -7,6 +7,7 @@
 
 using System;
 using System.IO;
+using System.Text;
 
 namespace Vlingo.Http.Resource
 {
@@ -18,11 +19,12 @@ namespace Vlingo.Http.Resource
         {
             if (_rootPath == null)
             {
-                var slash = root.EndsWith("/") ? "" : "/";
-                _rootPath = root + slash;
+                var initialSlash = root.StartsWith("/") ? "" : "/";
+                _rootPath = initialSlash + (root.EndsWith("/") ? root.Substring(0, root.Length - 1) : root);
             }
 
-            var contentPath = _rootPath + Context?.Request?.Uri?.AbsolutePath;
+            var uri = string.IsNullOrEmpty(contentFile) ? "/index.html" : Context?.Request?.Uri?.AbsolutePath;
+            var contentPath = ContentFilePath(_rootPath + uri);
 
             try
             {
@@ -37,6 +39,26 @@ namespace Vlingo.Http.Resource
             {
                 Completes?.With(Response.Of(Response.ResponseStatus.NotFound));
             }
+        }
+        
+        private string ContentFilePath(string path)
+        {
+            var maybeContent = File.GetAttributes(path);
+
+            if (maybeContent.HasFlag(FileAttributes.Directory))
+            {
+                var builder = new StringBuilder(path);
+
+                if (!path.EndsWith("/")) {
+                    builder.Append("/");
+                }
+
+                builder.Append("index.html");
+
+                return builder.ToString();
+            }
+
+            return path;
         }
 
         private byte[] ReadFile(string? path)

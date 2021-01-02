@@ -28,14 +28,21 @@ namespace Vlingo.Http.Resource
                 switch (mappedParameters?.ActionId)
                 {
                     case 0: // GET %root%{path} ServeFile(string root, string paths, string contentFilePath)
-                        Action<StaticFilesResource>? consumer = handler => handler.ServeFile((string)mappedParameters?.Mapped[0].Value!, (string)mappedParameters?.Mapped[1].Value!, (string)mappedParameters?.Mapped[2].Value!);
-                        PooledHandler.HandleFor(context, consumer);
+                        if (mappedParameters.Mapped.Count == 3)
+                        {
+                            PooledHandler.HandleFor<StaticFilesResource>(context, handler => handler.ServeFile((string) mappedParameters.Mapped[0].Value!, (string) mappedParameters.Mapped[1].Value!, (string) mappedParameters.Mapped[2].Value!));
+                        }
+                        else
+                        {
+                            PooledHandler.HandleFor<StaticFilesResource>(context, handler => handler.ServeFile(string.Empty, (string) mappedParameters.Mapped[0].Value!, (string) mappedParameters.Mapped[1].Value!));
+
+                        }
                         break;
                 }
             }
             catch (Exception)
             {
-                throw new ArgumentException("Action mismatch: Request: " + context.Request + " Parameters: " + mappedParameters);
+                throw new ArgumentException($"Action mismatch: Request: {context.Request} Parameters: {mappedParameters}");
             }
         }
     }

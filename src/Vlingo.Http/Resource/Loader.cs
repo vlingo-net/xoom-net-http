@@ -46,6 +46,8 @@ namespace Vlingo.Http.Resource
         private const string StaticFilesResourceSubPaths = "static.files.resource.subpaths";
         private const string StaticFilesResourceServeFile = "ServeFile(string contentFile, string root, string validSubPaths)";
         private const string StaticFilesResourcePathParameter = "{contentFile}";
+        private const string StaticFilesResourceRoot1 = "//";
+        private const string StaticFilesResourceRoot2 = "///";
 
         public static Resources LoadResources(HttpProperties properties, ILogger logger)
         {
@@ -218,13 +220,24 @@ namespace Vlingo.Http.Resource
 
             var poolSize = properties.GetProperty(StaticFilesResourcePool, "5")!;
             var validSubPaths = properties.GetProperty(StaticFilesResourceSubPaths);
-            var actionSubPaths = ActionNamesFrom(validSubPaths, StaticFilesResourceSubPaths).OrderByDescending(x => x.Length);
+            var actionSubPaths = ActionNamesFrom(validSubPaths, StaticFilesResourceSubPaths);
 
+            LoadStaticFileResource(staticFilesResourceActions, root, poolSize, validSubPaths, actionSubPaths, logger);
+
+            return staticFilesResourceActions;
+        }
+
+        private static void LoadStaticFileResource(Dictionary<string, IConfigurationResource> staticFilesResources,
+            string root,
+            string poolSize,
+            string? validSubPaths,
+            IEnumerable<string> actionSubPaths, ILogger logger)
+        {
             try
             {
-                int resourceSequence = 0;
+                var resourceSequence = 0;
 
-                foreach (var actionSubPath in actionSubPaths)
+                foreach (var actionSubPath in ListOfSorted(actionSubPaths.ToArray()))
                 {
                     var mappedParameterRoot = new Action.MappedParameter("string", root);
                     var mappedParameterValidSubPaths = new Action.MappedParameter("string", validSubPaths);
@@ -233,20 +246,46 @@ namespace Vlingo.Http.Resource
                     var resourceName = StaticFilesResource + resourceSequence++;
 
                     var actions = new List<Action>(1);
-                    var additionalParameters = new List<Action.MappedParameter> { mappedParameterRoot, mappedParameterValidSubPaths };
-                    actions.Add(new Action(0, Method.Get.Name, actionSubPath + slash + StaticFilesResourcePathParameter, StaticFilesResourceServeFile, null, additionalParameters));
+                    var additionalParameters = new List<Action.MappedParameter>
+                        {mappedParameterRoot, mappedParameterValidSubPaths};
+                    actions.Add(new Action(0, Method.Get.Name, PatternFrom(actionSubPath, slash), StaticFilesResourceServeFile, null, additionalParameters));
                     var resource = ResourceFor(resourceName, typeof(StaticFilesResource), int.Parse(poolSize), actions, logger);
-                    staticFilesResourceActions[resourceName] = resource;
+                    staticFilesResources[resourceName] = resource;
                 }
             }
             catch (Exception e)
             {
-                Console.WriteLine($"vlingo-net/http: Failed to load static files resource: {StaticFilesResource} because: {e.Message}");
+                Console.WriteLine(
+                    $"vlingo-net/http: Failed to load static files resource: {StaticFilesResource} because: {e.Message}");
                 Console.WriteLine(e.StackTrace);
                 throw;
             }
+        }
+        
+        private static List<string> ListOfSorted(string[] actionSubPaths)
+        {
+            var sortedActionsSubPaths = actionSubPaths.OrderByDescending(x => x.Length);
+            var list = new List<string>(2 + actionSubPaths.Length);
 
-            return staticFilesResourceActions;
+            list.Add(StaticFilesResourceRoot1);
+            list.Add(StaticFilesResourceRoot2);
+            list.AddRange(sortedActionsSubPaths);
+
+            return list;
+        }
+        
+        private static string PatternFrom(string path, string slash)
+        {
+
+            switch (path)
+            {
+                case StaticFilesResourceRoot1:
+                    return "";
+                case StaticFilesResourceRoot2:
+                    return "/";
+            }
+
+            return path + slash + StaticFilesResourcePathParameter;
         }
 
         private static IConfigurationResource ResourceFor(

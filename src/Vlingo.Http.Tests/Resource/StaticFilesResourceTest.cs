@@ -32,6 +32,28 @@ namespace Vlingo.Http.Tests.Resource
         private readonly World _world;
 
         private string GetRequest(string filePath) => $"GET {filePath} HTTP/1.1\nHost: vlingo.io\n\n";
+        
+        [Fact]
+        public void TestThatServesRootDefaultStaticFile()
+        {
+            var resource = "/index.html";
+            var content = ReadTextFile(_contentRoot + resource);
+            var request = GetRequest("/");
+            _client.RequestWith(ToByteBuffer(request));
+
+            var consumeCalls = _progress.ExpectConsumeTimes(1);
+            while (consumeCalls.TotalWrites < 1)
+            {
+                _client.ProbeChannel();
+            }
+            consumeCalls.ReadFrom<int>("completed");
+
+            _progress.Responses.TryDequeue(out var contentResponse);
+
+            Assert.Equal(1, _progress.ConsumeCount.Get());
+            Assert.Equal(Response.ResponseStatus.Ok, contentResponse.Status);
+            Assert.Equal(content, contentResponse.Entity.Content);
+        }
 
         [Fact]
         public void TestThatServesRootStaticFile()
