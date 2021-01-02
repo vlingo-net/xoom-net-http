@@ -35,6 +35,7 @@ namespace Vlingo.Http.Tests.Resource
             Assert.NotNull(_resource);
             Assert.NotNull(_resource.Stage);
             Assert.NotNull(_resource.Logger);
+            Assert.NotNull(_resource.Scheduler);
             Assert.Null(_resource.Context);
         }
 
@@ -107,7 +108,7 @@ namespace Vlingo.Http.Tests.Resource
             {
             }
             
-            public ICompletes<Response> Test() => Completes.WithSuccess(Response.Of(Response.ResponseStatus.Ok));
+            public ICompletes<Response> Test() => Vlingo.Common.Completes.WithSuccess(Response.Of(Response.ResponseStatus.Ok));
 
             public override Http.Resource.Resource Routes => ResourceBuilder.Resource("Hello Resource", this,
                 ResourceBuilder.Get("/test").Handle(Test));
