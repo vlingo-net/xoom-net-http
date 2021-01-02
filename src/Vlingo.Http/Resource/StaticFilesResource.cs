@@ -19,8 +19,8 @@ namespace Vlingo.Http.Resource
         {
             if (_rootPath == null)
             {
-                var initialSlash = root.StartsWith("/") && root.Length > 2 && root[1] != ':' ? "" : "/";
-                _rootPath = initialSlash + (root.EndsWith("/") ? root.Substring(0, root.Length - 1) : root);
+                var slash = root.EndsWith("/") ? "" : "/";
+                _rootPath = root + slash;
             }
 
             var uri = string.IsNullOrEmpty(contentFile) ? "/index.html" : Context?.Request?.Uri?.AbsolutePath;

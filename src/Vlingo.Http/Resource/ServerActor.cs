@@ -238,8 +238,8 @@ namespace Vlingo.Http.Resource
 
         private class ServerDispatcherPool : AbstractDispatcherPool
         {
-            private AtomicLong _dispatcherPoolIndex;
-            private int _dispatcherPoolSize;
+            private readonly AtomicLong _dispatcherPoolIndex;
+            private readonly int _dispatcherPoolSize;
 
             public ServerDispatcherPool(Stage stage, Resources resources, int dispatcherPoolSize)
                 : base(stage, resources, dispatcherPoolSize)
