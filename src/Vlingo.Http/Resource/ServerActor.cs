@@ -238,20 +238,20 @@ namespace Vlingo.Http.Resource
 
         private class ServerDispatcherPool : AbstractDispatcherPool
         {
-            private int _dispatcherPoolIndex;
+            private AtomicLong _dispatcherPoolIndex;
+            private int _dispatcherPoolSize;
 
             public ServerDispatcherPool(Stage stage, Resources resources, int dispatcherPoolSize)
                 : base(stage, resources, dispatcherPoolSize)
-                    => _dispatcherPoolIndex = 0;
+            {
+                _dispatcherPoolIndex = new AtomicLong(0);
+                _dispatcherPoolSize = DispatcherPool.Length;
+            }
 
             public override IDispatcher Dispatcher()
             {
-                if (_dispatcherPoolIndex >= DispatcherPool.Length)
-                {
-                    _dispatcherPoolIndex = 0;
-                }
-
-                return DispatcherPool[_dispatcherPoolIndex++];
+                var index = (int) (_dispatcherPoolIndex.IncrementAndGet() % _dispatcherPoolSize);
+                return DispatcherPool[index];
             }
         }
 
