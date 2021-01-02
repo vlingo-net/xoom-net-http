@@ -43,7 +43,7 @@ namespace Vlingo.Http.Resource
         
         private string ContentFilePath(string path)
         {
-            var fileSystemPath = string.Join(" ", path.Split(new[] {"%20"}, StringSplitOptions.None));
+            var fileSystemPath = $@"{path}";
             var maybeContent = File.GetAttributes(fileSystemPath);
 
             if (maybeContent.HasFlag(FileAttributes.Directory))
