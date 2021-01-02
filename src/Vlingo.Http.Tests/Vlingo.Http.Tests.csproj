@@ -40,10 +40,10 @@
     <None Update="Content\views\About.vue">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Content\views\index.html">
+    <None Update="Content\index.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Content\index.html">
+    <None Update="Content\views\Test 2\index.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

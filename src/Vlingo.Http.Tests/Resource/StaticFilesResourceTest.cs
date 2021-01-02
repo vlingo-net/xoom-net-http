@@ -31,7 +31,8 @@ namespace Vlingo.Http.Tests.Resource
         private readonly Progress _progress;
         private readonly World _world;
 
-        private string GetRequest(string filePath) => $"GET {filePath} HTTP/1.1\nHost: vlingo.io\n\n";
+        private string GetRequest(string filePath)
+            => $"GET {string.Join("%20", filePath.Split(" "))} HTTP/1.1\nHost: vlingo.io\n\n";
         
         [Fact]
         public void TestThatServesRootDefaultStaticFile()
@@ -58,9 +59,9 @@ namespace Vlingo.Http.Tests.Resource
         [Fact]
         public void TestThatServesDefaultStaticFile()
         {
-            var resource = "/views/index.html";
+            var resource = "/views/test 2//index.html";
             var content = ReadTextFile(_contentRoot + resource);
-            var request = GetRequest("/views/");
+            var request = GetRequest("/views/test 2/");
             _client.RequestWith(ToByteBuffer(request));
 
             var consumeCalls = _progress.ExpectConsumeTimes(1);
