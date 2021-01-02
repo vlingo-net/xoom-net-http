@@ -262,13 +262,11 @@ namespace Vlingo.Http.Resource
             }
         }
         
-        private static List<string> ListOfSorted(string[] actionSubPaths)
+        private static IEnumerable<string> ListOfSorted(string[] actionSubPaths)
         {
             var sortedActionsSubPaths = actionSubPaths.OrderByDescending(x => x.Length);
-            var list = new List<string>(2 + actionSubPaths.Length);
+            var list = new List<string>(2 + actionSubPaths.Length) {StaticFilesResourceRoot1, StaticFilesResourceRoot2};
 
-            list.Add(StaticFilesResourceRoot1);
-            list.Add(StaticFilesResourceRoot2);
             list.AddRange(sortedActionsSubPaths);
 
             return list;
