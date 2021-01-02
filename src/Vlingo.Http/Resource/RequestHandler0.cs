@@ -31,27 +31,27 @@ namespace Vlingo.Http.Resource
         {
         }
 
-        public RequestHandler0? Handle(Handler0 handler)
+        public RequestHandler0 Handle(Handler0 handler)
         {
             _executor = (request, mediaTypeMapper1, errorHandler1, logger)
                 => RequestExecutor.ExecuteRequest(() => handler.Invoke(), errorHandler1, logger);
             return this;
         }
 
-        public RequestHandler0? Handle(ObjectHandler0 handler)
+        public RequestHandler0 Handle(ObjectHandler0 handler)
         {
             _executor = (request, mediaTypeMapper1, errorHandler1, logger)
                 => RequestObjectExecutor.ExecuteRequest(request, mediaTypeMapper1, () => handler.Invoke(), errorHandler1, logger);
             return this;
         }
 
-        public RequestHandler0? OnError(IErrorHandler errorHandler)
+        public RequestHandler0 OnError(IErrorHandler errorHandler)
         {
             ErrorHandler = errorHandler;
             return this;
         }
 
-        public RequestHandler0? Mapper(MediaTypeMapper mediaTypeMapper)
+        public RequestHandler0 Mapper(MediaTypeMapper mediaTypeMapper)
         {
             MediaTypeMapper = mediaTypeMapper;
             return this;
