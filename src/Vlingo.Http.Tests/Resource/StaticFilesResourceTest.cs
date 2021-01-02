@@ -236,7 +236,7 @@ namespace Vlingo.Http.Tests.Resource
                 _world.DefaultLogger);
         }
 
-        private string ReadTextFile(string path) => File.ReadAllText(path);
+        private string ReadTextFile(string path) => File.ReadAllText($@"{path}");
 
         private byte[] ToByteBuffer(string requestContent)
         {
