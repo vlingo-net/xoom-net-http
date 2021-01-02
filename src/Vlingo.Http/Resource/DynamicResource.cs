@@ -14,13 +14,19 @@ namespace Vlingo.Http.Resource
 {
     public class DynamicResource : Resource
     {
+        internal DynamicResourceHandler? DynamicResourceHandler { get; }
         internal IList<RequestHandler> Handlers { get; }
         public IList<Action> Actions { get; } = new List<Action>();
 
-        public DynamicResource(string name, int handlerPoolSize, IList<RequestHandler> unsortedHandlers)
+        protected internal DynamicResource(string name, int handlerPoolSize, IList<RequestHandler> unsortedHandlers) : this(name, null, handlerPoolSize, unsortedHandlers)
+        {
+        }
+        
+        protected internal DynamicResource(string name, DynamicResourceHandler? dynamicResourceHandler, int handlerPoolSize, IList<RequestHandler> unsortedHandlers)
             : base(name, handlerPoolSize)
         {
             Handlers = SortHandlersBySlashes(unsortedHandlers);
+            DynamicResourceHandler = dynamicResourceHandler;
             var currentId = 0;
             foreach (var predicate in Handlers)
             {
@@ -38,6 +44,8 @@ namespace Vlingo.Http.Resource
             try
             {
                 var handler = Handlers[mappedParameters!.ActionId];
+                DynamicResourceHandler?.SetContext(context);
+
                 PooledHandler.HandleFor(context, mappedParameters, handler);
             }
             catch

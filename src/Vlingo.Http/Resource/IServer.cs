@@ -99,5 +99,32 @@ namespace Vlingo.Http.Resource
 
             return server;
         }
+        
+        public static IServer StartWithAgent(
+            Stage stage,
+            Resources resources,
+            int port,
+            int dispatcherPoolSize) =>
+            StartWithAgent(stage, resources, Filters.None(), port, dispatcherPoolSize);
+
+        public static IServer StartWithAgent(
+            Stage stage,
+            Resources resources,
+            Filters filters,
+            int port,
+            int dispatcherPoolSize) =>
+            StartWithAgent(stage, resources, filters, port, new Configuration.SizingConf(1, dispatcherPoolSize, 100, 10240), "queueMailbox");
+
+        public static IServer StartWithAgent(Stage stage, Resources resources, Filters filters, int port, Configuration.SizingConf sizing, string severMailboxTypeName)
+        {
+            var server = stage.ActorFor<IServer>(
+                () => new ServerActor(resources, filters, port, sizing, new Configuration.TimingConf(2, 2, 100), severMailboxTypeName),
+                severMailboxTypeName, ServerActor.ServerName, stage.World.AddressFactory.WithHighId(),
+                stage.World.DefaultLogger);
+
+            server.StartUp();
+
+            return server;
+        }
     }
 }
