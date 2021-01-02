@@ -50,7 +50,8 @@ namespace Vlingo.Http.Resource
             {
                 var builder = new StringBuilder(fileSystemPath);
 
-                if (!path.EndsWith("/")) {
+                if (!path.EndsWith("/"))
+                {
                     builder.Append("/");
                 }
 

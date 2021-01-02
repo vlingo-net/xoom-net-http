@@ -59,7 +59,7 @@ namespace Vlingo.Http.Tests.Resource
         [Fact]
         public void TestThatServesDefaultStaticFile()
         {
-            var resource = "/views/test 2//index.html";
+            var resource = "/views/test 2/index.html";
             var content = ReadTextFile(_contentRoot + resource);
             var request = GetRequest("/views/test 2/");
             _client.RequestWith(ToByteBuffer(request));
