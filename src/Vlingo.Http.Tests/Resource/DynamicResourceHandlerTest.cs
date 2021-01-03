@@ -21,6 +21,7 @@ namespace Vlingo.Http.Tests.Resource
 {
     public class DynamicResourceHandlerTest : IDisposable
     {
+        private static readonly AtomicInteger BaseServerPort = new AtomicInteger(18080);
         private readonly MemoryStream _buffer = new MemoryStream(65535);
         private readonly IClientRequestResponseChannel _client;
         private readonly Progress _progress;
@@ -43,7 +44,7 @@ namespace Vlingo.Http.Tests.Resource
         public void TestThatContextIsSet()
         {
             var request = GetTestRequest();
-            _client.RequestWith(ToByteBuffer(request).ToArray());
+            _client.RequestWith(ToByteBuffer(request));
             var consumeCalls = _progress.ExpectConsumeTimes(1);
             
             while (consumeCalls.TotalWrites < 1)
@@ -72,15 +73,15 @@ namespace Vlingo.Http.Tests.Resource
             _world = World.StartWithDefaults("test-dynamic-resource-handler");
 
             _resource = new TestResource(_world.Stage);
-
-            _server = ServerFactory.StartWithAgent(_world.Stage, Resources.Are(_resource.Routes), 18080, 2);
+            var serverPort = BaseServerPort.GetAndIncrement();
+            _server = ServerFactory.StartWithAgent(_world.Stage, Resources.Are(_resource.Routes), serverPort, 2);
 
             _progress = new Progress();
             
             var consumer = _world.ActorFor<IResponseChannelConsumer>(
                 () => new TestResponseChannelConsumer(_progress));
             _client = new BasicClientRequestResponseChannel(
-                Address.From(Host.Of("localhost"), 18080, AddressType.None), consumer, 100, 10240,
+                Address.From(Host.Of("localhost"), serverPort, AddressType.None), consumer, 100, 10240,
                 _world.DefaultLogger);
         }
         
@@ -94,12 +95,12 @@ namespace Vlingo.Http.Tests.Resource
 
         private string GetTestRequest() => "GET /test" + " HTTP/1.1\nHost: vlingo.io\nConnection: close\n\n";
 
-        private MemoryStream ToByteBuffer(string requestContent)
+        private byte[] ToByteBuffer(string requestContent)
         {
             _buffer.Clear();
             _buffer.Write(Converters.TextToBytes(requestContent));
             _buffer.Flip();
-            return _buffer;
+            return _buffer.ToArray();
         }
 
         private class TestResource : DynamicResourceHandler
