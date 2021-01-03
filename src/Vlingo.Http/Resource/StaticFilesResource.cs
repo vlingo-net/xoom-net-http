@@ -43,7 +43,7 @@ namespace Vlingo.Http.Resource
         
         private string ContentFilePath(string path)
         {
-            var fileSystemPath = $@"{path.Replace("%20", " ")}";
+            var fileSystemPath = Path.GetFullPath($@"{path.Replace("%20", " ")}");
             var maybeContent = File.GetAttributes(fileSystemPath);
 
             if (maybeContent.HasFlag(FileAttributes.Directory))
