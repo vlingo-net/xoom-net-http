@@ -165,7 +165,8 @@ namespace Vlingo.Http.Resource
                 var resourcePath = resourceHandlerType.FullName?.Substring(0, resourceHandlerType.FullName.LastIndexOf('.'))
                     .Replace('.', Path.DirectorySeparatorChar);
                 var filePath = Path.Combine(classPath.DirectoryName!, resourcePath!, resourceHandlerType.Name + DispatcherSuffix + ".dll");
-                assembly = Assembly.LoadFrom(filePath);
+                byte[] assemblyBytes = File.ReadAllBytes(filePath);
+                assembly = Assembly.Load(assemblyBytes);
                 return true;
             }
             catch
@@ -185,7 +186,8 @@ namespace Vlingo.Http.Resource
                     .Replace('.', Path.DirectorySeparatorChar);
                 var resourceHandlerName = resourceHandlerTypeName?.Substring(resourceHandlerTypeName.LastIndexOf('.') + 1);
                 var filePath = Path.Combine(classPath.DirectoryName!, resourcePath!, resourceHandlerName + DispatcherSuffix + ".dll");
-                assembly = Assembly.LoadFrom(filePath);
+                byte[] assemblyBytes = File.ReadAllBytes(filePath);
+                assembly = Assembly.Load(assemblyBytes);
                 return true;
             }
             catch
