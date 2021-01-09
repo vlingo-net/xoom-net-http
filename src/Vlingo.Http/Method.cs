@@ -52,7 +52,7 @@ namespace Vlingo.Http
                 case "TRACE":
                     return Trace;
                 default:
-                    throw new ArgumentException($"{Response.ResponseStatus.MethodNotAllowed.GetDescription()}\n\n${methodNameText}");
+                    throw new ArgumentException($"{ResponseStatus.MethodNotAllowed.GetDescription()}\n\n${methodNameText}");
             }
         }
 

@@ -15,15 +15,15 @@ namespace Vlingo.Http.Resource
         {
             if (ex is MediaTypeNotSupportedException)
             {
-                return Response.Of(Response.ResponseStatus.UnsupportedMediaType);
+                return Response.Of(ResponseStatus.UnsupportedMediaType);
             }
             else if (ex is ArgumentException)
             {
-                return Response.Of(Response.ResponseStatus.BadRequest);
+                return Response.Of(ResponseStatus.BadRequest);
             }
             else
             {
-                return Response.Of(Response.ResponseStatus.InternalServerError);
+                return Response.Of(ResponseStatus.InternalServerError);
             }
         };
 

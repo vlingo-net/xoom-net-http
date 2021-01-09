@@ -83,7 +83,7 @@ namespace Vlingo.Http.Tests.Resource.Sse
 
             var response =
                 Response.Of(
-                    Response.ResponseStatus.Ok,
+                    ResponseStatus.Ok,
                     Headers.Of(ResponseHeader.WithContentType("text/@event-stream")), 
                 @event.Sendable());
 
@@ -107,7 +107,7 @@ namespace Vlingo.Http.Tests.Resource.Sse
 
             var response =
                 Response.Of(
-                    Response.ResponseStatus.Ok,
+                    ResponseStatus.Ok,
                     Headers.Of(ResponseHeader.WithContentType("text/@event-stream")), 
                 @event.Sendable());
 
@@ -127,7 +127,7 @@ namespace Vlingo.Http.Tests.Resource.Sse
 
             var response =
                 Response.Of(
-                    Response.ResponseStatus.Ok,
+                    ResponseStatus.Ok,
                     Headers.Of(ResponseHeader.WithContentType("text/@event-stream")), 
                 @event.Sendable());
 

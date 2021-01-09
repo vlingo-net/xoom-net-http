@@ -30,7 +30,7 @@ namespace Vlingo.Http.Tests.Resource
 
             _entities.AddOrUpdate(data.Id, taggedData, (k, value) => value);
 
-            return Common.Completes.WithSuccess(Response.Of(Response.ResponseStatus.Created,
+            return Common.Completes.WithSuccess(Response.Of(ResponseStatus.Created,
                 JsonSerialization.Serialized(taggedData)));
         }
 
@@ -39,8 +39,8 @@ namespace Vlingo.Http.Tests.Resource
             var gotData = _entities.TryGetValue(resId, out var data);
 
             return Common.Completes.WithSuccess(!gotData
-                ? Response.Of(Response.ResponseStatus.NotFound)
-                : Response.Of(Response.ResponseStatus.Ok, JsonSerialization.Serialized(data)));
+                ? Response.Of(ResponseStatus.NotFound)
+                : Response.Of(ResponseStatus.Ok, JsonSerialization.Serialized(data)));
         }
 
         public override Http.Resource.Resource Routes() =>

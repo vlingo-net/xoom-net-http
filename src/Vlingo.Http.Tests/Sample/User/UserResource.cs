@@ -39,7 +39,7 @@ namespace Vlingo.Http.Tests.Sample.User
             _repository.Save(userState);
 
             Completes.With(Response.Of(
-                Response.ResponseStatus.Created,
+                ResponseStatus.Created,
                 Headers.Of(ResponseHeader.Of(ResponseHeader.Location, UserLocation(userState.Id))), 
                 JsonSerialization.Serialized(UserData.From(userState))));
         }
@@ -48,11 +48,11 @@ namespace Vlingo.Http.Tests.Sample.User
         {
             if (userId.EndsWith("123"))
             {
-                Completes.With(Response.Of(Response.ResponseStatus.PermanentRedirect, Headers.Of(ResponseHeader.Of(ResponseHeader.Location, "/"))));
+                Completes.With(Response.Of(ResponseStatus.PermanentRedirect, Headers.Of(ResponseHeader.Of(ResponseHeader.Location, "/"))));
             } 
             else
             {
-                Completes.With(Response.Of(Response.ResponseStatus.Ok));
+                Completes.With(Response.Of(ResponseStatus.Ok));
             }
         }
         
@@ -60,18 +60,18 @@ namespace Vlingo.Http.Tests.Sample.User
         {
             Stage.ActorOf<IUser>(_addressFactory.From(userId))
                 .AndThenTo(user => user.WithContact(new Contact(contactData.EmailAddress, contactData.TelephoneNumber)))
-                .OtherwiseConsume(noUser => Completes.With(Response.Of(Response.ResponseStatus.NotFound, UserLocation(userId))))
-                .AndThenConsume(userState => Response.Of(Response.ResponseStatus.Ok, JsonSerialization.Serialized(UserData.From(userState))));
+                .OtherwiseConsume(noUser => Completes.With(Response.Of(ResponseStatus.NotFound, UserLocation(userId))))
+                .AndThenConsume(userState => Response.Of(ResponseStatus.Ok, JsonSerialization.Serialized(UserData.From(userState))));
         }
 
         public void ChangeName(string userId, NameData nameData)
         {
             Stage.ActorOf<IUser>(_addressFactory.From(userId))
                 .AndThenTo(user => user.WithName(new Name(nameData.Given, nameData.Family)))
-                .OtherwiseConsume(noUser => Completes.With(Response.Of(Response.ResponseStatus.NotFound, UserLocation(userId))))
+                .OtherwiseConsume(noUser => Completes.With(Response.Of(ResponseStatus.NotFound, UserLocation(userId))))
                 .AndThenConsume(userState => {
                     _repository.Save(userState);
-                    Completes.With(Response.Of(Response.ResponseStatus.Ok, JsonSerialization.Serialized(UserData.From(userState))));
+                    Completes.With(Response.Of(ResponseStatus.Ok, JsonSerialization.Serialized(UserData.From(userState))));
             });
         }
 
@@ -80,11 +80,11 @@ namespace Vlingo.Http.Tests.Sample.User
             var userState = _repository.UserOf(userId);
             if (userState.DoesNotExist())
             {
-                Completes.With(Response.Of(Response.ResponseStatus.NotFound, UserLocation(userId)));
+                Completes.With(Response.Of(ResponseStatus.NotFound, UserLocation(userId)));
             }
             else
             {
-                Completes.With(Response.Of(Response.ResponseStatus.Ok, JsonSerialization.Serialized(UserData.From(userState))));
+                Completes.With(Response.Of(ResponseStatus.Ok, JsonSerialization.Serialized(UserData.From(userState))));
             }
         }
 
@@ -98,7 +98,7 @@ namespace Vlingo.Http.Tests.Sample.User
                 users.Add(UserData.From(userState));
             }
             
-            Completes.With(Response.Of(Response.ResponseStatus.Ok, JsonSerialization.Serialized(users)));
+            Completes.With(Response.Of(ResponseStatus.Ok, JsonSerialization.Serialized(users)));
         }
         
         private string UserLocation(string userId) => $"/users/{userId}";

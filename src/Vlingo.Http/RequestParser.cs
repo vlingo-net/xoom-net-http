@@ -114,7 +114,7 @@ namespace Vlingo.Http
 
                 _fullRequestsIterator.Dispose();
                 throw new InvalidOperationException(
-                    $"{Response.ResponseStatus.BadRequest}\n\nRequest is not completed: {_method} {_uri}");
+                    $"{ResponseStatus.BadRequest}\n\nRequest is not completed: {_method} {_uri}");
             }
 
             internal bool HasFullRequest()
@@ -330,7 +330,7 @@ namespace Vlingo.Http
                 _continuation = false;
                 while (true)
                 {
-                    var maybeHeaderLine = NextLine(Response.ResponseStatus.BadRequest.GetDescription(),
+                    var maybeHeaderLine = NextLine(ResponseStatus.BadRequest.GetDescription(),
                         "\n\nHeader is required.");
                     if (!maybeHeaderLine.IsPresent)
                     {
@@ -358,7 +358,7 @@ namespace Vlingo.Http
 
                 if (_headers.Count == 0)
                 {
-                    throw new ArgumentException(Response.ResponseStatus.BadRequest.GetDescription() +
+                    throw new ArgumentException(ResponseStatus.BadRequest.GetDescription() +
                                                 "\n\nHeader is required.");
                 }
 
@@ -368,7 +368,7 @@ namespace Vlingo.Http
             private bool ParseRequestLine()
             {
                 _continuation = false;
-                var maybeLine = NextLine(Response.ResponseStatus.BadRequest.GetDescription(),
+                var maybeLine = NextLine(ResponseStatus.BadRequest.GetDescription(),
                     "\n\nRequest line is required.");
                 if (!maybeLine.IsPresent)
                 {
@@ -390,7 +390,7 @@ namespace Vlingo.Http
                 catch (Exception e)
                 {
                     throw new ArgumentException(
-                        $"{Response.ResponseStatus.BadRequest.GetDescription()}\n\nParsing exception: {e.Message}", e);
+                        $"{ResponseStatus.BadRequest.GetDescription()}\n\nParsing exception: {e.Message}", e);
                 }
             }
 
@@ -409,7 +409,7 @@ namespace Vlingo.Http
                 }
 
                 throw new ArgumentException(
-                    $"{Response.ResponseStatus.BadRequest.GetDescription()}\n\nRequest line part missing: {name}");
+                    $"{ResponseStatus.BadRequest.GetDescription()}\n\nRequest line part missing: {name}");
             }
 
             private bool NewRequest()

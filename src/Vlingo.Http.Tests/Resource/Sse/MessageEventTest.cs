@@ -18,7 +18,7 @@ namespace Vlingo.Http.Tests.Resource.Sse
             var @event = ": I like events.\nid: 1\nevent: E1\ndata: value\nretry: 2500\n\n";
             var response =
                 Response.Of(
-                    Response.ResponseStatus.Ok,
+                    ResponseStatus.Ok,
                     Headers.Of(ResponseHeader.WithContentType("text/event-stream")), @event);
 
             var messageEvents = MessageEvent.From(response);
@@ -44,7 +44,7 @@ namespace Vlingo.Http.Tests.Resource.Sse
 
             var response =
                 Response.Of(
-                    Response.ResponseStatus.Ok,
+                    ResponseStatus.Ok,
                     Headers.Of(ResponseHeader.WithContentType("text/event-stream")),
                     event1 + event2 + event3 + event4);
 

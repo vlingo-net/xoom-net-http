@@ -48,7 +48,7 @@ namespace Vlingo.Http.Tests.Resource.Feed
             _progress.Responses.TryDequeue(out var contentResponse);
 
             Assert.Equal(1, _progress.ConsumeCount.Get());
-            Assert.Equal(Response.ResponseStatus.Ok, contentResponse.Status);
+            Assert.Equal(ResponseStatus.Ok, contentResponse.Status);
             Assert.Equal("events:100:1\n2\n3\n4\n5\n", contentResponse.Entity.Content);
         }
         

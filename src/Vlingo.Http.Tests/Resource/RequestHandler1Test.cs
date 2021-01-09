@@ -28,7 +28,7 @@ namespace Vlingo.Http.Tests.Resource
                     "/posts/{postId}",
                     ParameterResolver.Path<string>(0))
                 .Handle(postId =>
-                    Completes.WithSuccess(Response.Of(Response.ResponseStatus.Ok, JsonSerialization.Serialized(
+                    Completes.WithSuccess(Response.Of(ResponseStatus.Ok, JsonSerialization.Serialized(
                         $"{postId}"))));
 
             var response = handler
@@ -39,7 +39,7 @@ namespace Vlingo.Http.Tests.Resource
             Assert.Equal("/posts/{postId}", handler.Path);
             Assert.Equal(typeof(string), handler.Resolver.ParamClass);
             AssertResponsesAreEquals(
-                Response.Of(Response.ResponseStatus.Ok, JsonSerialization.Serialized("my-post")), response);
+                Response.Of(ResponseStatus.Ok, JsonSerialization.Serialized("my-post")), response);
         }
 
         [Fact]
@@ -70,7 +70,7 @@ namespace Vlingo.Http.Tests.Resource
         public void ActionSignatureWithEmptyParamNameThrowsException()
         {
             var exception = Assert.Throws<ArgumentException>(() => CreateRequestHandler(Method.Get, "/posts/{}", ParameterResolver.Path<string>(0))
-                .Handle(postId => Completes.WithSuccess(Response.Of(Response.ResponseStatus.Ok, JsonSerialization.Serialized(postId)))));
+                .Handle(postId => Completes.WithSuccess(Response.Of(ResponseStatus.Ok, JsonSerialization.Serialized(postId)))));
             Assert.Equal("Empty path parameter name for GET /posts/{}", exception.Message);
         }
 
@@ -78,7 +78,7 @@ namespace Vlingo.Http.Tests.Resource
         public void ActionSignatureWithBlankParamNameThrowsException()
         {
             var exception = Assert.Throws<ArgumentException>(() => CreateRequestHandler(Method.Get, "/posts/{ }", ParameterResolver.Path<string>(0))
-                .Handle(postId => Completes.WithSuccess(Response.Of(Response.ResponseStatus.Ok, JsonSerialization.Serialized(postId)))));
+                .Handle(postId => Completes.WithSuccess(Response.Of(ResponseStatus.Ok, JsonSerialization.Serialized(postId)))));
             Assert.Equal("Empty path parameter name for GET /posts/{ }", exception.Message);
         }
 
@@ -86,7 +86,7 @@ namespace Vlingo.Http.Tests.Resource
         public void ActionWithoutParamNameShouldNotThrowException()
         {
             var handler = CreateRequestHandler(Method.Post, "/posts", ParameterResolver.Body<string>())
-                .Handle(postId => Completes.WithSuccess(Response.Of(Response.ResponseStatus.Ok, JsonSerialization.Serialized(postId))));
+                .Handle(postId => Completes.WithSuccess(Response.Of(ResponseStatus.Ok, JsonSerialization.Serialized(postId))));
 
             Assert.Equal("", handler.ActionSignature);
         }
@@ -108,13 +108,13 @@ namespace Vlingo.Http.Tests.Resource
                     "/posts/{postId}",
                     ParameterResolver.Path<string>(0))
                 .Handle(postId
-                    => Completes.WithSuccess(Response.Of(Response.ResponseStatus.Ok, JsonSerialization.Serialized(
+                    => Completes.WithSuccess(Response.Of(ResponseStatus.Ok, JsonSerialization.Serialized(
                         $"{postId}"))));
 
             var response = handler.Execute(request, mappedParameters, Logger).Outcome;
 
             AssertResponsesAreEquals(
-                Response.Of(Response.ResponseStatus.Ok, JsonSerialization.Serialized("my-post")),
+                Response.Of(ResponseStatus.Ok, JsonSerialization.Serialized("my-post")),
                 response);
         }
         
@@ -130,7 +130,7 @@ namespace Vlingo.Http.Tests.Resource
                     new Action.MappedParameter("String", "my-post")
                 });
             var handler = CreateRequestHandler(Method.Get, "/posts/{postId}", ParameterResolver.Path<int>(0))
-                .Handle(postId => Completes.WithSuccess(Response.Of(Response.ResponseStatus.Ok, JsonSerialization.Serialized("it is my-post"))));
+                .Handle(postId => Completes.WithSuccess(Response.Of(ResponseStatus.Ok, JsonSerialization.Serialized("it is my-post"))));
 
             var exception = Assert.Throws<ArgumentException>(() => handler.Execute(request, mappedParameters, Logger));
             Assert.Equal("Value my-post is of mimeType String instead of Int32", exception.Message);
@@ -282,7 +282,7 @@ namespace Vlingo.Http.Tests.Resource
                 method,
                 path,
                 parameterResolver1,
-                ErrorHandler.HandleAllWith(Response.ResponseStatus.InternalServerError),
+                ErrorHandler.HandleAllWith(ResponseStatus.InternalServerError),
                 DefaultMediaTypeMapper.Instance);
         }
     }

@@ -27,7 +27,7 @@ namespace Vlingo.Http.Tests.Resource.Feed
                 body.Append(count).Append("\n");
             }
             
-            var response = Response.Of(Response.ResponseStatus.Ok, body.ToString());
+            var response = Response.Of(ResponseStatus.Ok, body.ToString());
             request.Context.Completes.With(response);
         }
     }

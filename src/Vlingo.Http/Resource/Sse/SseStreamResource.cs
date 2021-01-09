@@ -40,7 +40,7 @@ namespace Vlingo.Http.Resource.Sse
 
             PublisherFor(streamName, feedClass, feedPayload, feedInterval, feedDefaultId).Subscribe(subscriber);
 
-            Completes?.With(Response.Of(Response.ResponseStatus.Ok, ResponseHeader.WithHeaders(ResponseHeader.WithCorrelationId(correlationId))));
+            Completes?.With(Response.Of(ResponseStatus.Ok, ResponseHeader.WithHeaders(ResponseHeader.WithCorrelationId(correlationId))));
         }
 
         public void UnsubscribeFromStream(string streamName, string id)
@@ -50,7 +50,7 @@ namespace Vlingo.Http.Resource.Sse
                 publisher.Unsubscribe(new SseSubscriber(streamName, new SseClient(Context?.ClientContext)));
             }
 
-            Completes?.With(Response.Of(Response.ResponseStatus.Ok));
+            Completes?.With(Response.Of(ResponseStatus.Ok));
         }
 
         private ISsePublisher PublisherFor(string streamName, Type feedClass, int feedPayload, int feedInterval, string feedDefaultId)

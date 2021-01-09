@@ -29,7 +29,7 @@ namespace Vlingo.Http.Tests.Resource
             ParameterResolver.Query("page", 10),
                 ParameterResolver.Query("pageSize", 10))
                 .Handle((postId, commentId, userId, page, pageSize) =>
-                    Completes.WithSuccess(Response.Of(Response.ResponseStatus.Ok, JsonSerialization.Serialized(
+                    Completes.WithSuccess(Response.Of(ResponseStatus.Ok, JsonSerialization.Serialized(
                         $"{postId} {commentId}"))));
 
             var response = handler
@@ -41,7 +41,7 @@ namespace Vlingo.Http.Tests.Resource
             Assert.Equal(typeof(string), handler.ResolverParam1.ParamClass);
             Assert.Equal(typeof(string), handler.ResolverParam2.ParamClass);
             Assert.Equal(typeof(string), handler.ResolverParam3.ParamClass);
-            AssertResponsesAreEquals(Response.Of(Response.ResponseStatus.Ok, JsonSerialization.Serialized("my-post my-comment")), response);
+            AssertResponsesAreEquals(Response.Of(ResponseStatus.Ok, JsonSerialization.Serialized("my-post my-comment")), response);
         }
 
         [Fact]
@@ -97,12 +97,12 @@ namespace Vlingo.Http.Tests.Resource
                     ParameterResolver.Query("page", 10),
                     ParameterResolver.Query("pageSize", 10))
                 .Handle((postId, commentId, userId, page, pageSize)
-                    => Completes.WithSuccess(Response.Of(Response.ResponseStatus.Ok, JsonSerialization.Serialized(
+                    => Completes.WithSuccess(Response.Of(ResponseStatus.Ok, JsonSerialization.Serialized(
                         $"{postId} {commentId} {userId}"))));
 
             var response = handler.Execute(request, mappedParameters, Logger).Outcome;
 
-            AssertResponsesAreEquals(Response.Of(Response.ResponseStatus.Ok, JsonSerialization.Serialized("my-post my-comment my-user")), response);
+            AssertResponsesAreEquals(Response.Of(ResponseStatus.Ok, JsonSerialization.Serialized("my-post my-comment my-user")), response);
         }
 
         public RequestHandler5Test(ITestOutputHelper output) : base(output)
@@ -125,7 +125,7 @@ namespace Vlingo.Http.Tests.Resource
                 parameterResolver3,
                 parameterResolver4,
                 parameterResolver5,
-                ErrorHandler.HandleAllWith(Response.ResponseStatus.InternalServerError),
+                ErrorHandler.HandleAllWith(ResponseStatus.InternalServerError),
                 DefaultMediaTypeMapper.Instance);
         }
     }

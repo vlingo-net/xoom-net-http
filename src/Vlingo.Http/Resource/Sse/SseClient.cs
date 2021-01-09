@@ -63,7 +63,7 @@ namespace Vlingo.Http.Resource.Sse
         {
             try
             {
-                var response = Response.Of(Response.ResponseStatus.Ok, Headers.Copy());
+                var response = Response.Of(ResponseStatus.Ok, Headers.Copy());
                 var buffer = BasicConsumerByteBuffer.Allocate(1, _maxMessageSize);
                 _context?.RespondWith(response.Into(buffer));
             }

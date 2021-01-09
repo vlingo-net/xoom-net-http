@@ -79,7 +79,7 @@ namespace Vlingo.Http
             private Headers<ResponseHeader> _headers;
             private bool _keepAlive;
             private long _outOfContentTime;
-            private Response.ResponseStatus _status;
+            private ResponseStatus _status;
             private bool _stream;
             private Version? _version;
 
@@ -392,7 +392,7 @@ namespace Vlingo.Http
                 if (_bodyOnly)
                 {
                     _version = Version.Http1_1;
-                    _status = Response.ResponseStatus.Ok;
+                    _status = ResponseStatus.Ok;
                     NextStep();
                     return false;
                 }

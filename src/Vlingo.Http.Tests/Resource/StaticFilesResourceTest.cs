@@ -52,7 +52,7 @@ namespace Vlingo.Http.Tests.Resource
             _progress.Responses.TryDequeue(out var contentResponse);
 
             Assert.Equal(1, _progress.ConsumeCount.Get());
-            Assert.Equal(Response.ResponseStatus.Ok, contentResponse.Status);
+            Assert.Equal(ResponseStatus.Ok, contentResponse.Status);
             Assert.Equal(content, contentResponse.Entity.Content);
         }
         
@@ -74,7 +74,7 @@ namespace Vlingo.Http.Tests.Resource
             _progress.Responses.TryDequeue(out var contentResponse);
 
             Assert.Equal(1, _progress.ConsumeCount.Get());
-            Assert.Equal(Response.ResponseStatus.Ok, contentResponse.Status);
+            Assert.Equal(ResponseStatus.Ok, contentResponse.Status);
             Assert.Equal(content, contentResponse.Entity.Content);
         }
 
@@ -97,7 +97,7 @@ namespace Vlingo.Http.Tests.Resource
             _progress.Responses.TryDequeue(out var contentResponse);
 
             Assert.Equal(1, _progress.ConsumeCount.Get());
-            Assert.Equal(Response.ResponseStatus.Ok, contentResponse.Status);
+            Assert.Equal(ResponseStatus.Ok, contentResponse.Status);
             Assert.Equal(content, contentResponse.Entity.Content);
         }
 
@@ -120,7 +120,7 @@ namespace Vlingo.Http.Tests.Resource
             _progress.Responses.TryDequeue(out var contentResponse);
 
             Assert.Equal(1, _progress.ConsumeCount.Get());
-            Assert.Equal(Response.ResponseStatus.Ok, contentResponse.Status);
+            Assert.Equal(ResponseStatus.Ok, contentResponse.Status);
             Assert.Equal(content, contentResponse.Entity.Content);
         }
 
@@ -142,7 +142,7 @@ namespace Vlingo.Http.Tests.Resource
             _progress.Responses.TryDequeue(out var contentResponse);
             
             Assert.Equal(1, _progress.ConsumeCount.Get());
-            Assert.Equal(Response.ResponseStatus.Ok, contentResponse.Status);
+            Assert.Equal(ResponseStatus.Ok, contentResponse.Status);
             Assert.Equal(content, contentResponse.Entity.Content);
         }
 
@@ -164,7 +164,7 @@ namespace Vlingo.Http.Tests.Resource
             _progress.Responses.TryDequeue(out var contentResponse);
             
             Assert.Equal(1, _progress.ConsumeCount.Get());
-            Assert.Equal(Response.ResponseStatus.Ok, contentResponse.Status);
+            Assert.Equal(ResponseStatus.Ok, contentResponse.Status);
             Assert.Equal(content, contentResponse.Entity.Content);
         }
 

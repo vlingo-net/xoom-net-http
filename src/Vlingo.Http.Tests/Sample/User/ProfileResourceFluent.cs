@@ -26,7 +26,7 @@ namespace Vlingo.Http.Tests.Sample.User
             return _stage.ActorOf<IProfile>(_stage.World.AddressFactory.FindableBy(int.Parse(userId)))
                 .AndThenTo(profile => {
                     var profileState = _repository.ProfileOf(userId);
-                    return Vlingo.Common.Completes.WithSuccess(Response.Of(Response.ResponseStatus.Ok, Headers.Of(ResponseHeader.Of(ResponseHeader.Location, ProfileLocation(userId))),
+                    return Vlingo.Common.Completes.WithSuccess(Response.Of(ResponseStatus.Ok, Headers.Of(ResponseHeader.Of(ResponseHeader.Location, ProfileLocation(userId))),
                         JsonSerialization.Serialized(ProfileData.From(profileState))));
                 })
                 .Otherwise<Response>(noProfile => {
@@ -40,7 +40,7 @@ namespace Vlingo.Http.Tests.Sample.User
                     Stage.ActorFor<IProfile>(() => new ProfileActor(profileState));
 
                 _repository.Save(profileState);
-                return Response.Of(Response.ResponseStatus.Created, JsonSerialization.Serialized(ProfileData.From(profileState)));
+                return Response.Of(ResponseStatus.Created, JsonSerialization.Serialized(ProfileData.From(profileState)));
             });
         }
 
@@ -49,10 +49,10 @@ namespace Vlingo.Http.Tests.Sample.User
             var profileState = _repository.ProfileOf(userId);
             if (profileState.DoesNotExist)
             {
-                return Vlingo.Common.Completes.WithSuccess(Response.Of(Response.ResponseStatus.NotFound, ProfileLocation(userId)));
+                return Vlingo.Common.Completes.WithSuccess(Response.Of(ResponseStatus.NotFound, ProfileLocation(userId)));
             }
 
-            return Vlingo.Common.Completes.WithSuccess(Response.Of(Response.ResponseStatus.Ok, JsonSerialization.Serialized(ProfileData.From(profileState))));
+            return Vlingo.Common.Completes.WithSuccess(Response.Of(ResponseStatus.Ok, JsonSerialization.Serialized(ProfileData.From(profileState))));
         }
 
         public override Http.Resource.Resource Routes()

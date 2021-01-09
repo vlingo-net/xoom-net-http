@@ -211,7 +211,7 @@ namespace Vlingo.Http.Resource
                     {
                         requestResponseHttpContext.RequestResponseContext.ConsumerData<RequestParser>(null!);
                         toRemove.Add(id);
-                        requestResponseHttpContext.HttpContext.Completes.With(Response.Of(Response.ResponseStatus.BadRequest, "Missing content."));
+                        requestResponseHttpContext.HttpContext.Completes.With(Response.Of(ResponseStatus.BadRequest, "Missing content."));
                         requestResponseHttpContext.RequestResponseContext.ConsumerData<RequestParser>(null!);
                     }
                 }
@@ -330,7 +330,7 @@ namespace Vlingo.Http.Resource
                 catch (Exception e)
                 {
                     _serverActor.Logger.Error("Request parsing failed.", e);
-                    new ResponseCompletes(_serverActor, requestResponseContext, null).With(Response.Of(Response.ResponseStatus.BadRequest, e.Message));
+                    new ResponseCompletes(_serverActor, requestResponseContext, null).With(Response.Of(ResponseStatus.BadRequest, e.Message));
                 }
                 finally
                 {

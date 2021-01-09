@@ -14,7 +14,7 @@ namespace Vlingo.Http.Tests
         [Fact]
         public void TestResponseWithOneHeaderNoEntity()
         {
-            var response = Response.Of(Version.Http1_1, Response.ResponseStatus.Ok, ResponseHeader.WithHeaders(ResponseHeader.CacheControl, "max-age=3600"));
+            var response = Response.Of(Version.Http1_1, ResponseStatus.Ok, ResponseHeader.WithHeaders(ResponseHeader.CacheControl, "max-age=3600"));
 
             var facsimile = "HTTP/1.1 200 OK\nCache-Control: max-age=3600\n\n";
 
@@ -25,7 +25,7 @@ namespace Vlingo.Http.Tests
         public void TestResponseWithOneHeaderAndEntity()
         {
             var body = "{ text : \"some text\" }";
-            var response = Response.Of(Version.Http1_1, Response.ResponseStatus.Ok, ResponseHeader.WithHeaders(ResponseHeader.CacheControl, "max-age=3600"), body);
+            var response = Response.Of(Version.Http1_1, ResponseStatus.Ok, ResponseHeader.WithHeaders(ResponseHeader.CacheControl, "max-age=3600"), body);
 
             var facsimile =
                 $"HTTP/1.1 200 OK\nCache-Control: max-age=3600\nContent-Length: {body.Length}\n\n{{ text : \"some text\" }}";
@@ -37,7 +37,7 @@ namespace Vlingo.Http.Tests
         public void TestBinaryBodyResponseWithOneHeaderAndEntity()
         {
             byte[] body = {1, 2, 1, 2};
-            var response = Response.Of(Version.Http1_1, Response.ResponseStatus.Ok,
+            var response = Response.Of(Version.Http1_1, ResponseStatus.Ok,
                 Headers.Of(
                     ResponseHeader.Of(ResponseHeader.ContentType, "application/octet-stream"),
                     ResponseHeader.Of(ResponseHeader.ContentLength, body.Length))
@@ -50,7 +50,7 @@ namespace Vlingo.Http.Tests
         [Fact]
         public void TestResponseWithMultipleHeadersNoEntity()
         {
-            var response = Response.Of(Version.Http1_1, Response.ResponseStatus.Ok,
+            var response = Response.Of(Version.Http1_1, ResponseStatus.Ok,
                 ResponseHeader.WithHeaders(ResponseHeader.Of(ResponseHeader.ETag, "123ABC")).And(ResponseHeader.Of(ResponseHeader.CacheControl, "max-age=3600")));
 
             var facsimile = "HTTP/1.1 200 OK\nETag: 123ABC\nCache-Control: max-age=3600\n\n";
@@ -62,7 +62,7 @@ namespace Vlingo.Http.Tests
         public void TestResponseWithMultipleHeadersAndEntity()
         {
             var body = "{ text : \"some text\" }";
-            var response = Response.Of(Version.Http1_1, Response.ResponseStatus.Ok,
+            var response = Response.Of(Version.Http1_1, ResponseStatus.Ok,
                 ResponseHeader.WithHeaders(ResponseHeader.Of(ResponseHeader.ETag, "123ABC")).And(ResponseHeader.Of(ResponseHeader.CacheControl, "max-age=3600")), body);
 
             var facsimile =
@@ -84,7 +84,7 @@ namespace Vlingo.Http.Tests
             var response =
                 Response.Of(
                     Version.Http1_1,
-                    Response.ResponseStatus.Ok,
+                    ResponseStatus.Ok,
                     ResponseHeader.WithHeaders(ResponseHeader.Of(ResponseHeader.TransferEncoding, "chunked")).And(ResponseHeader.Of(ResponseHeader.CacheControl, "no-cache")),
                     Body.BeginChunked().AppendChunk(chunk1).AppendChunk(chunk2).End());
 

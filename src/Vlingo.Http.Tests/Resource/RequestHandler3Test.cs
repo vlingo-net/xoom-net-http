@@ -29,7 +29,7 @@ namespace Vlingo.Http.Tests.Resource
                     ParameterResolver.Path<string>(1),
                     ParameterResolver.Query("page", 10))
                 .Handle((postId, commentId, page) =>
-                    Completes.WithSuccess(Response.Of(Response.ResponseStatus.Ok, JsonSerialization.Serialized(
+                    Completes.WithSuccess(Response.Of(ResponseStatus.Ok, JsonSerialization.Serialized(
                         $"{postId} {commentId}"))));
 
             var response = handler
@@ -41,7 +41,7 @@ namespace Vlingo.Http.Tests.Resource
             Assert.Equal(typeof(string), handler.ResolverParam1.ParamClass);
             Assert.Equal(typeof(string), handler.ResolverParam2.ParamClass);
             AssertResponsesAreEquals(
-                Response.Of(Response.ResponseStatus.Ok, JsonSerialization.Serialized("my-post my-comment")), response);
+                Response.Of(ResponseStatus.Ok, JsonSerialization.Serialized("my-post my-comment")), response);
         }
 
         [Fact]
@@ -93,13 +93,13 @@ namespace Vlingo.Http.Tests.Resource
                     ParameterResolver.Path<string>(1),
                     ParameterResolver.Query("page", 10))
                 .Handle((postId, commentId, page)
-                    => Completes.WithSuccess(Response.Of(Response.ResponseStatus.Ok, JsonSerialization.Serialized(
+                    => Completes.WithSuccess(Response.Of(ResponseStatus.Ok, JsonSerialization.Serialized(
                         $"{postId} {commentId}"))));
 
             var response = handler.Execute(request, mappedParameters, Logger).Outcome;
 
             AssertResponsesAreEquals(
-                Response.Of(Response.ResponseStatus.Ok, JsonSerialization.Serialized("my-post my-comment")),
+                Response.Of(ResponseStatus.Ok, JsonSerialization.Serialized("my-post my-comment")),
                 response);
         }
 
@@ -246,7 +246,7 @@ namespace Vlingo.Http.Tests.Resource
                 parameterResolver1,
                 parameterResolver2,
                 parameterResolver3,
-                ErrorHandler.HandleAllWith(Response.ResponseStatus.InternalServerError),
+                ErrorHandler.HandleAllWith(ResponseStatus.InternalServerError),
                 DefaultMediaTypeMapper.Instance);
         }
     }

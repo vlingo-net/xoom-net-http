@@ -57,7 +57,7 @@ namespace Vlingo.Http.Tests.Resource
             _progress.Responses.TryDequeue(out var createdResponse);
 
             Assert.Equal(1, _progress.ConsumeCount.Get());
-            Assert.Equal(Response.ResponseStatus.Ok, createdResponse.Status);
+            Assert.Equal(ResponseStatus.Ok, createdResponse.Status);
 
             Assert.NotNull(_resource.Context);
             Assert.NotNull(_resource.Context.Request);
@@ -109,7 +109,7 @@ namespace Vlingo.Http.Tests.Resource
             {
             }
             
-            public ICompletes<Response> Test() => Vlingo.Common.Completes.WithSuccess(Response.Of(Response.ResponseStatus.Ok));
+            public ICompletes<Response> Test() => Vlingo.Common.Completes.WithSuccess(Response.Of(ResponseStatus.Ok));
 
             public override Http.Resource.Resource Routes => ResourceBuilder.Resource("Hello Resource", this,
                 ResourceBuilder.Get("/test").Handle(Test));

@@ -30,7 +30,7 @@ namespace Vlingo.Http.Resource
             catch (Exception e)
             {
                 Logger.Error("Error thrown by resource dispatcher", e);
-                context.Completes.With(Response.Of(Response.ResponseStatus.InternalServerError));
+                context.Completes.With(Response.Of(ResponseStatus.InternalServerError));
             }
         }
 
@@ -41,7 +41,7 @@ namespace Vlingo.Http.Resource
                 .Execute(context.Request!, mappedParameters, resource.Logger!)
                 .AndThen(outcome => RespondWith(context, outcome))
                 .Otherwise<Response>(failure => RespondWith(context, failure))
-                .RecoverFrom(exception => Response.Of(Response.ResponseStatus.BadRequest, exception.Message));
+                .RecoverFrom(exception => Response.Of(ResponseStatus.BadRequest, exception.Message));
 
             HandleFor(context, consumer);
         }

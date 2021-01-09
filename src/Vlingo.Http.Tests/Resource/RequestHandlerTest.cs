@@ -25,7 +25,7 @@ namespace Vlingo.Http.Tests.Resource
         [Fact]
         public void ExecutionErrorUsesErrorHandlerWhenExceptionThrown()
         {
-            var testStatus = Response.ResponseStatus.BadRequest;
+            var testStatus = ResponseStatus.BadRequest;
 
             var handler = new RequestHandlerFake(
                 Method.Get, 
@@ -47,7 +47,7 @@ namespace Vlingo.Http.Tests.Resource
         [Fact]
         public void ExecutionErrorObjectUsesErrorHandlerWhenExceptionThrown()
         {
-            var testStatus = Response.ResponseStatus.BadRequest;
+            var testStatus = ResponseStatus.BadRequest;
 
             var validHandler = new ErrorHandlerImpl(exception => {
                 Assert.True(exception != null);
@@ -69,7 +69,7 @@ namespace Vlingo.Http.Tests.Resource
         [Fact]
         public void InternalErrorReturnedWhenErrorHandlerThrowsException()
         {
-            var testStatus = Response.ResponseStatus.InternalServerError;
+            var testStatus = ResponseStatus.InternalServerError;
 
             var handler = new RequestHandlerFake(
                 Method.Get, 
@@ -86,7 +86,7 @@ namespace Vlingo.Http.Tests.Resource
         [Fact]
         public void InternalErrorReturnedWhenNoErrorHandlerDefined()
         {
-            var testStatus = Response.ResponseStatus.InternalServerError;
+            var testStatus = ResponseStatus.InternalServerError;
 
             var handler = new RequestHandlerFake(
                 Method.Get, 
@@ -101,7 +101,7 @@ namespace Vlingo.Http.Tests.Resource
         [Fact]
         public void MappingNotAvailableReturnsMediaTypeNotFoundResponse()
         {
-            var testStatus = Response.ResponseStatus.UnsupportedMediaType;
+            var testStatus = ResponseStatus.UnsupportedMediaType;
 
             var handler = new RequestHandlerFake(
                 Method.Get, 
@@ -121,13 +121,13 @@ namespace Vlingo.Http.Tests.Resource
             var handler = new RequestObjectHandlerFake(
                 Method.Get, 
                 "/hello",
-                () => Completes.WithSuccess(ObjectResponse<Name>.Of(Response.ResponseStatus.Ok, name)));
+                () => Completes.WithSuccess(ObjectResponse<Name>.Of(ResponseStatus.Ok, name)));
 
 
             var response = handler.Execute(Request.WithMethod(Method.Get), null, Logger).Await();
             var nameAsJson = JsonSerialization.Serialized(name);
             AssertResponsesAreEquals(
-                Response.Of(Response.ResponseStatus.Ok,
+                Response.Of(ResponseStatus.Ok,
                     ResponseHeader.WithHeaders(ResponseHeader.ContentType, ContentMediaType.Json.ToString()),
                     nameAsJson),
                 response);
@@ -224,7 +224,7 @@ namespace Vlingo.Http.Tests.Resource
         internal RequestHandlerFake(Method method, string path, List<IParameterResolver> parameterResolvers) : base(method, path, parameterResolvers)
         {
             _executor = (request, mediaTypeMapper1, errorHandler1, logger1) =>
-                RequestExecutor.ExecuteRequest(() => Completes.WithSuccess(Response.Of(Response.ResponseStatus.Ok)), errorHandler1, logger1);
+                RequestExecutor.ExecuteRequest(() => Completes.WithSuccess(Response.Of(ResponseStatus.Ok)), errorHandler1, logger1);
         }
 
         internal RequestHandlerFake(Method method, string path, List<IParameterResolver> parameterResolvers, RequestHandler0.Handler0 handler) : base (method, path, parameterResolvers)

@@ -77,7 +77,7 @@ namespace Vlingo.Http.Resource
                 logger.Error(message, e);
             }
 
-            context.Completes.With(Response.Of(Response.ResponseStatus.NotFound, message));
+            context.Completes.With(Response.Of(ResponseStatus.NotFound, message));
         }
     }
 }

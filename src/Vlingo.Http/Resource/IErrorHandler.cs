@@ -16,7 +16,7 @@ namespace Vlingo.Http.Resource
 
     public static class ErrorHandler
     {
-        public static IErrorHandler HandleAllWith(Response.ResponseStatus status)
+        public static IErrorHandler HandleAllWith(ResponseStatus status)
             => new ErrorHandlerImpl(err => Response.Of(status));
     }
 

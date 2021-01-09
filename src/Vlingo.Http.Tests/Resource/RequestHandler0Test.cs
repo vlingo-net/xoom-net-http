@@ -21,13 +21,13 @@ namespace Vlingo.Http.Tests.Resource
         public void SimpleHandler()
         {
             var handler = new RequestHandler0(Method.Get, "/helloworld")
-                .Handle(() => Completes.WithSuccess(Response.Of(Response.ResponseStatus.Created)));
+                .Handle(() => Completes.WithSuccess(Response.Of(ResponseStatus.Created)));
             var response = handler.Execute(Request.WithMethod(Method.Get), Logger).Outcome;
 
             Assert.NotNull(handler);
             Assert.Equal(Method.Get, handler.Method);
             Assert.Equal("/helloworld", handler.Path);
-            AssertResponsesAreEquals(Response.Of(Response.ResponseStatus.Created), response);
+            AssertResponsesAreEquals(Response.Of(ResponseStatus.Created), response);
         }
 
         [Fact]
@@ -35,7 +35,7 @@ namespace Vlingo.Http.Tests.Resource
         {
             byte[] body = {1, 2, 1, 2};
             var handler = new RequestHandler0(Method.Get, "/helloworld")
-                .Handle(() => Completes.WithSuccess(Response.Of(Response.ResponseStatus.Created, Body.From(body, Body.Encoding.None))));
+                .Handle(() => Completes.WithSuccess(Response.Of(ResponseStatus.Created, Body.From(body, Body.Encoding.None))));
             var response = handler.Execute(Request.WithMethod(Method.Get), Logger).Outcome;
 
             Assert.NotNull(handler);
@@ -56,7 +56,7 @@ namespace Vlingo.Http.Tests.Resource
         [Fact]
         public void ActionSignatureIsEmpty()
         {
-            var handler = new RequestHandler0(Method.Get, "/helloworld").Handle(() => Completes.WithSuccess(Response.Of(Response.ResponseStatus.Created)));
+            var handler = new RequestHandler0(Method.Get, "/helloworld").Handle(() => Completes.WithSuccess(Response.Of(ResponseStatus.Created)));
 
             Assert.Equal("", handler.ActionSignature);
         }
@@ -70,13 +70,13 @@ namespace Vlingo.Http.Tests.Resource
             var mappedParameters =
                 new Action.MappedParameters(1, Method.Get, "ignored", new List<Action.MappedParameter>());
             var handler = new RequestHandler0(Method.Get, "/helloworld")
-                .Handle(()  => Completes.WithSuccess(Response.Of(Response.ResponseStatus.Created)));
+                .Handle(()  => Completes.WithSuccess(Response.Of(ResponseStatus.Created)));
             var response = handler.Execute(request, mappedParameters, Logger).Outcome;
 
             Assert.NotNull(handler);
             Assert.Equal(Method.Get, handler.Method);
             Assert.Equal("/helloworld", handler.Path);
-            AssertResponsesAreEquals(Response.Of(Response.ResponseStatus.Created), response);
+            AssertResponsesAreEquals(Response.Of(ResponseStatus.Created), response);
         }
 
         //region adding handlers to RequestHandler0

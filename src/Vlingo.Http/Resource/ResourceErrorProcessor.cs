@@ -12,7 +12,7 @@ namespace Vlingo.Http.Resource
 {
     public class ResourceErrorProcessor
     {
-        public static Response DefaultErrorResponse() => Response.Of(Response.ResponseStatus.InternalServerError);
+        public static Response DefaultErrorResponse() => Response.Of(ResponseStatus.InternalServerError);
 
         public static Response ResourceHandlerError(IErrorHandler errorHandler, ILogger logger, Exception exception)
         {

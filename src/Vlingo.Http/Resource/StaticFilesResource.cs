@@ -29,15 +29,15 @@ namespace Vlingo.Http.Resource
             try
             {
                 var fileContent = ReadFile(contentPath);
-                Completes?.With(Response.Of(Response.ResponseStatus.Ok, Body.From(fileContent, Body.Encoding.UTF8).Content));
+                Completes?.With(Response.Of(ResponseStatus.Ok, Body.From(fileContent, Body.Encoding.UTF8).Content));
             }
             catch (IOException)
             {
-                Completes?.With(Response.Of(Response.ResponseStatus.InternalServerError));
+                Completes?.With(Response.Of(ResponseStatus.InternalServerError));
             }
             catch (ArgumentException)
             {
-                Completes?.With(Response.Of(Response.ResponseStatus.NotFound));
+                Completes?.With(Response.Of(ResponseStatus.NotFound));
             }
         }
         

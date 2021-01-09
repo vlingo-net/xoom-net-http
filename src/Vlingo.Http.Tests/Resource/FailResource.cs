@@ -20,7 +20,7 @@ namespace Vlingo.Http.Tests.Resource
         public ICompletes<Response> Query()
         {
             _output.WriteLine("QUERY");
-            return Common.Completes.WithFailure(Response.Of(Response.ResponseStatus.BadRequest));
+            return Common.Completes.WithFailure(Response.Of(ResponseStatus.BadRequest));
         }
 
         public override Http.Resource.Resource Routes() 

@@ -21,12 +21,12 @@ namespace Vlingo.Http.Resource
         private static readonly ContentMediaType DefaultMediaType = ContentMediaType.Json;
 
         private readonly Version _version;
-        private readonly Response.ResponseStatus _status;
+        private readonly ResponseStatus _status;
         private readonly Headers<ResponseHeader> _headers;
         private readonly T _entity;
 
         private ObjectResponse(Version version,
-            Response.ResponseStatus status,
+            ResponseStatus status,
             Headers<ResponseHeader> headers,
             T entity)
         {
@@ -38,19 +38,19 @@ namespace Vlingo.Http.Resource
 
         public static IObjectResponse Of<TR>(
             Version version,
-            Response.ResponseStatus status,
+            ResponseStatus status,
             Headers<ResponseHeader> headers,
             TR entity)
             => new ObjectResponse<TR>(version, status, headers, entity);
 
         public static IObjectResponse Of<TR>(
-            Response.ResponseStatus status,
+            ResponseStatus status,
             Headers<ResponseHeader> headers,
             TR entity)
             => new ObjectResponse<TR>(Version.Http1_1, status, headers, entity);
 
         public static IObjectResponse Of<TR>(
-            Response.ResponseStatus status,
+            ResponseStatus status,
             TR entity)
             => new ObjectResponse<TR>(Version.Http1_1, status, Headers.Empty<ResponseHeader>(), entity);
 

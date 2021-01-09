@@ -24,7 +24,7 @@ namespace Vlingo.Http.Tests.Sample.User
                 .AndThenConsume(profile => {
                     var profileState = _repository.ProfileOf(userId);
                     Completes.With(Response.Of(
-                        Response.ResponseStatus.Ok,
+                        ResponseStatus.Ok,
                         Headers.Of(ResponseHeader.Of(ResponseHeader.Location, ProfileLocation(userId))),
                         JsonSerialization.Serialized(ProfileData.From(profileState))));
             })
@@ -39,7 +39,7 @@ namespace Vlingo.Http.Tests.Sample.User
                 Stage.ActorFor<IProfile>(() => new ProfileActor(profileState));
   
                 _repository.Save(profileState);
-                Completes.With(Response.Of(Response.ResponseStatus.Created, JsonSerialization.Serialized(ProfileData.From(profileState))));
+                Completes.With(Response.Of(ResponseStatus.Created, JsonSerialization.Serialized(ProfileData.From(profileState))));
             });
         }
         
@@ -48,11 +48,11 @@ namespace Vlingo.Http.Tests.Sample.User
             var profileState = _repository.ProfileOf(userId);
             if (profileState.DoesNotExist)
             {
-                Completes.With(Response.Of(Response.ResponseStatus.NotFound, ProfileLocation(userId)));
+                Completes.With(Response.Of(ResponseStatus.NotFound, ProfileLocation(userId)));
             }
             else
             {
-                Completes.With(Response.Of(Response.ResponseStatus.Ok, JsonSerialization.Serialized(ProfileData.From(profileState))));
+                Completes.With(Response.Of(ResponseStatus.Ok, JsonSerialization.Serialized(ProfileData.From(profileState))));
             }
         }
 

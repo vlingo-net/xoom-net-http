@@ -60,7 +60,7 @@ namespace Vlingo.Http.Tests
 
             var filters = Filters.Are(Filters.NoRequestFilters(), new []{filter1, filter2, filter3});
 
-            var response1 = Response.Of(Response.ResponseStatus.Ok);
+            var response1 = Response.Of(ResponseStatus.Ok);
 
             var response2 = response1;
             for (var times = 0; times < 5; ++times)

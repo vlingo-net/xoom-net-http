@@ -51,7 +51,7 @@ namespace Vlingo.Http.Tests.Resource
                         .And(RequestHeader.WithContentLength(user))
                         .And(RequestHeader.WithKeepAlive())
                         .And(Body.From(user)))
-                .AndThenConsume(TimeSpan.FromMilliseconds(5000), Response.Of(Response.ResponseStatus.RequestTimeout), response => _expectedResponse = response)
+                .AndThenConsume(TimeSpan.FromMilliseconds(5000), Response.Of(ResponseStatus.RequestTimeout), response => _expectedResponse = response)
                 .AndThenConsume(response => _expectedHeaderCount = response.Headers.Count)
                 .AndThenConsume(response => _location = response.Headers.HeaderOf(ResponseHeader.Location))
                 .AndThenConsume(known.Consume);
@@ -61,7 +61,7 @@ namespace Vlingo.Http.Tests.Resource
 
             Assert.Equal(1, responseCount);
             Assert.NotNull(_expectedResponse);
-            Assert.Equal(Response.ResponseStatus.Created, _expectedResponse.Status);
+            Assert.Equal(ResponseStatus.Created, _expectedResponse.Status);
             Assert.Equal(3, _expectedHeaderCount);
             Assert.NotNull(_location);
             Assert.Equal(0, unknownResponseCount);

@@ -47,7 +47,7 @@ namespace Vlingo.Http.Tests.Resource
             _progress.Responses.TryDequeue(out var createdResponse);
 
             Assert.Equal(1, _progress.ConsumeCount.Get());
-            Assert.Equal(Response.ResponseStatus.InternalServerError, createdResponse.Status);
+            Assert.Equal(ResponseStatus.InternalServerError, createdResponse.Status);
         }
         
         [Fact]
@@ -82,7 +82,7 @@ namespace Vlingo.Http.Tests.Resource
             _progress.Responses.TryDequeue(out var getResponse);
 
             Assert.Equal(2, _progress.ConsumeCount.Get());
-            Assert.Equal(Response.ResponseStatus.Ok, getResponse.Status);
+            Assert.Equal(ResponseStatus.Ok, getResponse.Status);
             Assert.NotNull(getResponse.Entity);
             Assert.NotNull(getResponse.Entity.Content);
             Assert.True(getResponse.Entity.HasContent);
@@ -138,7 +138,7 @@ namespace Vlingo.Http.Tests.Resource
             _progress.Responses.TryPeek(out var response);
 
             Assert.NotNull(response);
-            Assert.Equal(Response.ResponseStatus.PermanentRedirect, response.Status);
+            Assert.Equal(ResponseStatus.PermanentRedirect, response.Status);
             Assert.Equal(1, _progress.ConsumeCount.Get());
         }
 
@@ -158,7 +158,7 @@ namespace Vlingo.Http.Tests.Resource
             _progress.Responses.TryPeek(out var response);
 
             Assert.NotNull(response);
-            Assert.Equal(Response.ResponseStatus.Ok, response.Status);
+            Assert.Equal(ResponseStatus.Ok, response.Status);
             Assert.Equal(1, _progress.ConsumeCount.Get());
         }
         

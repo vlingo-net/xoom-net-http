@@ -19,11 +19,11 @@ namespace Vlingo.Http.Tests.Resource
         public void SimpleRoute()
         {
             var resource = (DynamicResource) ResourceBuilder.Resource("userResource",
-                    ResourceBuilder.Get("/helloWorld").Handle(() => Common.Completes.WithSuccess(Response.Of(Response.ResponseStatus.Ok,  JsonSerialization.Serialized("Hello World")))),
+                    ResourceBuilder.Get("/helloWorld").Handle(() => Common.Completes.WithSuccess(Response.Of(ResponseStatus.Ok,  JsonSerialization.Serialized("Hello World")))),
                 ResourceBuilder.Post("/post/{postId}")
                 .Param<string>()
                 .Body<UserData>()
-                .Handle((postId, userData) => Common.Completes.WithSuccess(Response.Of(Response.ResponseStatus.Ok, JsonSerialization.Serialized(postId)))));
+                .Handle((postId, userData) => Common.Completes.WithSuccess(Response.Of(ResponseStatus.Ok, JsonSerialization.Serialized(postId)))));
 
             Assert.NotNull(resource);
             Assert.Equal("userResource", resource.Name);
@@ -38,11 +38,11 @@ namespace Vlingo.Http.Tests.Resource
                     ResourceBuilder.Get("/customers/{customerId}/accounts/{accountId}")
                 .Param<string>()
                 .Param<string>()
-                .Handle((customerId, accountId) => Common.Completes.WithSuccess(Response.Of(Response.ResponseStatus.Ok, JsonSerialization.Serialized("users")))),
+                .Handle((customerId, accountId) => Common.Completes.WithSuccess(Response.Of(ResponseStatus.Ok, JsonSerialization.Serialized("users")))),
             ResourceBuilder.Get("/customers/{customerId}/accounts/{accountId}/withdraw")
                 .Param<string>()
                 .Param<string>()
-                .Handle((customerId, accountId) => Common.Completes.WithSuccess(Response.Of(Response.ResponseStatus.Ok, JsonSerialization.Serialized("user admin"))))
+                .Handle((customerId, accountId) => Common.Completes.WithSuccess(Response.Of(ResponseStatus.Ok, JsonSerialization.Serialized("user admin"))))
             );
 
             var matchWithdrawResource = resource.MatchWith(Method.Get, "/customers/cd1234/accounts/ac1234/withdraw".ToMatchableUri());
