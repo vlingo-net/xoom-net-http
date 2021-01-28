@@ -34,10 +34,10 @@ namespace Vlingo.Http.Tests.Resource
         [Fact]
         public void TestThatServerHandlesThrowables()
         {
+            var consumeCalls = _progress.ExpectConsumeTimes(1);
             var request = GetExceptionRequest("1");
             _client.RequestWith(ToStream(request).ToArray());
-
-            var consumeCalls = _progress.ExpectConsumeTimes(1);
+            
             while (consumeCalls.TotalWrites < 1)
             {
                 _client.ProbeChannel();
@@ -53,10 +53,10 @@ namespace Vlingo.Http.Tests.Resource
         [Fact]
         public void TestThatServerDispatchesRequests()
         {
+            var consumeCalls = _progress.ExpectConsumeTimes(1);
             var request = PostRequestCloseFollowing(UniqueJohnDoe());
             _client.RequestWith(ToStream(request).ToArray());
-
-            var consumeCalls = _progress.ExpectConsumeTimes(1);
+            
             while (consumeCalls.TotalWrites < 1)
             {
                 _client.ProbeChannel();
@@ -125,10 +125,10 @@ namespace Vlingo.Http.Tests.Resource
         [Fact]
         public void TestThatServerRespondsPermanentRedirectWithNoContentLengthHeader()
         {
+            var consumeCalls = _progress.ExpectConsumeTimes(1);
             var request = PutRequest("u-123", UniqueJohnDoe());
             _client.RequestWith(ToStream(request).ToArray());
-
-            var consumeCalls = _progress.ExpectConsumeTimes(1);
+            
             while (consumeCalls.TotalWrites < 1)
             {
                 _client.ProbeChannel();
@@ -145,10 +145,10 @@ namespace Vlingo.Http.Tests.Resource
         [Fact]
         public void TestThatServerRespondsOkWithNoContentLengthHeader()
         {
+            var consumeCalls = _progress.ExpectConsumeTimes(1);
             var request = PutRequest("u-456", UniqueJohnDoe());
             _client.RequestWith(ToStream(request).ToArray());
-
-            var consumeCalls = _progress.ExpectConsumeTimes(1);
+            
             while (consumeCalls.TotalWrites < 1)
             {
                 _client.ProbeChannel();
