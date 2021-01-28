@@ -21,7 +21,8 @@ namespace Vlingo.Http.Tests.Resource
 {
     public class DynamicResourceHandlerTest : IDisposable
     {
-        private static readonly AtomicInteger BaseServerPort = new AtomicInteger(19080);
+        private static readonly Random Random = new Random();
+        private static readonly AtomicInteger BaseServerPort = new AtomicInteger(10_000 + Random.Next((50_000)));
         private readonly MemoryStream _buffer = new MemoryStream(65535);
         private readonly IClientRequestResponseChannel _client;
         private readonly Progress _progress;
