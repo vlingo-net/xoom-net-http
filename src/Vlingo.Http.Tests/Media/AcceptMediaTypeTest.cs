@@ -46,7 +46,8 @@ namespace Vlingo.Http.Tests.Media
         }
         
         [Fact]
-        public void QualityFactorTrumpsSpecificity() {
+        public void QualityFactorTrumpsSpecificity()
+        {
             var acceptMediaType1 = new MediaTypeDescriptor.Builder<ResponseMediaTypeSelector.AcceptMediaType>(
                     (a, b, c) => new ResponseMediaTypeSelector.AcceptMediaType(a, b, c))
                 .WithMimeType("text")

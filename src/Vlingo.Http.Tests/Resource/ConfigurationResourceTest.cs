@@ -25,7 +25,8 @@ namespace Vlingo.Http.Tests.Resource
         private readonly JsonSerializerSettings _settings;
 
         [Fact]
-        public void TestThatPostRegisterUserDispatches() {
+        public void TestThatPostRegisterUserDispatches()
+        {
             var request = Request.From(Encoding.UTF8.GetBytes(PostJohnDoeUserMessage));
             var completes = new MockCompletesEventuallyResponse();
 

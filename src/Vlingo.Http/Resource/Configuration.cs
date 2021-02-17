@@ -33,12 +33,14 @@ namespace Vlingo.Http.Resource
             return this;
         }
 
-        public Configuration With(SizingConf sizing) {
+        public Configuration With(SizingConf sizing)
+        {
             Sizing = sizing;
             return this;
         }
 
-        public Configuration With(TimingConf timing) {
+        public Configuration With(TimingConf timing)
+        {
             Timing = timing;
             return this;
         }

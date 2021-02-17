@@ -13,7 +13,8 @@ namespace Vlingo.Http.Tests.Resource
     public class ConfigurationTest
     {
         [Fact]
-        public void TestThatConfigurationDefaults() {
+        public void TestThatConfigurationDefaults()
+        {
             var configuration =
                 Configuration.Define();
 
@@ -31,7 +32,8 @@ namespace Vlingo.Http.Tests.Resource
         }
 
         [Fact]
-        public void TestThatConfigurationConfirgures() {
+        public void TestThatConfigurationConfirgures()
+        {
             var configuration =
                 Configuration.Define()
                     .WithPort(9000)

@@ -40,7 +40,8 @@ namespace Vlingo.Http.Tests.Media
         }
         
         [Fact]
-        public void Specific_media_type_select_highest_ranked() {
+        public void Specific_media_type_select_highest_ranked()
+        {
             var jsonHigherPriorityXmlLowerPriorityAccepted = "application/xml;q=0.8, application/json";
             var selector = new ResponseMediaTypeSelector(jsonHigherPriorityXmlLowerPriorityAccepted);
             var selected = selector.SelectType(new[]{ContentMediaType.Xml, ContentMediaType.Json});

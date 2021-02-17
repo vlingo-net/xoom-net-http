@@ -12,7 +12,8 @@ namespace Vlingo.Http.Tests
     public class RequestHeaderTest
     {
         [Fact]
-        public void TestHeaderNameValue() {
+        public void TestHeaderNameValue()
+        {
             var header = RequestHeader.Of(RequestHeader.Accept, "text/plain");
     
             Assert.Equal(RequestHeader.Accept, header.Name);
@@ -20,7 +21,8 @@ namespace Vlingo.Http.Tests
         }
   
         [Fact]
-        public void TestParseHeader() {
+        public void TestParseHeader()
+        {
             var header = RequestHeader.FromString("Accept: text/plain");
     
             Assert.Equal(RequestHeader.Accept, header.Name);
@@ -28,7 +30,8 @@ namespace Vlingo.Http.Tests
         }
   
         [Fact]
-        public void TestParseSpaceyHeader() {
+        public void TestParseSpaceyHeader()
+        {
             var header = RequestHeader.FromString("  Accept:    text/plain  ");
     
             Assert.Equal(RequestHeader.Accept, header.Name);
@@ -36,14 +39,16 @@ namespace Vlingo.Http.Tests
         }
 
         [Fact]
-        public void TestParseLowerCaseContentLength() {
+        public void TestParseLowerCaseContentLength()
+        {
             var header = RequestHeader.FromString("content-length: 10");
 
             Assert.Equal(10, header.IfContentLength);
         }
 
         [Fact]
-        public void TestEqualsCaseInsensitive() {
+        public void TestEqualsCaseInsensitive()
+        {
             var header1 = RequestHeader.FromString("Content-length: 10");
             var header2 = RequestHeader.FromString("content-length: 10");
 
@@ -51,7 +56,8 @@ namespace Vlingo.Http.Tests
         }
 
         [Fact]
-        public void TestParseHeaderWithMultipleValueStrings() {
+        public void TestParseHeaderWithMultipleValueStrings()
+        {
             var header = RequestHeader.FromString("Cookie: $Version=1; Skin=new;");
     
             Assert.Equal(RequestHeader.Cookie, header.Name);
@@ -59,7 +65,8 @@ namespace Vlingo.Http.Tests
         }
   
         [Fact]
-        public void TestParseHeaderWithMultipleValueStringsAndColons() {
+        public void TestParseHeaderWithMultipleValueStringsAndColons()
+        {
             var header = RequestHeader.FromString("Accept-Datetime: Thu, 31 May 2007 20:35:00 GMT");
     
             Assert.Equal(RequestHeader.AcceptDatetime, header.Name);

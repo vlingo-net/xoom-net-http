@@ -54,7 +54,8 @@ namespace Vlingo.Http.Tests.Resource
 
         private int _uniqueId = 1;
         
-        protected MemoryStream ToStream(string requestContent) {
+        protected MemoryStream ToStream(string requestContent)
+        {
             _buffer.Clear();
             _buffer.Write(Converters.TextToBytes(requestContent));
             _buffer.Flip();
@@ -92,7 +93,8 @@ namespace Vlingo.Http.Tests.Resource
 
         protected string UniqueJaneDoePostRequest() => PostRequestCloseFollowing(UniqueJaneDoe());
 
-        protected string UniqueJohnDoe() {
+        protected string UniqueJohnDoe()
+        {
             var id = "" + _uniqueId;
             if (id.Length == 1) id = "00" + id;
             if (id.Length == 2) id = "0" + id;
