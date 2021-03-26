@@ -35,9 +35,9 @@ namespace Vlingo.Http.Tests.Resource.Feed
         {
             var request = RequestFor($"{FeedURI}/100");
 
-            _client.RequestWith(ToMemoryStream(request).ToArray());
-
             var consumeCalls = _progress.ExpectConsumeTimes(1);
+            
+            _client.RequestWith(ToMemoryStream(request).ToArray());
 
             while (consumeCalls.TotalWrites < 1)
             {

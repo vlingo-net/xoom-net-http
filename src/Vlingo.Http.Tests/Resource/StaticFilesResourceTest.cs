@@ -40,9 +40,11 @@ namespace Vlingo.Http.Tests.Resource
             var resource = "/index.html";
             var content = ReadTextFile(_contentRoot + resource);
             var request = GetRequest("/");
-            _client.RequestWith(ToByteBuffer(request));
-
+            
             var consumeCalls = _progress.ExpectConsumeTimes(1);
+            
+            _client.RequestWith(ToByteBuffer(request));
+            
             while (consumeCalls.TotalWrites < 1)
             {
                 _client.ProbeChannel();
@@ -62,9 +64,11 @@ namespace Vlingo.Http.Tests.Resource
             var resource = "/views/test 2/index.html";
             var content = ReadTextFile(_contentRoot + resource);
             var request = GetRequest("/views/test 2/");
-            _client.RequestWith(ToByteBuffer(request));
-
+            
             var consumeCalls = _progress.ExpectConsumeTimes(1);
+
+            _client.RequestWith(ToByteBuffer(request));
+            
             while (consumeCalls.TotalWrites < 1)
             {
                 _client.ProbeChannel();
@@ -84,9 +88,11 @@ namespace Vlingo.Http.Tests.Resource
             var resource = "/index.html";
             var content = ReadTextFile(_contentRoot + resource);
             var request = GetRequest(resource);
-            _client.RequestWith(ToByteBuffer(request));
-
+            
             var consumeCalls = _progress.ExpectConsumeTimes(1);
+            
+            _client.RequestWith(ToByteBuffer(request));
+            
             while (consumeCalls.TotalWrites < 1)
             {
                 _client.ProbeChannel();
@@ -107,9 +113,11 @@ namespace Vlingo.Http.Tests.Resource
             var resource = "/css/styles.css";
             var content = ReadTextFile(_contentRoot + resource);
             var request = GetRequest(resource);
-            _client.RequestWith(ToByteBuffer(request));
-
+            
             var consumeCalls = _progress.ExpectConsumeTimes(1);
+            
+            _client.RequestWith(ToByteBuffer(request));
+            
             while (consumeCalls.TotalWrites < 1)
             {
                 _client.ProbeChannel();
@@ -130,8 +138,11 @@ namespace Vlingo.Http.Tests.Resource
             var resource = "/js/vuetify.js";
             var content = ReadTextFile(_contentRoot + resource);
             var request = GetRequest(resource);
-            _client.RequestWith(ToByteBuffer(request));
+            
             var consumeCalls = _progress.ExpectConsumeTimes(1);
+            
+            _client.RequestWith(ToByteBuffer(request));
+            
             while (consumeCalls.TotalWrites < 1)
             {
                 _client.ProbeChannel();
@@ -152,8 +163,11 @@ namespace Vlingo.Http.Tests.Resource
             var resource = "/views/About.vue";
             var content = ReadTextFile(_contentRoot + resource);
             var request = GetRequest(resource);
-            _client.RequestWith(ToByteBuffer(request));
+            
             var consumeCalls = _progress.ExpectConsumeTimes(1);
+            
+            _client.RequestWith(ToByteBuffer(request));
+            
             while (consumeCalls.TotalWrites < 1)
             {
                 _client.ProbeChannel();
