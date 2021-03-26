@@ -19,7 +19,7 @@ namespace Vlingo.Http.Tests.Resource.Sse
         public AtomicInteger RespondWithCount { get; }
         public AtomicReference<Response> Response { get; }
         
-        private AccessSafely _abandonSafely = AccessSafely.AfterCompleting(0);
+        private AccessSafely _abandonSafely;
         private AccessSafely _respondWithSafely;
 
         private bool _receivedStatus;
@@ -30,6 +30,7 @@ namespace Vlingo.Http.Tests.Resource.Sse
             EventsResponse = new AtomicReference<Response>();
             RespondWithCount = new AtomicInteger(0);
             Response = new AtomicReference<Response>();
+            _abandonSafely = ExpectAbandon(0);
             _respondWithSafely = ExpectRespondWith(0);
             _receivedStatus = false;
         }

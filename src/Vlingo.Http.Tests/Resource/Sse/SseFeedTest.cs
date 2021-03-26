@@ -15,7 +15,7 @@ using Xunit.Abstractions;
 
 namespace Vlingo.Http.Tests.Resource.Sse
 {
-    public class SseFeedTest
+    public class SseFeedTest : IDisposable
     {
         private readonly SseClient _client;
         private readonly MockRequestResponseContext _context;
@@ -71,6 +71,12 @@ namespace Vlingo.Http.Tests.Resource.Sse
             Configuration.Define();
             _context = new MockRequestResponseContext(new MockResponseSenderChannel());
             _client = new SseClient(_context);
+        }
+
+        public void Dispose()
+        {
+            _client.Close();
+            _world.Terminate();
         }
     }
 }

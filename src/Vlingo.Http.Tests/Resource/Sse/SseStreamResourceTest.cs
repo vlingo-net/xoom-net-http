@@ -7,23 +7,27 @@
 
 using System;
 using Vlingo.Actors;
+using Vlingo.Common;
 using Vlingo.Http.Tests.Sample.User;
 using Xunit;
 using Xunit.Abstractions;
 
 namespace Vlingo.Http.Tests.Resource.Sse
 {
-    public class SseStreamResourceTest
+    public class SseStreamResourceTest : IDisposable
     {
         private readonly MockSseStreamResource _resource;
+        private static readonly AtomicInteger NextStreamNumber = new(0);
+        private readonly World _world;
 
         [Fact]
         public void TestThatClientSubscribes()
         {
+            var streamName = NextStreamName();
             var request =
                 Request
                     .WithMethod(Method.Get)
-                    .WithUri("/eventstreams/all")
+                    .WithUri($"/eventstreams/{streamName}")
                     .And(RequestHeader.WithHost("StreamsRUs.co"))
                     .And(RequestHeader.WithAccept("text/event-stream"));
 
@@ -31,7 +35,7 @@ namespace Vlingo.Http.Tests.Resource.Sse
 
             _resource.NextRequest(request);
 
-            _resource.SubscribeToStream("all", typeof(AllSseFeedActor), 10, 10, "1");
+            _resource.SubscribeToStream(streamName, typeof(AllSseFeedActor), 10, 10, "1");
 
             Assert.Equal(10, respondWithSafely.ReadFrom<int>("count"));
 
@@ -41,10 +45,11 @@ namespace Vlingo.Http.Tests.Resource.Sse
         [Fact]
         public void TestThatClientUnsubscribes()
         {
+            var streamName = NextStreamName();
             var subscribe =
                 Request
                     .WithMethod(Method.Get)
-                    .WithUri("/eventstreams/all")
+                    .WithUri($"/eventstreams/{streamName}")
                     .And(RequestHeader.WithHost("StreamsRUs.co"))
                     .And(RequestHeader.WithAccept("text/event-stream"));
 
@@ -52,7 +57,7 @@ namespace Vlingo.Http.Tests.Resource.Sse
 
             _resource.NextRequest(subscribe);
 
-            _resource.SubscribeToStream("all", typeof(AllSseFeedActor), 1, 10, "1");
+            _resource.SubscribeToStream(streamName, typeof(AllSseFeedActor), 1, 10, "1");
 
             Assert.True(1 <= respondWithSafely.ReadFrom<int>("count"));
             Assert.True(1 <= _resource._requestResponseContext.Channel.RespondWithCount.Get());
@@ -62,7 +67,7 @@ namespace Vlingo.Http.Tests.Resource.Sse
             var unsubscribe =
                 Request
                     .WithMethod(Method.Delete)
-                    .WithUri($"/eventstreams/all/{clientId}")
+                    .WithUri($"/eventstreams/{streamName}/{clientId}")
                     .And(RequestHeader.WithHost("StreamsRUs.co"))
                     .And(RequestHeader.WithAccept("text/event-stream"));
 
@@ -70,7 +75,7 @@ namespace Vlingo.Http.Tests.Resource.Sse
 
             _resource.NextRequest(unsubscribe);
 
-            _resource.UnsubscribeFromStream("all", clientId);
+            _resource.UnsubscribeFromStream(streamName, clientId);
 
             Assert.Equal(1, abandonSafely.ReadFrom<int>("count"));
             Assert.Equal(1, _resource._requestResponseContext.Channel.AbandonCount.Get());
@@ -81,9 +86,16 @@ namespace Vlingo.Http.Tests.Resource.Sse
             var converter = new Converter(output);
             Console.SetOut(converter);
 
-            var world = World.StartWithDefaults("test-stream-userResource");
+            _world = World.StartWithDefaults("test-stream-userResource");
             Configuration.Define();
-            _resource = new MockSseStreamResource(world);
+            _resource = new MockSseStreamResource(_world);
+        }
+        
+        private string NextStreamName() => $"all-{NextStreamNumber.IncrementAndGet()}";
+
+        public void Dispose()
+        {
+            _world.Terminate();
         }
     }
 }
