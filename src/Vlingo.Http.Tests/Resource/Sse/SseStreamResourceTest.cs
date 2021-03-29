@@ -17,7 +17,7 @@ namespace Vlingo.Http.Tests.Resource.Sse
     public class SseStreamResourceTest : IDisposable
     {
         private readonly MockSseStreamResource _resource;
-        private static readonly AtomicInteger NextStreamNumber = new(0);
+        private static readonly AtomicInteger NextStreamNumber = new AtomicInteger(0);
         private readonly World _world;
 
         [Fact]
