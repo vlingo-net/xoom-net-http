@@ -38,7 +38,7 @@ namespace Vlingo.Http.Tests.Resource
         public void TestThatServesRootDefaultStaticFile()
         {
             var resource = "/index.html";
-            var content = ReadTextFile(_contentRoot + resource);
+            var content = ReadManifestTextFile(_contentRoot + resource);
             var request = GetRequest("/");
             
             var consumeCalls = _progress.ExpectConsumeTimes(1);
@@ -62,7 +62,7 @@ namespace Vlingo.Http.Tests.Resource
         public void TestThatServesDefaultStaticFile()
         {
             var resource = "/views/test 2/index.html";
-            var content = ReadTextFile(_contentRoot + resource);
+            var content = ReadManifestTextFile(_contentRoot + resource);
             var request = GetRequest("/views/test 2/");
             
             var consumeCalls = _progress.ExpectConsumeTimes(1);
@@ -86,7 +86,7 @@ namespace Vlingo.Http.Tests.Resource
         public void TestThatServesRootStaticFile()
         {
             var resource = "/index.html";
-            var content = ReadTextFile(_contentRoot + resource);
+            var content = ReadManifestTextFile(_contentRoot + resource);
             var request = GetRequest(resource);
             
             var consumeCalls = _progress.ExpectConsumeTimes(1);
@@ -111,7 +111,7 @@ namespace Vlingo.Http.Tests.Resource
         public void TestThatServesCssSubDirectoryStaticFile()
         {
             var resource = "/css/styles.css";
-            var content = ReadTextFile(_contentRoot + resource);
+            var content = ReadManifestTextFile(_contentRoot + resource);
             var request = GetRequest(resource);
             
             var consumeCalls = _progress.ExpectConsumeTimes(1);
@@ -136,7 +136,7 @@ namespace Vlingo.Http.Tests.Resource
         public void TestThatServesJsSubDirectoryStaticFile()
         {
             var resource = "/js/vuetify.js";
-            var content = ReadTextFile(_contentRoot + resource);
+            var content = ReadManifestTextFile(_contentRoot + resource);
             var request = GetRequest(resource);
             
             var consumeCalls = _progress.ExpectConsumeTimes(1);
@@ -161,7 +161,7 @@ namespace Vlingo.Http.Tests.Resource
         public void TestThatServesViewsSubDirectoryStaticFile()
         {
             var resource = "/views/About.vue";
-            var content = ReadTextFile(_contentRoot + resource);
+            var content = ReadManifestTextFile(_contentRoot + resource);
             var request = GetRequest(resource);
             
             var consumeCalls = _progress.ExpectConsumeTimes(1);
@@ -203,7 +203,7 @@ namespace Vlingo.Http.Tests.Resource
             properties.Add("server.request.missing.content.timeout", "100");
 
             properties.Add("static.files.resource.pool", "5");
-            _contentRoot = $"{Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)}/Content";
+            _contentRoot = $"Vlingo.Http.Tests.Content";
             properties.Add("static.files.resource.root", _contentRoot);
             properties.Add("static.files.resource.subpaths", "[/, /css, /js, /views]");
 
@@ -254,6 +254,15 @@ namespace Vlingo.Http.Tests.Resource
         {
             var fixedPath = Path.GetFullPath(path);
             return File.ReadAllText(fixedPath);
+        }
+        
+        private string ReadManifestTextFile(string path)
+        {
+            var assembly = Assembly.GetExecutingAssembly();
+            path = $"{path.Replace("/", ".").Replace(" ", "_")}";
+            var stream = assembly.GetManifestResourceStream(path);
+            using var sreader = new StreamReader(stream);
+            return sreader.ReadToEnd();
         }
 
         private byte[] ToByteBuffer(string requestContent)
