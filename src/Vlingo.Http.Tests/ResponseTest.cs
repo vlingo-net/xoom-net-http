@@ -16,7 +16,7 @@ namespace Vlingo.Http.Tests
         {
             var response = Response.Of(Version.Http1_1, ResponseStatus.Ok, ResponseHeader.WithHeaders(ResponseHeader.CacheControl, "max-age=3600"));
 
-            var facsimile = "HTTP/1.1 200 OK\nCache-Control: max-age=3600\n\n";
+            var facsimile = "HTTP/1.1 200 OK\nCache-Control: max-age=3600\nContent-Length: 0\n\n";
 
             Assert.Equal(facsimile, response.ToString());
         }
@@ -53,7 +53,7 @@ namespace Vlingo.Http.Tests
             var response = Response.Of(Version.Http1_1, ResponseStatus.Ok,
                 ResponseHeader.WithHeaders(ResponseHeader.Of(ResponseHeader.ETag, "123ABC")).And(ResponseHeader.Of(ResponseHeader.CacheControl, "max-age=3600")));
 
-            var facsimile = "HTTP/1.1 200 OK\nETag: 123ABC\nCache-Control: max-age=3600\n\n";
+            var facsimile = "HTTP/1.1 200 OK\nETag: 123ABC\nCache-Control: max-age=3600\nContent-Length: 0\n\n";
 
             Assert.Equal(facsimile, response.ToString());
         }
@@ -89,6 +89,36 @@ namespace Vlingo.Http.Tests
                     Body.BeginChunked().AppendChunk(chunk1).AppendChunk(chunk2).End());
 
             Assert.Equal(responseMultiHeadersWithChunkedBody, response.ToString());
+        }
+        
+        [Fact]
+        public void TestItShouldSendNoContentLengthWithInformationalStatusCodes()
+        {
+            var response = Response.Of(Version.Http1_1, ResponseStatus.Continue);
+
+            var facsimile = "HTTP/1.1 100 Continue\n\n";
+
+            Assert.Equal(facsimile, response.ToString());
+        }
+
+        [Fact]
+        public void TestItShouldSendNoContentLengthWithNoContentStatusCode()
+        {
+            var response = Response.Of(Version.Http1_1, ResponseStatus.NoContent);
+
+            var facsimile = "HTTP/1.1 204 No Content\n\n";
+
+            Assert.Equal(facsimile, response.ToString());
+        }
+
+        [Fact]
+        public void TestItShouldSendNoContentLengthWithNotModifiedStatusCode()
+        {
+            var response = Response.Of(Version.Http1_1, ResponseStatus.NotModified);
+
+            var facsimile = "HTTP/1.1 304 Not Modified\n\n";
+
+            Assert.Equal(facsimile, response.ToString());
         }
     }
 }
