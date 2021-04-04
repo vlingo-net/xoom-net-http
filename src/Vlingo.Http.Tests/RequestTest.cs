@@ -233,6 +233,27 @@ namespace Vlingo.Http.Tests
                     .WithBody("{ text:\"some text\"}")
                     .ToString());
         }
+        
+        [Fact]
+        public void TestExtendedCharactersContentLength()
+        {
+            var asciiWithExtendedCharacters = ExtendedCharactersFixture.AsciiWithExtendedCharacters();
+
+            var request =
+                Request
+                    .Has(Method.Post)
+                    .WithUri("/one/two/")
+                    .WithHeader(RequestHeader.Host, "test.com")
+                    .WithBody(asciiWithExtendedCharacters);
+
+            var contentLength = int.Parse(request.HeaderValueOr(RequestHeader.ContentLength, "0"));
+
+            Assert.False(contentLength == 0);
+
+            Assert.True(asciiWithExtendedCharacters.Length < contentLength);
+
+            Assert.Equal(Converters.TextToBytes(asciiWithExtendedCharacters).Length, contentLength);
+        }
 
         public RequestTest(ITestOutputHelper output)
         {

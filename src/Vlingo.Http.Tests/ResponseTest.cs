@@ -5,6 +5,7 @@
 // was not distributed with this file, You can obtain
 // one at https://mozilla.org/MPL/2.0/.
 
+using Vlingo.Wire.Message;
 using Xunit;
 
 namespace Vlingo.Http.Tests
@@ -119,6 +120,22 @@ namespace Vlingo.Http.Tests
             var facsimile = "HTTP/1.1 304 Not Modified\n\n";
 
             Assert.Equal(facsimile, response.ToString());
+        }
+        
+        [Fact]
+        public void TestExtendedCharactersContentLength()
+        {
+            var asciiWithExtendedCharacters = ExtendedCharactersFixture.AsciiWithExtendedCharacters();
+
+            var response = Response.Of(ResponseStatus.Ok, Headers.Empty<ResponseHeader>(), asciiWithExtendedCharacters);
+
+            var contentLength = int.Parse(response.HeaderValueOr(RequestHeader.ContentLength, "0"));
+
+            Assert.False(contentLength == 0);
+
+            Assert.True(asciiWithExtendedCharacters.Length < contentLength);
+
+            Assert.Equal(Converters.TextToBytes(asciiWithExtendedCharacters).Length, contentLength);
         }
     }
 }
