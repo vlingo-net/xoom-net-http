@@ -47,8 +47,8 @@ namespace Vlingo.Http.Tests.Resource.Sse
         public void RespondWith(RequestResponseContext context, IConsumerByteBuffer buffer, bool closeFollowing)
         {
             var parser = _receivedStatus ?
-                ResponseParser.ParserForBodyOnly(buffer.ToArray()) :
-                ResponseParser.ParserFor(buffer.ToArray());
+                ResponseParser.ParserForBodyOnly(buffer) :
+                ResponseParser.ParserFor(buffer);
 
             if (!_receivedStatus)
             {
@@ -71,8 +71,8 @@ namespace Vlingo.Http.Tests.Resource.Sse
                     .Put(Converters.TextToBytes(textResponse)).Flip();
 
             var parser = _receivedStatus ?
-                ResponseParser.ParserForBodyOnly(buffer.ToArray()) :
-                ResponseParser.ParserFor(buffer.ToArray());
+                ResponseParser.ParserForBodyOnly(buffer) :
+                ResponseParser.ParserFor(buffer);
 
             if (!_receivedStatus)
             {

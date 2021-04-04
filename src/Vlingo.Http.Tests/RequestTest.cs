@@ -6,9 +6,8 @@
 // one at https://mozilla.org/MPL/2.0/.
 
 using System;
-using System.IO;
 using System.Text;
-using Vlingo.Wire.Channel;
+using Vlingo.Wire.Message;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -16,17 +15,17 @@ namespace Vlingo.Http.Tests
 {
     public class RequestTest
     {
-        private MemoryStream _buffer = new MemoryStream(1024);
-        private string _requestOneHeader;
-        private string _requestTwoHeadersWithBody;
-        private string _requestMultiHeaders;
-        private string _requestMultiHeadersWithBody;
-        private string _requestQueryParameters;
+        private readonly IConsumerByteBuffer _consumerByteBuffer = BasicConsumerByteBuffer.Allocate(2, 1024);
+        private readonly string _requestOneHeader;
+        private readonly string _requestTwoHeadersWithBody;
+        private readonly string _requestMultiHeaders;
+        private readonly string _requestMultiHeadersWithBody;
+        private readonly string _requestQueryParameters;
 
         [Fact]
         public void testThatRequestCanHaveOneHeader()
         {
-            var request = Request.From(ToByteBuffer(_requestOneHeader).ToArray());
+            var request = Request.From(ToConsumerByteBuffer(_requestOneHeader));
 
             Assert.NotNull(request);
             Assert.True(request.Method.IsGet());
@@ -39,7 +38,7 @@ namespace Vlingo.Http.Tests
         [Fact]
         public void TestThatRequestCanHaveOneHeaderWithBody()
         {
-            var request = Request.From(ToByteBuffer(_requestTwoHeadersWithBody).ToArray());
+            var request = Request.From(ToConsumerByteBuffer(_requestTwoHeadersWithBody));
 
             Assert.NotNull(request);
             Assert.True(request.Method.IsPut());
@@ -52,9 +51,9 @@ namespace Vlingo.Http.Tests
         }
 
         [Fact]
-        public void TestThatRequestCanHaveMutipleHeaders()
+        public void TestThatRequestCanHaveMultipleHeaders()
         {
-            var request = Request.From(ToByteBuffer(_requestMultiHeaders).ToArray());
+            var request = Request.From(ToConsumerByteBuffer(_requestMultiHeaders));
 
             Assert.NotNull(request);
             Assert.True(request.Method.IsGet());
@@ -76,7 +75,7 @@ namespace Vlingo.Http.Tests
         [Fact]
         public void TestThatRequestCanHaveMutipleHeadersAndBody()
         {
-            var request = Request.From(ToByteBuffer(_requestMultiHeadersWithBody).ToArray());
+            var request = Request.From(ToConsumerByteBuffer(_requestMultiHeadersWithBody));
 
             Assert.NotNull(request);
             Assert.True(request.Method.IsPost());
@@ -96,31 +95,31 @@ namespace Vlingo.Http.Tests
         [Fact]
         public void TestRejectBogusMethodRequest()
         {
-            Assert.Throws<ArgumentException>(() => Request.From(ToByteBuffer("BOGUS / HTTP/1.1\nHost: test.com\n\n").ToArray()));
+            Assert.Throws<ArgumentException>(() => Request.From(ToConsumerByteBuffer("BOGUS / HTTP/1.1\nHost: test.com\n\n")));
         }
 
         [Fact]
         public void TestRejectUnsupportedVersionRequest()
         {
-            Assert.Throws<ArgumentException>(() => Request.From(ToByteBuffer("GET / HTTP/0.1\nHost: test.com\n\n").ToArray()));
+            Assert.Throws<ArgumentException>(() => Request.From(ToConsumerByteBuffer("GET / HTTP/0.1\nHost: test.com\n\n")));
         }
 
         [Fact]
         public void TestRejectBadRequestNoHeader()
         {
-            Assert.Throws<ArgumentException>(() => Request.From(ToByteBuffer("GET / HTTP/1.1\n\n").ToArray()));
+            Assert.Throws<ArgumentException>(() => Request.From(ToConsumerByteBuffer("GET / HTTP/1.1\n\n")));
         }
 
         [Fact]
         public void TestRejectBadRequestMissingLine()
         {
-            Assert.Throws<InvalidOperationException>(() => Request.From(ToByteBuffer("GET / HTTP/1.1\nHost: test.com\n").ToArray()));
+            Assert.Throws<InvalidOperationException>(() => Request.From(ToConsumerByteBuffer("GET / HTTP/1.1\nHost: test.com\n")));
         }
 
         [Fact]
         public void TestFindHeader()
         {
-            var request = Request.From(ToByteBuffer(_requestTwoHeadersWithBody).ToArray());
+            var request = Request.From(ToConsumerByteBuffer(_requestTwoHeadersWithBody));
 
             Assert.NotNull(request.HeaderOf(RequestHeader.Host));
             Assert.Equal(RequestHeader.Host, request.HeaderOf(RequestHeader.Host).Name);
@@ -131,7 +130,7 @@ namespace Vlingo.Http.Tests
         [Fact]
         public void TestFindHeaders()
         {
-            var request = Request.From(ToByteBuffer(_requestMultiHeaders).ToArray());
+            var request = Request.From(ToConsumerByteBuffer(_requestMultiHeaders));
 
             Assert.NotNull(request.HeaderOf(RequestHeader.Host));
             Assert.Equal(RequestHeader.Host, request.HeaderOf(RequestHeader.Host).Name);
@@ -149,7 +148,7 @@ namespace Vlingo.Http.Tests
         [Fact]
         public void TestQueryParameters()
         {
-            var request = Request.From(ToByteBuffer(_requestQueryParameters).ToArray());
+            var request = Request.From(ToConsumerByteBuffer(_requestQueryParameters));
             var queryParameters = request.QueryParameters;
             Assert.Equal(4, queryParameters.Names.Count);
             Assert.Equal("1", queryParameters.ValuesOf("one")[0]);
@@ -254,12 +253,12 @@ namespace Vlingo.Http.Tests
                 "GET /one/param1?one=1&two=2&three=3&state=NY&state=CO HTTP/1.1\nHost: test.com\n\n";
         }
 
-        private MemoryStream ToByteBuffer(string requestContent)
+        private IConsumerByteBuffer ToConsumerByteBuffer(string requestContent)
         {
-            _buffer.Clear();
-            _buffer.Write(Encoding.UTF8.GetBytes(requestContent));
-            _buffer.Flip();
-            return _buffer;
+            _consumerByteBuffer.Clear();
+            _consumerByteBuffer.Put(Encoding.UTF8.GetBytes(requestContent));
+            _consumerByteBuffer.Flip();
+            return _consumerByteBuffer;
         }
     }
 }

@@ -6,11 +6,9 @@
 // one at https://mozilla.org/MPL/2.0/.
 
 using System;
-using System.IO;
 using Vlingo.Actors;
 using Vlingo.Common;
 using Vlingo.Http.Resource;
-using Vlingo.Wire.Channel;
 using Vlingo.Wire.Message;
 using Vlingo.Wire.Node;
 using Xunit;
@@ -24,7 +22,7 @@ namespace Vlingo.Http.Tests.Resource
         private readonly ITestOutputHelper _output;
         private static readonly AtomicInteger NextPort = new AtomicInteger(14000);
 
-        private readonly MemoryStream _buffer = new MemoryStream(1024);
+        private readonly IConsumerByteBuffer _consumerByteBuffer = BasicConsumerByteBuffer.Allocate(5, 1024);
         private Client _client;
         private int _count;
         private readonly int _port;
@@ -44,7 +42,7 @@ namespace Vlingo.Http.Tests.Resource
 
             _client = Client.Using(config, Client.ClientConsumerType.RoundRobin, 1);
 
-            var request = Request.From(ToStream("GET /fail HTTP/1.1\nHost: vlingo.io\n\n").ToArray());
+            var request = Request.From(ToConsumerByteBuffer("GET /fail HTTP/1.1\nHost: vlingo.io\n\n"));
 
             _count = 0;
 
@@ -82,17 +80,17 @@ namespace Vlingo.Http.Tests.Resource
         public void Dispose()
         {
             _client.Close();
-            _buffer?.Dispose();
+            _consumerByteBuffer?.Clear();
             _server?.ShutDown();
             _world?.Terminate();
         }
-        
-        private MemoryStream ToStream(string requestContent)
+
+        private IConsumerByteBuffer ToConsumerByteBuffer(string requestContent)
         {
-            _buffer.Clear();
-            _buffer.Write(Converters.TextToBytes(requestContent));
-            _buffer.Flip();
-            return _buffer;
+            _consumerByteBuffer.Clear();
+            _consumerByteBuffer.Put(Converters.TextToBytes(requestContent));
+            _consumerByteBuffer.Flip();
+            return _consumerByteBuffer;
         }
     }
 }

@@ -45,11 +45,11 @@ namespace Vlingo.Http.Resource
             {
                 if (_state.Parser == null)
                 {
-                    _state.Parser = ResponseParser.ParserFor(buffer.ToArray());
+                    _state.Parser = ResponseParser.ParserFor(buffer);
                 }
                 else
                 {
-                    _state.Parser.ParseNext(buffer.ToArray());
+                    _state.Parser.ParseNext(buffer);
                 }
 
                 while (_state.Parser.HasFullResponse())

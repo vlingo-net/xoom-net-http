@@ -103,7 +103,7 @@ namespace Vlingo.Http.Tests.Resource
             buffer.Put(Encoding.UTF8.GetBytes(get));
             buffer.Flip();
             
-            requestSender.SendRequest(Request.From(buffer.ToArray()));
+            requestSender.SendRequest(Request.From(buffer));
 
             Assert.Equal(1, access.ReadFrom<int>("consumeCount"));
 

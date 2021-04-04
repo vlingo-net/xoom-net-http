@@ -290,14 +290,14 @@ namespace Vlingo.Http.Resource
 
                     if (!requestResponseContext.HasConsumerData)
                     {
-                        parser = RequestParser.ParserFor(buffer.ToArray());
+                        parser = RequestParser.ParserFor(buffer);
                         requestResponseContext.ConsumerData(parser);
                     }
                     else
                     {
                         parser = requestResponseContext.ConsumerData<RequestParser>();
                         wasIncompleteContent = parser.IsMissingContent;
-                        parser.ParseNext(buffer.ToArray());
+                        parser.ParseNext(buffer);
                     }
 
                     Context? context = null;

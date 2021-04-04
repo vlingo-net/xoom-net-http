@@ -6,11 +6,9 @@
 // one at https://mozilla.org/MPL/2.0/.
 
 using System;
-using System.IO;
 using Vlingo.Actors;
 using Vlingo.Common.Serialization;
 using Vlingo.Http.Resource;
-using Vlingo.Wire.Channel;
 using Vlingo.Wire.Message;
 using Xunit;
 using Xunit.Abstractions;
@@ -23,7 +21,7 @@ namespace Vlingo.Http.Tests.Resource
         private readonly ITestOutputHelper _output;
         private readonly IDispatcher _dispatcher;
         private readonly World _world;
-        private readonly MemoryStream _buffer = new MemoryStream(512);
+        private readonly IConsumerByteBuffer _consumerByteBuffer = BasicConsumerByteBuffer.Allocate(4, 512);
         private long _previousResourceHandlerId = -1L;
         private static readonly Data TestData1 = Data.With("Test1", "The test description");
         private static readonly string DataSerialized = JsonSerialization.Serialized(TestData1);
@@ -35,7 +33,7 @@ namespace Vlingo.Http.Tests.Resource
         {
             for (var count = 0; count < 3; ++count)
             {
-                var request = Request.From(ToStream(_postDataMessage).ToArray());
+                var request = Request.From(ToConsumerByteBuffer(_postDataMessage));
                 var completes = new MockCompletesEventuallyResponse();
 
                 var outcomes = completes.ExpectWithTimes(1);
@@ -78,12 +76,12 @@ namespace Vlingo.Http.Tests.Resource
 
         public void Dispose() => _world.Terminate();
 
-        private MemoryStream ToStream(string requestContent)
+        private IConsumerByteBuffer ToConsumerByteBuffer(string requestContent)
         {
-            _buffer.Clear();
-            _buffer.Write(Converters.TextToBytes(requestContent));
-            _buffer.Flip();
-            return _buffer;
+            _consumerByteBuffer.Clear();
+            _consumerByteBuffer.Put(Converters.TextToBytes(requestContent));
+            _consumerByteBuffer.Flip();
+            return _consumerByteBuffer;
         }
     }
 }

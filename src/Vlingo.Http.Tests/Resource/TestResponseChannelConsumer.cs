@@ -28,11 +28,11 @@ namespace Vlingo.Http.Tests.Resource
         {
             if (_parser == null)
             {
-                _parser = ResponseParser.ParserFor(buffer.ToArray());
+                _parser = ResponseParser.ParserFor(buffer);
             }
             else
             {
-                _parser.ParseNext(buffer.ToArray());
+                _parser.ParseNext(buffer);
             }
             
             buffer.Release();

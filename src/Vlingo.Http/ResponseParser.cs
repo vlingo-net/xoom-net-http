@@ -16,10 +16,10 @@ namespace Vlingo.Http
     {
         private readonly VirtualStateParser _virtualStateParser;
 
-        public static ResponseParser ParserFor(byte[] requestContent)
+        public static ResponseParser ParserFor(IConsumerByteBuffer requestContent)
             => new ResponseParser(requestContent);
         
-        public static ResponseParser ParserForBodyOnly(byte[] requestContent)
+        public static ResponseParser ParserForBodyOnly(IConsumerByteBuffer requestContent)
             => new ResponseParser(requestContent, true);
 
         public Response FullResponse() => _virtualStateParser.FullResponse();
@@ -37,18 +37,14 @@ namespace Vlingo.Http
         
         public bool IsStreamContentType => _virtualStateParser.IsStreamContentType;
 
-        public void ParseNext(byte[] responseContent)
+        public void ParseNext(IConsumerByteBuffer responseContent)
             => _virtualStateParser.Includes(responseContent).Parse();
 
-        private ResponseParser(byte[] responseContent)
-        {
+        private ResponseParser(IConsumerByteBuffer responseContent) => 
             _virtualStateParser = new VirtualStateParser().Includes(responseContent).Parse();
-        }
-        
-        private ResponseParser(byte[] responseContent, bool bodyOnly)
-        {
+
+        private ResponseParser(IConsumerByteBuffer responseContent, bool bodyOnly) => 
             _virtualStateParser = new VirtualStateParser(bodyOnly).Includes(responseContent).Parse();
-        }
 
 
         //=========================================
@@ -61,7 +57,7 @@ namespace Vlingo.Http
 
             // DO NOT RESET: (1) contentQueue, (2) position, (3) requestText (4) currentResponseTextLength
 
-            private readonly Queue<string> _contentQueue;
+            private readonly Queue<ContentPacket> _contentQueue;
             private int _position;
             private string _responseText;
             private int _currentResponseTextLength;
@@ -71,6 +67,7 @@ namespace Vlingo.Http
             private Body? _body;
             private bool _bodyOnly;
             private int _contentLength;
+            private int _contentExtraLength;
             private bool _continuation;
             private Step _currentStep;
             private readonly List<Response> _fullResponses;
@@ -91,7 +88,7 @@ namespace Vlingo.Http
             {
                 _bodyOnly = bodyOnly;
                 _outOfContentTime = 0;
-                _contentQueue = new Queue<string>();
+                _contentQueue = new Queue<ContentPacket>();
                 _currentStep = Step.NotStarted;
                 _responseText = string.Empty;
                 _headers = new Headers<ResponseHeader>(2);
@@ -170,18 +167,20 @@ namespace Vlingo.Http
             internal bool HasMissingContentTimeExpired(long timeLimit)
                 => _outOfContentTime + timeLimit < DateExtensions.GetCurrentMillis();
 
-            internal VirtualStateParser Includes(byte[] responseContent)
+            internal VirtualStateParser Includes(IConsumerByteBuffer responseContent)
             {
                 _outOfContentTime = 0;
-                var responseContentText = Converters.BytesToText(responseContent);
+                var responseContentText = Converters.BytesToText(responseContent.ToArray());
+                var utf8ExtraLength = responseContent.Remaining - responseContentText.Length;
                 if (_contentQueue.Count == 0)
                 {
+                    _contentExtraLength += (int) utf8ExtraLength;
                     _responseText = _responseText + responseContentText;
                     _currentResponseTextLength = _responseText.Length;
                 }
                 else
                 {
-                    _contentQueue.Enqueue(responseContentText);
+                    _contentQueue.Enqueue(new ContentPacket(responseContentText, (int) utf8ExtraLength));
                 }
                 return this;
             }
@@ -250,7 +249,9 @@ namespace Vlingo.Http
                         _responseText = Compact();
                         return Optional.Empty<string>();
                     }
-                    _responseText = Compact() + _contentQueue.Dequeue();
+                    var packet = _contentQueue.Dequeue();
+                    _contentExtraLength += packet.Utf8ExtraLength;
+                    _responseText = Compact() + packet.Content;
                     return NextLine(mayBeBlank, errorMessage);
                 }
 
@@ -312,19 +313,21 @@ namespace Vlingo.Http
                 if (_contentLength > 0)
                 {
                     var endIndex = _position + _contentLength;
-                    if (_currentResponseTextLength < endIndex)
+                    if (_currentResponseTextLength + _contentExtraLength < endIndex)
                     {
                         if (_contentQueue.Count == 0)
                         {
                             _responseText = Compact();
                             return true;
                         }
-                        _responseText = Compact() + _contentQueue.Dequeue();
+                        var packet = _contentQueue.Dequeue();
+                        _responseText = Compact() + packet.Content;
+                        _contentExtraLength += packet.Utf8ExtraLength;
                         ParseBody();
                         return false;
                     }
-                    _body = Body.From(_responseText.Substring(_position, endIndex - _position));
-                    _position += _contentLength;
+                    _body = Body.From(_responseText.Substring(_position, endIndex - _position - _contentExtraLength));
+                    _position += _contentLength - _contentExtraLength;
                 }
                 else
                 {
@@ -445,6 +448,7 @@ namespace Vlingo.Http
 
                 _body = null;
                 _contentLength = 0;
+                _contentExtraLength = 0;
                 _continuation = false;
                 _outOfContentTime = 0;
                 _status = 0;

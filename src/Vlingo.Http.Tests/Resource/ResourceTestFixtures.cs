@@ -51,6 +51,7 @@ namespace Vlingo.Http.Tests.Resource
         protected string PostJaneDoeUserMessage => $"POST /users HTTP/1.1\nHost: vlingo.io\nContent-Length: {JaneDoeUserSerialized.Length}\n\n{JaneDoeUserSerialized}";
 
         private MemoryStream _buffer = new MemoryStream(65535);
+        private IConsumerByteBuffer _consumerByteBuffer = BasicConsumerByteBuffer.Allocate(1, 65535);
 
         private int _uniqueId = 1;
         
@@ -60,6 +61,14 @@ namespace Vlingo.Http.Tests.Resource
             _buffer.Write(Converters.TextToBytes(requestContent));
             _buffer.Flip();
             return _buffer;
+        }
+        
+        protected IConsumerByteBuffer ToByteBuffer(string requestContent)
+        {
+            _consumerByteBuffer.Clear();
+            _consumerByteBuffer.Put(Converters.TextToBytes(requestContent));
+            _consumerByteBuffer.Flip();
+            return _consumerByteBuffer;
         }
         
         protected string CreatedResponse(string body) => $"HTTP/1.1 201 CREATED\nContent-Length: {body.Length}\n\n{body}";
@@ -78,7 +87,7 @@ namespace Vlingo.Http.Tests.Resource
         {
             var unique =
                 UserData.From(
-                    "" + _uniqueId,
+                    $"{_uniqueId}",
                     NameData.From("Jane", "Doe"),
                     ContactData.From("jane.doe@vlingo.io", "+1 212-555-1212"));
 
@@ -95,9 +104,9 @@ namespace Vlingo.Http.Tests.Resource
 
         protected string UniqueJohnDoe()
         {
-            var id = "" + _uniqueId;
-            if (id.Length == 1) id = "00" + id;
-            if (id.Length == 2) id = "0" + id;
+            var id = $"{_uniqueId}";
+            if (id.Length == 1) id = $"00{id}";
+            if (id.Length == 2) id = $"0{id}";
             var unique =
                 UserData.From(
                     id, //"" + uniqueId,

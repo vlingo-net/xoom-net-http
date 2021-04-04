@@ -6,6 +6,7 @@
 // one at https://mozilla.org/MPL/2.0/.
 
 using System;
+using Vlingo.Wire.Message;
 
 namespace Vlingo.Http
 {
@@ -17,7 +18,7 @@ namespace Vlingo.Http
         public Uri? Uri { get; }
         public Version? Version { get; }
 
-        public static Request From(byte[] requestContent)
+        public static Request From(IConsumerByteBuffer requestContent)
             => RequestParser.ParserFor(requestContent).FullRequest();
         
         public static Request From(Method method, Uri uri, Version version, Headers<RequestHeader> headers, Body body) 

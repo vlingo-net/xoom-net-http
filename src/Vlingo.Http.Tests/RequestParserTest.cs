@@ -21,7 +21,7 @@ namespace Vlingo.Http.Tests
         [Fact]
         public void TestThatSingleResponseParses()
         {
-            var parser = RequestParser.ParserFor(ToStream(PostJohnDoeUserMessage).ToArray());
+            var parser = RequestParser.ParserFor(ToByteBuffer(PostJohnDoeUserMessage));
 
             Assert.True(parser.HasCompleted);
             Assert.True(parser.HasFullRequest());
@@ -42,7 +42,7 @@ namespace Vlingo.Http.Tests
         [InlineData(200)]
         public void TestThatMultipleResponsesParse(int requests)
         {
-            var parser = RequestParser.ParserFor(ToStream(MultipleRequestBuilder(requests)).ToArray());
+            var parser = RequestParser.ParserFor(ToByteBuffer(MultipleRequestBuilder(requests)));
 
             Assert.True(parser.HasCompleted);
             Assert.True(parser.HasFullRequest());
@@ -78,7 +78,7 @@ namespace Vlingo.Http.Tests
             var totalLength = manyRequests.Length;
             var random = new Random();
             var alteringEndIndex = 1024;
-            var parser = RequestParser.ParserFor(ToStream(manyRequests.Substring(0, alteringEndIndex)).ToArray());
+            var parser = RequestParser.ParserFor(ToByteBuffer(manyRequests.Substring(0, alteringEndIndex)));
             var startingIndex = alteringEndIndex;
 
             while (startingIndex < totalLength)
@@ -90,7 +90,7 @@ namespace Vlingo.Http.Tests
                     alteringEndIndex = totalLength;
                 }
 
-                parser.ParseNext(ToStream(manyRequests.Substring(startingIndex, alteringEndIndex - startingIndex)).ToArray());
+                parser.ParseNext(ToByteBuffer(manyRequests.Substring(startingIndex, alteringEndIndex - startingIndex)));
                 startingIndex = alteringEndIndex;
             }
 

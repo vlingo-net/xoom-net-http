@@ -13,6 +13,7 @@ using Vlingo.Common.Serialization;
 using Vlingo.Http.Resource;
 using Vlingo.Http.Tests.Sample.User;
 using Vlingo.Http.Tests.Sample.User.Serialization;
+using Vlingo.Wire.Message;
 using Xunit;
 using Xunit.Abstractions;
 using Action = Vlingo.Http.Resource.Action;
@@ -27,7 +28,7 @@ namespace Vlingo.Http.Tests.Resource
         [Fact]
         public void TestThatPostRegisterUserDispatches()
         {
-            var request = Request.From(Encoding.UTF8.GetBytes(PostJohnDoeUserMessage));
+            var request = Request.From(ConsumerByteBuffer(PostJohnDoeUserMessage));
             var completes = new MockCompletesEventuallyResponse();
 
             var withCalls = completes.ExpectWithTimes(1);
@@ -49,11 +50,11 @@ namespace Vlingo.Http.Tests.Resource
             Assert.Equal(JohnDoeUserData.ContactData.EmailAddress, createdUserData.ContactData.EmailAddress);
             Assert.Equal(JohnDoeUserData.ContactData.TelephoneNumber, createdUserData.ContactData.TelephoneNumber);
         }
-        
+
         [Fact]
         public void TestThatGetUserDispatches()
         {
-            var postRequest = Request.From(Encoding.UTF8.GetBytes(PostJohnDoeUserMessage));
+            var postRequest = Request.From(ConsumerByteBuffer(PostJohnDoeUserMessage));
             var postCompletes = new MockCompletesEventuallyResponse();
             var postCompletesWithCalls = postCompletes.ExpectWithTimes(1);
             Dispatcher.DispatchFor(new Context(postRequest, postCompletes));
@@ -61,7 +62,7 @@ namespace Vlingo.Http.Tests.Resource
             Assert.NotNull(postCompletes.Response);
 
             var getUserMessage = $"GET {postCompletes.Response.Get().HeaderOf(ResponseHeader.Location).Value} HTTP/1.1\nHost: vlingo.io\n\n";
-            var getRequest = Request.From(Encoding.UTF8.GetBytes(getUserMessage));
+            var getRequest = Request.From(ConsumerByteBuffer(getUserMessage));
             var getCompletes = new MockCompletesEventuallyResponse();
             var getCompletesWithCalls = getCompletes.ExpectWithTimes(1);
             Dispatcher.DispatchFor(new Context(getRequest, getCompletes));
@@ -79,7 +80,7 @@ namespace Vlingo.Http.Tests.Resource
         [Fact]
         public void TestThatGetAllUsersDispatches()
         {
-            var postRequest1 = Request.From(Encoding.UTF8.GetBytes(PostJohnDoeUserMessage));
+            var postRequest1 = Request.From(ConsumerByteBuffer(PostJohnDoeUserMessage));
             var postCompletes1 = new MockCompletesEventuallyResponse();
 
             var postCompletes1WithCalls = postCompletes1.ExpectWithTimes(1);
@@ -87,7 +88,7 @@ namespace Vlingo.Http.Tests.Resource
             postCompletes1WithCalls.ReadFrom<int>("completed");
 
             Assert.NotNull(postCompletes1.Response);
-            var postRequest2 = Request.From(Encoding.UTF8.GetBytes(PostJaneDoeUserMessage));
+            var postRequest2 = Request.From(ConsumerByteBuffer(PostJaneDoeUserMessage));
             var postCompletes2 = new MockCompletesEventuallyResponse();
 
             var postCompletes2WithCalls = postCompletes2.ExpectWithTimes(1);
@@ -97,7 +98,7 @@ namespace Vlingo.Http.Tests.Resource
             Assert.NotNull(postCompletes2.Response);
 
             var getUserMessage = "GET /users HTTP/1.1\nHost: vlingo.io\n\n";
-            var getRequest = Request.From(Encoding.UTF8.GetBytes(getUserMessage));
+            var getRequest = Request.From(ConsumerByteBuffer(getUserMessage));
             var getCompletes = new MockCompletesEventuallyResponse();
 
             var getCompletesWithCalls = getCompletes.ExpectWithTimes(1);
@@ -128,7 +129,7 @@ namespace Vlingo.Http.Tests.Resource
         public void TestThatPatchNameWorks()
         {
             _output.WriteLine("TestThatPatchNameWorks()");
-            var postRequest1 = Request.From(Encoding.UTF8.GetBytes(PostJohnDoeUserMessage));
+            var postRequest1 = Request.From(ConsumerByteBuffer(PostJohnDoeUserMessage));
             var postCompletes1 = new MockCompletesEventuallyResponse();
             var postCompletes1WithCalls = postCompletes1.ExpectWithTimes(1);
             Dispatcher.DispatchFor(new Context(postRequest1, postCompletes1));
@@ -137,7 +138,7 @@ namespace Vlingo.Http.Tests.Resource
             Assert.NotNull(postCompletes1.Response);
             _output.WriteLine("1");
 
-            var postRequest2 = Request.From(Encoding.UTF8.GetBytes(PostJaneDoeUserMessage));
+            var postRequest2 = Request.From(ConsumerByteBuffer(PostJaneDoeUserMessage));
             var postCompletes2 = new MockCompletesEventuallyResponse();
 
             var postCompletes2WithCalls = postCompletes2.ExpectWithTimes(1);
@@ -156,7 +157,7 @@ namespace Vlingo.Http.Tests.Resource
                 $"\n\n{johnNameSerialized}";
 
             _output.WriteLine($"2.0: {patchJohnDoeUserMessage}");
-            var patchRequest1 = Request.From(Encoding.UTF8.GetBytes(patchJohnDoeUserMessage));
+            var patchRequest1 = Request.From(ConsumerByteBuffer(patchJohnDoeUserMessage));
             var patchCompletes1 = new MockCompletesEventuallyResponse();
 
             var patchCompletes1WithCalls = patchCompletes1.ExpectWithTimes(1);
@@ -178,7 +179,7 @@ namespace Vlingo.Http.Tests.Resource
                 $"/name HTTP/1.1\nHost: vlingo.io\nContent-Length: {janeNameSerialized.Length}" +
                 $"\n\n{janeNameSerialized}";
 
-            var patchRequest2 = Request.From(Encoding.UTF8.GetBytes(patchJaneDoeUserMessage));
+            var patchRequest2 = Request.From(ConsumerByteBuffer(patchJaneDoeUserMessage));
             var patchCompletes2 = new MockCompletesEventuallyResponse();
 
             var patchCompletes2WithCalls = patchCompletes2.ExpectWithTimes(1);
@@ -276,6 +277,14 @@ namespace Vlingo.Http.Tests.Resource
             _output = output;
             _settings = new JsonSerializerSettings();
             _settings.Converters.Add(new UserDataConverter());
+        }
+        
+        private IConsumerByteBuffer ConsumerByteBuffer(string message)
+        {
+            var requestContent = Encoding.UTF8.GetBytes(message);
+            var buffer = BasicConsumerByteBuffer.Allocate(3, requestContent.Length).Put(requestContent);
+            buffer.Rewind();
+            return buffer;
         }
     }
 }

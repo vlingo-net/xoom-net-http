@@ -5,9 +5,7 @@
 // was not distributed with this file, You can obtain
 // one at https://mozilla.org/MPL/2.0/.
 
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using Vlingo.Http.Tests.Resource;
 using Xunit;
@@ -22,7 +20,7 @@ namespace Vlingo.Http.Tests
         [Fact]
         public void TestThatSingleResponseParses()
         {
-            var parser = ResponseParser.ParserFor(ToStream(JohnDoeCreated()).ToArray());
+            var parser = ResponseParser.ParserFor(ToByteBuffer(JohnDoeCreated()));
 
             Assert.True(parser.HasCompleted);
             Assert.True(parser.HasFullResponse());
@@ -41,7 +39,7 @@ namespace Vlingo.Http.Tests
         [InlineData(200)]
         public void TestThatMultipleResponsesParse(int responses)
         {
-            var parser = ResponseParser.ParserFor(ToStream(MultipleResponseBuilder(responses)).ToArray());
+            var parser = ResponseParser.ParserFor(ToByteBuffer(MultipleResponseBuilder(responses)));
 
             Assert.True(parser.HasCompleted);
             Assert.True(parser.HasFullResponse());
@@ -74,7 +72,7 @@ namespace Vlingo.Http.Tests
 
             var totalLength = manyResponses.Length;
             var alteringEndIndex = 1024;
-            var parser = ResponseParser.ParserFor(ToStream(manyResponses.Substring(0, alteringEndIndex)).ToArray());
+            var parser = ResponseParser.ParserFor(ToByteBuffer(manyResponses.Substring(0, alteringEndIndex)));
             var startingIndex = alteringEndIndex;
 
             while (startingIndex < totalLength)
@@ -85,7 +83,7 @@ namespace Vlingo.Http.Tests
                     alteringEndIndex = totalLength;
                 }
 
-                parser.ParseNext(ToStream(manyResponses.Substring(startingIndex, alteringEndIndex - startingIndex)).ToArray());
+                parser.ParseNext(ToByteBuffer(manyResponses.Substring(startingIndex, alteringEndIndex - startingIndex)));
                 startingIndex = alteringEndIndex;
             }
 
