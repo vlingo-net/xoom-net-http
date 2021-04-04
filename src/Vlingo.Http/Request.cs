@@ -94,9 +94,9 @@ namespace Vlingo.Http
             Version = version;
             Body = body;
 
-            if(body != null && body.HasContent && headers.HeaderOf("Content-Length") == null)
+            if (body != null && body.HasContent && headers.HeaderOf(RequestHeader.ContentLength) == null)
             {
-                Headers = headers.And("Content-Length", $"{body.Content.Length}");
+                Headers = headers.And(RequestHeader.WithContentLength(body.Content));
             }
             else
             {

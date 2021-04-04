@@ -133,7 +133,7 @@ namespace Vlingo.Http
                 var header = headers.HeaderOf(ResponseHeader.ContentLength);
                 if (header == null && !((int)Status).ToString().StartsWith("1") && Status != ResponseStatus.NoContent && Status != ResponseStatus.NotModified)
                 {
-                    headers.Add(ResponseHeader.Of(ResponseHeader.ContentLength, Entity.Content.Length));
+                    headers.Add(ResponseHeader.Of(ResponseHeader.ContentLength, Converters.EncodedLength(Entity.Content)));
                 }
             }
 

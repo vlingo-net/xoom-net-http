@@ -7,6 +7,7 @@
 
 
 using System;
+using Vlingo.Wire.Message;
 
 namespace Vlingo.Http
 {
@@ -85,7 +86,7 @@ namespace Vlingo.Http
         
         public static RequestHeader WithContentLength(int length) => new RequestHeader(ContentLength, length.ToString());
 
-        public static RequestHeader WithContentLength(string body) => new RequestHeader(ContentLength, body.Length.ToString());
+        public static RequestHeader WithContentLength(string body) => new RequestHeader(ContentLength, Converters.EncodedLength(body).ToString());
 
         public static RequestHeader WithContentLength(byte[] body) => new RequestHeader(ContentLength, body.Length.ToString());
 
