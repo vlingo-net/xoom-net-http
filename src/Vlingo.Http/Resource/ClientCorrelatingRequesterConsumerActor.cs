@@ -10,7 +10,7 @@ using System.Collections.Generic;
 using System.IO;
 using Vlingo.Actors;
 using Vlingo.Common;
-using Vlingo.UUID;
+using Vlingo.Xoom.UUID;
 using Vlingo.Wire.Channel;
 using Vlingo.Wire.Message;
 
