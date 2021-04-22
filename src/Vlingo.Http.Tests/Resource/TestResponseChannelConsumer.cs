@@ -8,7 +8,7 @@
 using System.Collections.Concurrent;
 using Vlingo.Actors;
 using Vlingo.Actors.TestKit;
-using Vlingo.Common;
+using Vlingo.Xoom.Common;
 using Vlingo.Wire.Channel;
 using Vlingo.Wire.Message;
 

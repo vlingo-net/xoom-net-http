@@ -7,7 +7,7 @@
 
 using Vlingo.Actors;
 using Vlingo.Actors.TestKit;
-using Vlingo.Common;
+using Vlingo.Xoom.Common;
 
 namespace Vlingo.Http.Tests.Resource
 {

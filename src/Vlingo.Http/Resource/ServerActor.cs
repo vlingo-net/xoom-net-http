@@ -8,8 +8,8 @@
 using System;
 using System.Collections.Generic;
 using Vlingo.Actors;
-using Vlingo.Common;
-using Vlingo.Common.Pool;
+using Vlingo.Xoom.Common;
+using Vlingo.Xoom.Common.Pool;
 using Vlingo.Wire.Channel;
 using Vlingo.Wire.Fdx.Bidirectional;
 using Vlingo.Wire.Message;

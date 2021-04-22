@@ -7,8 +7,8 @@
 
 using System;
 using Vlingo.Actors;
-using Vlingo.Common;
-using Vlingo.Common.Serialization;
+using Vlingo.Xoom.Common;
+using Vlingo.Xoom.Common.Serialization;
 using Vlingo.Http.Resource;
 using Vlingo.Http.Tests.Sample.User.Model;
 
@@ -26,7 +26,7 @@ namespace Vlingo.Http.Tests.Sample.User
             return _stage.ActorOf<IProfile>(_stage.World.AddressFactory.FindableBy(int.Parse(userId)))
                 .AndThenTo(profile => {
                     var profileState = _repository.ProfileOf(userId);
-                    return Vlingo.Common.Completes.WithSuccess(Response.Of(ResponseStatus.Ok, Headers.Of(ResponseHeader.Of(ResponseHeader.Location, ProfileLocation(userId))),
+                    return Vlingo.Xoom.Common.Completes.WithSuccess(Response.Of(ResponseStatus.Ok, Headers.Of(ResponseHeader.Of(ResponseHeader.Location, ProfileLocation(userId))),
                         JsonSerialization.Serialized(ProfileData.From(profileState))));
                 })
                 .Otherwise<Response>(noProfile => {
@@ -49,10 +49,10 @@ namespace Vlingo.Http.Tests.Sample.User
             var profileState = _repository.ProfileOf(userId);
             if (profileState.DoesNotExist)
             {
-                return Vlingo.Common.Completes.WithSuccess(Response.Of(ResponseStatus.NotFound, ProfileLocation(userId)));
+                return Vlingo.Xoom.Common.Completes.WithSuccess(Response.Of(ResponseStatus.NotFound, ProfileLocation(userId)));
             }
 
-            return Vlingo.Common.Completes.WithSuccess(Response.Of(ResponseStatus.Ok, JsonSerialization.Serialized(ProfileData.From(profileState))));
+            return Vlingo.Xoom.Common.Completes.WithSuccess(Response.Of(ResponseStatus.Ok, JsonSerialization.Serialized(ProfileData.From(profileState))));
         }
 
         public override Http.Resource.Resource Routes()

@@ -6,8 +6,8 @@
 // one at https://mozilla.org/MPL/2.0/.
 
 using System.Collections.Generic;
-using Vlingo.Common;
-using Vlingo.Common.Serialization;
+using Vlingo.Xoom.Common;
+using Vlingo.Xoom.Common.Serialization;
 using Vlingo.Http.Resource;
 using Xunit;
 using Xunit.Abstractions;

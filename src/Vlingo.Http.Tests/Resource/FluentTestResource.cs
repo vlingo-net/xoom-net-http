@@ -8,8 +8,8 @@
 using System.Collections.Concurrent;
 using Newtonsoft.Json;
 using Vlingo.Actors;
-using Vlingo.Common;
-using Vlingo.Common.Serialization;
+using Vlingo.Xoom.Common;
+using Vlingo.Xoom.Common.Serialization;
 using Vlingo.Http.Resource;
 
 namespace Vlingo.Http.Tests.Resource
@@ -30,7 +30,7 @@ namespace Vlingo.Http.Tests.Resource
 
             _entities.AddOrUpdate(data.Id, taggedData, (k, value) => value);
 
-            return Common.Completes.WithSuccess(Response.Of(ResponseStatus.Created,
+            return Xoom.Common.Completes.WithSuccess(Response.Of(ResponseStatus.Created,
                 JsonSerialization.Serialized(taggedData)));
         }
 
@@ -38,7 +38,7 @@ namespace Vlingo.Http.Tests.Resource
         {
             var gotData = _entities.TryGetValue(resId, out var data);
 
-            return Common.Completes.WithSuccess(!gotData
+            return Xoom.Common.Completes.WithSuccess(!gotData
                 ? Response.Of(ResponseStatus.NotFound)
                 : Response.Of(ResponseStatus.Ok, JsonSerialization.Serialized(data)));
         }

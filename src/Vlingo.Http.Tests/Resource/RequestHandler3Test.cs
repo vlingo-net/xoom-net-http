@@ -7,8 +7,8 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Vlingo.Common;
-using Vlingo.Common.Serialization;
+using Vlingo.Xoom.Common;
+using Vlingo.Xoom.Common.Serialization;
 using Vlingo.Http.Resource;
 using Vlingo.Http.Tests.Sample.User;
 using Xunit;

@@ -11,11 +11,11 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using Vlingo.Actors;
-using Vlingo.Common;
-using Vlingo.Common.Compiler;
+using Vlingo.Xoom.Common;
+using Vlingo.Xoom.Common.Compiler;
 
-using static Vlingo.Common.Compiler.DynaFile;
-using static Vlingo.Common.Compiler.DynaNaming;
+using static Vlingo.Xoom.Common.Compiler.DynaFile;
+using static Vlingo.Xoom.Common.Compiler.DynaNaming;
 
 namespace Vlingo.Http.Resource
 {

@@ -7,7 +7,7 @@
 
 using System;
 using Vlingo.Actors;
-using Vlingo.Common;
+using Vlingo.Xoom.Common;
 using Vlingo.Http.Resource;
 using Vlingo.Http.Tests.Sample.User;
 using Configuration = Vlingo.Http.Resource.Configuration;

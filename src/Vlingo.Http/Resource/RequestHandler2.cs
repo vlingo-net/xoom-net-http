@@ -8,7 +8,7 @@
 using System;
 using System.Collections.Generic;
 using Vlingo.Actors;
-using Vlingo.Common;
+using Vlingo.Xoom.Common;
 
 namespace Vlingo.Http.Resource
 {
@@ -126,54 +126,5 @@ namespace Vlingo.Http.Resource
 
         public RequestHandler3<T, R, Header> Header(string name)
             => new RequestHandler3<T, R, Header>(Method, Path, ResolverParam1, ResolverParam2, ParameterResolver.Header(name), ErrorHandler, MediaTypeMapper);
-
-
-        /**
-         * ===========================
-         * Not necessary yet
-         * ====================
-         * 
-         * 
-         static class RequestExecutor2<T, R> extends RequestExecutor implements ParamExecutor2<T,R> {
-    private final Handler2<T,R> handler;
-
-    private RequestExecutor2(Handler2<T,R> handler) { this.handler = handler; }
-
-    @Override
-    public Completes<Response> execute(final Request request,
-                                       final T param1,
-                                       final R param2,
-                                       final MediaTypeMapper mediaTypeMapper,
-                                       final ErrorHandler errorHandler,
-                                       final Logger logger) {
-      return executeRequest(() -> handler.execute(param1, param2), errorHandler, logger);
-    }
-
-    static <T,R> RequestExecutor2<T,R> from(final Handler2<T,R> handler) {
-      return new RequestExecutor2<>(handler);}
-  }
-
-  static class RequestObjectExecutor2<T,R> extends RequestObjectExecutor implements ParamExecutor2<T,R> {
-    private final ObjectHandler2<T,R> handler;
-    private RequestObjectExecutor2(ObjectHandler2<T,R> handler) { this.handler = handler;}
-
-    @Override
-    public Completes<Response> execute(final Request request,
-                                       final T param1,
-                                       final R param2,
-                                       final MediaTypeMapper mediaTypeMapper,
-                                       final ErrorHandler errorHandler,
-                                       final Logger logger) {
-      return executeRequest(request,
-                            mediaTypeMapper,
-                            () -> handler.execute(param1, param2),
-                            errorHandler,
-                            logger);
-    }
-
-    static <T,R> RequestObjectExecutor2<T,R> from(final ObjectHandler2<T,R> handler) {
-      return new RequestObjectExecutor2<>(handler);}
-  }
-         **/
     }
 }

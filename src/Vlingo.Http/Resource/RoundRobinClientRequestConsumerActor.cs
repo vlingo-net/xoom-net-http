@@ -7,7 +7,7 @@
 
 using System;
 using Vlingo.Actors;
-using Vlingo.Common;
+using Vlingo.Xoom.Common;
 using Vlingo.Wire.Message;
 
 namespace Vlingo.Http.Resource

@@ -11,7 +11,7 @@ using System.Linq;
 using System.Text;
 using Vlingo.Actors;
 using Vlingo.Actors.TestKit;
-using Vlingo.Common;
+using Vlingo.Xoom.Common;
 using Vlingo.Http.Resource;
 using Vlingo.Wire.Channel;
 using Vlingo.Wire.Message;

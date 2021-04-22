@@ -9,7 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Vlingo.Common;
+using Vlingo.Xoom.Common;
 
 namespace Vlingo.Http.Resource
 {

@@ -8,7 +8,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Vlingo.Common;
+using Vlingo.Xoom.Common;
 using Vlingo.Wire.Message;
 
 namespace Vlingo.Http

@@ -5,7 +5,7 @@
 // was not distributed with this file, You can obtain
 // one at https://mozilla.org/MPL/2.0/.
 
-using Vlingo.Common;
+using Vlingo.Xoom.Common;
 using Vlingo.Http.Resource;
 using Xunit.Abstractions;
 
@@ -20,7 +20,7 @@ namespace Vlingo.Http.Tests.Resource
         public ICompletes<Response> Query()
         {
             _output.WriteLine("QUERY");
-            return Common.Completes.WithFailure(Response.Of(ResponseStatus.BadRequest));
+            return Xoom.Common.Completes.WithFailure(Response.Of(ResponseStatus.BadRequest));
         }
 
         public override Http.Resource.Resource Routes() 

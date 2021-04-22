@@ -6,7 +6,7 @@
 // one at https://mozilla.org/MPL/2.0/.
 
 using System.Collections.Generic;
-using Vlingo.Common;
+using Vlingo.Xoom.Common;
 using Vlingo.Http.Resource;
 using Vlingo.Http.Tests.Sample.User;
 using Xunit;

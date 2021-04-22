@@ -7,7 +7,7 @@
 
 using System;
 using Vlingo.Actors;
-using Vlingo.Common;
+using Vlingo.Xoom.Common;
 using Vlingo.Http.Tests.Sample.User;
 using Xunit;
 using Xunit.Abstractions;
@@ -31,7 +31,7 @@ namespace Vlingo.Http.Tests.Resource.Sse
                     .And(RequestHeader.WithHost("StreamsRUs.co"))
                     .And(RequestHeader.WithAccept("text/event-stream"));
 
-            var respondWithSafely = _resource._requestResponseContext.Channel.ExpectRespondWith(10);
+            var respondWithSafely = _resource.RequestResponseContext.Channel.ExpectRespondWith(10);
 
             _resource.NextRequest(request);
 
@@ -39,7 +39,7 @@ namespace Vlingo.Http.Tests.Resource.Sse
 
             Assert.Equal(10, respondWithSafely.ReadFrom<int>("count"));
 
-            Assert.Equal(10, _resource._requestResponseContext.Channel.RespondWithCount.Get());
+            Assert.Equal(10, _resource.RequestResponseContext.Channel.RespondWithCount.Get());
         }
 
         [Fact]
@@ -53,16 +53,16 @@ namespace Vlingo.Http.Tests.Resource.Sse
                     .And(RequestHeader.WithHost("StreamsRUs.co"))
                     .And(RequestHeader.WithAccept("text/event-stream"));
 
-            var respondWithSafely = _resource._requestResponseContext.Channel.ExpectRespondWith(10);
+            var respondWithSafely = _resource.RequestResponseContext.Channel.ExpectRespondWith(10);
 
             _resource.NextRequest(subscribe);
 
             _resource.SubscribeToStream(streamName, typeof(AllSseFeedActor), 1, 10, "1");
 
             Assert.True(1 <= respondWithSafely.ReadFrom<int>("count"));
-            Assert.True(1 <= _resource._requestResponseContext.Channel.RespondWithCount.Get());
+            Assert.True(1 <= _resource.RequestResponseContext.Channel.RespondWithCount.Get());
 
-            var clientId = _resource._requestResponseContext.Id;
+            var clientId = _resource.RequestResponseContext.Id;
 
             var unsubscribe =
                 Request
@@ -71,14 +71,14 @@ namespace Vlingo.Http.Tests.Resource.Sse
                     .And(RequestHeader.WithHost("StreamsRUs.co"))
                     .And(RequestHeader.WithAccept("text/event-stream"));
 
-            var abandonSafely = _resource._requestResponseContext.Channel.ExpectAbandon(1);
+            var abandonSafely = _resource.RequestResponseContext.Channel.ExpectAbandon(1);
 
             _resource.NextRequest(unsubscribe);
 
             _resource.UnsubscribeFromStream(streamName, clientId);
 
             Assert.Equal(1, abandonSafely.ReadFrom<int>("count"));
-            Assert.Equal(1, _resource._requestResponseContext.Channel.AbandonCount.Get());
+            Assert.Equal(1, _resource.RequestResponseContext.Channel.AbandonCount.Get());
         }
 
         public SseStreamResourceTest(ITestOutputHelper output)

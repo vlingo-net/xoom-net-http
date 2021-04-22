@@ -8,8 +8,8 @@
 using System;
 using System.Collections.Generic;
 using Vlingo.Actors;
-using Vlingo.Common;
-using Vlingo.Common.Serialization;
+using Vlingo.Xoom.Common;
+using Vlingo.Xoom.Common.Serialization;
 using Vlingo.Http.Media;
 using Vlingo.Http.Resource;
 using Vlingo.Http.Tests.Sample.User;
