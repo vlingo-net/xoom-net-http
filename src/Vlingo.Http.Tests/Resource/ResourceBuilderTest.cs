@@ -5,7 +5,7 @@
 // was not distributed with this file, You can obtain
 // one at https://mozilla.org/MPL/2.0/.
 
-using Vlingo.Common.Serialization;
+using Vlingo.Xoom.Common.Serialization;
 using Vlingo.Http.Resource;
 using Vlingo.Http.Tests.Sample.User;
 using Xunit;
@@ -19,11 +19,11 @@ namespace Vlingo.Http.Tests.Resource
         public void SimpleRoute()
         {
             var resource = (DynamicResource) ResourceBuilder.Resource("userResource",
-                    ResourceBuilder.Get("/helloWorld").Handle(() => Common.Completes.WithSuccess(Response.Of(ResponseStatus.Ok,  JsonSerialization.Serialized("Hello World")))),
+                    ResourceBuilder.Get("/helloWorld").Handle(() => Xoom.Common.Completes.WithSuccess(Response.Of(ResponseStatus.Ok,  JsonSerialization.Serialized("Hello World")))),
                 ResourceBuilder.Post("/post/{postId}")
                 .Param<string>()
                 .Body<UserData>()
-                .Handle((postId, userData) => Common.Completes.WithSuccess(Response.Of(ResponseStatus.Ok, JsonSerialization.Serialized(postId)))));
+                .Handle((postId, userData) => Xoom.Common.Completes.WithSuccess(Response.Of(ResponseStatus.Ok, JsonSerialization.Serialized(postId)))));
 
             Assert.NotNull(resource);
             Assert.Equal("userResource", resource.Name);
@@ -38,18 +38,18 @@ namespace Vlingo.Http.Tests.Resource
                     ResourceBuilder.Get("/customers/{customerId}/accounts/{accountId}")
                 .Param<string>()
                 .Param<string>()
-                .Handle((customerId, accountId) => Common.Completes.WithSuccess(Response.Of(ResponseStatus.Ok, JsonSerialization.Serialized("users")))),
+                .Handle((customerId, accountId) => Xoom.Common.Completes.WithSuccess(Response.Of(ResponseStatus.Ok, JsonSerialization.Serialized("users")))),
             ResourceBuilder.Get("/customers/{customerId}/accounts/{accountId}/withdraw")
                 .Param<string>()
                 .Param<string>()
-                .Handle((customerId, accountId) => Common.Completes.WithSuccess(Response.Of(ResponseStatus.Ok, JsonSerialization.Serialized("user admin"))))
+                .Handle((customerId, accountId) => Xoom.Common.Completes.WithSuccess(Response.Of(ResponseStatus.Ok, JsonSerialization.Serialized("user admin"))))
             );
 
             var matchWithdrawResource = resource.MatchWith(Method.Get, "/customers/cd1234/accounts/ac1234/withdraw".ToMatchableUri());
             var matchAccountResource = resource.MatchWith(Method.Get, "/customers/cd1234/accounts/ac1234".ToMatchableUri());
 
-            Assert.Equal("/customers/{customerId}/accounts/{accountId}/withdraw", matchWithdrawResource.Action.Uri);
-            Assert.Equal("/customers/{customerId}/accounts/{accountId}", matchAccountResource.Action.Uri);
+            Assert.Equal("/customers/{customerId}/accounts/{accountId}/withdraw", matchWithdrawResource.Action?.Uri);
+            Assert.Equal("/customers/{customerId}/accounts/{accountId}", matchAccountResource.Action?.Uri);
         }
         
         public ResourceBuilderTest(ITestOutputHelper output) : base(output)

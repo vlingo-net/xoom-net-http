@@ -9,7 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using Vlingo.Actors;
-using Vlingo.Common.Serialization;
+using Vlingo.Xoom.Common.Serialization;
 using Vlingo.Http.Resource;
 using Vlingo.Http.Tests.Sample.User;
 using Vlingo.Http.Tests.Sample.User.Model;

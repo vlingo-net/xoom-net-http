@@ -135,7 +135,7 @@ namespace Vlingo.Http.Resource
             namespaces.Add("System.Collections.Generic");
             namespaces.Add(typeof(Context).Namespace!);
             namespaces.Add(typeof(ResourceHandler).Namespace!);
-            namespaces.Add(typeof(AtomicBoolean).Namespace!); // Vlingo.Common
+            namespaces.Add(typeof(AtomicBoolean).Namespace!); // Vlingo.Xoom.Common
 
             return string.Join("\n", namespaces.Select(x => $"using {x};"));
             

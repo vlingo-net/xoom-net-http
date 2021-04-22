@@ -7,7 +7,7 @@
 
 using System;
 using Vlingo.Actors;
-using Vlingo.Common.Serialization;
+using Vlingo.Xoom.Common.Serialization;
 using Vlingo.Http.Resource;
 using Vlingo.Wire.Message;
 using Xunit;

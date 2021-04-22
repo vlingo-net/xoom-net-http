@@ -11,9 +11,9 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using Vlingo.Actors;
-using Vlingo.Common.Compiler;
+using Vlingo.Xoom.Common.Compiler;
 
-using static Vlingo.Common.Compiler.DynaFile;
+using static Vlingo.Xoom.Common.Compiler.DynaFile;
 
 namespace Vlingo.Http.Resource
 {
