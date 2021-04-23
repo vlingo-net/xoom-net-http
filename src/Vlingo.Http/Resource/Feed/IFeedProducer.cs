@@ -6,7 +6,7 @@
 // one at https://mozilla.org/MPL/2.0/.
 
 using System;
-using Vlingo.Actors;
+using Vlingo.Xoom.Actors;
 
 namespace Vlingo.Http.Resource.Feed
 {
@@ -28,7 +28,6 @@ namespace Vlingo.Http.Resource.Feed
         /// Answer a new <see cref="IFeedProducer"/>
         /// </summary>
         /// <param name="stage">The Stage in which the FeedProducer is created</param>
-        /// <param name="Type">Type of the feed producer actor to create</param>
         /// <param name="feedProducerClass">feedProducerClass</param>
         /// <returns>FeedProducer</returns>
         public static IFeedProducer Using(Stage stage, Type feedProducerClass)

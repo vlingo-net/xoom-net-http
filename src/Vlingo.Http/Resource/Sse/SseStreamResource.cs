@@ -9,8 +9,9 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using Vlingo.Actors;
+using Vlingo.Xoom.Actors;
 using Vlingo.Xoom.Common;
+using Actor = Vlingo.Xoom.Actors.Actor;
 
 namespace Vlingo.Http.Resource.Sse
 {

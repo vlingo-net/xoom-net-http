@@ -6,9 +6,9 @@
 // one at https://mozilla.org/MPL/2.0/.
 
 using System;
-using Vlingo.Actors;
 using Vlingo.Xoom.Common;
 using Vlingo.Http.Tests.Sample.User;
+using Vlingo.Xoom.Actors;
 using Xunit;
 using Xunit.Abstractions;
 

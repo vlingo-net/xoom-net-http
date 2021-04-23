@@ -9,9 +9,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using Vlingo.Actors;
 using Vlingo.Http.Resource.Feed;
 using Vlingo.Http.Resource.Sse;
+using Vlingo.Xoom.Actors;
 
 namespace Vlingo.Http.Resource
 {
@@ -383,7 +383,7 @@ namespace Vlingo.Http.Resource
 
             if (superclass == null)
             {
-                throw new ArgumentException($"Class must extend Vlingo.Actors.Actor: {candidateActorClass.FullName}");
+                throw new ArgumentException($"Class must extend Vlingo.Xoom.Actors.Actor: {candidateActorClass.FullName}");
             }
 
             foreach (var protocolInterfaceClass in candidateActorClass.GetInterfaces())

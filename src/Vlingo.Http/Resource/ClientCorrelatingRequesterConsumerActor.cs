@@ -8,11 +8,11 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Vlingo.Actors;
 using Vlingo.Xoom.Common;
 using Vlingo.Xoom.UUID;
 using Vlingo.Wire.Channel;
 using Vlingo.Wire.Message;
+using Vlingo.Xoom.Actors;
 
 namespace Vlingo.Http.Resource
 {
@@ -63,8 +63,7 @@ namespace Vlingo.Http.Resource
                     }
                     else
                     {
-                        ICompletesEventually? completes;
-                        if (_completables.TryGetValue(correlationId?.Value!, out completes))
+                        if (_completables.TryGetValue(correlationId?.Value!, out var completes))
                         {
                             if (!_state.Configuration.KeepAlive)
                             {

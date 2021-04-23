@@ -7,10 +7,10 @@
 
 using System.Collections.Concurrent;
 using Newtonsoft.Json;
-using Vlingo.Actors;
 using Vlingo.Xoom.Common;
 using Vlingo.Xoom.Common.Serialization;
 using Vlingo.Http.Resource;
+using Vlingo.Xoom.Actors;
 
 namespace Vlingo.Http.Tests.Resource
 {

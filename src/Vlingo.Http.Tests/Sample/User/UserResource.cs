@@ -7,10 +7,10 @@
 
 using System;
 using System.Collections.Generic;
-using Vlingo.Actors;
 using Vlingo.Xoom.Common.Serialization;
 using Vlingo.Http.Resource;
 using Vlingo.Http.Tests.Sample.User.Model;
+using Vlingo.Xoom.Actors;
 
 namespace Vlingo.Http.Tests.Sample.User
 {

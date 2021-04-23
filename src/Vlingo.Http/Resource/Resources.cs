@@ -8,7 +8,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using Vlingo.Actors;
+using Vlingo.Xoom.Actors;
 
 namespace Vlingo.Http.Resource
 {

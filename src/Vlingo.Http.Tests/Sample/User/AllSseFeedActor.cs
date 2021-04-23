@@ -6,8 +6,8 @@
 // one at https://mozilla.org/MPL/2.0/.
 
 using System.Collections.Generic;
-using Vlingo.Actors;
 using Vlingo.Http.Resource.Sse;
+using Vlingo.Xoom.Actors;
 
 namespace Vlingo.Http.Tests.Sample.User
 {
@@ -36,10 +36,10 @@ namespace Vlingo.Http.Tests.Sample.User
             {
                 var fresh = !subscriber.HasCurrentEventId;
                 var retry = fresh ? _retryThreshold : SseEvent.NoRetry;
-                var startId = fresh ? _defaultId : int.Parse(subscriber.CurrentEventId);
+                var startId = fresh ? _defaultId : int.Parse(subscriber.CurrentEventId!);
                 var endId = startId + _feedPayload - 1;
                 var (sseEvents, id) = ReadSubStream(startId, endId, retry);
-                subscriber.Client.Send(sseEvents);
+                subscriber.Client?.Send(sseEvents);
                 subscriber.CurrentEventId = id.ToString();
             }
         }

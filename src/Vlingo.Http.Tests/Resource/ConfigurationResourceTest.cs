@@ -8,12 +8,12 @@
 using System.Collections.Generic;
 using System.Text;
 using Newtonsoft.Json;
-using Vlingo.Actors.Plugin.Logging.Console;
 using Vlingo.Xoom.Common.Serialization;
 using Vlingo.Http.Resource;
 using Vlingo.Http.Tests.Sample.User;
 using Vlingo.Http.Tests.Sample.User.Serialization;
 using Vlingo.Wire.Message;
+using Vlingo.Xoom.Actors.Plugin.Logging.Console;
 using Xunit;
 using Xunit.Abstractions;
 using Action = Vlingo.Http.Resource.Action;

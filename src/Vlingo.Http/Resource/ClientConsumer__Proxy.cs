@@ -6,9 +6,9 @@
 // one at https://mozilla.org/MPL/2.0/.
 
 using System;
-using Vlingo.Actors;
 using Vlingo.Xoom.Common;
 using Vlingo.Wire.Message;
+using Vlingo.Xoom.Actors;
 
 namespace Vlingo.Http.Resource
 {
@@ -17,7 +17,7 @@ namespace Vlingo.Http.Resource
         private const string RepresentationConclude0 = "Conclude()";
         private const string RequestWithRepresentation1 = "RequestWith(Vlingo.Http.Request)";
         private const string ConsumeRepresentation3 = "Consume(Vlingo.Wire.Message.IConsumerByteBuffer)";
-        private const string IntervalSignalRepresentation4 = "IntervalSignal(Vlingo.Actors.IScheduled<object>, object)";
+        private const string IntervalSignalRepresentation4 = "IntervalSignal(Vlingo.Xoom.Actors.IScheduled<object>, object)";
         private const string StopRepresentation5 = "Stop()";
 
         private readonly Actor _actor;

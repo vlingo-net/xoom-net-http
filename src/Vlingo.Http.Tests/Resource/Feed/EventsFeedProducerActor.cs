@@ -6,8 +6,8 @@
 // one at https://mozilla.org/MPL/2.0/.
 
 using System.Text;
-using Vlingo.Actors;
 using Vlingo.Http.Resource.Feed;
+using Vlingo.Xoom.Actors;
 
 namespace Vlingo.Http.Tests.Resource.Feed
 {
@@ -28,7 +28,7 @@ namespace Vlingo.Http.Tests.Resource.Feed
             }
             
             var response = Response.Of(ResponseStatus.Ok, body.ToString());
-            request.Context.Completes.With(response);
+            request.Context?.Completes.With(response);
         }
     }
 }

@@ -6,26 +6,26 @@
 // one at https://mozilla.org/MPL/2.0/.
 
 using System;
-using Vlingo.Actors;
+using Vlingo.Xoom.Actors;
 using Vlingo.Xoom.Common;
 
 namespace Vlingo.Http.Resource
 {
     public class Server__Proxy : IServer
     {
-        private const string StartWithRepresentation1 = "StartWith(Vlingo.Actors.Stage)";
+        private const string StartWithRepresentation1 = "StartWith(Vlingo.Xoom.Actors.Stage)";
 
         private const string StartWithRepresentation2 =
-            "StartWith(Vlingo.Actors.Stage, Vlingo.Http.Resource.HttpProperties)";
+            "StartWith(Vlingo.Xoom.Actors.Stage, Vlingo.Http.Resource.HttpProperties)";
 
         private const string StartWithRepresentation3 =
-            "StartWith(Vlingo.Actors.Stage, Vlingo.Http.Resource.Resources, int, Vlingo.Http.Resource.Configuration.SizingConf, Vlingo.Http.Resource.Configuration.TimingConf)";
+            "StartWith(Vlingo.Xoom.Actors.Stage, Vlingo.Http.Resource.Resources, int, Vlingo.Http.Resource.Configuration.SizingConf, Vlingo.Http.Resource.Configuration.TimingConf)";
 
         private const string StartWithRepresentation4 =
-            "StartWith(Vlingo.Actors.Stage, Vlingo.Http.Resource.Resources, Vlingo.Http.Filters, int, Vlingo.Http.Resource.Configuration.SizingConf, Vlingo.Http.Resource.Configuration.TimingConf)";
+            "StartWith(Vlingo.Xoom.Actors.Stage, Vlingo.Http.Resource.Resources, Vlingo.Http.Filters, int, Vlingo.Http.Resource.Configuration.SizingConf, Vlingo.Http.Resource.Configuration.TimingConf)";
 
         private const string StartWithRepresentation5 =
-            "StartWith(Vlingo.Actors.Stage, Vlingo.Http.Resource.Resources, Vlingo.Http.Filters, int, Vlingo.Http.Resource.Configuration.SizingConf, Vlingo.Http.Resource.Configuration.TimingConf, string, string)";
+            "StartWith(Vlingo.Xoom.Actors.Stage, Vlingo.Http.Resource.Resources, Vlingo.Http.Filters, int, Vlingo.Http.Resource.Configuration.SizingConf, Vlingo.Http.Resource.Configuration.TimingConf, string, string)";
 
         private const string ShutDownRepresentation6 = "ShutDown()";
         private const string StartUpRepresentation7 = "StartUp()";

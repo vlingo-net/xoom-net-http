@@ -7,13 +7,13 @@
 
 using System;
 using System.Collections.Generic;
-using Vlingo.Actors;
 using Vlingo.Xoom.Common;
 using Vlingo.Xoom.Common.Serialization;
 using Vlingo.Http.Media;
 using Vlingo.Http.Resource;
 using Vlingo.Http.Tests.Sample.User;
 using Vlingo.Http.Tests.Sample.User.Model;
+using Vlingo.Xoom.Actors;
 using Xunit;
 using Xunit.Abstractions;
 using Action = Vlingo.Http.Resource.Action;

@@ -6,10 +6,10 @@
 // one at https://mozilla.org/MPL/2.0/.
 
 using System.IO;
-using Vlingo.Actors;
 using Vlingo.Xoom.Common;
 using Vlingo.Wire.Channel;
 using Vlingo.Wire.Fdx.Bidirectional;
+using Vlingo.Xoom.Actors;
 
 namespace Vlingo.Http.Resource
 {

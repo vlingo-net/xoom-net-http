@@ -6,10 +6,10 @@
 // one at https://mozilla.org/MPL/2.0/.
 
 using System;
-using Vlingo.Actors;
-using Vlingo.Actors.Plugin.Logging.Console;
 using Vlingo.Http.Media;
 using Vlingo.Http.Resource;
+using Vlingo.Xoom.Actors;
+using Vlingo.Xoom.Actors.Plugin.Logging.Console;
 using Xunit;
 using Xunit.Abstractions;
 

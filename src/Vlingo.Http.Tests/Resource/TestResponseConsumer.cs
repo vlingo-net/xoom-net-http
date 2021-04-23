@@ -7,9 +7,9 @@
 
 using System;
 using System.Collections.Generic;
-using Vlingo.Actors.TestKit;
 using Vlingo.Xoom.Common;
 using Vlingo.Http.Resource;
+using Vlingo.Xoom.Actors.TestKit;
 using Xunit.Abstractions;
 
 namespace Vlingo.Http.Tests.Resource

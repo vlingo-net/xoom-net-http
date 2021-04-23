@@ -7,9 +7,9 @@
 
 using System;
 using System.Collections.Generic;
-using Vlingo.Actors.Plugin.Logging.Console;
 using Vlingo.Http.Resource;
 using Vlingo.Http.Tests.Sample.User;
+using Vlingo.Xoom.Actors.Plugin.Logging.Console;
 using Xunit;
 using Action = Vlingo.Http.Resource.Action;
 

@@ -7,11 +7,11 @@
 
 using System;
 using System.IO;
-using Vlingo.Actors;
 using Vlingo.Xoom.Common;
 using Vlingo.Wire.Channel;
 using Vlingo.Wire.Fdx.Bidirectional;
 using Vlingo.Wire.Message;
+using Vlingo.Xoom.Actors;
 
 namespace Vlingo.Http.Resource
 {

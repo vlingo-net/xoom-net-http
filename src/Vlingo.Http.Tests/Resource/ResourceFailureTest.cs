@@ -6,11 +6,11 @@
 // one at https://mozilla.org/MPL/2.0/.
 
 using System;
-using Vlingo.Actors;
 using Vlingo.Xoom.Common;
 using Vlingo.Http.Resource;
 using Vlingo.Wire.Message;
 using Vlingo.Wire.Node;
+using Vlingo.Xoom.Actors;
 using Xunit;
 using Xunit.Abstractions;
 using Configuration = Vlingo.Http.Resource.Configuration;

@@ -5,12 +5,11 @@
 // was not distributed with this file, You can obtain
 // one at https://mozilla.org/MPL/2.0/.
 
-using System;
-using Vlingo.Actors;
 using Vlingo.Xoom.Common;
 using Vlingo.Xoom.Common.Serialization;
 using Vlingo.Http.Resource;
 using Vlingo.Http.Tests.Sample.User.Model;
+using Vlingo.Xoom.Actors;
 
 namespace Vlingo.Http.Tests.Sample.User
 {
@@ -37,7 +36,7 @@ namespace Vlingo.Http.Tests.Sample.User
                             profileData.LinkedInAccount,
                             profileData.Website);
                     
-                    Stage.ActorFor<IProfile>(() => new ProfileActor(profileState));
+                    Stage?.ActorFor<IProfile>(() => new ProfileActor(profileState));
 
                 _repository.Save(profileState);
                 return Response.Of(ResponseStatus.Created, JsonSerialization.Serialized(ProfileData.From(profileState)));
