@@ -7,18 +7,18 @@
       "pooledCompletes": true
     },
     "pooledCompletes": {
-      "classname" : "Vlingo.Actors.Plugin.Completes.PooledCompletesPlugin",
+      "classname" : "Vlingo.Xoom.Actors.Plugin.Completes.PooledCompletesPlugin",
       "pool" : 10,
       "mailbox" : "queueMailbox"
     },
     "queueMailbox": {
-      "classname": "Vlingo.Actors.Plugin.Mailbox.ConcurrentQueue.ConcurrentQueueMailboxPlugin",
+      "classname": "Vlingo.Xoom.Actors.Plugin.Mailbox.ConcurrentQueue.ConcurrentQueueMailboxPlugin",
       "defaultMailbox": true,
       "numberOfDispatchersFactor": 1.5,
       "dispatcherThrottlingCount": 1
     },
     "arrayQueueMailbox": {
-      "classname": "Vlingo.Actors.Plugin.Mailbox.AgronaMPSCArrayQueue.ManyToOneConcurrentArrayQueuePlugin",
+      "classname": "Vlingo.Xoom.Actors.Plugin.Mailbox.AgronaMPSCArrayQueue.ManyToOneConcurrentArrayQueuePlugin",
       "defaultMailbox": false,
       "size": 65535,
       "fixedBackoff": 2,
@@ -26,7 +26,7 @@
       "sendRetires": 10
     },
     "consoleLogger": {
-      "classname": "Vlingo.Actors.Plugin.Logging.Console.ConsoleLoggerPlugin",
+      "classname": "Vlingo.Xoom.Actors.Plugin.Logging.Console.ConsoleLoggerPlugin",
       "name": "vlingo-net/http",
       "defaultLogger": true
     }
