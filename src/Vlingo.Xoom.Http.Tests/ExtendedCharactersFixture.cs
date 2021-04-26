@@ -7,7 +7,7 @@
 
 using System.Text;
 
-namespace Vlingo.Http.Tests
+namespace Vlingo.Xoom.Http.Tests
 {
     public class ExtendedCharactersFixture
     {

@@ -8,7 +8,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Vlingo.Http.Resource
+namespace Vlingo.Xoom.Http.Resource
 {
     public class StaticFilesResourceDispatcher : ConfigurationResource
     {

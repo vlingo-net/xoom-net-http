@@ -8,9 +8,9 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Vlingo.Xoom.Common;
-using Vlingo.Http.Resource;
 using Vlingo.Xoom.Actors;
+using Vlingo.Xoom.Common;
+using Vlingo.Xoom.Http.Resource;
 using Vlingo.Xoom.Wire.Channel;
 using Vlingo.Xoom.Wire.Fdx.Bidirectional;
 using Vlingo.Xoom.Wire.Message;
@@ -18,7 +18,7 @@ using Vlingo.Xoom.Wire.Nodes;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Vlingo.Http.Tests.Resource.Feed
+namespace Vlingo.Xoom.Http.Tests.Resource.Feed
 {
     public class FeedResourceTest
     {

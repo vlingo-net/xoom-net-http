@@ -9,16 +9,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Vlingo.Http
+namespace Vlingo.Xoom.Http
 {
     public class QueryParameters
     {
         private readonly IDictionary<string, IList<string>> _allParameters;
 
-        public QueryParameters(string? query)
-        {
-            _allParameters = ParseQuery(query);
-        }
+        public QueryParameters(string? query) => _allParameters = ParseQuery(query);
 
         public ICollection<string> Names => _allParameters.Keys;
 

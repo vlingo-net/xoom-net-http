@@ -8,7 +8,7 @@
 using System.Linq;
 using Xunit;
 
-namespace Vlingo.Http.Tests
+namespace Vlingo.Xoom.Http.Tests
 {
     public class QueryParametersParserTest
     {

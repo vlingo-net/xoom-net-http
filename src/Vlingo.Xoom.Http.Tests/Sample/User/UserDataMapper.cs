@@ -8,14 +8,14 @@
 using System;
 using Newtonsoft.Json;
 using Vlingo.Xoom.Common.Serialization;
-using Vlingo.Http.Resource;
-using Vlingo.Http.Tests.Sample.User.Serialization;
+using Vlingo.Xoom.Http.Resource;
+using Vlingo.Xoom.Http.Tests.Sample.User.Serialization;
 
-namespace Vlingo.Http.Tests.Sample.User
+namespace Vlingo.Xoom.Http.Tests.Sample.User
 {
     public class UserDataMapper : IMapper
     {
-        private JsonSerializerSettings _settings;
+        private readonly JsonSerializerSettings _settings;
 
         public UserDataMapper()
         {

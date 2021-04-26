@@ -7,7 +7,7 @@
 
 using System;
 
-namespace Vlingo.Http
+namespace Vlingo.Xoom.Http
 {
     public class ResponseHeader : Header
     {

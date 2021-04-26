@@ -10,7 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Vlingo.Http.Resource
+namespace Vlingo.Xoom.Http.Resource
 {
     public sealed class Action
     {

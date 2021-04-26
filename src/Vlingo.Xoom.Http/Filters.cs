@@ -8,7 +8,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Vlingo.Http
+namespace Vlingo.Xoom.Http
 {
     public class Filters
     {

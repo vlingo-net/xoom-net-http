@@ -6,15 +6,15 @@
 // one at https://mozilla.org/MPL/2.0/.
 
 using System;
-using Vlingo.Xoom.Common.Serialization;
-using Vlingo.Http.Resource;
 using Vlingo.Xoom.Actors;
+using Vlingo.Xoom.Common.Serialization;
+using Vlingo.Xoom.Http.Resource;
 using Vlingo.Xoom.Wire.Message;
 using Xunit;
 using Xunit.Abstractions;
-using IDispatcher = Vlingo.Http.Resource.IDispatcher;
+using IDispatcher = Vlingo.Xoom.Http.Resource.IDispatcher;
 
-namespace Vlingo.Http.Tests.Resource
+namespace Vlingo.Xoom.Http.Tests.Resource
 {
     public class DynamicResourceDispatcherTest : IDisposable
     {

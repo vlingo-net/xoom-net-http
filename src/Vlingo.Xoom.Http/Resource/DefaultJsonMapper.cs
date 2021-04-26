@@ -8,7 +8,7 @@
 using System;
 using Vlingo.Xoom.Common.Serialization;
 
-namespace Vlingo.Http.Resource
+namespace Vlingo.Xoom.Http.Resource
 {
     public class DefaultJsonMapper : IMapper
     {
@@ -16,7 +16,7 @@ namespace Vlingo.Http.Resource
 
         public object? From(string? data, Type? type)
         {
-            if(type == typeof(string))
+            if (type == typeof(string))
             {
                 return data;
             }

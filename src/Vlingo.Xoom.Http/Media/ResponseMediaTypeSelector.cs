@@ -8,9 +8,9 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using Vlingo.Http.Resource;
+using Vlingo.Xoom.Http.Resource;
 
-namespace Vlingo.Http.Media
+namespace Vlingo.Xoom.Http.Media
 {
     public class ResponseMediaTypeSelector
     {

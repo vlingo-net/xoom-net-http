@@ -7,13 +7,13 @@
 
 using System;
 using System.Collections.Generic;
-using Vlingo.Http.Resource.Sse;
-using Vlingo.Http.Tests.Sample.User;
 using Vlingo.Xoom.Actors;
+using Vlingo.Xoom.Http.Resource.Sse;
+using Vlingo.Xoom.Http.Tests.Sample.User;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Vlingo.Http.Tests.Resource.Sse
+namespace Vlingo.Xoom.Http.Tests.Resource.Sse
 {
     public class SseFeedTest : IDisposable
     {

@@ -7,12 +7,12 @@
 
 using System;
 using System.Collections.Generic;
-using Vlingo.Xoom.Common;
-using Vlingo.Http.Resource;
 using Vlingo.Xoom.Actors.TestKit;
+using Vlingo.Xoom.Common;
+using Vlingo.Xoom.Http.Resource;
 using Xunit.Abstractions;
 
-namespace Vlingo.Http.Tests.Resource
+namespace Vlingo.Xoom.Http.Tests.Resource
 {
     public class TestResponseConsumer
     {

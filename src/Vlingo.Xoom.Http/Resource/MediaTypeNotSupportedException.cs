@@ -7,7 +7,7 @@
 
 using System;
 
-namespace Vlingo.Http.Resource
+namespace Vlingo.Xoom.Http.Resource
 {
     public class MediaTypeNotSupportedException : Exception
     {

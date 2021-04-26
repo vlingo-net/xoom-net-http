@@ -6,12 +6,13 @@
 // one at https://mozilla.org/MPL/2.0/.
 
 using System;
+using System.Collections;
 using System.Text;
 using Vlingo.Xoom.Wire.Message;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Vlingo.Http.Tests
+namespace Vlingo.Xoom.Http.Tests
 {
     public class RequestTest
     {
@@ -31,7 +32,7 @@ namespace Vlingo.Http.Tests
             Assert.True(request.Method.IsGet());
             Assert.Equal("/".ToMatchableUri(), request.Uri);
             Assert.True(request.Version.IsHttp1_1());
-            Assert.Single(request.Headers);
+            Assert.Single((IEnumerable) request.Headers);
             Assert.False(request.Body.HasContent);
         }
 

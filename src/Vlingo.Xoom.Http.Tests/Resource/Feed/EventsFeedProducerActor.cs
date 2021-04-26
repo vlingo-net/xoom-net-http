@@ -6,10 +6,10 @@
 // one at https://mozilla.org/MPL/2.0/.
 
 using System.Text;
-using Vlingo.Http.Resource.Feed;
 using Vlingo.Xoom.Actors;
+using Vlingo.Xoom.Http.Resource.Feed;
 
-namespace Vlingo.Http.Tests.Resource.Feed
+namespace Vlingo.Xoom.Http.Tests.Resource.Feed
 {
     public class EventsFeedProducerActor : Actor, IFeedProducer
     {

@@ -9,7 +9,7 @@ using System;
 using System.Collections.Generic;
 using Vlingo.Xoom.Actors;
 
-namespace Vlingo.Http.Resource
+namespace Vlingo.Xoom.Http.Resource
 {
     public interface IConfigurationResource : IResource
     {

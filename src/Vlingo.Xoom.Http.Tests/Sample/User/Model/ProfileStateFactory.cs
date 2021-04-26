@@ -5,7 +5,7 @@
 // was not distributed with this file, You can obtain
 // one at https://mozilla.org/MPL/2.0/.
 
-namespace Vlingo.Http.Tests.Sample.User.Model
+namespace Vlingo.Xoom.Http.Tests.Sample.User.Model
 {
     public static class ProfileStateFactory
     {

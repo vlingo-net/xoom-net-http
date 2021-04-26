@@ -10,24 +10,24 @@ using System.Collections.Generic;
 using Vlingo.Xoom.Actors;
 using Vlingo.Xoom.Common;
 
-namespace Vlingo.Http.Resource
+namespace Vlingo.Xoom.Http.Resource
 {
-    public class RequestHandler4<T, R, U, I> : RequestHandler
+    public class RequestHandler4<T, TR, TU, TI> : RequestHandler
     {
         internal ParameterResolver<T> ResolverParam1 { get; }
-        internal ParameterResolver<R> ResolverParam2 { get; }
-        internal ParameterResolver<U> ResolverParam3 { get; }
-        internal ParameterResolver<I> ResolverParam4 { get; }
+        internal ParameterResolver<TR> ResolverParam2 { get; }
+        internal ParameterResolver<TU> ResolverParam3 { get; }
+        internal ParameterResolver<TI> ResolverParam4 { get; }
         private ParamExecutor4? _executor;
 
-        public delegate ICompletes<Response> Handler4(T param1, R param2, U param3, I param4);
-        public delegate ICompletes<IObjectResponse> ObjectHandler4(T param1, R param2, U param3, I param4);
+        public delegate ICompletes<Response> Handler4(T param1, TR param2, TU param3, TI param4);
+        public delegate ICompletes<IObjectResponse> ObjectHandler4(T param1, TR param2, TU param3, TI param4);
         internal delegate ICompletes<Response> ParamExecutor4(
             Request request,
             T param1,
-            R param2,
-            U param3,
-            I param4,
+            TR param2,
+            TU param3,
+            TI param4,
             MediaTypeMapper mediaTypeMapper,
             IErrorHandler errorHandler,
             ILogger logger);
@@ -36,9 +36,9 @@ namespace Vlingo.Http.Resource
             Method method,
             string path,
             ParameterResolver<T> resolverParam1,
-            ParameterResolver<R> resolverParam2,
-            ParameterResolver<U> resolverParam3,
-            ParameterResolver<I> resolverParam4,
+            ParameterResolver<TR> resolverParam2,
+            ParameterResolver<TU> resolverParam3,
+            ParameterResolver<TI> resolverParam4,
             IErrorHandler errorHandler,
             MediaTypeMapper mediaTypeMapper)
             : base(method, path, new List<IParameterResolver> { resolverParam1, resolverParam2, resolverParam3, resolverParam4 }, errorHandler, mediaTypeMapper)
@@ -49,7 +49,7 @@ namespace Vlingo.Http.Resource
             ResolverParam4 = resolverParam4;
         }
 
-        internal ICompletes<Response> Execute(Request request, T param1, R param2, U param3, I param4, ILogger logger)
+        internal ICompletes<Response> Execute(Request request, T param1, TR param2, TU param3, TI param4, ILogger logger)
         {
             Func<ICompletes<Response>> exec = ()
                 => _executor?.Invoke(request, param1, param2, param3, param4, MediaTypeMapper, ErrorHandler, logger)!;
@@ -57,14 +57,14 @@ namespace Vlingo.Http.Resource
             return RunParamExecutor(_executor, () => RequestExecutor.ExecuteRequest(exec, ErrorHandler, logger));
         }
 
-        public RequestHandler4<T, R, U, I>? Handle(Handler4 handler)
+        public RequestHandler4<T, TR, TU, TI>? Handle(Handler4 handler)
         {
             _executor = (request, param1, param2, param3, param4, mediaTypeMapper1, errorHandler1, logger1)
                 => RequestExecutor.ExecuteRequest(() => handler.Invoke(param1, param2, param3, param4), errorHandler1, logger1);
             return this;
         }
 
-        public RequestHandler4<T, R, U, I> Handle(ObjectHandler4 handler)
+        public RequestHandler4<T, TR, TU, TI> Handle(ObjectHandler4 handler)
         {
             _executor = (request, param1, param2, param3, param4, mediaTypeMapper1, errorHandler1, logger)
                 => RequestObjectExecutor.ExecuteRequest(
@@ -76,7 +76,7 @@ namespace Vlingo.Http.Resource
             return this;
         }
 
-        public RequestHandler4<T, R, U, I> OnError(IErrorHandler errorHandler)
+        public RequestHandler4<T, TR, TU, TI> OnError(IErrorHandler errorHandler)
         {
             ErrorHandler = errorHandler;
             return this;
@@ -94,76 +94,76 @@ namespace Vlingo.Http.Resource
             return Execute(request, param1, param2, param3, param4, logger);
         }
 
-        public RequestHandler5<T, R, U, I, J> Param<J>()
-            => new RequestHandler5<T, R, U, I, J>(
+        public RequestHandler5<T, TR, TU, TI, TJ> Param<TJ>()
+            => new RequestHandler5<T, TR, TU, TI, TJ>(
                 Method,
                 Path,
                 ResolverParam1,
                 ResolverParam2,
                 ResolverParam3,
                 ResolverParam4,
-                ParameterResolver.Path<J>(4),
+                ParameterResolver.Path<TJ>(4),
                 ErrorHandler,
                 MediaTypeMapper);
 
-        public RequestHandler5<T, R, U, I, J> Body<J>()
-            => new RequestHandler5<T, R, U, I, J>(
+        public RequestHandler5<T, TR, TU, TI, TJ> Body<TJ>()
+            => new RequestHandler5<T, TR, TU, TI, TJ>(
                 Method,
                 Path,
                 ResolverParam1,
                 ResolverParam2,
                 ResolverParam3,
                 ResolverParam4,
-                ParameterResolver.Body<J>(MediaTypeMapper),
+                ParameterResolver.Body<TJ>(MediaTypeMapper),
                 ErrorHandler,
                 MediaTypeMapper);
 
         [Obsolete("Deprecated in favor of using the ContentMediaType method, which handles media types appropriately. Use Body<J>(Type, MediaTypeMapper) or Body<J>(Type).")]
-        public RequestHandler5<T, R, U, I, J> Body<J>(Type mapperClass)
-            => Body<J>(MapperFrom(mapperClass));
+        public RequestHandler5<T, TR, TU, TI, TJ> Body<TJ>(Type mapperClass)
+            => Body<TJ>(MapperFrom(mapperClass));
 
         [Obsolete("Deprecated in favor of using the ContentMediaType method, which handles media types appropriately. Use Body<J>(Type, MediaTypeMapper) or Body<J>(Type).")]
-        public RequestHandler5<T, R, U, I, J> Body<J>(IMapper mapper)
-            => new RequestHandler5<T, R, U, I, J>(
+        public RequestHandler5<T, TR, TU, TI, TJ> Body<TJ>(IMapper mapper)
+            => new RequestHandler5<T, TR, TU, TI, TJ>(
                 Method,
                 Path,
                 ResolverParam1,
                 ResolverParam2,
                 ResolverParam3,
                 ResolverParam4,
-                ParameterResolver.Body<J>(mapper),
+                ParameterResolver.Body<TJ>(mapper),
                 ErrorHandler,
                 MediaTypeMapper);
 
-        public RequestHandler5<T, R, U, I, J> Body<J>(MediaTypeMapper mediaTypeMapper)
-            => new RequestHandler5<T, R, U, I, J>(
+        public RequestHandler5<T, TR, TU, TI, TJ> Body<TJ>(MediaTypeMapper mediaTypeMapper)
+            => new RequestHandler5<T, TR, TU, TI, TJ>(
                 Method,
                 Path,
                 ResolverParam1,
                 ResolverParam2,
                 ResolverParam3,
                 ResolverParam4,
-                ParameterResolver.Body<J>(mediaTypeMapper),
+                ParameterResolver.Body<TJ>(mediaTypeMapper),
                 ErrorHandler,
                 mediaTypeMapper);
 
-        public RequestHandler5<T, R, U, I, string> Query(string name)
+        public RequestHandler5<T, TR, TU, TI, string> Query(string name)
             => Query<string>(name, typeof(string));
 
-        public RequestHandler5<T, R, U, I, J> Query<J>(string name, Type queryClass)
-            => new RequestHandler5<T, R, U, I, J>(
+        public RequestHandler5<T, TR, TU, TI, TJ> Query<TJ>(string name, Type queryClass)
+            => new RequestHandler5<T, TR, TU, TI, TJ>(
                 Method,
                 Path,
                 ResolverParam1,
                 ResolverParam2,
                 ResolverParam3,
                 ResolverParam4,
-                ParameterResolver.Query<J>(name),
+                ParameterResolver.Query<TJ>(name),
                 ErrorHandler,
                 MediaTypeMapper);
 
-        public RequestHandler5<T, R, U, I, Header> Header(string name)
-            => new RequestHandler5<T, R, U, I, Header>(
+        public RequestHandler5<T, TR, TU, TI, Header> Header(string name)
+            => new RequestHandler5<T, TR, TU, TI, Header>(
                 Method,
                 Path,
                 ResolverParam1,

@@ -8,7 +8,7 @@
 using System;
 using Vlingo.Xoom.Actors;
 
-namespace Vlingo.Http.Resource.Feed
+namespace Vlingo.Xoom.Http.Resource.Feed
 {
     /// <summary>
     /// Produce a feed item for a named feed.

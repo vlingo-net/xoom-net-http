@@ -6,11 +6,11 @@
 // one at https://mozilla.org/MPL/2.0/.
 
 using System;
-using Vlingo.Xoom.Common;
 using Vlingo.Xoom.Actors;
+using Vlingo.Xoom.Common;
 using Vlingo.Xoom.Wire.Message;
 
-namespace Vlingo.Http.Resource
+namespace Vlingo.Xoom.Http.Resource
 {
     /// <summary>
     /// Round-robin router of <see cref="IClientConsumer"/> requests.

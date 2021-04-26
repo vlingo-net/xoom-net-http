@@ -7,7 +7,7 @@
 
 using Vlingo.Xoom.Actors;
 
-namespace Vlingo.Http.Resource
+namespace Vlingo.Xoom.Http.Resource
 {
     /// <summary>
     /// Default behavior for all <see cref="IDispatcherPool"/> implementations.

@@ -7,7 +7,7 @@
 
 using Vlingo.Xoom.Actors;
 
-namespace Vlingo.Http.Resource.Sse
+namespace Vlingo.Xoom.Http.Resource.Sse
 {
     public interface ISsePublisher : IStoppable
     {

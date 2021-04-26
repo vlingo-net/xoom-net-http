@@ -7,9 +7,9 @@
 
 using System;
 using Vlingo.Xoom.Common.Serialization;
-using Vlingo.Http.Resource;
+using Vlingo.Xoom.Http.Resource;
 
-namespace Vlingo.Http.Tests.Resource
+namespace Vlingo.Xoom.Http.Tests.Resource
 {
     public class TestMapper : IMapper
     {

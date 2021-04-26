@@ -6,12 +6,12 @@
 // one at https://mozilla.org/MPL/2.0/.
 
 using Vlingo.Xoom.Common.Serialization;
-using Vlingo.Http.Resource;
-using Vlingo.Http.Tests.Sample.User;
+using Vlingo.Xoom.Http.Resource;
+using Vlingo.Xoom.Http.Tests.Sample.User;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Vlingo.Http.Tests.Resource
+namespace Vlingo.Xoom.Http.Tests.Resource
 {
     public class ResourceBuilderTest : ResourceTestFixtures
     {

@@ -7,7 +7,7 @@
 
 using System.Text;
 
-namespace Vlingo.Http
+namespace Vlingo.Xoom.Http
 {
     /// <summary>
     /// An HTTP compliant content type.

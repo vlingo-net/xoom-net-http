@@ -9,7 +9,7 @@
 using System;
 using Vlingo.Xoom.Wire.Message;
 
-namespace Vlingo.Http
+namespace Vlingo.Xoom.Http
 {
     public class RequestHeader : Header
     {

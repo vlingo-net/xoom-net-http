@@ -7,7 +7,7 @@
 
 using Vlingo.Xoom.Actors;
 
-namespace Vlingo.Http.Resource
+namespace Vlingo.Xoom.Http.Resource
 {
     /// <summary>
     /// Sends <code>Request</code> messages in behalf of a client.

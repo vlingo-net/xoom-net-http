@@ -9,7 +9,7 @@ using System;
 using System.Collections.Generic;
 using Vlingo.Xoom.Actors;
 
-namespace Vlingo.Http.Resource.Feed
+namespace Vlingo.Xoom.Http.Resource.Feed
 {
     /// <summary>
     /// Standard reusable resource for serving feeds.

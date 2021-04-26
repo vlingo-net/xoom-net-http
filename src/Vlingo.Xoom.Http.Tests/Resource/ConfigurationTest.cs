@@ -5,10 +5,10 @@
 // was not distributed with this file, You can obtain
 // one at https://mozilla.org/MPL/2.0/.
 
-using Vlingo.Http.Resource;
+using Vlingo.Xoom.Http.Resource;
 using Xunit;
 
-namespace Vlingo.Http.Tests.Resource
+namespace Vlingo.Xoom.Http.Tests.Resource
 {
     public class ConfigurationTest
     {

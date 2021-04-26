@@ -7,7 +7,7 @@
 
 using System.Linq;
 
-namespace Vlingo.Http.Resource
+namespace Vlingo.Xoom.Http.Resource
 {
     public static class ResourceBuilder
     {

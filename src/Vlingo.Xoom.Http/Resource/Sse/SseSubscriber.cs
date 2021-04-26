@@ -7,7 +7,7 @@
 
 using System.Text;
 
-namespace Vlingo.Http.Resource.Sse
+namespace Vlingo.Xoom.Http.Resource.Sse
 {
     public class SseSubscriber
     {

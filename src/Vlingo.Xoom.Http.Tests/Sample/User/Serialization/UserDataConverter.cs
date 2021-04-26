@@ -9,7 +9,7 @@ using System;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace Vlingo.Http.Tests.Sample.User.Serialization
+namespace Vlingo.Xoom.Http.Tests.Sample.User.Serialization
 {
     public class UserDataConverter : JsonConverter<UserData>
     {

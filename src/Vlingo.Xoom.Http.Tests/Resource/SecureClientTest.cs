@@ -9,17 +9,17 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Vlingo.Xoom.Common;
-using Vlingo.Http.Resource;
 using Vlingo.Xoom.Actors;
 using Vlingo.Xoom.Actors.TestKit;
+using Vlingo.Xoom.Common;
+using Vlingo.Xoom.Http.Resource;
 using Vlingo.Xoom.Wire.Channel;
 using Vlingo.Xoom.Wire.Message;
 using Vlingo.Xoom.Wire.Nodes;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Vlingo.Http.Tests.Resource
+namespace Vlingo.Xoom.Http.Tests.Resource
 {
     public class SecureClientTest : IDisposable
     {

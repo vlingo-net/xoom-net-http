@@ -8,7 +8,7 @@
 using Vlingo.Xoom.Actors;
 using Vlingo.Xoom.Common;
 
-namespace Vlingo.Http.Resource
+namespace Vlingo.Xoom.Http.Resource
 {
     /// <summary>
     /// An optional base class that may be used by resources configured using

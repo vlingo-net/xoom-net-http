@@ -6,13 +6,13 @@
 // one at https://mozilla.org/MPL/2.0/.
 
 using System;
-using Vlingo.Xoom.Common;
-using Vlingo.Http.Tests.Sample.User;
 using Vlingo.Xoom.Actors;
+using Vlingo.Xoom.Common;
+using Vlingo.Xoom.Http.Tests.Sample.User;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Vlingo.Http.Tests.Resource.Sse
+namespace Vlingo.Xoom.Http.Tests.Resource.Sse
 {
     public class SseStreamResourceTest : IDisposable
     {

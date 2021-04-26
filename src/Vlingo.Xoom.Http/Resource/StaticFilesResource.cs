@@ -14,7 +14,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.StaticFiles;
 
-namespace Vlingo.Http.Resource
+namespace Vlingo.Xoom.Http.Resource
 {
     /// <summary>
     /// Serves static file resources. Note that the current limit of 2GB file sizes.

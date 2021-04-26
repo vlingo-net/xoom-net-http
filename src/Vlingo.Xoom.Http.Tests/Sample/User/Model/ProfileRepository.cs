@@ -7,13 +7,13 @@
 
 using System.Collections.Generic;
 
-namespace Vlingo.Http.Tests.Sample.User.Model
+namespace Vlingo.Xoom.Http.Tests.Sample.User.Model
 {
     public class ProfileRepository
     {
         private static ProfileRepository _instance;
 
-        private Dictionary<string, ProfileState> _profiles;
+        private readonly Dictionary<string, ProfileState> _profiles;
         
         private static volatile object _lockSync = new object();
         

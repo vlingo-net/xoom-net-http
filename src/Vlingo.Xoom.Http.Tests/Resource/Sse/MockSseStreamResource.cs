@@ -5,11 +5,11 @@
 // was not distributed with this file, You can obtain
 // one at https://mozilla.org/MPL/2.0/.
 
-using Vlingo.Xoom.Common;
-using Vlingo.Http.Resource.Sse;
 using Vlingo.Xoom.Actors;
+using Vlingo.Xoom.Common;
+using Vlingo.Xoom.Http.Resource.Sse;
 
-namespace Vlingo.Http.Tests.Resource.Sse
+namespace Vlingo.Xoom.Http.Tests.Resource.Sse
 {
     public class MockSseStreamResource : SseStreamResource
     {

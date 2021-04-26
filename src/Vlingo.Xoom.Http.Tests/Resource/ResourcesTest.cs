@@ -7,13 +7,13 @@
 
 using System;
 using System.Collections.Generic;
-using Vlingo.Http.Resource;
-using Vlingo.Http.Tests.Sample.User;
 using Vlingo.Xoom.Actors.Plugin.Logging.Console;
+using Vlingo.Xoom.Http.Resource;
+using Vlingo.Xoom.Http.Tests.Sample.User;
 using Xunit;
-using Action = Vlingo.Http.Resource.Action;
+using Action = Vlingo.Xoom.Http.Resource.Action;
 
-namespace Vlingo.Http.Tests.Resource
+namespace Vlingo.Xoom.Http.Tests.Resource
 {
     public class ResourcesTest
     {

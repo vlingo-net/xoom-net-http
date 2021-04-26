@@ -9,7 +9,7 @@ using System;
 using Vlingo.Xoom.Actors;
 using Vlingo.Xoom.Common;
 
-namespace Vlingo.Http.Tests.Sample.User.Model
+namespace Vlingo.Xoom.Http.Tests.Sample.User.Model
 {
     public class User__Proxy : IUser
     {

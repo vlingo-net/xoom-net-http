@@ -13,7 +13,7 @@ using System.Text.RegularExpressions;
 using Vlingo.Xoom.Actors;
 using Vlingo.Xoom.Common;
 
-namespace Vlingo.Http.Resource
+namespace Vlingo.Xoom.Http.Resource
 {
     public abstract class RequestHandler
     {

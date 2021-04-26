@@ -7,11 +7,11 @@
 
 using System.Collections.Generic;
 using System.Text;
-using Vlingo.Http.Tests.Resource;
+using Vlingo.Xoom.Http.Tests.Resource;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Vlingo.Http.Tests
+namespace Vlingo.Xoom.Http.Tests
 {
     public class ResponseParserTest : ResourceTestFixtures
     {

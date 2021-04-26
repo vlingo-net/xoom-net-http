@@ -8,7 +8,7 @@
 using System;
 using Vlingo.Xoom.Actors;
 
-namespace Vlingo.Http.Resource
+namespace Vlingo.Xoom.Http.Resource
 {
     public class ResourceErrorProcessor
     {

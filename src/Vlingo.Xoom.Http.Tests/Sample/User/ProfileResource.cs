@@ -5,12 +5,12 @@
 // was not distributed with this file, You can obtain
 // one at https://mozilla.org/MPL/2.0/.
 
-using Vlingo.Xoom.Common.Serialization;
-using Vlingo.Http.Resource;
-using Vlingo.Http.Tests.Sample.User.Model;
 using Vlingo.Xoom.Actors;
+using Vlingo.Xoom.Common.Serialization;
+using Vlingo.Xoom.Http.Resource;
+using Vlingo.Xoom.Http.Tests.Sample.User.Model;
 
-namespace Vlingo.Http.Tests.Sample.User
+namespace Vlingo.Xoom.Http.Tests.Sample.User
 {
     public sealed class ProfileResource : ResourceHandler
     {

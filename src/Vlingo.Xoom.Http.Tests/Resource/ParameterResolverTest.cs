@@ -6,13 +6,13 @@
 // one at https://mozilla.org/MPL/2.0/.
 
 using System.Collections.Generic;
-using Vlingo.Http.Media;
-using Vlingo.Http.Resource;
-using Vlingo.Http.Tests.Sample.User;
+using Vlingo.Xoom.Http.Media;
+using Vlingo.Xoom.Http.Resource;
+using Vlingo.Xoom.Http.Tests.Sample.User;
 using Xunit;
-using Action = Vlingo.Http.Resource.Action;
+using Action = Vlingo.Xoom.Http.Resource.Action;
 
-namespace Vlingo.Http.Tests.Resource
+namespace Vlingo.Xoom.Http.Tests.Resource
 {
     public class ParameterResolverTest
     {

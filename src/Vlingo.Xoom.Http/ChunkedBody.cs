@@ -8,7 +8,7 @@
 using System;
 using System.Text;
 
-namespace Vlingo.Http
+namespace Vlingo.Xoom.Http
 {
     /// <summary>
     /// An HTTP response body that provides a multi-chunk format. You may create
@@ -61,7 +61,7 @@ namespace Vlingo.Http
 
         public override byte[] BinaryContent => System.Text.Encoding.UTF8.GetBytes(ToString());
 
-        public override bool IsComplex { get; } = true;
+        public override bool IsComplex => true;
 
         /// <summary>
         /// Gets self after appending the end chunk, which is a length of 0.

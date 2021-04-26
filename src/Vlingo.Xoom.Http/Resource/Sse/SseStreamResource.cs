@@ -13,7 +13,7 @@ using Vlingo.Xoom.Actors;
 using Vlingo.Xoom.Common;
 using Actor = Vlingo.Xoom.Actors.Actor;
 
-namespace Vlingo.Http.Resource.Sse
+namespace Vlingo.Xoom.Http.Resource.Sse
 {
     public class SseStreamResource : ResourceHandler
     {
@@ -21,10 +21,7 @@ namespace Vlingo.Http.Resource.Sse
 
         private readonly World _world;
 
-        public SseStreamResource(World world)
-        {
-            _world = world;
-        }
+        public SseStreamResource(World world) => _world = world;
 
         public void SubscribeToStream(string streamName, Type feedClass, int feedPayload, int feedInterval, string feedDefaultId)
         {

@@ -7,13 +7,13 @@
 
 using System;
 using System.IO;
-using Vlingo.Xoom.Common;
 using Vlingo.Xoom.Actors;
+using Vlingo.Xoom.Common;
 using Vlingo.Xoom.Wire.Channel;
 using Vlingo.Xoom.Wire.Fdx.Bidirectional;
 using Vlingo.Xoom.Wire.Message;
 
-namespace Vlingo.Http.Resource
+namespace Vlingo.Xoom.Http.Resource
 {
     public sealed class RequestSenderProbeActor : Actor, IRequestSender, IScheduled<object>
     {

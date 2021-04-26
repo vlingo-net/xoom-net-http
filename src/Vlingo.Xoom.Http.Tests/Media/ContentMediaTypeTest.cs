@@ -5,11 +5,11 @@
 // was not distributed with this file, You can obtain
 // one at https://mozilla.org/MPL/2.0/.
 
-using Vlingo.Http.Media;
-using Vlingo.Http.Resource;
+using Vlingo.Xoom.Http.Media;
+using Vlingo.Xoom.Http.Resource;
 using Xunit;
 
-namespace Vlingo.Http.Tests.Media
+namespace Vlingo.Xoom.Http.Tests.Media
 {
     public class ContentMediaTypeTest
     {

@@ -9,7 +9,7 @@ using Vlingo.Xoom.Actors;
 using Vlingo.Xoom.Wire.Channel;
 using Vlingo.Xoom.Wire.Fdx.Bidirectional;
 
-namespace Vlingo.Http.Resource
+namespace Vlingo.Xoom.Http.Resource
 {
     public static class ClientConsumerCommons
     {

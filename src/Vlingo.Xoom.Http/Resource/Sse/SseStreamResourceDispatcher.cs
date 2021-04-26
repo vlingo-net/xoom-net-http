@@ -8,7 +8,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Vlingo.Http.Resource.Sse
+namespace Vlingo.Xoom.Http.Resource.Sse
 {
     public class SseStreamResourceDispatcher : ConfigurationResource
     {

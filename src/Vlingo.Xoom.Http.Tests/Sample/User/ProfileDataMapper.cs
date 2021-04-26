@@ -6,9 +6,9 @@
 // one at https://mozilla.org/MPL/2.0/.
 
 using System;
-using Vlingo.Http.Resource;
+using Vlingo.Xoom.Http.Resource;
 
-namespace Vlingo.Http.Tests.Sample.User
+namespace Vlingo.Xoom.Http.Tests.Sample.User
 {
     public class ProfileDataMapper : IMapper
     {

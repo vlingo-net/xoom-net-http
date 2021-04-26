@@ -10,7 +10,7 @@ using System.Collections.Generic;
 using Vlingo.Xoom.Common;
 using Vlingo.Xoom.Wire.Message;
 
-namespace Vlingo.Http
+namespace Vlingo.Xoom.Http
 {
     public class ResponseParser
     {

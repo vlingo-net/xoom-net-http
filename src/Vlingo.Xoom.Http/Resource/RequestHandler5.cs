@@ -10,26 +10,26 @@ using System.Collections.Generic;
 using Vlingo.Xoom.Actors;
 using Vlingo.Xoom.Common;
 
-namespace Vlingo.Http.Resource
+namespace Vlingo.Xoom.Http.Resource
 {
-    public class RequestHandler5<T, R, U, I, J> : RequestHandler
+    public class RequestHandler5<T, TR, TU, TI, TJ> : RequestHandler
     {
         internal ParameterResolver<T> ResolverParam1 { get; }
-        internal ParameterResolver<R> ResolverParam2 { get; }
-        internal ParameterResolver<U> ResolverParam3 { get; }
-        internal ParameterResolver<I> ResolverParam4 { get; }
-        internal ParameterResolver<J> ResolverParam5 { get; }
+        internal ParameterResolver<TR> ResolverParam2 { get; }
+        internal ParameterResolver<TU> ResolverParam3 { get; }
+        internal ParameterResolver<TI> ResolverParam4 { get; }
+        internal ParameterResolver<TJ> ResolverParam5 { get; }
         private ParamExecutor5? _executor;
 
-        public delegate ICompletes<Response> Handler5(T param1, R param2, U param3, I param4, J param5);
-        public delegate ICompletes<IObjectResponse> ObjectHandler5(T param1, R param2, U param3, I param4, J param5);
+        public delegate ICompletes<Response> Handler5(T param1, TR param2, TU param3, TI param4, TJ param5);
+        public delegate ICompletes<IObjectResponse> ObjectHandler5(T param1, TR param2, TU param3, TI param4, TJ param5);
         internal delegate ICompletes<Response> ParamExecutor5(
             Request request,
             T param1,
-            R param2,
-            U param3,
-            I param4,
-            J param5,
+            TR param2,
+            TU param3,
+            TI param4,
+            TJ param5,
             MediaTypeMapper mediaTypeMapper,
             IErrorHandler errorHandler,
             ILogger logger);
@@ -38,10 +38,10 @@ namespace Vlingo.Http.Resource
             Method method,
             string path,
             ParameterResolver<T> resolverParam1,
-            ParameterResolver<R> resolverParam2,
-            ParameterResolver<U> resolverParam3,
-            ParameterResolver<I> resolverParam4,
-            ParameterResolver<J> resolverParam5,
+            ParameterResolver<TR> resolverParam2,
+            ParameterResolver<TU> resolverParam3,
+            ParameterResolver<TI> resolverParam4,
+            ParameterResolver<TJ> resolverParam5,
             IErrorHandler errorHandler,
             MediaTypeMapper mediaTypeMapper)
             : base(method, path, new List<IParameterResolver> { resolverParam1, resolverParam2, resolverParam3, resolverParam4, resolverParam5 }, errorHandler, mediaTypeMapper)
@@ -53,7 +53,7 @@ namespace Vlingo.Http.Resource
             ResolverParam5 = resolverParam5;
         }
 
-        internal ICompletes<Response> Execute(Request request, T param1, R param2, U param3, I param4, J param5, ILogger logger)
+        internal ICompletes<Response> Execute(Request request, T param1, TR param2, TU param3, TI param4, TJ param5, ILogger logger)
         {
             Func<ICompletes<Response>> exec = ()
                 => _executor?.Invoke(request, param1, param2, param3, param4, param5, MediaTypeMapper, ErrorHandler, logger)!;
@@ -61,14 +61,14 @@ namespace Vlingo.Http.Resource
             return RunParamExecutor(_executor, () => RequestExecutor.ExecuteRequest(exec, ErrorHandler, logger));
         }
 
-        public RequestHandler5<T, R, U, I, J>? Handle(Handler5 handler)
+        public RequestHandler5<T, TR, TU, TI, TJ>? Handle(Handler5 handler)
         {
             _executor = (request, param1, param2, param3, param4, param5, mediaTypeMapper1, errorHandler1, logger1)
                 => RequestExecutor.ExecuteRequest(() => handler.Invoke(param1, param2, param3, param4, param5), errorHandler1, logger1);
             return this;
         }
 
-        public RequestHandler5<T, R, U, I, J> Handle(ObjectHandler5 handler)
+        public RequestHandler5<T, TR, TU, TI, TJ> Handle(ObjectHandler5 handler)
         {
             _executor = (request, param1, param2, param3, param4, param5, mediaTypeMapper1, errorHandler1, logger)
                 => RequestObjectExecutor.ExecuteRequest(
@@ -80,7 +80,7 @@ namespace Vlingo.Http.Resource
             return this;
         }
 
-        public RequestHandler5<T, R, U, I, J> OnError(IErrorHandler errorHandler)
+        public RequestHandler5<T, TR, TU, TI, TJ> OnError(IErrorHandler errorHandler)
         {
             ErrorHandler = errorHandler;
             return this;

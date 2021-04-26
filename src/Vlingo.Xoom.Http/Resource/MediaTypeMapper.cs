@@ -8,9 +8,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Vlingo.Http.Media;
+using Vlingo.Xoom.Http.Media;
 
-namespace Vlingo.Http.Resource
+namespace Vlingo.Xoom.Http.Resource
 {
     public class MediaTypeMapper
     {

@@ -7,14 +7,14 @@
 
 using System;
 using System.Collections.Generic;
+using Vlingo.Xoom.Actors;
 using Vlingo.Xoom.Common;
 using Vlingo.Xoom.Common.Pool;
-using Vlingo.Xoom.Actors;
 using Vlingo.Xoom.Wire.Channel;
 using Vlingo.Xoom.Wire.Fdx.Bidirectional;
 using Vlingo.Xoom.Wire.Message;
 
-namespace Vlingo.Http.Resource
+namespace Vlingo.Xoom.Http.Resource
 {
     public sealed class ServerActor : Actor, IServer, IRequestChannelConsumerProvider, IScheduled<object?>
     {

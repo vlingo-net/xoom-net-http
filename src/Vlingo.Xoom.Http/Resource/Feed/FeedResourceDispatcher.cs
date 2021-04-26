@@ -8,7 +8,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Vlingo.Http.Resource.Feed
+namespace Vlingo.Xoom.Http.Resource.Feed
 {
     public class FeedResourceDispatcher : ConfigurationResource
     {

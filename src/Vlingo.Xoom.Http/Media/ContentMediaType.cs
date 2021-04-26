@@ -7,9 +7,9 @@
 
 using System;
 using System.Collections.Generic;
-using Vlingo.Http.Resource;
+using Vlingo.Xoom.Http.Resource;
 
-namespace Vlingo.Http.Media
+namespace Vlingo.Xoom.Http.Media
 {
     public class ContentMediaType : MediaTypeDescriptor
     {

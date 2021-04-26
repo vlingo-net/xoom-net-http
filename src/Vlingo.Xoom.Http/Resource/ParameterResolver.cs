@@ -6,9 +6,9 @@
 // one at https://mozilla.org/MPL/2.0/.
 
 using System;
-using Vlingo.Http.Media;
+using Vlingo.Xoom.Http.Media;
 
-namespace Vlingo.Http.Resource
+namespace Vlingo.Xoom.Http.Resource
 {
     internal interface IParameterResolver
     {

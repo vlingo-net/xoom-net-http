@@ -8,7 +8,7 @@
 using System;
 using System.IO;
 
-namespace Vlingo.Http
+namespace Vlingo.Xoom.Http
 {
     /// <summary>
     /// An HTTP request/response body, with concrete subclasses <see cref="PlainBody"/> and <see cref="ChunkedBody"/>.

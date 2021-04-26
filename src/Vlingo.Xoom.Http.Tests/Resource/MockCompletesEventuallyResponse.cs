@@ -9,7 +9,7 @@ using Vlingo.Xoom.Actors;
 using Vlingo.Xoom.Actors.TestKit;
 using Vlingo.Xoom.Common;
 
-namespace Vlingo.Http.Tests.Resource
+namespace Vlingo.Xoom.Http.Tests.Resource
 {
     public class MockCompletesEventuallyResponse : ICompletesEventually
     {

@@ -13,11 +13,10 @@ using System.Text;
 using Vlingo.Xoom.Actors;
 using Vlingo.Xoom.Common;
 using Vlingo.Xoom.Common.Compiler;
-
 using static Vlingo.Xoom.Common.Compiler.DynaFile;
 using static Vlingo.Xoom.Common.Compiler.DynaNaming;
 
-namespace Vlingo.Http.Resource
+namespace Vlingo.Xoom.Http.Resource
 {
     internal class ResourceDispatcherGenerator
     {

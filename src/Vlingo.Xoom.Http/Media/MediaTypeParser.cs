@@ -7,7 +7,7 @@
 
 using System;
 
-namespace Vlingo.Http.Media
+namespace Vlingo.Xoom.Http.Media
 {
     public static class MediaTypeParser
     {

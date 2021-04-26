@@ -8,13 +8,13 @@
 using System;
 using System.Collections.Generic;
 using Vlingo.Xoom.Common;
-using Vlingo.Http.Resource;
-using Vlingo.Http.Tests.Sample.User.Model;
+using Vlingo.Xoom.Http.Resource;
+using Vlingo.Xoom.Http.Tests.Sample.User.Model;
 using Vlingo.Xoom.Wire.Nodes;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Vlingo.Http.Tests.Resource
+namespace Vlingo.Xoom.Http.Tests.Resource
 {
     public class ClientTest : ResourceTestFixtures
     {
@@ -39,8 +39,7 @@ namespace Vlingo.Http.Tests.Resource
 
             var config = Client.Configuration.DefaultedExceptFor(
                 World.Stage,
-                Address.From(Host.Of("localhost"), NextPort.Get(), AddressType.None),
-                unknown);
+                Address.From(Host.Of("localhost"), NextPort.Get(), AddressType.None), unknown);
             _client = Client.Using(config) ;
 
             _client.RequestWith(
@@ -77,8 +76,7 @@ namespace Vlingo.Http.Tests.Resource
 
             var config = Client.Configuration.DefaultedExceptFor(
                 World.Stage,
-                Address.From(Host.Of("localhost"), NextPort.Get(), AddressType.None),
-                unknown);
+                Address.From(Host.Of("localhost"), NextPort.Get(), AddressType.None), unknown);
             config.TestInfo(true);
 
             _client =
@@ -127,8 +125,7 @@ namespace Vlingo.Http.Tests.Resource
 
             var config = Client.Configuration.DefaultedExceptFor(
                 World.Stage,
-                Address.From(Host.Of("localhost"), NextPort.Get(), AddressType.None),
-                unknown);
+                Address.From(Host.Of("localhost"), NextPort.Get(), AddressType.None), unknown);
             config.TestInfo(true);
 
             _client =

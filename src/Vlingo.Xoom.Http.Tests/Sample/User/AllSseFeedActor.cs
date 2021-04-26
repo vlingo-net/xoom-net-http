@@ -6,10 +6,10 @@
 // one at https://mozilla.org/MPL/2.0/.
 
 using System.Collections.Generic;
-using Vlingo.Http.Resource.Sse;
 using Vlingo.Xoom.Actors;
+using Vlingo.Xoom.Http.Resource.Sse;
 
-namespace Vlingo.Http.Tests.Sample.User
+namespace Vlingo.Xoom.Http.Tests.Sample.User
 {
     public class AllSseFeedActor : Actor, ISseFeed
     {

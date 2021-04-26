@@ -7,16 +7,16 @@
 
 using System;
 using Vlingo.Xoom.Common;
-using Vlingo.Http.Resource;
-using Vlingo.Http.Tests.Sample.User.Model;
+using Vlingo.Xoom.Http.Resource;
+using Vlingo.Xoom.Http.Tests.Sample.User.Model;
 using Vlingo.Xoom.Wire.Channel;
 using Vlingo.Xoom.Wire.Fdx.Bidirectional;
 using Vlingo.Xoom.Wire.Nodes;
 using Xunit;
 using Xunit.Abstractions;
-using Configuration = Vlingo.Http.Resource.Configuration;
+using Configuration = Vlingo.Xoom.Http.Resource.Configuration;
 
-namespace Vlingo.Http.Tests.Resource
+namespace Vlingo.Xoom.Http.Tests.Resource
 {
     public class ServerTest : ResourceTestFixtures
     {

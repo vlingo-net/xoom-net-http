@@ -11,7 +11,7 @@ using System.IO;
 using System.Linq;
 using Vlingo.Xoom.Common;
 
-namespace Vlingo.Http.Resource
+namespace Vlingo.Xoom.Http.Resource
 {
     public sealed class HttpProperties : ConfigurationProperties
     {

@@ -5,9 +5,9 @@
 // was not distributed with this file, You can obtain
 // one at https://mozilla.org/MPL/2.0/.
 
-using Vlingo.Http.Media;
+using Vlingo.Xoom.Http.Media;
 
-namespace Vlingo.Http.Resource
+namespace Vlingo.Xoom.Http.Resource
 {
     public static class DefaultMediaTypeMapper
     {

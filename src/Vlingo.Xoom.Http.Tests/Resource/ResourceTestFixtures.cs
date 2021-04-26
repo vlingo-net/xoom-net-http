@@ -8,18 +8,18 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Vlingo.Xoom.Common.Serialization;
-using Vlingo.Http.Resource;
-using Vlingo.Http.Tests.Sample.User;
-using Vlingo.Http.Tests.Sample.User.Model;
 using Vlingo.Xoom.Actors;
+using Vlingo.Xoom.Common.Serialization;
+using Vlingo.Xoom.Http.Resource;
+using Vlingo.Xoom.Http.Tests.Sample.User;
+using Vlingo.Xoom.Http.Tests.Sample.User.Model;
 using Vlingo.Xoom.Wire.Channel;
 using Vlingo.Xoom.Wire.Message;
 using Xunit.Abstractions;
-using Action = Vlingo.Http.Resource.Action;
-using IDispatcher = Vlingo.Http.Resource.IDispatcher;
+using Action = Vlingo.Xoom.Http.Resource.Action;
+using IDispatcher = Vlingo.Xoom.Http.Resource.IDispatcher;
 
-namespace Vlingo.Http.Tests.Resource
+namespace Vlingo.Xoom.Http.Tests.Resource
 {
     public abstract class ResourceTestFixtures : IDisposable
     {

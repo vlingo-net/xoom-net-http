@@ -5,10 +5,10 @@
 // was not distributed with this file, You can obtain
 // one at https://mozilla.org/MPL/2.0/.
 
-using Vlingo.Http.Resource.Sse;
+using Vlingo.Xoom.Http.Resource.Sse;
 using Xunit;
 
-namespace Vlingo.Http.Tests.Resource.Sse
+namespace Vlingo.Xoom.Http.Tests.Resource.Sse
 {
     public class SseEventTest
     {

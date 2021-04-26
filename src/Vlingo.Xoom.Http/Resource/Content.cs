@@ -5,9 +5,9 @@
 // was not distributed with this file, You can obtain
 // one at https://mozilla.org/MPL/2.0/.
 
-using Vlingo.Http.Media;
+using Vlingo.Xoom.Http.Media;
 
-namespace Vlingo.Http.Resource
+namespace Vlingo.Xoom.Http.Resource
 {
     public class Content
     {
@@ -41,7 +41,7 @@ namespace Vlingo.Http.Resource
         {
             unchecked
             {
-                int hash = 17;
+                var hash = 17;
                 hash = hash * 23 + (Data?.GetHashCode() ?? 0);
                 hash = hash * 23 + (ContentMediaType?.GetHashCode() ?? 0);
                 return hash;

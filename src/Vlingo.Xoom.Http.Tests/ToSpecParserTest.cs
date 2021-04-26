@@ -8,9 +8,9 @@
 using System;
 using Xunit;
 
-namespace Vlingo.Http.Tests
+namespace Vlingo.Xoom.Http.Tests
 {
-    using Vlingo.Http.Resource;
+    using Vlingo.Xoom.Http.Resource;
     
     public class ToSpecParserTest
     {

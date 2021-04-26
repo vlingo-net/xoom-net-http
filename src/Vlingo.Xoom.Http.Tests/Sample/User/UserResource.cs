@@ -7,12 +7,12 @@
 
 using System;
 using System.Collections.Generic;
-using Vlingo.Xoom.Common.Serialization;
-using Vlingo.Http.Resource;
-using Vlingo.Http.Tests.Sample.User.Model;
 using Vlingo.Xoom.Actors;
+using Vlingo.Xoom.Common.Serialization;
+using Vlingo.Xoom.Http.Resource;
+using Vlingo.Xoom.Http.Tests.Sample.User.Model;
 
-namespace Vlingo.Http.Tests.Sample.User
+namespace Vlingo.Xoom.Http.Tests.Sample.User
 {
     public sealed class UserResource : ResourceHandler
     {

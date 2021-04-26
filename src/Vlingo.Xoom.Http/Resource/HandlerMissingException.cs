@@ -8,7 +8,7 @@
 using System;
 using System.Runtime.Serialization;
 
-namespace Vlingo.Http.Resource
+namespace Vlingo.Xoom.Http.Resource
 {
     public class HandlerMissingException : Exception
     {

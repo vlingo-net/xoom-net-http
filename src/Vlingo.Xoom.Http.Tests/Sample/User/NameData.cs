@@ -5,9 +5,9 @@
 // was not distributed with this file, You can obtain
 // one at https://mozilla.org/MPL/2.0/.
 
-using Vlingo.Http.Tests.Sample.User.Model;
+using Vlingo.Xoom.Http.Tests.Sample.User.Model;
 
-namespace Vlingo.Http.Tests.Sample.User
+namespace Vlingo.Xoom.Http.Tests.Sample.User
 {
     public class NameData
     {

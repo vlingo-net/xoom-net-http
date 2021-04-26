@@ -8,13 +8,13 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using Vlingo.Xoom.Actors;
 using Vlingo.Xoom.Common;
 using Vlingo.Xoom.UUID;
-using Vlingo.Xoom.Actors;
 using Vlingo.Xoom.Wire.Channel;
 using Vlingo.Xoom.Wire.Message;
 
-namespace Vlingo.Http.Resource
+namespace Vlingo.Xoom.Http.Resource
 {
     public class ClientCorrelatingRequesterConsumerActor : Actor, IClientConsumer
     {

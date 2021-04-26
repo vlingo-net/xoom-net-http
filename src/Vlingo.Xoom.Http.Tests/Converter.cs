@@ -10,11 +10,11 @@ using System.IO;
 using System.Text;
 using Xunit.Abstractions;
 
-namespace Vlingo.Http.Tests
+namespace Vlingo.Xoom.Http.Tests
 {
     public class Converter : TextWriter
     {
-        ITestOutputHelper _output;
+        private readonly ITestOutputHelper _output;
         
         public Converter(ITestOutputHelper output)
         {

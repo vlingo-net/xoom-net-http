@@ -5,7 +5,7 @@
 // was not distributed with this file, You can obtain
 // one at https://mozilla.org/MPL/2.0/.
 
-namespace Vlingo.Http
+namespace Vlingo.Xoom.Http
 {
     public class ContentPacket
     {

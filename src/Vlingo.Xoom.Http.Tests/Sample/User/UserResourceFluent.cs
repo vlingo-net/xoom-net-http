@@ -7,15 +7,15 @@
 
 using System;
 using System.Collections.Generic;
+using Vlingo.Xoom.Actors;
 using Vlingo.Xoom.Common;
 using Vlingo.Xoom.Common.Serialization;
-using Vlingo.Http.Resource;
-using Vlingo.Http.Tests.Resource;
-using Vlingo.Http.Tests.Sample.User.Model;
-using Vlingo.Xoom.Actors;
-using Name = Vlingo.Http.Tests.Sample.User.Model.Name;
+using Vlingo.Xoom.Http.Resource;
+using Vlingo.Xoom.Http.Tests.Resource;
+using Vlingo.Xoom.Http.Tests.Sample.User.Model;
+using Name = Vlingo.Xoom.Http.Tests.Sample.User.Model.Name;
 
-namespace Vlingo.Http.Tests.Sample.User
+namespace Vlingo.Xoom.Http.Tests.Sample.User
 {
     public class UserResourceFluent : ResourceHandler
     {

@@ -8,7 +8,7 @@
 using Vlingo.Xoom.Common;
 using Vlingo.Xoom.Wire.Channel;
 
-namespace Vlingo.Http.Tests.Resource.Sse
+namespace Vlingo.Xoom.Http.Tests.Resource.Sse
 {
     public class MockRequestResponseContext : RequestResponseContext
     {

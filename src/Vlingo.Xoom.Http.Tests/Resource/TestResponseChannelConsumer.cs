@@ -6,13 +6,13 @@
 // one at https://mozilla.org/MPL/2.0/.
 
 using System.Collections.Concurrent;
-using Vlingo.Xoom.Common;
 using Vlingo.Xoom.Actors;
 using Vlingo.Xoom.Actors.TestKit;
+using Vlingo.Xoom.Common;
 using Vlingo.Xoom.Wire.Channel;
 using Vlingo.Xoom.Wire.Message;
 
-namespace Vlingo.Http.Tests.Resource
+namespace Vlingo.Xoom.Http.Tests.Resource
 {
     public class TestResponseChannelConsumer : Actor, IResponseChannelConsumer
     {

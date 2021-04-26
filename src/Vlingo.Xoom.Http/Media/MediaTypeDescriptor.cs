@@ -10,7 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Vlingo.Http.Media
+namespace Vlingo.Xoom.Http.Media
 {
     public abstract class MediaTypeDescriptor
     {

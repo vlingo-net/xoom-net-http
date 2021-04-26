@@ -6,13 +6,13 @@
 // one at https://mozilla.org/MPL/2.0/.
 
 using System;
-using Vlingo.Xoom.Common;
-using Vlingo.Http.Resource;
-using Vlingo.Http.Tests.Sample.User;
 using Vlingo.Xoom.Actors;
-using Configuration = Vlingo.Http.Resource.Configuration;
+using Vlingo.Xoom.Common;
+using Vlingo.Xoom.Http.Resource;
+using Vlingo.Xoom.Http.Tests.Sample.User;
+using Configuration = Vlingo.Xoom.Http.Resource.Configuration;
 
-namespace Vlingo.Http.Tests.Resource
+namespace Vlingo.Xoom.Http.Tests.Resource
 {
     public class ServerBootstrap
     {

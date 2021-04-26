@@ -7,11 +7,11 @@
 
 using System;
 using System.Collections.Generic;
-using Vlingo.Xoom.Common;
 using Vlingo.Xoom.Actors;
+using Vlingo.Xoom.Common;
 using Vlingo.Xoom.Wire.Nodes;
 
-namespace Vlingo.Http.Resource
+namespace Vlingo.Xoom.Http.Resource
 {
     /// <summary>
     /// Defines an HTTP client for sending <code>Request</code>s and receiving <code>Request</code>s.

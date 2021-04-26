@@ -7,9 +7,9 @@
 
 using System;
 using System.Text;
-using Vlingo.Http.Media;
+using Vlingo.Xoom.Http.Media;
 
-namespace Vlingo.Http.Resource
+namespace Vlingo.Xoom.Http.Resource
 {
     public interface IObjectResponse
     {

@@ -8,7 +8,7 @@
 using Vlingo.Xoom.Actors;
 using Vlingo.Xoom.Wire.Channel;
 
-namespace Vlingo.Http
+namespace Vlingo.Xoom.Http
 {
     public class Context
     {

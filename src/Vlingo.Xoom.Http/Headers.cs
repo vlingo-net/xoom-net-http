@@ -11,7 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace Vlingo.Http
+namespace Vlingo.Xoom.Http
 {
     public class Headers<T> : IList<T> where T : Header
     {
@@ -21,7 +21,7 @@ namespace Vlingo.Http
         
         public T? HeaderOfOrDefault(string name, T? defaultHeader)
         {
-            foreach(var header in _list)
+            foreach (var header in _list)
             {
                 if(header.MatchesNameOf(name))
                 {
@@ -45,7 +45,7 @@ namespace Vlingo.Http
         {
             Header? modified = null;
             var size = Count;
-            for (int index = 0; index < size; ++index)
+            for (var index = 0; index < size; ++index)
             {
                 if (this[index].MatchesNameOf(header))
                 {

@@ -5,7 +5,7 @@
 // was not distributed with this file, You can obtain
 // one at https://mozilla.org/MPL/2.0/.
 
-namespace Vlingo.Http.Resource.Feed
+namespace Vlingo.Xoom.Http.Resource.Feed
 {
     public class FeedProductRequest
     {

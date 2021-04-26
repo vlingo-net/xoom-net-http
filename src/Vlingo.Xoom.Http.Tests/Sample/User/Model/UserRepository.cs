@@ -7,7 +7,7 @@
 
 using System.Collections.Generic;
 
-namespace Vlingo.Http.Tests.Sample.User.Model
+namespace Vlingo.Xoom.Http.Tests.Sample.User.Model
 {
     public class UserRepository
     {

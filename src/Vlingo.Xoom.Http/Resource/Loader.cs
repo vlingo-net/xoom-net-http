@@ -9,11 +9,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using Vlingo.Http.Resource.Feed;
-using Vlingo.Http.Resource.Sse;
 using Vlingo.Xoom.Actors;
+using Vlingo.Xoom.Http.Resource.Feed;
+using Vlingo.Xoom.Http.Resource.Sse;
 
-namespace Vlingo.Http.Resource
+namespace Vlingo.Xoom.Http.Resource
 {
     public static class Loader
     {

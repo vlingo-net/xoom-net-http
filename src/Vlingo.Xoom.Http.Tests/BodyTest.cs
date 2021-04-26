@@ -11,7 +11,7 @@ using System.Text;
 using Vlingo.Xoom.Wire.Channel;
 using Xunit;
 
-namespace Vlingo.Http.Tests
+namespace Vlingo.Xoom.Http.Tests
 {
     public class BodyTest
     {

@@ -8,17 +8,17 @@
 using System.Collections.Generic;
 using System.Text;
 using Newtonsoft.Json;
-using Vlingo.Xoom.Common.Serialization;
-using Vlingo.Http.Resource;
-using Vlingo.Http.Tests.Sample.User;
-using Vlingo.Http.Tests.Sample.User.Serialization;
 using Vlingo.Xoom.Actors.Plugin.Logging.Console;
+using Vlingo.Xoom.Common.Serialization;
+using Vlingo.Xoom.Http.Resource;
+using Vlingo.Xoom.Http.Tests.Sample.User;
+using Vlingo.Xoom.Http.Tests.Sample.User.Serialization;
 using Vlingo.Xoom.Wire.Message;
 using Xunit;
 using Xunit.Abstractions;
-using Action = Vlingo.Http.Resource.Action;
+using Action = Vlingo.Xoom.Http.Resource.Action;
 
-namespace Vlingo.Http.Tests.Resource
+namespace Vlingo.Xoom.Http.Tests.Resource
 {
     public class ConfigurationResourceTest : ResourceTestFixtures
     {

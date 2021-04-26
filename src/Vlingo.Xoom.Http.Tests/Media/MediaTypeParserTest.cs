@@ -6,10 +6,10 @@
 // one at https://mozilla.org/MPL/2.0/.
 
 using System.Collections.Generic;
-using Vlingo.Http.Media;
+using Vlingo.Xoom.Http.Media;
 using Xunit;
 
-namespace Vlingo.Http.Tests.Media
+namespace Vlingo.Xoom.Http.Tests.Media
 {
     public class MediaTypeParserTest
     {

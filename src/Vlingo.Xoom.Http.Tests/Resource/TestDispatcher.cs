@@ -6,11 +6,11 @@
 // one at https://mozilla.org/MPL/2.0/.
 
 using Vlingo.Xoom.Actors;
+using Vlingo.Xoom.Http.Resource;
+using IDispatcher = Vlingo.Xoom.Http.Resource.IDispatcher;
 
-namespace Vlingo.Http.Tests.Resource
+namespace Vlingo.Xoom.Http.Tests.Resource
 {
-    using Vlingo.Http.Resource;
-    
     public class TestDispatcher : IDispatcher
     {
         private readonly Resources _resources;

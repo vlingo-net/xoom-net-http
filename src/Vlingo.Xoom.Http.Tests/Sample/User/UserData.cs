@@ -7,9 +7,9 @@
 
 using System;
 using System.Collections.Generic;
-using Vlingo.Http.Tests.Sample.User.Model;
+using Vlingo.Xoom.Http.Tests.Sample.User.Model;
 
-namespace Vlingo.Http.Tests.Sample.User
+namespace Vlingo.Xoom.Http.Tests.Sample.User
 {
     public class UserData
     {

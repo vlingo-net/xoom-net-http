@@ -8,7 +8,7 @@
 using Vlingo.Xoom.Wire.Message;
 using Xunit;
 
-namespace Vlingo.Http.Tests
+namespace Vlingo.Xoom.Http.Tests
 {
     public class ResponseTest
     {
