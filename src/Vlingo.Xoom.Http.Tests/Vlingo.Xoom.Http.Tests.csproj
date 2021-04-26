@@ -25,7 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Vlingo.Http\Vlingo.Http.csproj" />
+    <ProjectReference Include="..\Vlingo.Xoom.Http\Vlingo.Xoom.Http.csproj" />
   </ItemGroup>
 
   <ItemGroup>

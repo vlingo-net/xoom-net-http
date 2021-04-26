@@ -8,16 +8,16 @@
     <!-- NuGet Metadata -->
     <IsPackable>true</IsPackable>
     <PackageVersion>$(VlingoVersion)</PackageVersion>
-    <PackageId>Vlingo.Http</PackageId>
+    <PackageId>Vlingo.Xoom.Http</PackageId>
     <Authors>Vlingo</Authors>
     <Description>
       Reactive, scalable, and resilient HTTP servers and RESTful services running on vlingo-net/cluster and vlingo-net/actors.
     </Description>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
-    <PackageProjectUrl>https://github.com/vlingo-net/vlingo-net-http</PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/vlingo-net/xoom-net-http</PackageProjectUrl>
     <PackageIcon>vlingo-64x64.png</PackageIcon>
-    <RepositoryUrl>https://github.com/vlingo-net/vlingo-net-http</RepositoryUrl>
+    <RepositoryUrl>https://github.com/vlingo-net/xoom-net-http</RepositoryUrl>
     <Configurations>Debug;Release;Debug With Project References</Configurations>
   </PropertyGroup>
   <ItemGroup>
