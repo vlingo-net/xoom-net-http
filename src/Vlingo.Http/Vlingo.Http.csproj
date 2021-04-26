@@ -35,14 +35,14 @@
   <Choose>
     <When Condition="'$(Configuration)' == 'Debug With Project References'">
       <ItemGroup>
-        <ProjectReference Include="..\..\..\vlingo-net-wire\src\Vlingo.Wire\Vlingo.Wire.csproj" />
+        <ProjectReference Include="..\..\..\xoom-net-wire\src\Vlingo.Xoom.Wire\Vlingo.Xoom.Wire.csproj" />
       </ItemGroup>
     </When>
     <Otherwise>
       <ItemGroup>
         <PackageReference Include="Vlingo.Xoom.Actors" Version="$(VlingoVersion)" />
         <PackageReference Include="Vlingo.Xoom.Common" Version="$(VlingoVersion)" />
-        <PackageReference Include="Vlingo.Wire" Version="$(VlingoVersion)" />
+        <PackageReference Include="Vlingo.Xoom.Wire" Version="$(VlingoVersion)" />
       </ItemGroup>
     </Otherwise>
   </Choose>
