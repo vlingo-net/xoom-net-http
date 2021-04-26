@@ -10,7 +10,7 @@ using Vlingo.Xoom.Common;
 using Vlingo.Http.Resource;
 using Vlingo.Xoom.Actors;
 using Vlingo.Xoom.Wire.Message;
-using Vlingo.Xoom.Wire.Node;
+using Vlingo.Xoom.Wire.Nodes;
 using Xunit;
 using Xunit.Abstractions;
 using Configuration = Vlingo.Http.Resource.Configuration;

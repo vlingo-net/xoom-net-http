@@ -9,7 +9,7 @@ using System;
 using System.Collections.Generic;
 using Vlingo.Xoom.Common;
 using Vlingo.Xoom.Actors;
-using Vlingo.Xoom.Wire.Node;
+using Vlingo.Xoom.Wire.Nodes;
 
 namespace Vlingo.Http.Resource
 {

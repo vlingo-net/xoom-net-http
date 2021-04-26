@@ -235,7 +235,7 @@ namespace Vlingo.Http.Tests.Resource
 
         internal override ICompletes<Response> Execute(Request request, Action.MappedParameters mappedParameters, ILogger logger)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
         
         internal ICompletes<Response> Execute(Request request, IErrorHandler errorHandler, ILogger logger) => 

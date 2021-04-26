@@ -15,7 +15,7 @@ using Vlingo.Xoom.Actors;
 using Vlingo.Xoom.Wire.Channel;
 using Vlingo.Xoom.Wire.Fdx.Bidirectional;
 using Vlingo.Xoom.Wire.Message;
-using Vlingo.Xoom.Wire.Node;
+using Vlingo.Xoom.Wire.Nodes;
 using Xunit;
 using Xunit.Abstractions;
 

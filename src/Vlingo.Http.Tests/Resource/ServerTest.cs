@@ -11,7 +11,7 @@ using Vlingo.Http.Resource;
 using Vlingo.Http.Tests.Sample.User.Model;
 using Vlingo.Xoom.Wire.Channel;
 using Vlingo.Xoom.Wire.Fdx.Bidirectional;
-using Vlingo.Xoom.Wire.Node;
+using Vlingo.Xoom.Wire.Nodes;
 using Xunit;
 using Xunit.Abstractions;
 using Configuration = Vlingo.Http.Resource.Configuration;
