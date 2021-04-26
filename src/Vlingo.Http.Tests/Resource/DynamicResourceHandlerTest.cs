@@ -9,11 +9,11 @@ using System;
 using System.IO;
 using Vlingo.Xoom.Common;
 using Vlingo.Http.Resource;
-using Vlingo.Wire.Channel;
-using Vlingo.Wire.Fdx.Bidirectional;
-using Vlingo.Wire.Message;
-using Vlingo.Wire.Node;
 using Vlingo.Xoom.Actors;
+using Vlingo.Xoom.Wire.Channel;
+using Vlingo.Xoom.Wire.Fdx.Bidirectional;
+using Vlingo.Xoom.Wire.Message;
+using Vlingo.Xoom.Wire.Node;
 using Xunit;
 using Xunit.Abstractions;
 

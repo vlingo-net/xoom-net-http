@@ -8,8 +8,8 @@
 using System;
 using Vlingo.Xoom.Common.Serialization;
 using Vlingo.Http.Resource;
-using Vlingo.Wire.Message;
 using Vlingo.Xoom.Actors;
+using Vlingo.Xoom.Wire.Message;
 using Xunit;
 using Xunit.Abstractions;
 using IDispatcher = Vlingo.Http.Resource.IDispatcher;

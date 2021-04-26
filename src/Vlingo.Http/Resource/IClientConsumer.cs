@@ -7,9 +7,9 @@
 
 using System.IO;
 using Vlingo.Xoom.Common;
-using Vlingo.Wire.Channel;
-using Vlingo.Wire.Fdx.Bidirectional;
 using Vlingo.Xoom.Actors;
+using Vlingo.Xoom.Wire.Channel;
+using Vlingo.Xoom.Wire.Fdx.Bidirectional;
 
 namespace Vlingo.Http.Resource
 {

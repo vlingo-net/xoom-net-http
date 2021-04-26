@@ -7,7 +7,7 @@
 
 using System;
 using System.Text;
-using Vlingo.Wire.Message;
+using Vlingo.Xoom.Wire.Message;
 using Xunit;
 using Xunit.Abstractions;
 

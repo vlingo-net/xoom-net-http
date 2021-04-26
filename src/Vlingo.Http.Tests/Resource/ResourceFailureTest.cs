@@ -8,9 +8,9 @@
 using System;
 using Vlingo.Xoom.Common;
 using Vlingo.Http.Resource;
-using Vlingo.Wire.Message;
-using Vlingo.Wire.Node;
 using Vlingo.Xoom.Actors;
+using Vlingo.Xoom.Wire.Message;
+using Vlingo.Xoom.Wire.Node;
 using Xunit;
 using Xunit.Abstractions;
 using Configuration = Vlingo.Http.Resource.Configuration;

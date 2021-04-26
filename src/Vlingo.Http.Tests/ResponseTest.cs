@@ -5,7 +5,7 @@
 // was not distributed with this file, You can obtain
 // one at https://mozilla.org/MPL/2.0/.
 
-using Vlingo.Wire.Message;
+using Vlingo.Xoom.Wire.Message;
 using Xunit;
 
 namespace Vlingo.Http.Tests

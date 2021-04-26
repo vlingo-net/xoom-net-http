@@ -7,7 +7,7 @@
 
 
 using System;
-using Vlingo.Wire.Message;
+using Vlingo.Xoom.Wire.Message;
 
 namespace Vlingo.Http
 {

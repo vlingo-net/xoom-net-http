@@ -5,8 +5,8 @@
 // was not distributed with this file, You can obtain
 // one at https://mozilla.org/MPL/2.0/.
 
-using Vlingo.Wire.Channel;
 using Vlingo.Xoom.Actors;
+using Vlingo.Xoom.Wire.Channel;
 
 namespace Vlingo.Http
 {

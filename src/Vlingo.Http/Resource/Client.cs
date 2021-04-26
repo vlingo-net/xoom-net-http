@@ -8,8 +8,8 @@
 using System;
 using System.Collections.Generic;
 using Vlingo.Xoom.Common;
-using Vlingo.Wire.Node;
 using Vlingo.Xoom.Actors;
+using Vlingo.Xoom.Wire.Node;
 
 namespace Vlingo.Http.Resource
 {
@@ -315,9 +315,9 @@ namespace Vlingo.Http.Resource
             /// <summary>
             /// Answer my test info, which may be null.
             /// </summary>
-            /// <typeparam name="R">The type expected by the test request/response handler.</typeparam>
+            /// <typeparam name="TR">The type expected by the test request/response handler.</typeparam>
             /// <returns></returns>
-            public R TestInfo<R>() => (R)_testInfo!;
+            public TR TestInfo<TR>() => (TR)_testInfo!;
 
             /// <summary>
             /// Marks this configuration as used for testing. There may be a

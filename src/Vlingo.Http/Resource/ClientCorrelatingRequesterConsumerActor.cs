@@ -10,9 +10,9 @@ using System.Collections.Generic;
 using System.IO;
 using Vlingo.Xoom.Common;
 using Vlingo.Xoom.UUID;
-using Vlingo.Wire.Channel;
-using Vlingo.Wire.Message;
 using Vlingo.Xoom.Actors;
+using Vlingo.Xoom.Wire.Channel;
+using Vlingo.Xoom.Wire.Message;
 
 namespace Vlingo.Http.Resource
 {

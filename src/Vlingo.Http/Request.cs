@@ -6,7 +6,7 @@
 // one at https://mozilla.org/MPL/2.0/.
 
 using System;
-using Vlingo.Wire.Message;
+using Vlingo.Xoom.Wire.Message;
 
 namespace Vlingo.Http
 {

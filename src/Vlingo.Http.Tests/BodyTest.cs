@@ -8,7 +8,7 @@
 using System;
 using System.IO;
 using System.Text;
-using Vlingo.Wire.Channel;
+using Vlingo.Xoom.Wire.Channel;
 using Xunit;
 
 namespace Vlingo.Http.Tests

@@ -10,7 +10,7 @@ using System.Collections.Generic;
 using Vlingo.Xoom.Common;
 using Vlingo.Http.Resource;
 using Vlingo.Http.Tests.Sample.User.Model;
-using Vlingo.Wire.Node;
+using Vlingo.Xoom.Wire.Node;
 using Xunit;
 using Xunit.Abstractions;
 

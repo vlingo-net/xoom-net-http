@@ -6,7 +6,7 @@
 // one at https://mozilla.org/MPL/2.0/.
 
 using Vlingo.Xoom.Common;
-using Vlingo.Wire.Channel;
+using Vlingo.Xoom.Wire.Channel;
 
 namespace Vlingo.Http.Tests.Resource.Sse
 {
