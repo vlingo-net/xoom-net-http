@@ -29,6 +29,27 @@ namespace Vlingo.Xoom.Http.Resource
         }
         
         protected ContentType ContentType => ContentType.Of("text/plain", "us-ascii");
+        
+        /// <summary>
+        /// Answer a <see cref="Response"/> with the <see cref="ResponseStatus"/> and <paramref name="entity"/>
+        /// with a <code>Content-Type</code> header per my <code>ContentType</code>, which may be overridden.
+        /// </summary>
+        /// <param name="status">The status of the response</param>
+        /// <param name="entity">The string entity of the response</param>
+        /// <returns><see cref="Response"/></returns>
+        protected Response EntityResponseOf(ResponseStatus status, string entity) =>
+            EntityResponseOf(status, Headers.Empty<ResponseHeader>(), entity);
+
+        /// <summary>
+        /// Answer a <see cref="Response"/> with the <see cref="ResponseStatus"/> and <paramref name="entity"/>
+        /// with a <code>Content-Type</code> header per my <code>ContentType</code>, which may be overridden.
+        /// </summary>
+        /// <param name="status">The status of the response</param>
+        /// <param name="headers">The <see cref="Headers{ResponseHeader}"/> to which the <code>Content-Type</code> header is appended</param>
+        /// <param name="entity">The string entity of the response</param>
+        /// <returns><see cref="Response"/></returns>
+        protected Response EntityResponseOf(ResponseStatus status, Headers<ResponseHeader> headers, string entity) =>
+            Response.Of(status, headers.And(ContentType.ToResponseHeader()), entity);
 
         protected internal virtual ILogger? Logger => _stage?.World.DefaultLogger;
 
