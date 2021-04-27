@@ -203,17 +203,17 @@ namespace Vlingo.Xoom.Http.Tests.Resource
             properties.Add("server.request.missing.content.timeout", "100");
 
             properties.Add("static.files.resource.pool", "5");
-            _contentRoot = $"Vlingo.Http.Tests.Content";
+            _contentRoot = $"Vlingo.Xoom.Http.Tests.Content";
             properties.Add("static.files.resource.root", _contentRoot);
             properties.Add("static.files.resource.subpaths", "[/, /css, /js, /views]");
 
             properties.Add("feed.producer.name.events", "/feeds/events");
-            properties.Add("feed.producer.events.class", "Vlingo.Http.Tests.Resource.Feed.EventsFeedProducerActor");
+            properties.Add("feed.producer.events.class", "Vlingo.Xoom.Http.Tests.Resource.Feed.EventsFeedProducerActor");
             properties.Add("feed.producer.events.payload", "20");
             properties.Add("feed.producer.events.pool", "10");
 
             properties.Add("sse.stream.name.all", "/eventstreams/all");
-            properties.Add("sse.stream.all.feed.class", "Vlingo.Http.Tests.Sample.User.AllSseFeedActor");
+            properties.Add("sse.stream.all.feed.class", "Vlingo.Xoom.Http.Tests.Sample.User.AllSseFeedActor");
             properties.Add("sse.stream.all.feed.payload", "50");
             properties.Add("sse.stream.all.feed.interval", "1000");
             properties.Add("sse.stream.all.feed.default.id", "-1");
@@ -221,20 +221,20 @@ namespace Vlingo.Xoom.Http.Tests.Resource
 
             properties.Add("resource.name.profile", "[define, query]");
 
-            properties.Add("resource.profile.handler", "Vlingo.Http.Tests.Sample.User.ProfileResource");
+            properties.Add("resource.profile.handler", "Vlingo.Xoom.Http.Tests.Sample.User.ProfileResource");
             properties.Add("resource.profile.pool", "5");
             properties.Add("resource.profile.disallowPathParametersWithSlash", "false");
 
             properties.Add("action.profile.define.method", "PUT");
             properties.Add("action.profile.define.uri", "/users/{userId}/profile");
             properties.Add("action.profile.define.to",
-                "define(string userId, body:Vlingo.Http.Tests.Sample.User.ProfileData profileData)");
-            properties.Add("action.profile.define.mapper", "Vlingo.Http.Tests.Sample.User.ProfileDataMapper");
+                "define(string userId, body:Vlingo.Xoom.Http.Tests.Sample.User.ProfileData profileData)");
+            properties.Add("action.profile.define.mapper", "Vlingo.Xoom.Http.Tests.Sample.User.ProfileDataMapper");
 
             properties.Add("action.profile.query.method", "GET");
             properties.Add("action.profile.query.uri", "/users/{userId}/profile");
             properties.Add("action.profile.query.to", "query(string userId)");
-            properties.Add("action.profile.query.mapper", "Vlingo.Http.Tests.Sample.User.ProfileDataMapper");
+            properties.Add("action.profile.query.mapper", "Vlingo.Xoom.Http.Tests.Sample.User.ProfileDataMapper");
 
             var httpProperties = HttpProperties.Instance;
             httpProperties.SetCustomProperties(properties);

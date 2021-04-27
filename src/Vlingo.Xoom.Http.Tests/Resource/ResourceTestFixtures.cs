@@ -133,13 +133,13 @@ namespace Vlingo.Xoom.Http.Tests.Resource
 
             World = World.Start(WorldName);
 
-            ActionPostUser = new Action(0, "POST", "/users", "Register(body:Vlingo.Http.Tests.Sample.User.UserData userData)", "Vlingo.Http.Tests.Sample.User.UserDataMapper");
-            ActionPatchUserContact = new Action(1, "PATCH", "/users/{userId}/contact", "changeContact(string userId, body:Vlingo.Http.Tests.Sample.User.ContactData contactData)", "Vlingo.Http.Tests.Sample.User.UserDataMapper");
-            ActionPatchUserName = new Action(2, "PATCH", "/users/{userId}/name", "changeName(string userId, body:Vlingo.Http.Tests.Sample.User.NameData nameData)", "Vlingo.Http.Tests.Sample.User.UserDataMapper");
-            ActionGetUser = new Action(3, "GET", "/users/{userId}", "queryUser(string userId)", "Vlingo.Http.Tests.Sample.User.UserDataMapper");
-            ActionGetUsers = new Action(4, "GET", "/users", "queryUsers()", "Vlingo.Http.Tests.Sample.User.UserDataMapper");
-            ActionGetUserError = new Action(5, "GET", "/users/{userId}/error", "queryUserError(string userId)", "Vlingo.Http.Tests.Sample.User.UserDataMapper");
-            ActionPutUser = new Action(6, "PUT", "/users/{userId}", "changeUser(string userId, body:Vlingo.Http.Tests.Sample.User.UserData userData)", "Vlingo.Http.Tests.Sample.User.UserDataMapper");
+            ActionPostUser = new Action(0, "POST", "/users", "Register(body:Vlingo.Xoom.Http.Tests.Sample.User.UserData userData)", "Vlingo.Xoom.Http.Tests.Sample.User.UserDataMapper");
+            ActionPatchUserContact = new Action(1, "PATCH", "/users/{userId}/contact", "changeContact(string userId, body:Vlingo.Xoom.Http.Tests.Sample.User.ContactData contactData)", "Vlingo.Xoom.Http.Tests.Sample.User.UserDataMapper");
+            ActionPatchUserName = new Action(2, "PATCH", "/users/{userId}/name", "changeName(string userId, body:Vlingo.Xoom.Http.Tests.Sample.User.NameData nameData)", "Vlingo.Xoom.Http.Tests.Sample.User.UserDataMapper");
+            ActionGetUser = new Action(3, "GET", "/users/{userId}", "queryUser(string userId)", "Vlingo.Xoom.Http.Tests.Sample.User.UserDataMapper");
+            ActionGetUsers = new Action(4, "GET", "/users", "queryUsers()", "Vlingo.Xoom.Http.Tests.Sample.User.UserDataMapper");
+            ActionGetUserError = new Action(5, "GET", "/users/{userId}/error", "queryUserError(string userId)", "Vlingo.Xoom.Http.Tests.Sample.User.UserDataMapper");
+            ActionPutUser = new Action(6, "PUT", "/users/{userId}", "changeUser(string userId, body:Vlingo.Xoom.Http.Tests.Sample.User.UserData userData)", "Vlingo.Xoom.Http.Tests.Sample.User.UserDataMapper");
 
 
             var actions = new List<Action> {
@@ -152,7 +152,7 @@ namespace Vlingo.Xoom.Http.Tests.Resource
                 ActionPutUser
             };
 
-            ResourceHandlerType = ConfigurationResource.NewResourceHandlerTypeFor("Vlingo.Http.Tests.Sample.User.UserResource");
+            ResourceHandlerType = ConfigurationResource.NewResourceHandlerTypeFor("Vlingo.Xoom.Http.Tests.Sample.User.UserResource");
 
             Resource = ConfigurationResource.NewResourceFor("user", ResourceHandlerType, 7, actions, World.DefaultLogger);
 

@@ -13,8 +13,8 @@ namespace Vlingo.Xoom.Http.Resource.Sse
     public class SsePublisher__Proxy : ISsePublisher
     {
         private const string RepresentationConclude0 = "Conclude()";
-        private const string SubscribeRepresentation1 = "Subscribe(Vlingo.Http.Resource.SSE.SseSubscriber)";
-        private const string UnsubscribeRepresentation2 = "Unsubscribe(Vlingo.Http.Resource.SSE.SseSubscriber)";
+        private const string SubscribeRepresentation1 = "Subscribe(Vlingo.Xoom.Http.Resource.SSE.SseSubscriber)";
+        private const string UnsubscribeRepresentation2 = "Unsubscribe(Vlingo.Xoom.Http.Resource.SSE.SseSubscriber)";
         private const string StopRepresentation3 = "Stop()";
 
         private readonly Actor _actor;

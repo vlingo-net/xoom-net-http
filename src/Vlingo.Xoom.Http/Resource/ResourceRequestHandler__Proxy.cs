@@ -12,8 +12,8 @@ namespace Vlingo.Xoom.Http.Resource
 {
     public class ResourceRequestHandler__Proxy : IResourceRequestHandler
     {
-        private const string HandleForRepresentation1 = "HandleFor<T>(Vlingo.Http.Context, Action<T>)";
-        private const string HandleForRepresentation2 = "HandleFor(Vlingo.Http.Context, Action.MappedParameters, RequestHandler)";
+        private const string HandleForRepresentation1 = "HandleFor<T>(Vlingo.Xoom.Http.Context, Action<T>)";
+        private const string HandleForRepresentation2 = "HandleFor(Vlingo.Xoom.Http.Context, Action.MappedParameters, RequestHandler)";
 
         private readonly Actor _actor;
         private readonly IMailbox _mailbox;

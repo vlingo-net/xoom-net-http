@@ -13,7 +13,7 @@ namespace Vlingo.Xoom.Http.Resource.Feed
     public class FeedProducer__Proxy : IFeedProducer
     {
         private const string ProduceFeedForRepresentation1 =
-            "ProduceFeedFor(Vlingo.Http.Resource.Feed.FeedProductRequest)";
+            "ProduceFeedFor(Vlingo.Xoom.Http.Resource.Feed.FeedProductRequest)";
 
         private readonly Actor _actor;
         private readonly IMailbox _mailbox;

@@ -15,7 +15,7 @@ namespace Vlingo.Xoom.Http.Resource
     public class ClientConsumer__Proxy : IClientConsumer
     {
         private const string RepresentationConclude0 = "Conclude()";
-        private const string RequestWithRepresentation1 = "RequestWith(Vlingo.Http.Request)";
+        private const string RequestWithRepresentation1 = "RequestWith(Vlingo.Xoom.Http.Request)";
         private const string ConsumeRepresentation3 = "Consume(Vlingo.Xoom.Wire.Message.IConsumerByteBuffer)";
         private const string IntervalSignalRepresentation4 = "IntervalSignal(Vlingo.Xoom.Actors.IScheduled<object>, object)";
         private const string StopRepresentation5 = "Stop()";

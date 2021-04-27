@@ -55,9 +55,9 @@ namespace Vlingo.Xoom.Http.Tests.Resource
             var converter = new Converter(output);
             Console.SetOut(converter);
             
-            var actionPostUser = new Action(0, "POST", "/users", "register(body:Vlingo.Http.Tests.Sample.User.UserData userData)", null);
-            var actionPatchUserContact = new Action(1, "PATCH", "/users/{userId}/contact", "changeContact(string userId, body:Vlingo.Http.Tests.Sample.User.ContactData contactData)", null);
-            var actionPatchUserName = new Action(2, "PATCH", "/users/{userId}/name", "changeName(string userId, body:Vlingo.Http.Tests.Sample.User.NameData nameData)", null);
+            var actionPostUser = new Action(0, "POST", "/users", "register(body:Vlingo.Xoom.Http.Tests.Sample.User.UserData userData)", null);
+            var actionPatchUserContact = new Action(1, "PATCH", "/users/{userId}/contact", "changeContact(string userId, body:Vlingo.Xoom.Http.Tests.Sample.User.ContactData contactData)", null);
+            var actionPatchUserName = new Action(2, "PATCH", "/users/{userId}/name", "changeName(string userId, body:Vlingo.Xoom.Http.Tests.Sample.User.NameData nameData)", null);
             var actionGetUser = new Action(3, "GET", "/users/{userId}", "queryUser(string userId)", null);
             var actionGetUsers = new Action(4, "GET", "/users", "queryUsers()", null);
             var actionQueryUserError = new Action(5, "GET", "/users/{userId}/error", "queryUserError(string userId)", null);
@@ -76,11 +76,11 @@ namespace Vlingo.Xoom.Http.Tests.Resource
             
             try
             {
-                resourceHandlerClass = Type.GetType("Vlingo.Http.Tests.Sample.User.UserResource");
+                resourceHandlerClass = Type.GetType("Vlingo.Xoom.Http.Tests.Sample.User.UserResource");
             }
             catch (Exception)
             {
-                resourceHandlerClass = ConfigurationResource.NewResourceHandlerTypeFor("Vlingo.Http.Tests.Sample.User.UserResource");
+                resourceHandlerClass = ConfigurationResource.NewResourceHandlerTypeFor("Vlingo.Xoom.Http.Tests.Sample.User.UserResource");
             }
             
             _resource = ConfigurationResource.NewResourceFor("user", resourceHandlerClass, 5, _actions, ConsoleLogger.TestInstance());

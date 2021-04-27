@@ -116,7 +116,7 @@ namespace Vlingo.Xoom.Http.Resource
                 constructorName = constructorName.Substring(0, constructorName.IndexOf('<'));
             }
 
-            var signature = string.Format("  public {0}(string name, Type resourceHandlerClass, int handlerPoolSize, IList<Vlingo.Http.Resource.Action> actions)" +
+            var signature = string.Format("  public {0}(string name, Type resourceHandlerClass, int handlerPoolSize, IList<Vlingo.Xoom.Http.Resource.Action> actions)" +
                                           " : base(name, resourceHandlerClass, handlerPoolSize, actions)", constructorName);
 
             builder
@@ -178,7 +178,7 @@ namespace Vlingo.Xoom.Http.Resource
             var builder = new StringBuilder();
     
             builder
-                .Append("  public override void DispatchToHandlerWith(Context context, Vlingo.Http.Resource.Action.MappedParameters mappedParameters) {\n")
+                .Append("  public override void DispatchToHandlerWith(Context context, Vlingo.Xoom.Http.Resource.Action.MappedParameters mappedParameters) {\n")
                 .Append("    Action<" + GetSimpleTypeName(handlerType) + "> consumer = null;\n")
                 .Append("\n")
                 .Append("    try {\n")

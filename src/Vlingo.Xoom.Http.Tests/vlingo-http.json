@@ -51,12 +51,12 @@
       "profile": "[Define, Query]"
     },
     "user": {
-      "handler": "Vlingo.Http.Tests.Sample.User.UserResource",
+      "handler": "Vlingo.Xoom.Http.Tests.Sample.User.UserResource",
       "pool": "10",
       "disallowPathParametersWithSlash": "true"
     },
     "profile": {
-      "handler": "Vlingo.Http.Tests.Sample.User.ProfileResource",
+      "handler": "Vlingo.Xoom.Http.Tests.Sample.User.ProfileResource",
       "pool": "5",
       "disallowPathParametersWithSlash": "false"
     }
@@ -77,7 +77,7 @@
       },
       "all": {
         "feed": {
-          "class": "Vlingo.Http.Tests.Sample.User.AllSseFeedActor",
+          "class": "Vlingo.Xoom.Http.Tests.Sample.User.AllSseFeedActor",
           "payload": "50",
           "interval": "1000",
           "default": {
@@ -95,7 +95,7 @@
       },
       "events": {
         "producer": {
-          "class": "Vlingo.Http.Tests.Resource.Feed.EventsFeedProducerActor"
+          "class": "Vlingo.Xoom.Http.Tests.Resource.Feed.EventsFeedProducerActor"
         },
         "elements": "20",
         "pool": "10"
@@ -107,17 +107,17 @@
       "register": {
         "method": "POST",
         "uri": "/users",
-        "to": "Register(body:Vlingo.Http.Tests.Sample.User.UserData userData)"
+        "to": "Register(body:Vlingo.Xoom.Http.Tests.Sample.User.UserData userData)"
       },
       "contact": {
         "method": "PATCH",
         "uri": "/users/{userId}/contact",
-        "to": "ChangeContact(string userId, body:Vlingo.Http.Tests.Sample.User.ContactData contactData)"
+        "to": "ChangeContact(string userId, body:Vlingo.Xoom.Http.Tests.Sample.User.ContactData contactData)"
       },
       "name": {
         "method": "PATCH",
         "uri": "/users/{userId}/name",
-        "to": "ChangeName(string userId, body:Vlingo.Http.Tests.Sample.User.NameData nameData)"
+        "to": "ChangeName(string userId, body:Vlingo.Xoom.Http.Tests.Sample.User.NameData nameData)"
       },
       "queryUser": {
         "method": "GET",
@@ -139,14 +139,14 @@
       "define": {
         "method": "PUT",
         "uri": "/users/{userId}/profile",
-        "to": "Define(string userId, body:Vlingo.Http.Tests.Sample.User.ProfileData profileData)",
-        "mapper": "Vlingo.Http.Tests.Sample.User.ProfileDataMapper"
+        "to": "Define(string userId, body:Vlingo.Xoom.Http.Tests.Sample.User.ProfileData profileData)",
+        "mapper": "Vlingo.Xoom.Http.Tests.Sample.User.ProfileDataMapper"
       },
       "query": {
         "method": "GET",
         "uri": "/users/{userId}/profile",
         "to": "Query(string userId)",
-        "mapper": "Vlingo.Http.Tests.Sample.User.ProfileDataMapper"
+        "mapper": "Vlingo.Xoom.Http.Tests.Sample.User.ProfileDataMapper"
       }
     }
   }

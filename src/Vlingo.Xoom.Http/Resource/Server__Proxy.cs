@@ -16,16 +16,16 @@ namespace Vlingo.Xoom.Http.Resource
         private const string StartWithRepresentation1 = "StartWith(Vlingo.Xoom.Actors.Stage)";
 
         private const string StartWithRepresentation2 =
-            "StartWith(Vlingo.Xoom.Actors.Stage, Vlingo.Http.Resource.HttpProperties)";
+            "StartWith(Vlingo.Xoom.Actors.Stage, Vlingo.Xoom.Http.Resource.HttpProperties)";
 
         private const string StartWithRepresentation3 =
-            "StartWith(Vlingo.Xoom.Actors.Stage, Vlingo.Http.Resource.Resources, int, Vlingo.Http.Resource.Configuration.SizingConf, Vlingo.Http.Resource.Configuration.TimingConf)";
+            "StartWith(Vlingo.Xoom.Actors.Stage, Vlingo.Xoom.Http.Resource.Resources, int, Vlingo.Xoom.Http.Resource.Configuration.SizingConf, Vlingo.Xoom.Http.Resource.Configuration.TimingConf)";
 
         private const string StartWithRepresentation4 =
-            "StartWith(Vlingo.Xoom.Actors.Stage, Vlingo.Http.Resource.Resources, Vlingo.Http.Filters, int, Vlingo.Http.Resource.Configuration.SizingConf, Vlingo.Http.Resource.Configuration.TimingConf)";
+            "StartWith(Vlingo.Xoom.Actors.Stage, Vlingo.Xoom.Http.Resource.Resources, Vlingo.Xoom.Http.Filters, int, Vlingo.Xoom.Http.Resource.Configuration.SizingConf, Vlingo.Xoom.Http.Resource.Configuration.TimingConf)";
 
         private const string StartWithRepresentation5 =
-            "StartWith(Vlingo.Xoom.Actors.Stage, Vlingo.Http.Resource.Resources, Vlingo.Http.Filters, int, Vlingo.Http.Resource.Configuration.SizingConf, Vlingo.Http.Resource.Configuration.TimingConf, string, string)";
+            "StartWith(Vlingo.Xoom.Actors.Stage, Vlingo.Xoom.Http.Resource.Resources, Vlingo.Xoom.Http.Filters, int, Vlingo.Xoom.Http.Resource.Configuration.SizingConf, Vlingo.Xoom.Http.Resource.Configuration.TimingConf, string, string)";
 
         private const string ShutDownRepresentation6 = "ShutDown()";
         private const string StartUpRepresentation7 = "StartUp()";

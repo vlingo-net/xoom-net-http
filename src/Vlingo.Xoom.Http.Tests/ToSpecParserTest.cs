@@ -65,7 +65,7 @@ namespace Vlingo.Xoom.Http.Tests
         public void TestComplexQualifiedBodyParameterMapping()
         {
             new Action(0, "PATCH", "/airports/{airportId}/geocode",
-                "name(body:Vlingo.Http.Tests.ToSpecParserTest+Geocode geocode)", null);
+                "name(body:Vlingo.Xoom.Http.Tests.ToSpecParserTest+Geocode geocode)", null);
         }
 
         public class Geocode

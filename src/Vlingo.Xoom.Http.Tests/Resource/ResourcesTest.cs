@@ -27,7 +27,7 @@ namespace Vlingo.Xoom.Http.Tests.Resource
             Assert.NotNull(user);
             Assert.Equal("user", user.Name);
             Assert.NotNull(user.ResourceHandlerClass);
-            Assert.Equal("Vlingo.Http.Tests.Sample.User.UserResource", user.ResourceHandlerClass.FullName);
+            Assert.Equal("Vlingo.Xoom.Http.Tests.Sample.User.UserResource", user.ResourceHandlerClass.FullName);
             Assert.Equal(10, user.HandlerPoolSize);
     
             var countUserActions = 0;
@@ -50,7 +50,7 @@ namespace Vlingo.Xoom.Http.Tests.Resource
             Assert.NotNull(profile);
             Assert.Equal("profile", profile.Name);
             Assert.NotNull(profile.ResourceHandlerClass);
-            Assert.Equal("Vlingo.Http.Tests.Sample.User.ProfileResource", profile.ResourceHandlerClass.FullName);
+            Assert.Equal("Vlingo.Xoom.Http.Tests.Sample.User.ProfileResource", profile.ResourceHandlerClass.FullName);
             Assert.Equal(5, profile.HandlerPoolSize);
     
             var countProfileActions = 0;
@@ -77,7 +77,7 @@ namespace Vlingo.Xoom.Http.Tests.Resource
             Assert.NotNull(allStream);
             Assert.Equal("all", allStream.Name);
             Assert.NotNull(allStream.ResourceHandlerClass);
-            Assert.Equal("Vlingo.Http.Resource.Sse.SseStreamResource", allStream.ResourceHandlerClass.FullName);
+            Assert.Equal("Vlingo.Xoom.Http.Resource.Sse.SseStreamResource", allStream.ResourceHandlerClass.FullName);
             Assert.Equal(10, allStream.HandlerPoolSize);
     
             Assert.Equal(2, allStream.Actions.Count);
@@ -99,15 +99,15 @@ namespace Vlingo.Xoom.Http.Tests.Resource
             var resources =
                 Resources
                     .Are(ConfigurationResource.Defining("user", typeof(UserResource), 10,
-            Actions.CanBe("POST", "/users", "register(body:Vlingo.Http.Tests.Sample.User.UserData userData)")
-                .Also("PATCH", "/users/{userId}/contact", "changeContact(string userId, body:Vlingo.Http.Tests.Sample.User.ContactData contactData)")
-                .Also("PATCH", "/users/{userId}/name", "changeName(string userId, body:Vlingo.Http.Tests.Sample.User.NameData nameData)")
+            Actions.CanBe("POST", "/users", "register(body:Vlingo.Xoom.Http.Tests.Sample.User.UserData userData)")
+                .Also("PATCH", "/users/{userId}/contact", "changeContact(string userId, body:Vlingo.Xoom.Http.Tests.Sample.User.ContactData contactData)")
+                .Also("PATCH", "/users/{userId}/name", "changeName(string userId, body:Vlingo.Xoom.Http.Tests.Sample.User.NameData nameData)")
                 .Also("GET", "/users/{userId}", "queryUser(string userId)")
                 .Also("GET", "/users", "queryUsers()")
                 .ThatsAll(), ConsoleLogger.TestInstance()),
             ConfigurationResource.Defining("profile", typeof(ProfileResource), 5,
-            Actions.CanBe("PUT", "/users/{userId}/profile", "define(string userId, body:Vlingo.Http.Tests.Sample.User.ProfileData profileData)", "Vlingo.Http.Tests.Sample.User.ProfileDataMapper")
-                .Also("GET", "/users/{userId}/profile", "query(string userId)", "Vlingo.Http.Tests.Sample.User.ProfileDataMapper")
+            Actions.CanBe("PUT", "/users/{userId}/profile", "define(string userId, body:Vlingo.Xoom.Http.Tests.Sample.User.ProfileData profileData)", "Vlingo.Xoom.Http.Tests.Sample.User.ProfileDataMapper")
+                .Also("GET", "/users/{userId}/profile", "query(string userId)", "Vlingo.Xoom.Http.Tests.Sample.User.ProfileDataMapper")
                 .ThatsAll(), ConsoleLogger.TestInstance()));
 
             Assert.NotNull(resources.ResourceOf("user"));
@@ -117,12 +117,12 @@ namespace Vlingo.Xoom.Http.Tests.Resource
         [Fact]
         public void TestThatWrongIdSequenceBreaks()
         {
-            var actionPostUser = new Action(0, "POST", "/users", "register(body:Vlingo.Http.Tests.Sample.User.UserData userData)", null);
-            var actionPatchUserContact = new Action(3, "PATCH", "/users/{userId}/contact", "changeContact(string userId, body:Vlingo.Http.Tests.Sample.User.ContactData contactData)", null);
+            var actionPostUser = new Action(0, "POST", "/users", "register(body:Vlingo.Xoom.Http.Tests.Sample.User.UserData userData)", null);
+            var actionPatchUserContact = new Action(3, "PATCH", "/users/{userId}/contact", "changeContact(string userId, body:Vlingo.Xoom.Http.Tests.Sample.User.ContactData contactData)", null);
 
             var actions = new List<Action> {actionPostUser, actionPatchUserContact};
 
-            var resourceHandlerClass = ConfigurationResource.NewResourceHandlerTypeFor("Vlingo.Http.Tests.Sample.User.UserResource");
+            var resourceHandlerClass = ConfigurationResource.NewResourceHandlerTypeFor("Vlingo.Xoom.Http.Tests.Sample.User.UserResource");
     
             Assert.Throws<ArgumentException>(() => ConfigurationResource.NewResourceFor("user", resourceHandlerClass, 5, actions, ConsoleLogger.TestInstance()));
         }
@@ -130,12 +130,12 @@ namespace Vlingo.Xoom.Http.Tests.Resource
         [Fact]
         public void TestThatWrongIdOrderBreaks()
         {
-            var actionPostUser = new Action(3, "POST", "/users", "register(body:Vlingo.Http.Tests.Sample.User.UserData userData)", null);
-            var actionPatchUserContact = new Action(1, "PATCH", "/users/{userId}/contact", "changeContact(string userId, body:Vlingo.Http.Tests.Sample.User.ContactData contactData)", null);
+            var actionPostUser = new Action(3, "POST", "/users", "register(body:Vlingo.Xoom.Http.Tests.Sample.User.UserData userData)", null);
+            var actionPatchUserContact = new Action(1, "PATCH", "/users/{userId}/contact", "changeContact(string userId, body:Vlingo.Xoom.Http.Tests.Sample.User.ContactData contactData)", null);
 
             var actions = new List<Action> {actionPostUser, actionPatchUserContact};
 
-            var resourceHandlerClass = ConfigurationResource.NewResourceHandlerTypeFor("Vlingo.Http.Tests.Sample.User.UserResource");
+            var resourceHandlerClass = ConfigurationResource.NewResourceHandlerTypeFor("Vlingo.Xoom.Http.Tests.Sample.User.UserResource");
     
             Assert.Throws<ArgumentException>(() => ConfigurationResource.NewResourceFor("user", resourceHandlerClass, 5, actions, ConsoleLogger.TestInstance()));
         }

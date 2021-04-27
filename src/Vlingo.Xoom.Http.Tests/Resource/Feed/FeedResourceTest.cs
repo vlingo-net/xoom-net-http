@@ -72,7 +72,7 @@ namespace Vlingo.Xoom.Http.Tests.Resource.Feed
             properties.Add("server.request.missing.content.timeout", "100");
 
             properties.Add("feed.resource.name.events", FeedURI);
-            properties.Add("feed.resource.events.producer.class", "Vlingo.Http.Tests.Resource.Feed.EventsFeedProducerActor");
+            properties.Add("feed.resource.events.producer.class", "Vlingo.Xoom.Http.Tests.Resource.Feed.EventsFeedProducerActor");
             properties.Add("feed.resource.events.elements", "5");
             properties.Add("feed.resource.events.pool", "10");
             

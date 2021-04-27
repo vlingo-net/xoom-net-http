@@ -12,7 +12,7 @@ namespace Vlingo.Xoom.Http.Resource.Sse
 {
     public class SseFeed__Proxy : ISseFeed
     {
-        private const string ToRepresentation = "To(ICollection<Vlingo.Http.Resource.SSE.SseSubscriber>)";
+        private const string ToRepresentation = "To(ICollection<Vlingo.Xoom.Http.Resource.SSE.SseSubscriber>)";
 
         private readonly Actor _actor;
         private readonly IMailbox _mailbox;

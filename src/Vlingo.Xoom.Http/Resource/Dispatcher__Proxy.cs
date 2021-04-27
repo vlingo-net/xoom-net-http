@@ -13,7 +13,7 @@ namespace Vlingo.Xoom.Http.Resource
     public class Dispatcher__Proxy : IDispatcher
     {
         private const string RepresentationConclude0 = "Conclude()";
-        private const string DispatchForRepresentation1 = "DispatchFor(Vlingo.Http.Context)";
+        private const string DispatchForRepresentation1 = "DispatchFor(Vlingo.Xoom.Http.Context)";
         private const string StopRepresentation2 = "Stop()";
 
         private readonly Actor _actor;

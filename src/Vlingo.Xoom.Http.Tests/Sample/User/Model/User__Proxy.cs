@@ -13,8 +13,8 @@ namespace Vlingo.Xoom.Http.Tests.Sample.User.Model
 {
     public class User__Proxy : IUser
     {
-        private const string WithContactRepresentation1 = "WithContact(Vlingo.Http.Tests.Sample.User.Model.Contact)";
-        private const string WithNameRepresentation2 = "WithName(Vlingo.Http.Tests.Sample.User.Model.Name)";
+        private const string WithContactRepresentation1 = "WithContact(Vlingo.Xoom.Http.Tests.Sample.User.Model.Contact)";
+        private const string WithNameRepresentation2 = "WithName(Vlingo.Xoom.Http.Tests.Sample.User.Model.Name)";
 
         private readonly Actor _actor;
         private readonly IMailbox _mailbox;
