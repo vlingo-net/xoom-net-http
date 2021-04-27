@@ -1,8 +1,8 @@
-# vlingo-http
+# xoom-net-http
 
-[![Build status](https://ci.appveyor.com/api/projects/status/1c2u6kbrpbvfjxgf/branch/master?svg=true)](https://ci.appveyor.com/project/VlingoNetOwner/vlingo-net-http/branch/master)
-![Build master](https://github.com/vlingo-net/vlingo-net-http/workflows/.NET/badge.svg)
-[![NuGet](https://img.shields.io/nuget/v/Vlingo.Http.svg)](https://www.nuget.org/packages/Vlingo.Http)
+[![Build status](https://ci.appveyor.com/api/projects/status/1c2u6kbrpbvfjxgf/branch/master?svg=true)](https://ci.appveyor.com/project/VlingoNetOwner/xoom-net-http/branch/master)
+![Build master](https://github.com/vlingo-net/xoom-net-http/workflows/.NET/badge.svg)
+[![NuGet](https://img.shields.io/nuget/v/Vlingo.Xoom.Http.svg)](https://www.nuget.org/packages/Vlingo.Xoom.Http)
 [![Gitter](https://badges.gitter.im/vlingo-platform-net/community.svg)](https://gitter.im/vlingo-platform-net/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
 ### Usage
@@ -15,18 +15,18 @@ Reactive, scalable, and resilient HTTP servers and RESTful services running on v
   * Requests that require message body content are auto-mapped to simple Java objects.
 
 2. To run the Server:
-  * [Use Server#StartWith() to start the Server actor](https://github.com/vlingo/vlingo-net-http/blob/master/src/Vlingo.Http/Resource/Server.cs)
+  * [Use Server#StartWith() to start the Server actor](https://github.com/vlingo/xoom-net-http/blob/master/src/Vlingo.Xoom.Http/Resource/Server.cs)
   * The light-weight Server is meant to be run inside vlingo/cluster nodes the require RESTful HTTP support.
   
 3. See the following for usage examples:
-  * [vlingo/http properties file](https://github.com/vlingo/vlingo-net-http/blob/master/src/Vlingo.Http.Tests/Resources/vlingo-http.properties)
+  * [vlingo/http properties file](https://github.com/vlingo/xoom-net-http/blob/master/src/Vlingo.Xoom.Http.Tests/Resources/vlingo-http.properties)
   * [The user resource sample](#) (Sample link to be provided)
   * [The user profile resource sample](#) (Sample link to be provided)
 
 
 License (See LICENSE file for full license)
 -------------------------------------------
-Copyright © 2012-2019 VLINGO LABS. All rights reserved.
+Copyright © 2012-2021 VLINGO LABS. All rights reserved.
 
 This Source Code Form is subject to the terms of the
 Mozilla Public License, v. 2.0. If a copy of the MPL
