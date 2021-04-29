@@ -28,16 +28,12 @@ namespace Vlingo.Xoom.Http.Media
         }
 
         public ContentMediaType(string mimeType, string mimeSubType)
-            : base(mimeType, mimeSubType)
-        {
+            : base(mimeType, mimeSubType) =>
             Validate();
-        }
 
         public ContentMediaType(string mimeType, string mimeSubType, IDictionary<string, string> parameters)
-            : base(mimeType, mimeSubType, parameters)
-        {
+            : base(mimeType, mimeSubType, parameters) =>
             Validate();
-        }
 
         private void Validate()
         {
@@ -62,6 +58,9 @@ namespace Vlingo.Xoom.Http.Media
 
         public static ContentMediaType Xml
              => new ContentMediaType(MimeTypes.Application.ToString().ToLower(), "xml");
+
+        public static  ContentMediaType PlainText =>
+            new ContentMediaType(MimeTypes.Text.ToString(), "plain");
 
         public static ContentMediaType ParseFromDescriptor(string contentMediaTypeDescriptor)
             => MediaTypeParser.ParseFrom(
