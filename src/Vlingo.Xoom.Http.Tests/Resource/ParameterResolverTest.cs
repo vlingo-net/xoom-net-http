@@ -30,6 +30,28 @@ namespace Vlingo.Xoom.Http.Tests.Resource
             Assert.Equal("my-post", result);
             Assert.Equal(ParameterResolver.Type.Path, resolver.Type);
         }
+        
+        [Fact]
+        public void BodyContentRequest()
+        {
+            var content = new byte[] {0xD, 0xE, 0xA, 0xD, 0xB, 0xE, 0xE, 0xF};
+            var binaryMediaTypeDescriptor = "application/octet-stream";
+            var binaryMediaType = ContentMediaType.ParseFromDescriptor(binaryMediaTypeDescriptor);
+            var binaryRequest = Request.Has(Method.Post)
+                .And(Version.Http1_1)
+                .And("/user/my-post".ToMatchableUri())
+                .And(RequestHeader.FromString("Host:www.vlingo.io"))
+                .And(RequestHeader.WithContentType(binaryMediaTypeDescriptor))
+                .And(Http.Body.From(content, Http.Body.Encoding.None));
+
+            var resolver = ParameterResolver.Body<PostRequestBody>();
+
+            var result = resolver.Apply(binaryRequest, _mappedParameters);
+            var expected = new PostRequestBody(Http.Body.From(content, Http.Body.Encoding.None), binaryMediaType);
+
+            Assert.Equal(expected, result);
+            Assert.Equal(ParameterResolver.Type.Body, resolver.Type);
+        }
 
         [Fact]
         public void Body()
@@ -83,7 +105,6 @@ namespace Vlingo.Xoom.Http.Tests.Resource
         }
 
         [Fact]
-
         public void QueryWithType()
         {
             var resolver = ParameterResolver.Query<int>("page");
@@ -95,10 +116,9 @@ namespace Vlingo.Xoom.Http.Tests.Resource
         }
 
         [Fact]
-
         public void QueryShouldReturnDefaultWhenItIsNotPresent()
         {
-            var resolver = ParameterResolver.Query<int>("pageSize", 50);
+            var resolver = ParameterResolver.Query("pageSize", 50);
 
             var result = resolver.Apply(_request, _mappedParameters);
 

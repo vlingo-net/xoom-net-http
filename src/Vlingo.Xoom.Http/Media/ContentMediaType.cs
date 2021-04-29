@@ -61,6 +61,16 @@ namespace Vlingo.Xoom.Http.Media
 
         public static  ContentMediaType PlainText =>
             new ContentMediaType(MimeTypes.Text.ToString(), "plain");
+        
+        public static ContentMediaType BinaryContent =>
+            new ContentMediaType(MimeTypes.Application.ToString(), "octet-stream");
+
+        public static ContentMediaType CompressedZipContent() => 
+            new ContentMediaType(MimeTypes.Application.ToString(), "gzip");
+
+        public static ContentMediaType CompressedTarContent =>
+            new ContentMediaType(MimeTypes.Application.ToString(), "octet-stream");
+
 
         public static ContentMediaType ParseFromDescriptor(string contentMediaTypeDescriptor)
             => MediaTypeParser.ParseFrom(

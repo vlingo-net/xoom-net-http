@@ -23,8 +23,7 @@ namespace Vlingo.Xoom.Http.Resource
         public Type ParamClass { get; }
         private readonly Func<Request, Action.MappedParameters, T> _resolver;
 
-        private ParameterResolver(ParameterResolver.Type type,
-            Func<Request, Action.MappedParameters, T> resolver)
+        private ParameterResolver(ParameterResolver.Type type, Func<Request, Action.MappedParameters, T> resolver)
         {
             Type = type;
             ParamClass = typeof(T);
@@ -37,8 +36,7 @@ namespace Vlingo.Xoom.Http.Resource
         public T Apply(Request? request, Action.MappedParameters mappedParameters)
             => _resolver.Invoke(request!, mappedParameters);
 
-        internal static ParameterResolver<T> Create(ParameterResolver.Type type,
-            Func<Request, Action.MappedParameters, T> resolver)
+        internal static ParameterResolver<T> Create(ParameterResolver.Type type, Func<Request, Action.MappedParameters, T> resolver)
             => new ParameterResolver<T>(type, resolver);
     }
 
@@ -68,14 +66,26 @@ namespace Vlingo.Xoom.Http.Resource
                 (request, mappedParameters) => (T)mapper.From(request?.Body?.ToString(), typeof(T))!);
 
         public static ParameterResolver<T> Body<T>(MediaTypeMapper mediaTypeMapper)
-            => ParameterResolver<T>.Create(
-                Type.Body,
-                (request, mappedParameters) =>
+        {
+            return typeof(T).IsAssignableFrom(typeof(PostRequestBody)) ? 
+                (ParameterResolver<T>)(object) ParameterResolver<PostRequestBody>.Create(Type.Body, (request, mappedParameters) =>
                 {
-                    var assumedBodyContentType = ContentMediaType.Json.ToString();
-                    var bodyMediaType = request.HeaderValueOr(RequestHeader.ContentType, assumedBodyContentType);
+                    // This is a fall-back when content-type not provided for backwards compat for curl/cmd line users
+                    var bodyMediaType = BodyMediaTypeOrFallback(request);
+                    return new PostRequestBody(request.Body!, ContentMediaType.ParseFromDescriptor(bodyMediaType));
+                }) :
+            ParameterResolver<T>.Create(Type.Body, (request, mappedParameters) =>
+                {
+                    var bodyMediaType = BodyMediaTypeOrFallback(request);
                     return mediaTypeMapper.From<T>(request.Body?.ToString(), ContentMediaType.ParseFromDescriptor(bodyMediaType));
                 });
+        }
+        
+        private static string BodyMediaTypeOrFallback(Request request)
+        {
+            var assumedBodyContentType = ContentMediaType.Json.ToString();
+            return request.HeaderValueOr(RequestHeader.ContentType, assumedBodyContentType);
+        }
 
         public static ParameterResolver<Header> Header(string headerName)
             => ParameterResolver<Header>.Create(

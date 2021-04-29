@@ -16,10 +16,8 @@ namespace Vlingo.Xoom.Http.Resource
     {
         private readonly IDictionary<ContentMediaType, IMapper> _mappersByContentType;
 
-        public MediaTypeMapper(IDictionary<ContentMediaType, IMapper> mappersByContentType)
-        {
+        public MediaTypeMapper(IDictionary<ContentMediaType, IMapper> mappersByContentType) => 
             _mappersByContentType = mappersByContentType;
-        }
 
         public T From<T>(string? data, ContentMediaType contentMediaType)
         {
@@ -45,12 +43,9 @@ namespace Vlingo.Xoom.Http.Resource
 
         public class Builder
         {
-            private IDictionary<ContentMediaType, IMapper> _mappersByContentType;
+            private readonly IDictionary<ContentMediaType, IMapper> _mappersByContentType;
 
-            public Builder()
-            {
-                _mappersByContentType = new Dictionary<ContentMediaType, IMapper>();
-            }
+            public Builder() => _mappersByContentType = new Dictionary<ContentMediaType, IMapper>();
 
             public Builder AddMapperFor(ContentMediaType contentMediaType, IMapper mapper)
             {
