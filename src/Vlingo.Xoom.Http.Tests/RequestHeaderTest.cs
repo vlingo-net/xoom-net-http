@@ -72,5 +72,32 @@ namespace Vlingo.Xoom.Http.Tests
             Assert.Equal(RequestHeader.AcceptDatetime, header.Name);
             Assert.Equal("Thu, 31 May 2007 20:35:00 GMT", header.Value);
         }
+        
+        [Fact]
+        public void TestContentEncodingHeaderFromString()
+        {
+            var header = RequestHeader.FromString("Content-Encoding: deflate, gzip");
+
+            Assert.Equal(RequestHeader.ContentEncoding, header.Name);
+            Assert.Equal("deflate, gzip", header.Value);
+        }
+
+        [Fact]
+        public void TestContentEncodingJoinsMethods()
+        {
+            var header = RequestHeader.WithContentEncoding("foo", "bar");
+
+            Assert.Equal(RequestHeader.ContentEncoding, header.Name);
+            Assert.Equal("foo,bar", header.Value);
+        }
+
+        [Fact]
+        public void TestContentEncodingEmpty()
+        {
+            var header = RequestHeader.WithContentEncoding();
+
+            Assert.Equal(RequestHeader.ContentEncoding, header.Name);
+            Assert.Equal("", header.Value);
+        }
     }
 }
