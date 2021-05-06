@@ -42,12 +42,13 @@ namespace Vlingo.Xoom.Http.Tests.Resource
                 .And("/user/my-post".ToMatchableUri())
                 .And(RequestHeader.FromString("Host:www.vlingo.io"))
                 .And(RequestHeader.WithContentType(binaryMediaTypeDescriptor))
+                .And(RequestHeader.WithContentEncoding(ContentEncodingMethod.Gzip.ToString()))
                 .And(Http.Body.From(content, Http.Body.Encoding.None));
 
-            var resolver = ParameterResolver.Body<PostRequestBody>();
+            var resolver = ParameterResolver.Body<RequestData>();
 
             var result = resolver.Apply(binaryRequest, _mappedParameters);
-            var expected = new PostRequestBody(Http.Body.From(content, Http.Body.Encoding.None), binaryMediaType);
+            var expected = new RequestData(Http.Body.From(content, Http.Body.Encoding.None), binaryMediaType, new ContentEncoding(ContentEncodingMethod.Gzip));
 
             Assert.Equal(expected, result);
             Assert.Equal(ParameterResolver.Type.Body, resolver.Type);
