@@ -50,7 +50,9 @@ namespace Vlingo.Xoom.Http.Tests.Resource
             var result = resolver.Apply(binaryRequest, _mappedParameters);
             var expected = new RequestData(Http.Body.From(content, Http.Body.Encoding.None), binaryMediaType, new ContentEncoding(ContentEncodingMethod.Gzip));
 
-            Assert.Equal(expected, result);
+            Assert.Equal(expected.ContentEncoding, result.ContentEncoding);
+            Assert.Equal(expected.MediaType, result.MediaType);
+            Assert.Equal(expected.Body.BinaryContent, result.Body.BinaryContent);
             Assert.Equal(ParameterResolver.Type.Body, resolver.Type);
         }
         
