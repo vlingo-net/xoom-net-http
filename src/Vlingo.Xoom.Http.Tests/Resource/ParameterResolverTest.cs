@@ -53,6 +53,33 @@ namespace Vlingo.Xoom.Http.Tests.Resource
             Assert.Equal(expected, result);
             Assert.Equal(ParameterResolver.Type.Body, resolver.Type);
         }
+        
+        [Fact]
+        public void BodyContentMultipart()
+        {
+            var content = new byte[]{0xD, 0xE, 0xA, 0xD, 0xB, 0xE, 0xE, 0xF};
+            var binaryMediaTypeDescriptor = "application/octet-stream";
+
+            var binaryMediaType = ContentMediaType.ParseFromDescriptor(binaryMediaTypeDescriptor);
+            var binaryRequest = Request.Has(Method.Post)
+                .And(Version.Http1_1)
+                .And("/user/my-post".ToMatchableUri())
+                .And(RequestHeader.FromString("Host:www.vlingo.io"))
+                .And(RequestHeader.WithContentType(binaryMediaTypeDescriptor))
+                .And(RequestHeader.WithContentEncoding(ContentEncodingMethod.Gzip.ToString()))
+                .And(Http.Body.From(content, Http.Body.Encoding.None));
+
+            var resolver = ParameterResolver.Body<RequestData>();
+
+            var result = resolver.Apply(binaryRequest, _mappedParameters);
+            var expected = new RequestData(
+                Http.Body.From(content, Http.Body.Encoding.None),
+                binaryMediaType,
+                new ContentEncoding(ContentEncodingMethod.Gzip));
+
+            Assert.Equal(expected, result);
+            Assert.Equal(ParameterResolver.Type.Body, resolver.Type);
+        }
 
         [Fact]
         public void Body()
