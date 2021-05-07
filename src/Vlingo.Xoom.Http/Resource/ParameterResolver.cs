@@ -67,12 +67,14 @@ namespace Vlingo.Xoom.Http.Resource
 
         public static ParameterResolver<T> Body<T>(MediaTypeMapper mediaTypeMapper)
         {
-            return typeof(T).IsAssignableFrom(typeof(PostRequestBody)) ? 
-                (ParameterResolver<T>)(object) ParameterResolver<PostRequestBody>.Create(Type.Body, (request, mappedParameters) =>
+            return typeof(T).IsAssignableFrom(typeof(RequestData)) ? 
+                (ParameterResolver<T>)(object) ParameterResolver<RequestData>.Create(Type.Body, (request, mappedParameters) =>
                 {
                     // This is a fall-back when content-type not provided for backwards compat for curl/cmd line users
                     var bodyMediaType = BodyMediaTypeOrFallback(request);
-                    return new PostRequestBody(request.Body!, ContentMediaType.ParseFromDescriptor(bodyMediaType));
+                    var contentEncodingHeader = request.Headers.HeaderOfOrDefault(ResponseHeader.ContentEncoding, RequestHeader.WithContentEncoding());
+                    var contentEncoding = ContentEncoding.ParseFromHeader(contentEncodingHeader?.Value);
+                    return new RequestData(request.Body!, ContentMediaType.ParseFromDescriptor(bodyMediaType), contentEncoding);
                 }) :
             ParameterResolver<T>.Create(Type.Body, (request, mappedParameters) =>
                 {

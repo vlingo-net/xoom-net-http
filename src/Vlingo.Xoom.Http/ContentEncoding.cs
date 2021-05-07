@@ -21,15 +21,20 @@ namespace Vlingo.Xoom.Http
 
         public ContentEncoding() => EncodingMethods = new ContentEncodingMethod[0];
 
-        public static ContentEncoding ParseFromHeader(string headerValue)
+        public static ContentEncoding ParseFromHeader(string? headerValue)
         {
-            var methods = headerValue.Split(',');
-            var parsedMethods = methods.Select(ContentEncodingMethodHelper.Parse)
-                .Where(o => o.IsPresent)
-                .Select(o => o.Get())
-                .ToArray();
+            if (!string.IsNullOrEmpty(headerValue))
+            {
+                var methods = headerValue?.Split(',');
+                var parsedMethods = methods?.Select(ContentEncodingMethodHelper.Parse)
+                    .Where(o => o.IsPresent)
+                    .Select(o => o.Get())
+                    .ToArray();
 
-            return new ContentEncoding(parsedMethods);
+                if (parsedMethods != null) return new ContentEncoding(parsedMethods);
+            }
+
+            return new ContentEncoding();
         }
         
         public static ContentEncoding None() => new ContentEncoding();

@@ -22,7 +22,7 @@ namespace Vlingo.Xoom.Http
     {
         public static Optional<ContentEncodingMethod> Parse(string value)
         {
-            if (Enum.TryParse(value, out ContentEncodingMethod parsed))
+            if (Enum.TryParse(value.ToLower().Trim() == "br" ? "brotli" : value.Trim(), true, out ContentEncodingMethod parsed))
             {
                 return Optional.Of(parsed);
             }

@@ -25,6 +25,7 @@ namespace Vlingo.Xoom.Http
         public const string Connection = "Connection";
         public const string Cookie = "Cookie";
         public const string ContentLength = "Content-Length";
+        public const string ContentEncoding = "Content-Encoding";
         public const string ContentMD5 = "Content-MD5";
         public const string ContentType = "Content-Type";
         public const string Date = "Date";
@@ -93,6 +94,11 @@ namespace Vlingo.Xoom.Http
         public static RequestHeader WithContentType(string type) => new RequestHeader(ContentType, type);
 
         public static RequestHeader WithCorrelationId(string correlationId) => new RequestHeader(XCorrelationID, correlationId);
+
+        public static RequestHeader WithContentEncoding(params string[] encodingMethods) =>
+            encodingMethods.Length > 0 ?
+                new RequestHeader(ContentEncoding, string.Join(",", encodingMethods)) :
+                new RequestHeader(ContentEncoding, "");
 
         public static RequestHeader WithHost(string host) => new RequestHeader(Host, host);
         
