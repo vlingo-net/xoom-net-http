@@ -11,15 +11,15 @@ namespace Vlingo.Xoom.Http
 {
     public class RequestData
     {
-        private readonly Body _body;
-        private readonly ContentMediaType _mediaType;
-        private readonly ContentEncoding _contentEncoding;
+        public Body Body { get; }
+        public ContentMediaType MediaType { get; }
+        public ContentEncoding ContentEncoding { get; }
 
         public RequestData(Body body, ContentMediaType mediaType, ContentEncoding contentEncoding)
         {
-            _body = body;
-            _mediaType = mediaType;
-            _contentEncoding = contentEncoding;
+            Body = body;
+            MediaType = mediaType;
+            ContentEncoding = contentEncoding;
         }
 
         public override bool Equals(object? obj)
@@ -35,12 +35,12 @@ namespace Vlingo.Xoom.Http
             }
 
             var that = (RequestData) obj;
-            return _body.Equals(that._body) && _mediaType.Equals(that._mediaType);
+            return Body.Equals(that.Body) && MediaType.Equals(that.MediaType);
         }
 
         protected bool Equals(RequestData other) => 
-            Equals(_body, other._body) && Equals(_mediaType, other._mediaType);
+            Equals(Body, other.Body) && Equals(MediaType, other.MediaType);
 
-        public override int GetHashCode() => 31 * _body.GetHashCode() + _mediaType.GetHashCode();
+        public override int GetHashCode() => 31 * Body.GetHashCode() + MediaType.GetHashCode();
     }
 }

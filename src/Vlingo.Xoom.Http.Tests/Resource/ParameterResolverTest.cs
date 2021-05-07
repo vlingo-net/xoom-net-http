@@ -55,10 +55,15 @@ namespace Vlingo.Xoom.Http.Tests.Resource
         }
         
         [Fact]
-        public void BodyContentMultipart()
+        public void BodyContentFormData()
         {
-            var content = new byte[]{0xD, 0xE, 0xA, 0xD, 0xB, 0xE, 0xE, 0xF};
-            var binaryMediaTypeDescriptor = "application/octet-stream";
+            var content = "--boundary\n" +
+                          "Content-Disposition: form-data; name=\"field1\"\n\n" +
+                          "value1\n" + "--boundary\n" +
+                          "Content-Disposition: form-data; name=\"field2\"; filename=\"example.txt\"\n\n" +
+                          "value2\n" + "--boundary--";
+            
+            var binaryMediaTypeDescriptor = "multipart/form-data;boundary=\"boundary\"";
 
             var binaryMediaType = ContentMediaType.ParseFromDescriptor(binaryMediaTypeDescriptor);
             var binaryRequest = Request.Has(Method.Post)
@@ -66,18 +71,19 @@ namespace Vlingo.Xoom.Http.Tests.Resource
                 .And("/user/my-post".ToMatchableUri())
                 .And(RequestHeader.FromString("Host:www.vlingo.io"))
                 .And(RequestHeader.WithContentType(binaryMediaTypeDescriptor))
-                .And(RequestHeader.WithContentEncoding(ContentEncodingMethod.Gzip.ToString()))
-                .And(Http.Body.From(content, Http.Body.Encoding.None));
+                .And(Http.Body.From(content));
 
             var resolver = ParameterResolver.Body<RequestData>();
 
             var result = resolver.Apply(binaryRequest, _mappedParameters);
             var expected = new RequestData(
-                Http.Body.From(content, Http.Body.Encoding.None),
-                binaryMediaType,
-                new ContentEncoding(ContentEncodingMethod.Gzip));
+                Http.Body.From(content),
+                ContentMediaType.ParseFromDescriptor(binaryMediaTypeDescriptor),
+                ContentEncoding.None());
 
-            Assert.Equal(expected, result);
+            Assert.Equal(expected.MediaType, result.MediaType);
+            Assert.Equal(expected.ContentEncoding, result.ContentEncoding);
+            Assert.Equal(expected.Body.Content, result.Body.Content);
             Assert.Equal(ParameterResolver.Type.Body, resolver.Type);
         }
 

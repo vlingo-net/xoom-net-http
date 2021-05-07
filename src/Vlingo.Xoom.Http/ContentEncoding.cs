@@ -5,6 +5,7 @@
 // was not distributed with this file, You can obtain
 // one at https://mozilla.org/MPL/2.0/.
 
+using System.Collections;
 using System.Linq;
 
 namespace Vlingo.Xoom.Http
@@ -38,5 +39,25 @@ namespace Vlingo.Xoom.Http
         }
         
         public static ContentEncoding None() => new ContentEncoding();
+
+        public override bool Equals(object? obj)
+        {
+            if (this == obj)
+            {
+                return true;
+            }
+            
+            if (obj == null || GetType() != obj.GetType())
+            {
+                return false;
+            }
+            
+            var that = (ContentEncoding) obj;
+            return ((IStructuralEquatable)EncodingMethods).Equals(that.EncodingMethods, StructuralComparisons.StructuralEqualityComparer);
+        }
+
+        protected bool Equals(ContentEncoding other) => ((IStructuralEquatable)EncodingMethods).Equals(other.EncodingMethods, StructuralComparisons.StructuralEqualityComparer);
+
+        public override int GetHashCode() => EncodingMethods.GetHashCode();
     }
 }
