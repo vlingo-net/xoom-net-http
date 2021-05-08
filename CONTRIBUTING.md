@@ -1,10 +1,10 @@
-## How to contribute to the vlingo/common
+## How to contribute to the xoom-net-http
 
 #### **Did you find a bug?**
 
-* Make sure the bug was not already reported here: [Issues](https://github.com/vlingo-net/vlingo-net-http/issues).
+* Make sure the bug was not already reported here: [Issues](https://github.com/vlingo-net/xoom-net-http/issues).
 
-* If nonexisting, open a new issue for the problem: [Open New Issue](https://github.com/vlingo-net/vlingo-net-http/issues/new). Always provide a **title and clear description**, as much relevant information as possible, and a **code sample** or an **executable test case** demonstrating the expected behavior that is not occurring.
+* If nonexisting, open a new issue for the problem: [Open New Issue](https://github.com/vlingo-net/xoom-net-http/issues/new). Always provide a **title and clear description**, as much relevant information as possible, and a **code sample** or an **executable test case** demonstrating the expected behavior that is not occurring.
 
 #### **Patches and bug fixes**
 
