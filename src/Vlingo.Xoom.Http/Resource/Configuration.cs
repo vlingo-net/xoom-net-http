@@ -14,6 +14,7 @@ namespace Vlingo.Xoom.Http.Resource
         public int Port { get; private set; }
         public SizingConf Sizing { get; private set; }
         public TimingConf Timing { get; private set; }
+        public Filters Filters { get; private set; }
 
         public static Configuration Define()
         {
@@ -44,6 +45,12 @@ namespace Vlingo.Xoom.Http.Resource
             Timing = timing;
             return this;
         }
+        
+        public Configuration With(Filters filters)
+        {
+            Filters = filters;
+            return this;
+        }
 
         private Configuration()
         {
@@ -66,6 +73,7 @@ namespace Vlingo.Xoom.Http.Resource
 
             Sizing = new SizingConf(processorPoolSize, dispatcherPoolSize, maxBufferPoolSize, maxMessageSize);
             Timing = new TimingConf(probeInterval, probeTimeout, requestMissingContentTimeout);
+            Filters = Filters.None();
         }
 
         public class SizingConf
