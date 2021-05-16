@@ -57,10 +57,10 @@ namespace Vlingo.Xoom.Http.Resource
             Port = 8080;
             Sizing = SizingConf.DefineConf();
             Timing = new TimingConf(4, 2, 100);
+            Filters = Filters.None();
         }
 
-        private Configuration(HttpProperties properties)
-            : this()
+        private Configuration(HttpProperties properties) : this()
         {
             Port = int.Parse(properties.GetProperty("server.http.port", Port.ToString())!);
             var processorPoolSize = int.Parse(properties.GetProperty("server.processor.pool.size", Sizing.ProcessorPoolSize.ToString())!);

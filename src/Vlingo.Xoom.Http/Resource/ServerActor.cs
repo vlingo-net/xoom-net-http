@@ -346,7 +346,7 @@ namespace Vlingo.Xoom.Http.Resource
                     var remoteAddress = requestResponseContext.RemoteAddress();
                     if (!string.IsNullOrEmpty(remoteAddress))
                     {
-                        request.Headers.Add(RequestHeader.Of(RequestHeader.XForwardedFor, remoteAddress));
+                        request.Headers.Add(RequestHeader.Of(RequestHeader.XForwardedFor, remoteAddress!));
                     }
                     else
                     {
