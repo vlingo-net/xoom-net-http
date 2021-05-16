@@ -13,7 +13,7 @@ namespace Vlingo.Xoom.Http.Tests.Resource
 {
     public class ConfigurationTest
     {
-        private readonly Request _request = Request.From(Method.Get, new Uri("/"), Version.Http1_1, Headers.Empty<RequestHeader>(), Body.Empty);
+        private readonly Request _request = Request.From(Method.Get, "/".ToMatchableUri(), Version.Http1_1, Headers.Empty<RequestHeader>(), Body.Empty);
         private readonly Response _response = Response.Of(ResponseStatus.Ok, Body.Empty);
         private readonly RequestFilter _dummyFilter = new DummyRequestFilter();
             
