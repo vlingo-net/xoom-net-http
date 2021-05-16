@@ -87,6 +87,7 @@ namespace Vlingo.Xoom.Http.Resource
             string? contentType = null;
             if (contentStream == null || path.Equals(_rootPath))
             {
+                Logger?.Warn($"Loading index because failed path '{path}' and root path '{_rootPath}'");
                 path = EmbeddedResourceLoader.CleanPath(_indexPagePath);
                 contentStream = EmbeddedResourceLoader.LoadFromPath(path).GetManifestResourceStream(path);
                 contentType = "text/html";
