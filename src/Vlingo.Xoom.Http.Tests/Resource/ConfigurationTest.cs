@@ -78,6 +78,6 @@ namespace Vlingo.Xoom.Http.Tests.Resource
         }
 
         public override (Request, bool) Filter(Request request) => 
-            (Request.From(Method.Post, new Uri("/"), Version.Http1_1, Headers.Empty<RequestHeader>(), Body.Empty), false);
+            (Request.From(Method.Post, "/".ToMatchableUri(), Version.Http1_1, Headers.Empty<RequestHeader>(), Body.Empty), false);
     }
 }
