@@ -305,6 +305,7 @@ namespace Vlingo.Xoom.Http.Resource
                     while (parser.HasFullRequest())
                     {
                         var unfilteredRequest = parser.FullRequest();
+                        unfilteredRequest = EnrichRequest(requestResponseContext, unfilteredRequest);
                         DetermineKeepAlive(requestResponseContext, unfilteredRequest);
                         var request = _serverActor._filters.Process(unfilteredRequest);
                         var completes = new ResponseCompletes(_serverActor, requestResponseContext, request.Headers.HeaderOf(RequestHeader.XCorrelationID));
@@ -336,6 +337,28 @@ namespace Vlingo.Xoom.Http.Resource
                 {
                     buffer.Release();
                 }
+            }
+
+            private Request EnrichRequest(RequestResponseContext requestResponseContext, Request request)
+            {
+                try
+                {
+                    var remoteAddress = requestResponseContext.RemoteAddress();
+                    if (!string.IsNullOrEmpty(remoteAddress))
+                    {
+                        request.Headers.Add(RequestHeader.Of(RequestHeader.XForwardedFor, remoteAddress));
+                    }
+                    else
+                    {
+                        _serverActor.Logger.Error("Unable to enrich request headers");
+                    }
+                }
+                catch (Exception exception)
+                {
+                    _serverActor.Logger.Error("Unable to enrich request headers", exception);
+                }
+                
+                return request;
             }
             
             private bool DetermineKeepAlive(RequestResponseContext requestResponseContext, Request unfilteredRequest)
