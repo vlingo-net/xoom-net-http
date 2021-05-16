@@ -81,7 +81,7 @@ namespace Vlingo.Xoom.Http.Resource
 
         private ICompletes<Response> Serve(params string[] pathSegments)
         {
-            var path = EmbeddedResourceLoader.CleanPath(string.Join(_rootPath, string.Join("/", pathSegments)));
+            var path = EmbeddedResourceLoader.CleanPath(string.Join("/", _rootPath, pathSegments));
             var assembly = EmbeddedResourceLoader.LoadFromPath(path);
             var contentStream = assembly.GetManifestResourceStream(path);
             string? contentType = null;
