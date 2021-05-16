@@ -37,7 +37,7 @@ namespace Vlingo.Xoom.Http.Resource
             Resolver = resolver;
         }
 
-        public RequestHandler1<T>? Handle(Handler1 handler)
+        public RequestHandler1<T> Handle(Handler1 handler)
         {
             _executor = (request, param1, mediaTypeMapper1, errorHandler1, logger1)
                 => RequestExecutor.ExecuteRequest(() => handler.Invoke(param1), errorHandler1, logger1);

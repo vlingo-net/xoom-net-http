@@ -53,16 +53,15 @@ namespace Vlingo.Xoom.Http.Resource
                 {
                     _rootPath = root.EndsWith("/") ? root.Substring(0, root.Length - 1) : root;
                     uri = string.IsNullOrEmpty(contentFile) ? "/index.html" :  Context?.Request?.Uri?.AbsolutePath;
-
-
-                    _assembly ??= LoadFromPath(root);
+                    
+                    _assembly ??= EmbeddedResourceLoader.LoadFromPath(root);
                     
                     var response = new List<string>
                         {
                             $"{_rootPath}{uri}",
                             $"{WithIndexHtmlAppended(_rootPath + uri)}"
                         }
-                        .Select(CleanPath)
+                        .Select(EmbeddedResourceLoader.CleanPath)
                         .Where(IsValidFilename)
                         .Take(1)
                         .Select(FileResponse)
@@ -81,35 +80,6 @@ namespace Vlingo.Xoom.Http.Resource
             }
         }
 
-        private Assembly LoadFromPath(string path)
-        {
-            var lastIndexOfPathSeparator = path.LastIndexOf('.');
-            var loadPath = path.Substring(0, lastIndexOfPathSeparator);
-            var assemblies = AppDomain.CurrentDomain.GetAssemblies();
-            while (!string.IsNullOrWhiteSpace(loadPath))
-            {
-                var assembly = assemblies.SingleOrDefault(a => a.GetName().Name == loadPath);
-                if (assembly != null)
-                {
-                    return assembly;
-                }
-
-                var nextIndex = loadPath.LastIndexOf('.');
-                if (nextIndex > 0)
-                {
-                    loadPath = loadPath.Substring(0, nextIndex);
-                }
-                else
-                {
-                    loadPath = string.Empty;
-                }
-            }
-
-            return Assembly.GetExecutingAssembly();
-        }
-        
-        private string CleanPath(string path) => path.Replace("%20", "_").Replace("/", ".");
-        
         public bool IsValidFilename(string path)
         {
             var containsABadCharacter = new Regex($"[{Regex.Escape(new string(Path.GetInvalidPathChars()))}]");

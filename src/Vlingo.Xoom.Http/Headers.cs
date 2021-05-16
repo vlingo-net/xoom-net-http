@@ -124,10 +124,10 @@ namespace Vlingo.Xoom.Http
         public static Headers<T> Empty<T>() where T : Header
             => new Headers<T>(0);
 
-        public static Headers<T> Of<T>(params T[] requestHeaders) where T : Header
+        public static Headers<T> Of<T>(params T[] allHeaders) where T : Header
         {
-            var headers = new Headers<T>(requestHeaders.Length);
-            foreach (var requestHeader in requestHeaders)
+            var headers = new Headers<T>(allHeaders.Length);
+            foreach (var requestHeader in allHeaders)
             {
                 headers.Add(requestHeader);
             }

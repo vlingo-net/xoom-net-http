@@ -19,10 +19,7 @@ namespace Vlingo.Xoom.Http.Tests.Resource
         private ResponseParser _parser;
         private readonly Progress _progress;
 
-        public TestResponseChannelConsumer(Progress progress)
-        {
-            _progress = progress;
-        }
+        public TestResponseChannelConsumer(Progress progress) => _progress = progress;
 
         public void Consume(IConsumerByteBuffer buffer)
         {
