@@ -61,7 +61,7 @@ namespace Vlingo.Xoom.Http.Resource
             return RunParamExecutor(_executor, () => RequestExecutor.ExecuteRequest(exec, ErrorHandler, logger));
         }
 
-        public RequestHandler5<T, TR, TU, TI, TJ>? Handle(Handler5 handler)
+        public RequestHandler5<T, TR, TU, TI, TJ> Handle(Handler5 handler)
         {
             _executor = (request, param1, param2, param3, param4, param5, mediaTypeMapper1, errorHandler1, logger1)
                 => RequestExecutor.ExecuteRequest(() => handler.Invoke(param1, param2, param3, param4, param5), errorHandler1, logger1);
