@@ -41,6 +41,7 @@ namespace Vlingo.Xoom.Http.Resource
             RequestHandler2<string, string>.Handler2 serve2 = (p1, p2) => Serve(p1, p2);
             RequestHandler3<string, string, string>.Handler3 serve3 = (p1, p2, p3) => Serve(p1, p2, p3);
             RequestHandler4<string, string, string, string>.Handler4 serve4 = (p1, p2, p3, p4) => Serve(p1, p2, p3, p4);
+            RequestHandler5<string, string, string, string, string>.Handler5 serve5 = (p1, p2, p3, p4, p5) => Serve(p1, p2, p3, p4, p5);
 
             return ResourceBuilder.Resource("ui", 10,
                 ResourceBuilder.Get("/")
@@ -64,7 +65,14 @@ namespace Vlingo.Xoom.Http.Resource
                     .Param<string>()
                     .Param<string>()
                     .Param<string>()
-                    .Handle(serve4)
+                    .Handle(serve4),
+                ResourceBuilder.Get($"{_contextPath}/{{path1}}/{{path2}}/{{path3}}/{{path4}}/{{file}}")
+                    .Param<string>()
+                    .Param<string>()
+                    .Param<string>()
+                    .Param<string>()
+                    .Param<string>()
+                    .Handle(serve5)
             );
         }
 
@@ -82,6 +90,11 @@ namespace Vlingo.Xoom.Http.Resource
         private ICompletes<Response> Serve(params string[] pathSegments)
         {
             var path = EmbeddedResourceLoader.CleanPath($"{_rootPath}/{string.Join("/", pathSegments)}");
+            if (path.IndexOf("/static", StringComparison.Ordinal) != -1)
+            {
+                path = _rootPath + path.Substring(path.IndexOf("/static", StringComparison.Ordinal));
+            }
+                
             var assembly = EmbeddedResourceLoader.LoadFromPath(path);
             var contentStream = assembly.GetManifestResourceStream(path);
             string? contentType = null;
