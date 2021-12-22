@@ -75,9 +75,10 @@ namespace Vlingo.Xoom.Http
         /// <summary>
         /// Answer the <see cref="Response"/> resulting from any filtering.
         /// </summary>
+        /// <param name="request">The <see cref="Request"/> that may be null or may possibly be used for transforming the <see cref="Response"/></param>
         /// <param name="response">The <see cref="Response"/> outgoing from a <see cref="ResponseHeader"/></param>
         /// <returns><see cref="Response"/></returns>
-        public Response Process(Response response)
+        public Response Process(Request request, Response response)
         {
             if (_stopped)
             {
@@ -88,7 +89,7 @@ namespace Vlingo.Xoom.Http
 
             foreach (var filter in _responseFilters)
             {
-                var (filteredResponse, isFiltered) = filter.Filter(current);
+                var (filteredResponse, isFiltered) = request == null ? filter.Filter(current) : filter.Filter(request, current);
                 
                 if (!isFiltered)
                 {
@@ -101,6 +102,13 @@ namespace Vlingo.Xoom.Http
             return current;
         }
         
+        /// <summary>
+        /// Answer the <see cref="Response"/> resulting from any filtering.
+        /// </summary>
+        /// <param name="response">The <see cref="Response"/> outgoing from a <see cref="ResponseHeader"/></param>
+        /// <returns><see cref="Response"/></returns>
+        public Response Process(Response response) => Process(null!, response);
+
         /// <summary>
         /// Stop all filters.
         /// </summary>
