@@ -140,5 +140,6 @@ namespace Vlingo.Xoom.Http.Tests
         public override void Stop() => Stopped = true;
 
         public override (Response, bool) Filter(Response response) => (response, ++Count < 5);
+        public override (Response, bool) Filter(Request request, Response response) => (response, ++Count < 5);
     }
 }

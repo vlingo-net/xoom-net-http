@@ -21,5 +21,7 @@ namespace Vlingo.Xoom.Http
         /// <param name="response">The <see cref="Response"/> to filter</param>
         /// <returns>A pair of <code>(Response, bool)</code></returns>
         public abstract (Response, bool) Filter(Response response);
+        
+        public abstract (Response, bool) Filter(Request request, Response response);
     }
 }
