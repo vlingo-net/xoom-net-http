@@ -50,8 +50,8 @@ namespace Vlingo.Xoom.Http.Tests.Resource
 
         protected string PostJaneDoeUserMessage => $"POST /users HTTP/1.1\nHost: vlingo.io\nContent-Length: {JaneDoeUserSerialized.Length}\n\n{JaneDoeUserSerialized}";
 
-        private MemoryStream _buffer = new MemoryStream(65535);
-        private IConsumerByteBuffer _consumerByteBuffer = BasicConsumerByteBuffer.Allocate(1, 65535);
+        private readonly MemoryStream _buffer = new MemoryStream(65535);
+        private readonly IConsumerByteBuffer _consumerByteBuffer = BasicConsumerByteBuffer.Allocate(1, 65535);
 
         private int _uniqueId = 1;
         
@@ -72,6 +72,8 @@ namespace Vlingo.Xoom.Http.Tests.Resource
         }
         
         protected string CreatedResponse(string body) => $"HTTP/1.1 201 CREATED\nContent-Length: {body.Length}\n\n{body}";
+        
+        protected string GetUsersOriginHeader() => "GET /users HTTP/1.1\nHost: vlingo.io\nOrigin: hello.cors" + "\n\n";
 
         protected string PostRequestCloseFollowing(string body) => $"POST /users HTTP/1.1\nHost: vlingo.io\nContent-Length: {body.Length}\nConnection: close\n\n{body}";
         
