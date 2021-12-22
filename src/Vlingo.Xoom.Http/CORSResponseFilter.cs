@@ -13,6 +13,7 @@ namespace Vlingo.Xoom.Http
 {
     public class CORSResponseFilter : ResponseFilter
     {
+        private const string AnyOrigin = "*";
         private readonly Dictionary<string, List<ResponseHeader>> _originHeaders;
 
         public CORSResponseFilter() => _originHeaders = new Dictionary<string, List<ResponseHeader>>();
@@ -24,8 +25,21 @@ namespace Vlingo.Xoom.Http
         /// </summary>
         /// <param name="originUri">The string URI of a valid CORS origin</param>
         /// <param name="responseHeaders">The list of <see cref="ResponseFilter"/> to set in the Responses for <code>Origin</code> URI</param>
-        public void OriginHeadersFor(string originUri, IEnumerable<ResponseHeader> responseHeaders) => 
-            _originHeaders.Add(originUri, responseHeaders.ToList());
+        public void OriginHeadersFor(string originUri, IEnumerable<ResponseHeader> responseHeaders)
+        {
+            if (string.IsNullOrEmpty(originUri))
+            {
+                throw new ArgumentNullException(nameof(originUri),"The origin URI must not be null or empty.");
+            }
+
+            var headers = responseHeaders.ToList();
+            if (responseHeaders == null || !headers.Any())
+            {
+                throw new ArgumentNullException(nameof(responseHeaders), "The response headers must not be null or empty.");
+            }
+            
+            _originHeaders.Add(originUri, headers.ToList());
+        }
 
         public override (Response, bool) Filter(Response response) => new ValueTuple<Response, bool>(response, true);
 
@@ -37,9 +51,9 @@ namespace Vlingo.Xoom.Http
             {
                 foreach (string uri in _originHeaders.Keys)
                 {
-                    if (uri.Equals(origin))
+                    if (uri.Equals(AnyOrigin) || uri.Equals(origin))
                     {
-                        response.IncludeAll(_originHeaders[origin]);
+                        response.IncludeAll(_originHeaders[uri]);
                         break;
                     }
                 }
