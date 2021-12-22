@@ -6,6 +6,7 @@
 // one at https://mozilla.org/MPL/2.0/.
 
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text;
 using Vlingo.Xoom.Wire.Message;
@@ -92,6 +93,16 @@ namespace Vlingo.Xoom.Http
             {
                 Headers.And(ResponseHeader.Of(header.Name, header.Value));
             }
+            return this;
+        }
+        
+        public Response IncludeAll(IEnumerable<ResponseHeader> headers)
+        {
+            foreach (var header in headers)
+            {
+                Include(header);
+            }
+            
             return this;
         }
 
