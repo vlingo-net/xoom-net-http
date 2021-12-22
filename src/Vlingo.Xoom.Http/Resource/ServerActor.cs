@@ -275,7 +275,7 @@ namespace Vlingo.Xoom.Http.Resource
                 if (data != null)
                 {
                     var request = _serverActor._filters.Process((Request) data);
-                    var completes = new ResponseCompletes(_serverActor, requestResponseContext, request.Headers.HeaderOf(RequestHeader.XCorrelationID));
+                    var completes = new ResponseCompletes(_serverActor, request, requestResponseContext, request.Headers.HeaderOf(RequestHeader.XCorrelationID));
                     var context = new Context(requestResponseContext, request, _serverActor._world.CompletesFor(completes));
                     _dispatcher.DispatchFor(context);
                 }
@@ -308,7 +308,7 @@ namespace Vlingo.Xoom.Http.Resource
                         unfilteredRequest = EnrichRequest(requestResponseContext, unfilteredRequest);
                         DetermineKeepAlive(requestResponseContext, unfilteredRequest);
                         var request = _serverActor._filters.Process(unfilteredRequest);
-                        var completes = new ResponseCompletes(_serverActor, requestResponseContext, request.Headers.HeaderOf(RequestHeader.XCorrelationID));
+                        var completes = new ResponseCompletes(_serverActor, request, requestResponseContext, request.Headers.HeaderOf(RequestHeader.XCorrelationID));
                         context = new Context(requestResponseContext, request, _serverActor._world.CompletesFor(completes));
                         _dispatcher.DispatchFor(context);
                         if (wasIncompleteContent)
@@ -331,7 +331,7 @@ namespace Vlingo.Xoom.Http.Resource
                 catch (Exception e)
                 {
                     _serverActor.Logger.Error("Request parsing failed.", e);
-                    new ResponseCompletes(_serverActor, requestResponseContext, null).With(Response.Of(ResponseStatus.BadRequest, e.Message));
+                    new ResponseCompletes(_serverActor, requestResponseContext).With(Response.Of(ResponseStatus.BadRequest, e.Message));
                 }
                 finally
                 {
@@ -392,22 +392,24 @@ namespace Vlingo.Xoom.Http.Resource
         {
             private readonly Header? _correlationId;
             private readonly ServerActor _serverActor;
+            private readonly Request _request;
             private readonly RequestResponseContext _requestResponseContext;
 
-            internal ResponseCompletes(ServerActor serverActor, RequestResponseContext requestResponseContext, Header? correlationId) : base(serverActor.Stage.Scheduler)
+            internal ResponseCompletes(ServerActor serverActor, Request request, RequestResponseContext requestResponseContext, Header? correlationId) : base(serverActor.Stage.Scheduler)
             {
                 _serverActor = serverActor;
+                _request = request;
                 _requestResponseContext = requestResponseContext;
                 _correlationId = correlationId;
             }
 
-            internal ResponseCompletes(ServerActor serverActor, RequestResponseContext requestResponseContext) : this(serverActor, requestResponseContext, null)
+            internal ResponseCompletes(ServerActor serverActor, RequestResponseContext requestResponseContext) : this(serverActor, null!, requestResponseContext, null)
             {
             }
             
             public override ICompletes<T> With<T>(T response)
             {
-                var filtered = _serverActor._filters.Process((Response)(object) response!);
+                var filtered = _serverActor._filters.Process(_request, (Response)(object) response!);
                 var buffer = BufferFor(filtered);
                 var completedResponse = filtered.Include(_correlationId!);
                 _requestResponseContext.RespondWith(completedResponse.Into(buffer ?? BasicConsumerByteBuffer.Empty));
