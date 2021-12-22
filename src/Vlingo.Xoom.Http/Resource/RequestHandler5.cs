@@ -98,5 +98,59 @@ namespace Vlingo.Xoom.Http.Resource
             var param5 = ResolverParam5.Apply(request, mappedParameters);
             return Execute(request, param1, param2, param3, param4, param5, logger);
         }
+        
+        public RequestHandler6<T, TR, TU, TI, TJ, TK> Param<TK>() =>
+            new RequestHandler6<T, TR, TU, TI, TJ, TK>(
+                Method,
+                Path,
+                ResolverParam1,
+                ResolverParam2,
+                ResolverParam3,
+                ResolverParam4,
+                ResolverParam5,
+                ParameterResolver.Path<TK>(5),
+                ErrorHandler,
+                MediaTypeMapper);
+
+        public RequestHandler6<T, TR, TU, TI, TJ, TK> Body<TK>() =>
+            new RequestHandler6<T, TR, TU, TI, TJ, TK>(
+                Method,
+                Path,
+                ResolverParam1,
+                ResolverParam2,
+                ResolverParam3,
+                ResolverParam4,
+                ResolverParam5,
+                ParameterResolver.Body<TK>(MediaTypeMapper),
+                ErrorHandler,
+                MediaTypeMapper);
+
+        public RequestHandler6<T, TR, TU, TI, TJ, string> Query(string name) => Query<string>(name);
+
+        public RequestHandler6<T, TR, TU, TI, TJ, TK> Query<TK>(string name) =>
+            new RequestHandler6<T, TR, TU, TI, TJ, TK>(
+                Method,
+                Path,
+                ResolverParam1,
+                ResolverParam2,
+                ResolverParam3,
+                ResolverParam4,
+                ResolverParam5,
+                ParameterResolver.Query<TK>(name),
+                ErrorHandler,
+                MediaTypeMapper);
+
+        public RequestHandler6<T, TR, TU, TI, TJ, Header> Header(string name) =>
+            new RequestHandler6<T, TR, TU, TI, TJ, Header>(
+                Method,
+                Path,
+                ResolverParam1,
+                ResolverParam2,
+                ResolverParam3,
+                ResolverParam4,
+                ResolverParam5,
+                ParameterResolver.Header(name),
+                ErrorHandler,
+                MediaTypeMapper);
     }
 }

@@ -42,6 +42,9 @@ namespace Vlingo.Xoom.Http.Resource
             RequestHandler3<string, string, string>.Handler3 serve3 = (p1, p2, p3) => Serve(p1, p2, p3);
             RequestHandler4<string, string, string, string>.Handler4 serve4 = (p1, p2, p3, p4) => Serve(p1, p2, p3, p4);
             RequestHandler5<string, string, string, string, string>.Handler5 serve5 = (p1, p2, p3, p4, p5) => Serve(p1, p2, p3, p4, p5);
+            RequestHandler6<string, string, string, string, string, string>.Handler6 serve6 = (p1, p2, p3, p4, p5, p6) => Serve(p1, p2, p3, p4, p5, p6);
+            RequestHandler7<string, string, string, string, string, string, string>.Handler7 serve7 = (p1, p2, p3, p4, p5, p6, p7) => Serve(p1, p2, p3, p4, p5, p6, p7);
+            RequestHandler8<string, string, string, string, string, string, string, string>.Handler8 serve8 = (p1, p2, p3, p4, p5, p6, p7, p8) => Serve(p1, p2, p3, p4, p5, p6, p7, p8);
 
             return ResourceBuilder.Resource("ui", 10,
                 ResourceBuilder.Get("/")
@@ -72,7 +75,34 @@ namespace Vlingo.Xoom.Http.Resource
                     .Param<string>()
                     .Param<string>()
                     .Param<string>()
-                    .Handle(serve5)
+                    .Handle(serve5),
+                ResourceBuilder.Get($"{_contextPath}/{{path1}}/{{path2}}/{{path3}}/{{path4}}/{{path5}}/{{file}}")
+                    .Param<string>()
+                    .Param<string>()
+                    .Param<string>()
+                    .Param<string>()
+                    .Param<string>()
+                    .Param<string>()
+                    .Handle(serve6),
+                ResourceBuilder.Get($"{_contextPath}/{{path1}}/{{path2}}/{{path3}}/{{path4}}/{{path5}}/{{path6}}/{{file}}")
+                    .Param<string>()
+                    .Param<string>()
+                    .Param<string>()
+                    .Param<string>()
+                    .Param<string>()
+                    .Param<string>()
+                    .Param<string>()
+                    .Handle(serve7),
+                ResourceBuilder.Get($"{_contextPath}/{{path1}}/{{path2}}/{{path3}}/{{path4}}/{{path5}}/{{path6}}/{{path7}}/{{file}}")
+                    .Param<string>()
+                    .Param<string>()
+                    .Param<string>()
+                    .Param<string>()
+                    .Param<string>()
+                    .Param<string>()
+                    .Param<string>()
+                    .Param<string>()
+                    .Handle(serve8)
             );
         }
 
