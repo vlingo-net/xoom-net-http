@@ -36,14 +36,14 @@ namespace Vlingo.Xoom.Http.Tests.Resource
             {
                 ++countUserActions;
       
-                Assert.True(action.Method.IsPost() || action.Method.IsPatch() || action.Method.IsGet());
+                Assert.True(action.Method.IsPost() || action.Method.IsPatch() || action.Method.IsPut() || action.Method.IsGet());
       
                 Assert.NotNull(action.Uri);
                 Assert.NotNull(action.To);
                 Assert.NotNull(action.Mapper);
             }
 
-            Assert.Equal(6, countUserActions);
+            Assert.Equal(7, countUserActions);
     
             var profile = (ConfigurationResource) _resources.ResourceOf("profile");
     
@@ -104,6 +104,7 @@ namespace Vlingo.Xoom.Http.Tests.Resource
                 .Also("PATCH", "/users/{userId}/name", "changeName(string userId, body:Vlingo.Xoom.Http.Tests.Sample.User.NameData nameData)")
                 .Also("GET", "/users/{userId}", "queryUser(string userId)")
                 .Also("GET", "/users", "queryUsers()")
+                .Also("PUT", "/users/{userId}", "changeUser(string userId, body:Vlingo.Xoom.Http.Tests.Sample.User.UserData userData)")
                 .ThatsAll(), ConsoleLogger.TestInstance()),
             ConfigurationResource.Defining("profile", typeof(ProfileResource), 5,
             Actions.CanBe("PUT", "/users/{userId}/profile", "define(string userId, body:Vlingo.Xoom.Http.Tests.Sample.User.ProfileData profileData)", "Vlingo.Xoom.Http.Tests.Sample.User.ProfileDataMapper")

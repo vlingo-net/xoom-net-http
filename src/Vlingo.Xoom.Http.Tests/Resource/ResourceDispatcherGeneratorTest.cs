@@ -61,7 +61,8 @@ namespace Vlingo.Xoom.Http.Tests.Resource
             var actionGetUser = new Action(3, "GET", "/users/{userId}", "queryUser(string userId)", null);
             var actionGetUsers = new Action(4, "GET", "/users", "queryUsers()", null);
             var actionQueryUserError = new Action(5, "GET", "/users/{userId}/error", "queryUserError(string userId)", null);
-            
+            var actionPutUser = new Action(6, "PUT", "/users/{userId}", "changeUser(string userId, body:Vlingo.Xoom.Http.Tests.Sample.User.UserData userData)", null);
+
             _actions = new List<Action>
             {
                 actionPostUser,
@@ -69,7 +70,8 @@ namespace Vlingo.Xoom.Http.Tests.Resource
                 actionPatchUserName,
                 actionGetUser,
                 actionGetUsers,
-                actionQueryUserError
+                actionQueryUserError,
+                actionPutUser
             };
 
             Type resourceHandlerClass;

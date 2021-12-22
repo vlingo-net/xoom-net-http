@@ -68,11 +68,11 @@ namespace Vlingo.Xoom.Http.Tests.Resource
             Assert.Equal(1, _progress.ConsumeCount.Get());
             Assert.NotNull(createdResponse.Headers.HeaderOf(ResponseHeader.Location));
 
+            var moreConsumeCalls = _progress.ExpectConsumeTimes(1);
             var getUserMessage = $"GET {createdResponse.HeaderOf(ResponseHeader.Location).Value} HTTP/1.1\nHost: vlingo.io\nConnection: keep-alive\n\n";
 
             _client.RequestWith(ToStream(getUserMessage).ToArray());
 
-            var moreConsumeCalls = _progress.ExpectConsumeTimes(1);
             while (moreConsumeCalls.TotalWrites < 1)
             {
                 _client.ProbeChannel();
@@ -123,7 +123,7 @@ namespace Vlingo.Xoom.Http.Tests.Resource
         }
         
         [Fact]
-        public void TestThatServerRespondsPermanentRedirectWithNoContentLengthHeader()
+        public void TestThatServerRespondsPermanentRedirect()
         {
             var consumeCalls = _progress.ExpectConsumeTimes(1);
             var request = PutRequest("u-123", UniqueJohnDoe());
@@ -140,10 +140,11 @@ namespace Vlingo.Xoom.Http.Tests.Resource
             Assert.NotNull(response);
             Assert.Equal(ResponseStatus.PermanentRedirect, response.Status);
             Assert.Equal(1, _progress.ConsumeCount.Get());
+            Assert.Equal("0", response.Headers.HeaderOf("Content-Length").Value);
         }
 
         [Fact]
-        public void TestThatServerRespondsOkWithNoContentLengthHeader()
+        public void TestThatServerRespondsOk()
         {
             var consumeCalls = _progress.ExpectConsumeTimes(1);
             var request = PutRequest("u-456", UniqueJohnDoe());
@@ -160,6 +161,7 @@ namespace Vlingo.Xoom.Http.Tests.Resource
             Assert.NotNull(response);
             Assert.Equal(ResponseStatus.Ok, response.Status);
             Assert.Equal(1, _progress.ConsumeCount.Get());
+            Assert.Equal("0", response.Headers.HeaderOf("Content-Length").Value);
         }
         
         [Fact]

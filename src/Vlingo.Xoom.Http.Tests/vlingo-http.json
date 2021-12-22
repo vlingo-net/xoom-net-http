@@ -47,7 +47,7 @@
       }
     },
     "name": {
-      "user": "[register, contact, name, queryUser, queryUsers, queryUserError]",
+      "user": "[register, contact, name, queryUser, queryUsers, queryUserError, changeUser]",
       "profile": "[Define, Query]"
     },
     "user": {
@@ -133,6 +133,11 @@
         "method": "GET",
         "uri": "/user/{userId}/error",
         "to": "QueryUserError(string userId)"
+      },
+      "changeUser": {
+        "method": "PUT",
+        "uri": "/users/{userId}",
+        "to": "ChangeUser(string userId, body:Vlingo.Xoom.Http.Tests.Sample.User.UserData userData)"
       }
     },
     "profile": {
