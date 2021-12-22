@@ -11,11 +11,11 @@ using System.Linq;
 
 namespace Vlingo.Xoom.Http
 {
-    public class CorsResponseFilter : ResponseFilter
+    public class CORSResponseFilter : ResponseFilter
     {
         private readonly Dictionary<string, List<ResponseHeader>> _originHeaders;
 
-        public CorsResponseFilter() => _originHeaders = new Dictionary<string, List<ResponseHeader>>();
+        public CORSResponseFilter() => _originHeaders = new Dictionary<string, List<ResponseHeader>>();
 
         /// <summary>
         /// Register the <paramref name="responseHeaders"/> with the <paramref name="originUri"/> such that

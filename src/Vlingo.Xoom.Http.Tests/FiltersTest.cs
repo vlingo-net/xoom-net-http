@@ -98,7 +98,7 @@ namespace Vlingo.Xoom.Http.Tests
         [Fact]
         public void TestThatCorsOriginAllAllowed()
         {
-            var filter = new CorsResponseFilter();
+            var filter = new CORSResponseFilter();
 
             var headers = new List<ResponseHeader>
             {
@@ -124,7 +124,7 @@ namespace Vlingo.Xoom.Http.Tests
           [Fact]
           public void TestThatCorsOriginSomeAllowed()
           {
-            var filter = new CorsResponseFilter();
+            var filter = new CORSResponseFilter();
 
             var headersHelloWorld = new List<ResponseHeader>
             {
