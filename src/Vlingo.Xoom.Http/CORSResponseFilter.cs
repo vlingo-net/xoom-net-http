@@ -11,21 +11,21 @@ using System.Linq;
 
 namespace Vlingo.Xoom.Http
 {
-    public class CORSResponseFilter : ResponseFilter
+    public class CorsResponseFilter : ResponseFilter
     {
-        private Dictionary<string, List<ResponseHeader>> originHeaders;
+        private readonly Dictionary<string, List<ResponseHeader>> _originHeaders;
 
-        public CORSResponseFilter() => this.originHeaders = new Dictionary<string, List<ResponseHeader>>();
+        public CorsResponseFilter() => _originHeaders = new Dictionary<string, List<ResponseHeader>>();
 
         /// <summary>
-        /// Register the <paramref name="responseHeaders"/> with the <paramref name="originURI"/> such that
+        /// Register the <paramref name="responseHeaders"/> with the <paramref name="originUri"/> such that
         /// when a <see cref="Request"/> contains a RequestHeader of type <code>Origin</code>, the
         /// <see cref="Response"/> will contain the <paramref name="responseHeaders"/>.
         /// </summary>
-        /// <param name="originURI">The string URI of a valid CORS origin</param>
+        /// <param name="originUri">The string URI of a valid CORS origin</param>
         /// <param name="responseHeaders">The list of <see cref="ResponseFilter"/> to set in the Responses for <code>Origin</code> URI</param>
-        public void OriginHeadersFor(string originURI, IEnumerable<ResponseHeader> responseHeaders) => 
-            originHeaders.Add(originURI, responseHeaders.ToList());
+        public void OriginHeadersFor(string originUri, IEnumerable<ResponseHeader> responseHeaders) => 
+            _originHeaders.Add(originUri, responseHeaders.ToList());
 
         public override (Response, bool) Filter(Response response) => new ValueTuple<Response, bool>(response, true);
 
@@ -35,11 +35,11 @@ namespace Vlingo.Xoom.Http
 
             if (origin != null)
             {
-                foreach (string uri in originHeaders.Keys)
+                foreach (string uri in _originHeaders.Keys)
                 {
                     if (uri.Equals(origin))
                     {
-                        response.IncludeAll(originHeaders[origin]);
+                        response.IncludeAll(_originHeaders[origin]);
                         break;
                     }
                 }
