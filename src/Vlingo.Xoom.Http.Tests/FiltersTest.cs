@@ -22,7 +22,7 @@ namespace Vlingo.Xoom.Http.Tests
         private static readonly Random Random = new Random();
         private static readonly AtomicInteger PortToUse = new AtomicInteger(Random.Next(32_768, 60_999));
         
-        private static readonly string HeaderAcceptOriginAll = "*";
+        private static readonly string HeaderAcceptOriginAny = "*";
         private static readonly string ResponseHeaderAcceptAllHeaders = "X-Requested-With, Content-Type, Content-Length";
         private static readonly string ResponseHeaderAcceptMethodsAll = "POST,GET,PUT,PATCH,DELETE";
 
@@ -96,27 +96,27 @@ namespace Vlingo.Xoom.Http.Tests
         }
         
         [Fact]
-        public void TestThatCorsOriginAllAllowed()
+        public void TestThatCorsOriginAnyAllowed()
         {
             var filter = new CORSResponseFilter();
 
             var headers = new List<ResponseHeader>
             {
-                ResponseHeader.Of(ResponseHeader.AccessControlAllowOrigin, HeaderAcceptOriginAll),
+                ResponseHeader.Of(ResponseHeader.AccessControlAllowOrigin, HeaderAcceptOriginAny),
                 ResponseHeader.Of(ResponseHeader.AccessControlAllowHeaders, ResponseHeaderAcceptAllHeaders),
                 ResponseHeader.Of(ResponseHeader.AccessControlAllowMethods, ResponseHeaderAcceptMethodsAll)
             };
 
-            filter.OriginHeadersFor(HeaderAcceptOriginAll, headers);
+            filter.OriginHeadersFor(HeaderAcceptOriginAny, headers);
 
-            var request1 = Request.Has(Method.Get).And(RequestHeader.Of(RequestHeader.Origin, HeaderAcceptOriginAll));
+            var request1 = Request.Has(Method.Get).And(RequestHeader.Of(RequestHeader.Origin, HeaderAcceptOriginAny));
 
             var response1 = Response.Of(ResponseStatus.Ok).Include(ResponseHeader.WithContentLength(0));
 
             var filteredResponse = filter.Filter(request1, response1);
 
             Assert.True(filteredResponse.Item2);
-            Assert.Equal(HeaderAcceptOriginAll, filteredResponse.Item1.HeaderOf(ResponseHeader.AccessControlAllowOrigin).Value);
+            Assert.Equal(HeaderAcceptOriginAny, filteredResponse.Item1.HeaderOf(ResponseHeader.AccessControlAllowOrigin).Value);
             Assert.Equal(ResponseHeaderAcceptAllHeaders, filteredResponse.Item1.HeaderOf(ResponseHeader.AccessControlAllowHeaders).Value);
             Assert.Equal(ResponseHeaderAcceptMethodsAll, filteredResponse.Item1.HeaderOf(ResponseHeader.AccessControlAllowMethods).Value);
           }
@@ -171,7 +171,7 @@ namespace Vlingo.Xoom.Http.Tests
 
             //////////////// request: *
 
-            var requestAll = Request.Has(Method.Get).And(RequestHeader.Of(RequestHeader.Origin, HeaderAcceptOriginAll));
+            var requestAll = Request.Has(Method.Get).And(RequestHeader.Of(RequestHeader.Origin, HeaderAcceptOriginAny));
 
             var responseAll = Response.Of(ResponseStatus.Ok).Include(ResponseHeader.WithContentLength(0));
 
