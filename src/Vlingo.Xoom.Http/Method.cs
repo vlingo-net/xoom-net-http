@@ -13,10 +13,7 @@ namespace Vlingo.Xoom.Http
     {
         public string Name { get; }
 
-        private Method(string name)
-        {
-            Name = name;
-        }
+        private Method(string name) => Name = name;
 
         public static Method Connect { get; } = new Method("CONNECT");
         public static Method Delete { get; } = new Method("DELETE");
