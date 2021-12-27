@@ -85,7 +85,7 @@ namespace Vlingo.Xoom.Http
         public QueryParameters QueryParameters => new QueryParameters(Uri?.Query);
 
         public override string ToString()
-            => $"{Method} {(Uri!.IsAbsoluteUri ? Uri.PathAndQuery : Uri.ToString())} {Version}\n{Headers}\n{Body}";
+            => $"{Method.Name()} {(Uri!.IsAbsoluteUri ? Uri.PathAndQuery : Uri.ToString())} {Version}\n{Headers}\n{Body}";
 
         internal Request(Method? method, Uri? uri, Version? version, Headers<RequestHeader> headers, Body? body)
         {

@@ -60,7 +60,7 @@ namespace Vlingo.Xoom.Http.Resource
         {
             if (paramExecutor == null)
             {
-                throw new HandlerMissingException($"No handler defined for {Method} {Path}");
+                throw new HandlerMissingException($"No handler defined for {Method.Name()} {Path}");
             }
             return executeRequest?.Invoke()!;
         }
@@ -79,7 +79,7 @@ namespace Vlingo.Xoom.Http.Resource
 
             if (Path.Replace(" ", "").Contains("{}"))
             {
-                throw new ArgumentException($"Empty path parameter name for {Method} {Path}");
+                throw new ArgumentException($"Empty path parameter name for {Method.Name()} {Path}");
             }
 
             var result = new StringBuilder();

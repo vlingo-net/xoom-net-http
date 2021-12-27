@@ -9,62 +9,69 @@ using System;
 
 namespace Vlingo.Xoom.Http
 {
-    public class Method
+    public enum Method
     {
-        public string Name { get; }
-
-        private Method(string name) => Name = name;
-
-        public static Method Connect { get; } = new Method("CONNECT");
-        public static Method Delete { get; } = new Method("DELETE");
-        public static Method Get { get; } = new Method("GET");
-        public static Method Head { get; } = new Method("HEAD");
-        public static Method Options { get; } = new Method("OPTIONS");
-        public static Method Patch { get; } = new Method("PATCH");
-        public static Method Post { get; } = new Method("POST");
-        public static Method Put { get; } = new Method("PUT");
-        public static Method Trace { get; } = new Method("TRACE");
-
-        public static Method From(string? methodNameText)
+        Connect,
+        Delete,
+        Get,
+        Head,
+        Options,
+        Patch,
+        Post,
+        Put,
+        Trace
+    }
+    
+    public static class MethodExtensions
+    {
+        public static Method ToMethod(this string? methodNameText)
         {
             var name = (methodNameText ?? string.Empty).ToUpperInvariant();
             switch (name)
             {
                 case "CONNECT":
-                    return Connect;
+                    return Method.Connect;
                 case "DELETE":
-                    return Delete;
+                    return Method.Delete;
                 case "GET":
-                    return Get;
+                    return Method.Get;
                 case "HEAD":
-                    return Head;
+                    return Method.Head;
                 case "OPTIONS":
-                    return Options;
+                    return Method.Options;
                 case "PATCH":
-                    return Patch;
+                    return Method.Patch;
                 case "POST":
-                    return Post;
+                    return Method.Post;
                 case "PUT":
-                    return Put;
+                    return Method.Put;
                 case "TRACE":
-                    return Trace;
+                    return Method.Trace;
                 default:
                     throw new ArgumentException($"{ResponseStatus.MethodNotAllowed.GetDescription()}\n\n${methodNameText}");
             }
         }
 
-        public bool IsConnect() => MethodEquals("CONNECT");
-        public bool IsDelete() => MethodEquals("DELETE");
-        public bool IsGet() => MethodEquals("GET");
-        public bool IsHead() => MethodEquals("HEAD");
-        public bool IsOptions() => MethodEquals("OPTIONS");
-        public bool IsPatch() => MethodEquals("PATCH");
-        public bool IsPost() => MethodEquals("POST");
-        public bool IsPut() => MethodEquals("PUT");
-        public bool IsTrace() => MethodEquals("TRACE");
+        public static bool IsConnect(this Method? method) => method == Method.Connect;
+        public static bool IsConnect(this Method method) => method == Method.Connect;
+        public static bool IsDelete(this Method? method) => method == Method.Delete;
+        public static bool IsDelete(this Method method) => method == Method.Delete;
+        public static bool IsGet(this Method? method) => method == Method.Get;
+        public static bool IsGet(this Method method) => method == Method.Get;
+        public static bool IsHead(this Method? method) => method == Method.Head;
+        public static bool IsHead(this Method method) => method == Method.Head;
+        public static bool IsOptions(this Method? method) => method == Method.Options;
+        public static bool IsOptions(this Method method) => method == Method.Options;
+        public static bool IsPatch(this Method? method) => method == Method.Patch;
+        public static bool IsPatch(this Method method) => method == Method.Patch;
+        public static bool IsPost(this Method? method) => method == Method.Post;
+        public static bool IsPost(this Method method) => method == Method.Post;
+        public static bool IsPut(this Method? method) => method == Method.Put;
+        public static bool IsPut(this Method method) => method == Method.Put;
+        public static bool IsTrace(this Method? method) => method == Method.Trace;
+        public static bool IsTrace(this Method method) => method == Method.Trace;
 
-        public override string ToString() => Name;
-
-        private bool MethodEquals(string name) => string.Equals(Name, name);
+        public static string Name(this Method method) => method.ToString().ToUpperInvariant();
+        public static string? Name(this Method? method) => method?.ToString().ToUpperInvariant();
     }
 }

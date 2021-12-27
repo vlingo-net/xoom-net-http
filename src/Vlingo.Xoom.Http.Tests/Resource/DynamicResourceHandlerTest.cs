@@ -62,7 +62,7 @@ namespace Vlingo.Xoom.Http.Tests.Resource
 
             Assert.NotNull(_resource.Context);
             Assert.NotNull(_resource.Context.Request);
-            Assert.Equal("GET", _resource.Context.Request.Method.Name);
+            Assert.Equal("GET", _resource.Context.Request.Method.Name());
             Assert.Equal("/test", _resource.Context.Request.Uri.AbsolutePath);
         }
 

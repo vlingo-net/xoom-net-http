@@ -9,12 +9,12 @@ using Xunit;
 
 namespace Vlingo.Xoom.Http.Tests
 {
-    public class MethodTest
+    public class MethodExtensionsTest
     {
         [Fact]
         public void TestPost()
         {
-            var method = Method.From("POST");
+            var method = "POST".ToMethod();
             Assert.True(method.IsPost());
 
             Assert.False(method.IsConnect());
@@ -30,7 +30,7 @@ namespace Vlingo.Xoom.Http.Tests
         [Fact]
         public void TestGet()
         {
-            var method = Method.From("GET");
+            var method = "GET".ToMethod();
             Assert.True(method.IsGet());
 
             Assert.False(method.IsConnect());
@@ -46,7 +46,7 @@ namespace Vlingo.Xoom.Http.Tests
         [Fact]
         public void TestPut()
         {
-            var method = Method.From("PUT");
+            var method = "PUT".ToMethod();
             Assert.True(method.IsPut());
 
             Assert.False(method.IsConnect());
@@ -62,7 +62,7 @@ namespace Vlingo.Xoom.Http.Tests
         [Fact]
         public void TestPatch()
         {
-            var method = Method.From("PATCH");
+            var method = "PATCH".ToMethod();
             Assert.True(method.IsPatch());
 
             Assert.False(method.IsConnect());
@@ -78,7 +78,7 @@ namespace Vlingo.Xoom.Http.Tests
         [Fact]
         public void TestDelete()
         {
-            var method = Method.From("DELETE");
+            var method = "DELETE".ToMethod();
             Assert.True(method.IsDelete());
 
             Assert.False(method.IsConnect());
@@ -94,7 +94,7 @@ namespace Vlingo.Xoom.Http.Tests
         [Fact]
         public void TestHead()
         {
-            var method = Method.From("HEAD");
+            var method = "HEAD".ToMethod();
             Assert.True(method.IsHead());
 
             Assert.False(method.IsConnect());
@@ -110,7 +110,7 @@ namespace Vlingo.Xoom.Http.Tests
         [Fact]
         public void TestTrace()
         {
-            var method = Method.From("TRACE");
+            var method = "TRACE".ToMethod();
             Assert.True(method.IsTrace());
 
             Assert.False(method.IsConnect());
@@ -126,7 +126,7 @@ namespace Vlingo.Xoom.Http.Tests
         [Fact]
         public void TestOptions()
         {
-            var method = Method.From("OPTIONS");
+            var method = "OPTIONS".ToMethod();
             Assert.True(method.IsOptions());
 
             Assert.False(method.IsConnect());
@@ -142,7 +142,7 @@ namespace Vlingo.Xoom.Http.Tests
         [Fact]
         public void TestConnect()
         {
-            var method = Method.From("CONNECT");
+            var method = "CONNECT".ToMethod();
             Assert.True(method.IsConnect());
 
             Assert.False(method.IsDelete());

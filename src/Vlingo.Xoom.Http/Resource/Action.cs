@@ -45,7 +45,7 @@ namespace Vlingo.Xoom.Http.Resource
             IList<MappedParameter> additionalParameters)
         {
             Id = id;
-            _method = Method.From(method);
+            _method = method.ToMethod();
             _uri = uri;
             _to = new ToSpec(to);
             _originalTo = to;

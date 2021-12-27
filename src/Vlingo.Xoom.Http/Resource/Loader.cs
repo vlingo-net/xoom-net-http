@@ -142,7 +142,7 @@ namespace Vlingo.Xoom.Http.Resource
 
                     var actions = new List<Action>(1);
                     var additionalParameters = new List<Action.MappedParameter> { mappedParameterProducerClass, mappedParameterProductElements };
-                    actions.Add(new Action(0, Method.Get.Name, feedRequestUri, FeedProducerFeed, null, additionalParameters));
+                    actions.Add(new Action(0, Method.Get.Name(), feedRequestUri, FeedProducerFeed, null, additionalParameters));
                     var resource = ResourceFor(resourceName, typeof(FeedResource), handlerPoolSize, actions, logger);
                     feedResourceActions.Add(resourceName, resource);
                 }
@@ -191,8 +191,8 @@ namespace Vlingo.Xoom.Http.Resource
 
                     var actions = new List<Action>(2);
                     var additionalParameters = new List<Action.MappedParameter> { mappedParameterClass, mappedParameterPayload, mappedParameterInterval, mappedParameterDefaultId };
-                    actions.Add(new Action(0, Method.Get.Name, subscribeUri, SsePublisherSubscribeTo, null, additionalParameters));
-                    actions.Add(new Action(1, Method.Delete.Name, unsubscribeUri, SsePublisherUnsubscribeTo, null));
+                    actions.Add(new Action(0, Method.Get.Name(), subscribeUri, SsePublisherSubscribeTo, null, additionalParameters));
+                    actions.Add(new Action(1, Method.Delete.Name(), unsubscribeUri, SsePublisherUnsubscribeTo, null));
                     var resource = ResourceFor(resourceName, typeof(SseStreamResource), handlerPoolSize, actions, logger);
                     sseResourceActions[resourceName] = resource;
                 }
@@ -248,7 +248,7 @@ namespace Vlingo.Xoom.Http.Resource
                     var actions = new List<Action>(1);
                     var additionalParameters = new List<Action.MappedParameter>
                         {mappedParameterRoot, mappedParameterValidSubPaths};
-                    actions.Add(new Action(0, Method.Get.Name, PatternFrom(actionSubPath, slash), StaticFilesResourceServeFile, null, additionalParameters));
+                    actions.Add(new Action(0, Method.Get.Name(), PatternFrom(actionSubPath, slash), StaticFilesResourceServeFile, null, additionalParameters));
                     var resource = ResourceFor(resourceName, typeof(StaticFilesResource), int.Parse(poolSize), actions, logger);
                     staticFilesResources[resourceName] = resource;
                 }

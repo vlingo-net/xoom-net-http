@@ -42,7 +42,7 @@ namespace Vlingo.Xoom.Http
 
             builder.Append(Header).Append(" REQUEST PARSER CONTEXT:\n");
 
-            builder.Append(_virtualStateParser.Method?.Name).Append(" ").Append(_virtualStateParser.Uri).Append("\n");
+            builder.Append(_virtualStateParser.Method?.Name()).Append(" ").Append(_virtualStateParser.Uri).Append("\n");
 
             foreach (var header in _virtualStateParser.Headers)
             {
@@ -138,7 +138,7 @@ namespace Vlingo.Xoom.Http
 
                 _fullRequestsIterator.Dispose();
                 throw new InvalidOperationException(
-                    $"{ResponseStatus.BadRequest}\n\nRequest is not completed: {Method} {Uri}");
+                    $"{ResponseStatus.BadRequest}\n\nRequest is not completed: {Method.Name()} {Uri}");
             }
 
             internal bool HasFullRequest()
@@ -411,7 +411,7 @@ namespace Vlingo.Xoom.Http
 
                 try
                 {
-                    Method = Method.From(ParseSpecificRequestLinePart(parts, 1, "Method"));
+                    Method = ParseSpecificRequestLinePart(parts, 1, "Method").ToMethod();
                     Uri = ParseSpecificRequestLinePart(parts, 2, "URI/path").ToMatchableUri();
                     _version = Version.From(ParseSpecificRequestLinePart(parts, 3, "HTTP/version"));
 
