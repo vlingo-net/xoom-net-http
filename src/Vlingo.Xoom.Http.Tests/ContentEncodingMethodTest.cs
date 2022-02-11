@@ -7,25 +7,24 @@
 
 using Xunit;
 
-namespace Vlingo.Xoom.Http.Tests
-{
-    public class ContentEncodingMethodTest
-    {
-        [Fact]
-        public void MethodParseReturnsMethod()
-        {
-            var method = "gzip";
-            var result = ContentEncodingMethodHelper.Parse(method);
-            Assert.True(result.IsPresent);
-            Assert.Equal(ContentEncodingMethod.Gzip, result.Get());
-        }
+namespace Vlingo.Xoom.Http.Tests;
 
-        [Fact]
-        public void MethodParseReturnsEmpty()
-        {
-            var method = "jarjar";
-            var result = ContentEncodingMethodHelper.Parse(method);
-            Assert.False(result.IsPresent);
-        }
+public class ContentEncodingMethodTest
+{
+    [Fact]
+    public void MethodParseReturnsMethod()
+    {
+        var method = "gzip";
+        var result = ContentEncodingMethodHelper.Parse(method);
+        Assert.True(result.IsPresent);
+        Assert.Equal(ContentEncodingMethod.Gzip, result.Get());
+    }
+
+    [Fact]
+    public void MethodParseReturnsEmpty()
+    {
+        var method = "jarjar";
+        var result = ContentEncodingMethodHelper.Parse(method);
+        Assert.False(result.IsPresent);
     }
 }

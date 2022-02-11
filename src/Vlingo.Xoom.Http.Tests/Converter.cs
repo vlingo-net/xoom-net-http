@@ -10,31 +10,30 @@ using System.IO;
 using System.Text;
 using Xunit.Abstractions;
 
-namespace Vlingo.Xoom.Http.Tests
+namespace Vlingo.Xoom.Http.Tests;
+
+public class Converter : TextWriter
 {
-    public class Converter : TextWriter
-    {
-        private readonly ITestOutputHelper _output;
+    private readonly ITestOutputHelper _output;
         
-        public Converter(ITestOutputHelper output) => _output = output;
+    public Converter(ITestOutputHelper output) => _output = output;
 
-        public override Encoding Encoding => Encoding.UTF8;
+    public override Encoding Encoding => Encoding.UTF8;
 
-        public override void WriteLine(string message)
+    public override void WriteLine(string message)
+    {
+        try
         {
-            try
+            _output.WriteLine(message);
+        }
+        catch (InvalidOperationException e)
+        {
+            if (e.Message != "There is no currently active test.")
             {
-                _output.WriteLine(message);
-            }
-            catch (InvalidOperationException e)
-            {
-                if (e.Message != "There is no currently active test.")
-                {
-                    throw;
-                }
+                throw;
             }
         }
-
-        public override void WriteLine(string format, params object[] args) => _output.WriteLine(format, args);
     }
+
+    public override void WriteLine(string format, params object[] args) => _output.WriteLine(format, args);
 }

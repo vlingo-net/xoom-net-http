@@ -7,45 +7,44 @@
 
 using Vlingo.Xoom.Http.Media;
 
-namespace Vlingo.Xoom.Http.Resource
+namespace Vlingo.Xoom.Http.Resource;
+
+public class Content
 {
-    public class Content
+    public string Data { get; }
+    public ContentMediaType ContentMediaType { get; }
+
+    public Content(string data, ContentMediaType contentMediaType)
     {
-        public string Data { get; }
-        public ContentMediaType ContentMediaType { get; }
+        Data = data;
+        ContentMediaType = contentMediaType;
+    }
 
-        public Content(string data, ContentMediaType contentMediaType)
+    public override bool Equals(object? o)
+    {
+        if (ReferenceEquals(this, o))
         {
-            Data = data;
-            ContentMediaType = contentMediaType;
+            return true;
         }
 
-        public override bool Equals(object? o)
+        if (o == null || GetType() != o.GetType())
         {
-            if (ReferenceEquals(this, o))
-            {
-                return true;
-            }
-
-            if (o == null || GetType() != o.GetType())
-            {
-                return false;
-            }
-
-            var content = (Content)o;
-
-            return string.Equals(Data, content.Data) && Equals(ContentMediaType, content.ContentMediaType);
+            return false;
         }
 
-        public override int GetHashCode()
+        var content = (Content)o;
+
+        return string.Equals(Data, content.Data) && Equals(ContentMediaType, content.ContentMediaType);
+    }
+
+    public override int GetHashCode()
+    {
+        unchecked
         {
-            unchecked
-            {
-                var hash = 17;
-                hash = hash * 23 + (Data?.GetHashCode() ?? 0);
-                hash = hash * 23 + (ContentMediaType?.GetHashCode() ?? 0);
-                return hash;
-            }
+            var hash = 17;
+            hash = hash * 23 + (Data?.GetHashCode() ?? 0);
+            hash = hash * 23 + (ContentMediaType?.GetHashCode() ?? 0);
+            return hash;
         }
     }
 }

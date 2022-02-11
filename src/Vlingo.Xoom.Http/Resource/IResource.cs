@@ -8,15 +8,14 @@
 using System;
 using Vlingo.Xoom.Actors;
 
-namespace Vlingo.Xoom.Http.Resource
+namespace Vlingo.Xoom.Http.Resource;
+
+public interface IResource
 {
-    public interface IResource
-    {
-        string Name { get; }
-        int HandlerPoolSize { get; }
-        void DispatchToHandlerWith(Context context, Action.MappedParameters? mappedParameters);
-        Action.MatchResults MatchWith(Method? method, Uri? uri);
-        void Log(ILogger logger);
-        void AllocateHandlerPool(Stage stage);
-    }
+    string Name { get; }
+    int HandlerPoolSize { get; }
+    void DispatchToHandlerWith(Context context, Action.MappedParameters? mappedParameters);
+    Action.MatchResults MatchWith(Method? method, Uri? uri);
+    void Log(ILogger logger);
+    void AllocateHandlerPool(Stage stage);
 }

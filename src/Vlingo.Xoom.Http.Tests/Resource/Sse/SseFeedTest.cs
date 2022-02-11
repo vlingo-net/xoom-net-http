@@ -13,70 +13,69 @@ using Vlingo.Xoom.Http.Tests.Sample.User;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Vlingo.Xoom.Http.Tests.Resource.Sse
+namespace Vlingo.Xoom.Http.Tests.Resource.Sse;
+
+public class SseFeedTest : IDisposable
 {
-    public class SseFeedTest : IDisposable
+    private readonly SseClient _client;
+    private readonly MockRequestResponseContext _context;
+    private ISseFeed _feed;
+    private readonly World _world;
+
+    [Fact]
+    public void TestThatFeedFeedsOneSubscriber()
     {
-        private readonly SseClient _client;
-        private readonly MockRequestResponseContext _context;
-        private ISseFeed _feed;
-        private readonly World _world;
+        var respondWithSafely = _context.Channel.ExpectRespondWith(1);
 
-        [Fact]
-        public void TestThatFeedFeedsOneSubscriber()
-        {
-            var respondWithSafely = _context.Channel.ExpectRespondWith(1);
+        _feed = _world.ActorFor<ISseFeed>(() => new AllSseFeedActor("all", 10, "1"));
 
-            _feed = _world.ActorFor<ISseFeed>(() => new AllSseFeedActor("all", 10, "1"));
+        var subscriber = new SseSubscriber("all", _client, "ABC123", "42");
 
-            var subscriber = new SseSubscriber("all", _client, "ABC123", "42");
+        _feed.To(new List<SseSubscriber> {subscriber});
 
-            _feed.To(new List<SseSubscriber> {subscriber});
+        Assert.Equal(1, respondWithSafely.ReadFrom<int>("count"));
 
-            Assert.Equal(1, respondWithSafely.ReadFrom<int>("count"));
+        Assert.Equal(1, _context.Channel.RespondWithCount.Get());
 
-            Assert.Equal(1, _context.Channel.RespondWithCount.Get());
+        var eventsResponse = respondWithSafely.ReadFrom<Response>("eventsResponse");
 
-            var eventsResponse = respondWithSafely.ReadFrom<Response>("eventsResponse");
+        var events = MessageEvent.From(eventsResponse);
 
-            var events = MessageEvent.From(eventsResponse);
+        Assert.Equal(10, events.Count);
+    }
 
-            Assert.Equal(10, events.Count);
-        }
+    [Fact]
+    public void TestThatFeedFeedsMultipleSubscribers()
+    {
+        _feed = _world.ActorFor<ISseFeed>(() => new AllSseFeedActor("all", 10, "1"));
 
-        [Fact]
-        public void TestThatFeedFeedsMultipleSubscribers()
-        {
-            _feed = _world.ActorFor<ISseFeed>(() => new AllSseFeedActor("all", 10, "1"));
+        var subscriber1 = new SseSubscriber("all", _client, "ABC123", "41");
+        var subscriber2 = new SseSubscriber("all", _client, "ABC456", "42");
+        var subscriber3 = new SseSubscriber("all", _client, "ABC789", "43");
 
-            var subscriber1 = new SseSubscriber("all", _client, "ABC123", "41");
-            var subscriber2 = new SseSubscriber("all", _client, "ABC456", "42");
-            var subscriber3 = new SseSubscriber("all", _client, "ABC789", "43");
+        var respondWithSafely = _context.Channel.ExpectRespondWith(3);
 
-            var respondWithSafely = _context.Channel.ExpectRespondWith(3);
+        _feed.To(new List<SseSubscriber> {subscriber1, subscriber2, subscriber3});
 
-            _feed.To(new List<SseSubscriber> {subscriber1, subscriber2, subscriber3});
+        Assert.Equal(3, respondWithSafely.ReadFrom<int>("count"));
 
-            Assert.Equal(3, respondWithSafely.ReadFrom<int>("count"));
-
-            Assert.Equal(3, _context.Channel.RespondWithCount.Get());
-        }
+        Assert.Equal(3, _context.Channel.RespondWithCount.Get());
+    }
         
-        public SseFeedTest(ITestOutputHelper output)
-        {
-            var converter = new Converter(output);
-            Console.SetOut(converter);
+    public SseFeedTest(ITestOutputHelper output)
+    {
+        var converter = new Converter(output);
+        Console.SetOut(converter);
             
-            _world = World.StartWithDefaults("test-feed");
-            Configuration.Define();
-            _context = new MockRequestResponseContext(new MockResponseSenderChannel());
-            _client = new SseClient(_context);
-        }
+        _world = World.StartWithDefaults("test-feed");
+        Configuration.Define();
+        _context = new MockRequestResponseContext(new MockResponseSenderChannel());
+        _client = new SseClient(_context);
+    }
 
-        public void Dispose()
-        {
-            _client.Close();
-            _world.Terminate();
-        }
+    public void Dispose()
+    {
+        _client.Close();
+        _world.Terminate();
     }
 }

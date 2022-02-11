@@ -7,39 +7,38 @@
 
 using Xunit;
 
-namespace Vlingo.Xoom.Http.Tests
+namespace Vlingo.Xoom.Http.Tests;
+
+public class ContentEncodingTest
 {
-    public class ContentEncodingTest
+    [Fact]
+    public void CreateEncodingFrom()
     {
-        [Fact]
-        public void CreateEncodingFrom()
+        var results = ContentEncoding.ParseFromHeader("gzip, br");
+        ContentEncodingMethod[] expectedMethods =
         {
-            var results = ContentEncoding.ParseFromHeader("gzip, br");
-            ContentEncodingMethod[] expectedMethods =
-            {
-                ContentEncodingMethod.Gzip, ContentEncodingMethod.Brotli
-            };
+            ContentEncodingMethod.Gzip, ContentEncodingMethod.Brotli
+        };
             
-            Assert.Equal(expectedMethods, results.EncodingMethods);
-        }
+        Assert.Equal(expectedMethods, results.EncodingMethods);
+    }
 
-        [Fact]
-        public void CreateEncodingSkipsUnkownEncoding()
-        {
-            var results = ContentEncoding.ParseFromHeader("gzip, br, foo");
-            ContentEncodingMethod[] expectedMethods = {
-                ContentEncodingMethod.Gzip, ContentEncodingMethod.Brotli
-            };
+    [Fact]
+    public void CreateEncodingSkipsUnkownEncoding()
+    {
+        var results = ContentEncoding.ParseFromHeader("gzip, br, foo");
+        ContentEncodingMethod[] expectedMethods = {
+            ContentEncodingMethod.Gzip, ContentEncodingMethod.Brotli
+        };
             
-            Assert.Equal(expectedMethods, results.EncodingMethods);
-        }
+        Assert.Equal(expectedMethods, results.EncodingMethods);
+    }
 
-        [Fact]
-        public void CreateEncodingEmpty()
-        {
-            ContentEncoding results = ContentEncoding.ParseFromHeader("");
-            ContentEncodingMethod[] expectedMethods = {};
-            Assert.Equal(expectedMethods, results.EncodingMethods);
-        }
+    [Fact]
+    public void CreateEncodingEmpty()
+    {
+        ContentEncoding results = ContentEncoding.ParseFromHeader("");
+        ContentEncodingMethod[] expectedMethods = {};
+        Assert.Equal(expectedMethods, results.EncodingMethods);
     }
 }

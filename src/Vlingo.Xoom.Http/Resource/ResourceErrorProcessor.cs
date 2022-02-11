@@ -8,28 +8,27 @@
 using System;
 using Vlingo.Xoom.Actors;
 
-namespace Vlingo.Xoom.Http.Resource
-{
-    public class ResourceErrorProcessor
-    {
-        public static Response DefaultErrorResponse() => Response.Of(ResponseStatus.InternalServerError);
+namespace Vlingo.Xoom.Http.Resource;
 
-        public static Response ResourceHandlerError(IErrorHandler errorHandler, ILogger logger, Exception exception)
+public class ResourceErrorProcessor
+{
+    public static Response DefaultErrorResponse() => Response.Of(ResponseStatus.InternalServerError);
+
+    public static Response ResourceHandlerError(IErrorHandler errorHandler, ILogger logger, Exception exception)
+    {
+        Response response;
+        try
         {
-            Response response;
-            try
-            {
-                logger.Error("Exception thrown by Resource execution", exception);
-                response = errorHandler != null ?
-                    errorHandler.Handle(exception) :
-                    DefaultErrorHandler.Instance.Handle(exception);
-            }
-            catch
-            {
-                logger.Error("Exception thrown by error handler when handling error", exception);
-                response = DefaultErrorResponse();
-            }
-            return response;
+            logger.Error("Exception thrown by Resource execution", exception);
+            response = errorHandler != null ?
+                errorHandler.Handle(exception) :
+                DefaultErrorHandler.Instance.Handle(exception);
         }
+        catch
+        {
+            logger.Error("Exception thrown by error handler when handling error", exception);
+            response = DefaultErrorResponse();
+        }
+        return response;
     }
 }

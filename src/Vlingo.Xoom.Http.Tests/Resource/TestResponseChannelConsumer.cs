@@ -12,61 +12,60 @@ using Vlingo.Xoom.Common;
 using Vlingo.Xoom.Wire.Channel;
 using Vlingo.Xoom.Wire.Message;
 
-namespace Vlingo.Xoom.Http.Tests.Resource
+namespace Vlingo.Xoom.Http.Tests.Resource;
+
+public class TestResponseChannelConsumer : Actor, IResponseChannelConsumer
 {
-    public class TestResponseChannelConsumer : Actor, IResponseChannelConsumer
+    private ResponseParser _parser;
+    private readonly Progress _progress;
+
+    public TestResponseChannelConsumer(Progress progress) => _progress = progress;
+
+    public void Consume(IConsumerByteBuffer buffer)
     {
-        private ResponseParser _parser;
-        private readonly Progress _progress;
-
-        public TestResponseChannelConsumer(Progress progress) => _progress = progress;
-
-        public void Consume(IConsumerByteBuffer buffer)
+        if (_parser == null)
         {
-            if (_parser == null)
-            {
-                _parser = ResponseParser.ParserFor(buffer);
-            }
-            else
-            {
-                _parser.ParseNext(buffer);
-            }
+            _parser = ResponseParser.ParserFor(buffer);
+        }
+        else
+        {
+            _parser.ParseNext(buffer);
+        }
             
-            buffer.Release();
+        buffer.Release();
 
-            while (_parser.HasFullResponse())
-            {
-                var response = _parser.FullResponse();
-                _progress.ConsumeCalls.WriteUsing("consume", response);
-            }
+        while (_parser.HasFullResponse())
+        {
+            var response = _parser.FullResponse();
+            _progress.ConsumeCalls.WriteUsing("consume", response);
         }
     }
+}
     
-    public class Progress
-    {
-        internal AccessSafely ConsumeCalls = AccessSafely.AfterCompleting(0);
+public class Progress
+{
+    internal AccessSafely ConsumeCalls = AccessSafely.AfterCompleting(0);
 
-        public ConcurrentQueue<Response> Responses { get; } = new ConcurrentQueue<Response>();
+    public ConcurrentQueue<Response> Responses { get; } = new ConcurrentQueue<Response>();
         
-        public AtomicInteger ConsumeCount { get; } = new AtomicInteger(0);
+    public AtomicInteger ConsumeCount { get; } = new AtomicInteger(0);
         
-        /// <summary>
-        /// Answer with an AccessSafely which writes responses to "consume" and reads the write count from "completed".
-        /// </summary>
-        /// <param name="n">Number of times consume(response) must be called before readFrom(...) will return.</param>
-        /// <returns>AccessSafely</returns>
-        /// <remarks>Clients can replace the default lambdas with their own via readingWith/writingWith.</remarks>
-        public AccessSafely ExpectConsumeTimes(int n)
-        {
-            ConsumeCalls = AccessSafely.AfterCompleting(n);
-            ConsumeCalls.WritingWith<Response>("consume", response =>
-                {
-                    Responses.Enqueue(response);
-                    ConsumeCount.IncrementAndGet();
-                })
-                .ReadingWith("completed", () => ConsumeCalls.TotalWrites);
+    /// <summary>
+    /// Answer with an AccessSafely which writes responses to "consume" and reads the write count from "completed".
+    /// </summary>
+    /// <param name="n">Number of times consume(response) must be called before readFrom(...) will return.</param>
+    /// <returns>AccessSafely</returns>
+    /// <remarks>Clients can replace the default lambdas with their own via readingWith/writingWith.</remarks>
+    public AccessSafely ExpectConsumeTimes(int n)
+    {
+        ConsumeCalls = AccessSafely.AfterCompleting(n);
+        ConsumeCalls.WritingWith<Response>("consume", response =>
+            {
+                Responses.Enqueue(response);
+                ConsumeCount.IncrementAndGet();
+            })
+            .ReadingWith("completed", () => ConsumeCalls.TotalWrites);
             
-            return ConsumeCalls;
-        }
+        return ConsumeCalls;
     }
 }

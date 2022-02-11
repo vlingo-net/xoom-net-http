@@ -8,34 +8,33 @@
 using Vlingo.Xoom.Common;
 using Vlingo.Xoom.Wire.Channel;
 
-namespace Vlingo.Xoom.Http.Tests.Resource.Sse
+namespace Vlingo.Xoom.Http.Tests.Resource.Sse;
+
+public class MockRequestResponseContext : RequestResponseContext
 {
-    public class MockRequestResponseContext : RequestResponseContext
-    {
-        public MockResponseSenderChannel Channel { get; }
+    public MockResponseSenderChannel Channel { get; }
         
-        public AtomicReference<object> ConsumerDataRef => new AtomicReference<object>();
-        public AtomicReference<object> WhenClosingData => new AtomicReference<object>();
+    public AtomicReference<object> ConsumerDataRef => new AtomicReference<object>();
+    public AtomicReference<object> WhenClosingData => new AtomicReference<object>();
 
-        public MockRequestResponseContext(MockResponseSenderChannel channel)
-        {
-            Channel = channel;
-        }
-
-        public override TR ConsumerData<TR>() => (TR)ConsumerDataRef.Get();
-
-        public override TR ConsumerData<TR>(TR data)
-        {
-            ConsumerDataRef.Set(data);
-            return data;
-        }
-
-        public override void WhenClosing(object data) => WhenClosingData.Set(data);
-
-        public override bool HasConsumerData => ConsumerDataRef.Get() != null;
-
-        public override string Id => "1";
-
-        public override IResponseSenderChannel Sender => Channel;
+    public MockRequestResponseContext(MockResponseSenderChannel channel)
+    {
+        Channel = channel;
     }
+
+    public override TR ConsumerData<TR>() => (TR)ConsumerDataRef.Get();
+
+    public override TR ConsumerData<TR>(TR data)
+    {
+        ConsumerDataRef.Set(data);
+        return data;
+    }
+
+    public override void WhenClosing(object data) => WhenClosingData.Set(data);
+
+    public override bool HasConsumerData => ConsumerDataRef.Get() != null;
+
+    public override string Id => "1";
+
+    public override IResponseSenderChannel Sender => Channel;
 }

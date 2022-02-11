@@ -9,26 +9,25 @@ using Vlingo.Xoom.Actors;
 using Vlingo.Xoom.Common;
 using Vlingo.Xoom.Http.Resource.Sse;
 
-namespace Vlingo.Xoom.Http.Tests.Resource.Sse
+namespace Vlingo.Xoom.Http.Tests.Resource.Sse;
+
+public class MockSseStreamResource : SseStreamResource
 {
-    public class MockSseStreamResource : SseStreamResource
-    {
-        private readonly ICompletesEventually _completes;
+    private readonly ICompletesEventually _completes;
 
-        private Request _request;
+    private Request _request;
 
-        public readonly MockRequestResponseContext RequestResponseContext;
+    public readonly MockRequestResponseContext RequestResponseContext;
         
-        public MockSseStreamResource(World world) : base(world)
-        {
-            _completes = world.CompletesFor(new BasicCompletes<string>(world.Stage.Scheduler));
-            RequestResponseContext = new MockRequestResponseContext(new MockResponseSenderChannel());
-        }
-
-        public void NextRequest(Request request) => _request = request;
-
-        protected override ICompletesEventually Completes => _completes;
-
-        public override Context Context => new Context(RequestResponseContext, _request, _completes);
+    public MockSseStreamResource(World world) : base(world)
+    {
+        _completes = world.CompletesFor(new BasicCompletes<string>(world.Stage.Scheduler));
+        RequestResponseContext = new MockRequestResponseContext(new MockResponseSenderChannel());
     }
+
+    public void NextRequest(Request request) => _request = request;
+
+    protected override ICompletesEventually Completes => _completes;
+
+    public override Context Context => new Context(RequestResponseContext, _request, _completes);
 }

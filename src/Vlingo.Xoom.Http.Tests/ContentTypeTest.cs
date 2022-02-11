@@ -7,44 +7,43 @@
 
 using Xunit;
 
-namespace Vlingo.Xoom.Http.Tests
+namespace Vlingo.Xoom.Http.Tests;
+
+public class ContentTypeTest
 {
-    public class ContentTypeTest
+    [Fact]
+    public void TestThatContentTypeHasMediaTypeOnly()
     {
-        [Fact]
-        public void TestThatContentTypeHasMediaTypeOnly()
-        {
-            var contentType = ContentType.Of("text/html");
+        var contentType = ContentType.Of("text/html");
 
-            Assert.NotNull(contentType);
-            Assert.Equal("text/html", contentType.MediaType);
-            Assert.Equal("text/html", contentType.ToString());
-            Assert.Equal(string.Empty, contentType.Charset);
-            Assert.Equal(string.Empty, contentType.Boundary);
-        }
+        Assert.NotNull(contentType);
+        Assert.Equal("text/html", contentType.MediaType);
+        Assert.Equal("text/html", contentType.ToString());
+        Assert.Equal(string.Empty, contentType.Charset);
+        Assert.Equal(string.Empty, contentType.Boundary);
+    }
 
-        [Fact]
-        public void TestThatContentTypeHasMediaTypeCharsetOnly()
-        {
-            var contentType = ContentType.Of("text/html", "charset=UTF-8");
+    [Fact]
+    public void TestThatContentTypeHasMediaTypeCharsetOnly()
+    {
+        var contentType = ContentType.Of("text/html", "charset=UTF-8");
 
-            Assert.NotNull(contentType);
-            Assert.Equal("text/html", contentType.MediaType);
-            Assert.Equal("charset=UTF-8", contentType.Charset);
-            Assert.Equal("text/html; charset=UTF-8", contentType.ToString());
-            Assert.Equal(string.Empty, contentType.Boundary);
-        }
+        Assert.NotNull(contentType);
+        Assert.Equal("text/html", contentType.MediaType);
+        Assert.Equal("charset=UTF-8", contentType.Charset);
+        Assert.Equal("text/html; charset=UTF-8", contentType.ToString());
+        Assert.Equal(string.Empty, contentType.Boundary);
+    }
 
-        [Fact]
-        public void TestThatContentTypeHasMediaTypeCharsetBoundaryOnly()
-        {
-            var contentType = ContentType.Of("text/html", "charset=UTF-8", "boundary=something");
+    [Fact]
+    public void TestThatContentTypeHasMediaTypeCharsetBoundaryOnly()
+    {
+        var contentType = ContentType.Of("text/html", "charset=UTF-8", "boundary=something");
 
-            Assert.NotNull(contentType);
-            Assert.Equal("text/html", contentType.MediaType);
-            Assert.Equal("charset=UTF-8", contentType.Charset);
-            Assert.Equal("boundary=something", contentType.Boundary);
-            Assert.Equal("text/html; charset=UTF-8; boundary=something", contentType.ToString());
-        }
+        Assert.NotNull(contentType);
+        Assert.Equal("text/html", contentType.MediaType);
+        Assert.Equal("charset=UTF-8", contentType.Charset);
+        Assert.Equal("boundary=something", contentType.Boundary);
+        Assert.Equal("text/html; charset=UTF-8; boundary=something", contentType.ToString());
     }
 }

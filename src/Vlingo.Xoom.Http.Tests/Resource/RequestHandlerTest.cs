@@ -18,227 +18,226 @@ using Xunit;
 using Xunit.Abstractions;
 using Action = Vlingo.Xoom.Http.Resource.Action;
 
-namespace Vlingo.Xoom.Http.Tests.Resource
+namespace Vlingo.Xoom.Http.Tests.Resource;
+
+public class RequestHandlerTest : RequestHandlerTestBase
 {
-    public class RequestHandlerTest : RequestHandlerTestBase
+    [Fact]
+    public void ExecutionErrorUsesErrorHandlerWhenExceptionThrown()
     {
-        [Fact]
-        public void ExecutionErrorUsesErrorHandlerWhenExceptionThrown()
-        {
-            var testStatus = ResponseStatus.BadRequest;
+        var testStatus = ResponseStatus.BadRequest;
 
-            var handler = new RequestHandlerFake(
-                Method.Get, 
-                "/hello",
-                new List<IParameterResolver>(),
-                () => throw new Exception("Handler failed"));
+        var handler = new RequestHandlerFake(
+            Method.Get, 
+            "/hello",
+            new List<IParameterResolver>(),
+            () => throw new Exception("Handler failed"));
 
-            var customHandler = new ErrorHandlerImpl(exception => {
-                Assert.True(exception != null);
-                Assert.IsAssignableFrom<Exception>(exception);
-                return Response.Of(testStatus);
-            });
+        var customHandler = new ErrorHandlerImpl(exception => {
+            Assert.True(exception != null);
+            Assert.IsAssignableFrom<Exception>(exception);
+            return Response.Of(testStatus);
+        });
             
 
-            var response = handler.Execute(Request.WithMethod(Method.Get), customHandler, Logger).Await();
-            AssertResponsesAreEquals(Response.Of(testStatus), response);
-        }
+        var response = handler.Execute(Request.WithMethod(Method.Get), customHandler, Logger).Await();
+        AssertResponsesAreEquals(Response.Of(testStatus), response);
+    }
         
-        [Fact]
-        public void ExecutionErrorObjectUsesErrorHandlerWhenExceptionThrown()
-        {
-            var testStatus = ResponseStatus.BadRequest;
+    [Fact]
+    public void ExecutionErrorObjectUsesErrorHandlerWhenExceptionThrown()
+    {
+        var testStatus = ResponseStatus.BadRequest;
 
-            var validHandler = new ErrorHandlerImpl(exception => {
-                Assert.True(exception != null);
-                Assert.IsAssignableFrom<Exception>(exception);
-                return Response.Of(testStatus);
-            });
+        var validHandler = new ErrorHandlerImpl(exception => {
+            Assert.True(exception != null);
+            Assert.IsAssignableFrom<Exception>(exception);
+            return Response.Of(testStatus);
+        });
             
-            var handler = new RequestObjectHandlerFake(
-                Method.Get, 
-                "/hello",
-                validHandler,
-                () => throw new Exception("Handler failed"));
+        var handler = new RequestObjectHandlerFake(
+            Method.Get, 
+            "/hello",
+            validHandler,
+            () => throw new Exception("Handler failed"));
 
 
-            var response = handler.Execute(Request.WithMethod(Method.Get), null, Logger).Await();
-            AssertResponsesAreEquals(Response.Of(testStatus), response);
-        }
+        var response = handler.Execute(Request.WithMethod(Method.Get), null, Logger).Await();
+        AssertResponsesAreEquals(Response.Of(testStatus), response);
+    }
         
-        [Fact]
-        public void InternalErrorReturnedWhenErrorHandlerThrowsException()
-        {
-            var testStatus = ResponseStatus.InternalServerError;
+    [Fact]
+    public void InternalErrorReturnedWhenErrorHandlerThrowsException()
+    {
+        var testStatus = ResponseStatus.InternalServerError;
 
-            var handler = new RequestHandlerFake(
-                Method.Get, 
-                "/hello",
-                new List<IParameterResolver>(),
-                () => throw new Exception("Handler failed"));
+        var handler = new RequestHandlerFake(
+            Method.Get, 
+            "/hello",
+            new List<IParameterResolver>(),
+            () => throw new Exception("Handler failed"));
 
-            var badHandler = new ErrorHandlerImpl(exception => throw new InvalidOperationException());
+        var badHandler = new ErrorHandlerImpl(exception => throw new InvalidOperationException());
 
-            var response = handler.Execute(Request.WithMethod(Method.Get), badHandler, Logger).Await();
-            AssertResponsesAreEquals(Response.Of(testStatus), response);
-        }
+        var response = handler.Execute(Request.WithMethod(Method.Get), badHandler, Logger).Await();
+        AssertResponsesAreEquals(Response.Of(testStatus), response);
+    }
         
-        [Fact]
-        public void InternalErrorReturnedWhenNoErrorHandlerDefined()
-        {
-            var testStatus = ResponseStatus.InternalServerError;
+    [Fact]
+    public void InternalErrorReturnedWhenNoErrorHandlerDefined()
+    {
+        var testStatus = ResponseStatus.InternalServerError;
 
-            var handler = new RequestHandlerFake(
-                Method.Get, 
-                "/hello",
-                new List<IParameterResolver>(),
-                () => throw new Exception("Handler failed"));
+        var handler = new RequestHandlerFake(
+            Method.Get, 
+            "/hello",
+            new List<IParameterResolver>(),
+            () => throw new Exception("Handler failed"));
 
-            var response = handler.Execute(Request.WithMethod(Method.Get), null, Logger).Await();
-            AssertResponsesAreEquals(Response.Of(testStatus), response);
-        }
+        var response = handler.Execute(Request.WithMethod(Method.Get), null, Logger).Await();
+        AssertResponsesAreEquals(Response.Of(testStatus), response);
+    }
         
-        [Fact]
-        public void MappingNotAvailableReturnsMediaTypeNotFoundResponse()
-        {
-            var testStatus = ResponseStatus.UnsupportedMediaType;
+    [Fact]
+    public void MappingNotAvailableReturnsMediaTypeNotFoundResponse()
+    {
+        var testStatus = ResponseStatus.UnsupportedMediaType;
 
-            var handler = new RequestHandlerFake(
-                Method.Get, 
-                "/hello",
-                new List<IParameterResolver>(),
-                () => throw new MediaTypeNotSupportedException("foo/bar"));
+        var handler = new RequestHandlerFake(
+            Method.Get, 
+            "/hello",
+            new List<IParameterResolver>(),
+            () => throw new MediaTypeNotSupportedException("foo/bar"));
 
-            var response = handler.Execute(Request.WithMethod(Method.Get), null, Logger).Await();
-            AssertResponsesAreEquals(Response.Of(testStatus), response);
-        }
+        var response = handler.Execute(Request.WithMethod(Method.Get), null, Logger).Await();
+        AssertResponsesAreEquals(Response.Of(testStatus), response);
+    }
         
-        [Fact]
-        public void ObjectResponseMappedToContentType()
-        {
-            var name = new Name("first", "last");
+    [Fact]
+    public void ObjectResponseMappedToContentType()
+    {
+        var name = new Name("first", "last");
             
-            var handler = new RequestObjectHandlerFake(
-                Method.Get, 
-                "/hello",
-                () => Completes.WithSuccess(ObjectResponse<Name>.Of(ResponseStatus.Ok, name)));
+        var handler = new RequestObjectHandlerFake(
+            Method.Get, 
+            "/hello",
+            () => Completes.WithSuccess(ObjectResponse<Name>.Of(ResponseStatus.Ok, name)));
 
 
-            var response = handler.Execute(Request.WithMethod(Method.Get), null, Logger).Await();
-            var nameAsJson = JsonSerialization.Serialized(name);
-            AssertResponsesAreEquals(
-                Response.Of(ResponseStatus.Ok,
-                    ResponseHeader.WithHeaders(ResponseHeader.ContentType, ContentMediaType.Json.ToString()),
-                    nameAsJson),
-                response);
-        }
+        var response = handler.Execute(Request.WithMethod(Method.Get), null, Logger).Await();
+        var nameAsJson = JsonSerialization.Serialized(name);
+        AssertResponsesAreEquals(
+            Response.Of(ResponseStatus.Ok,
+                ResponseHeader.WithHeaders(ResponseHeader.ContentType, ContentMediaType.Json.ToString()),
+                nameAsJson),
+            response);
+    }
         
-        [Fact]
-        public void GenerateActionSignatureWhenNoPathIsSpecifiedIsEmptyString()
-        {
-            var handler = new RequestHandlerFake(
-                Method.Get,
-                "/hello",
-                new List<IParameterResolver> { ParameterResolver.Body<NameData>()});
+    [Fact]
+    public void GenerateActionSignatureWhenNoPathIsSpecifiedIsEmptyString()
+    {
+        var handler = new RequestHandlerFake(
+            Method.Get,
+            "/hello",
+            new List<IParameterResolver> { ParameterResolver.Body<NameData>()});
 
-            Assert.Equal("", handler.ActionSignature);
-        }
-
-        [Fact]
-        public void GenerateActionSignatureWithOnePathParameterReturnsSignatureWithOneParam()
-        {
-            var handler = new RequestHandlerFake(
-                Method.Get,
-                "/user/{userId}",
-                new List<IParameterResolver> { ParameterResolver.Path<string>(0)} );
-
-            Assert.Equal("String userId", handler.ActionSignature);
-        }
-
-        [Fact]
-        public void GenerateActionWithTwoPathParameters()
-        {
-            var handler = new RequestHandlerFake(
-                Method.Get,
-                "/user/{userId}/comment/{commentId}",
-                new List<IParameterResolver> { ParameterResolver.Path<string>(0), ParameterResolver.Path<int>(0)} );
-
-            Assert.Equal("String userId, Int32 commentId", handler.ActionSignature);
-        }
-
-        [Fact]
-        public void GenerateActionWithOnePathParameterAndBodyJustReturnPathParameterSignature()
-        {
-            var handler = new RequestHandlerFake(
-                Method.Get,
-                "/user/{userId}",
-                new List<IParameterResolver> { ParameterResolver.Path<string>(0), ParameterResolver.Body<NameData>()} );
-
-            Assert.Equal("String userId", handler.ActionSignature);
-        }
-
-        [Fact]
-        public void UnsortedPathParametersThrowsException()
-        {
-            Assert.Throws<ArgumentException>(() =>
-            {
-                return new RequestHandlerFake(
-                    Method.Get,
-                    "/user/{userId}",
-                    new List<IParameterResolver>
-                        {ParameterResolver.Body<NameData>(), ParameterResolver.Path<string>(0)});
-            });
-        }
-        
-        public RequestHandlerTest(ITestOutputHelper output) : base(output)
-        {
-        }
+        Assert.Equal("", handler.ActionSignature);
     }
 
-    internal class RequestObjectHandlerFake : RequestHandler
+    [Fact]
+    public void GenerateActionSignatureWithOnePathParameterReturnsSignatureWithOneParam()
     {
-        private readonly RequestHandler0.ParamExecutor0 _executor;
-        private readonly IErrorHandler _errorHandler;
+        var handler = new RequestHandlerFake(
+            Method.Get,
+            "/user/{userId}",
+            new List<IParameterResolver> { ParameterResolver.Path<string>(0)} );
 
-        internal RequestObjectHandlerFake(Method method, string path, RequestHandler0.ObjectHandler0 handler) : base (method, path, new List<IParameterResolver>())
-        {
-            _executor = (request, mediaTypeMapper1, errorHandler1, logger1) =>
-                RequestObjectExecutor.ExecuteRequest(request, mediaTypeMapper1, handler.Invoke, _errorHandler, logger1);
-        }
-        
-        internal RequestObjectHandlerFake(Method method, string path, IErrorHandler errorHandler, RequestHandler0.ObjectHandler0 handler) : base(method, path, new List<IParameterResolver>())
-        {
-            _executor = (request, mediaTypeMapper1, errorHandler1, logger1) =>
-                RequestObjectExecutor.ExecuteRequest(request, mediaTypeMapper1, handler.Invoke, errorHandler1, logger1);
-            _errorHandler = errorHandler;
-        }
-
-        internal override ICompletes<Response> Execute(Request request, Action.MappedParameters mappedParameters, ILogger logger)
-            => _executor.Invoke(request, DefaultMediaTypeMapper.Instance, _errorHandler, logger);
+        Assert.Equal("String userId", handler.ActionSignature);
     }
+
+    [Fact]
+    public void GenerateActionWithTwoPathParameters()
+    {
+        var handler = new RequestHandlerFake(
+            Method.Get,
+            "/user/{userId}/comment/{commentId}",
+            new List<IParameterResolver> { ParameterResolver.Path<string>(0), ParameterResolver.Path<int>(0)} );
+
+        Assert.Equal("String userId, Int32 commentId", handler.ActionSignature);
+    }
+
+    [Fact]
+    public void GenerateActionWithOnePathParameterAndBodyJustReturnPathParameterSignature()
+    {
+        var handler = new RequestHandlerFake(
+            Method.Get,
+            "/user/{userId}",
+            new List<IParameterResolver> { ParameterResolver.Path<string>(0), ParameterResolver.Body<NameData>()} );
+
+        Assert.Equal("String userId", handler.ActionSignature);
+    }
+
+    [Fact]
+    public void UnsortedPathParametersThrowsException()
+    {
+        Assert.Throws<ArgumentException>(() =>
+        {
+            return new RequestHandlerFake(
+                Method.Get,
+                "/user/{userId}",
+                new List<IParameterResolver>
+                    {ParameterResolver.Body<NameData>(), ParameterResolver.Path<string>(0)});
+        });
+    }
+        
+    public RequestHandlerTest(ITestOutputHelper output) : base(output)
+    {
+    }
+}
+
+internal class RequestObjectHandlerFake : RequestHandler
+{
+    private readonly RequestHandler0.ParamExecutor0 _executor;
+    private readonly IErrorHandler _errorHandler;
+
+    internal RequestObjectHandlerFake(Method method, string path, RequestHandler0.ObjectHandler0 handler) : base (method, path, new List<IParameterResolver>())
+    {
+        _executor = (request, mediaTypeMapper1, errorHandler1, logger1) =>
+            RequestObjectExecutor.ExecuteRequest(request, mediaTypeMapper1, handler.Invoke, _errorHandler, logger1);
+    }
+        
+    internal RequestObjectHandlerFake(Method method, string path, IErrorHandler errorHandler, RequestHandler0.ObjectHandler0 handler) : base(method, path, new List<IParameterResolver>())
+    {
+        _executor = (request, mediaTypeMapper1, errorHandler1, logger1) =>
+            RequestObjectExecutor.ExecuteRequest(request, mediaTypeMapper1, handler.Invoke, errorHandler1, logger1);
+        _errorHandler = errorHandler;
+    }
+
+    internal override ICompletes<Response> Execute(Request request, Action.MappedParameters mappedParameters, ILogger logger)
+        => _executor.Invoke(request, DefaultMediaTypeMapper.Instance, _errorHandler, logger);
+}
     
-    internal class RequestHandlerFake : RequestHandler
+internal class RequestHandlerFake : RequestHandler
+{
+    private readonly RequestHandler0.ParamExecutor0 _executor;
+        
+    internal RequestHandlerFake(Method method, string path, List<IParameterResolver> parameterResolvers) : base(method, path, parameterResolvers)
     {
-        private readonly RequestHandler0.ParamExecutor0 _executor;
-        
-        internal RequestHandlerFake(Method method, string path, List<IParameterResolver> parameterResolvers) : base(method, path, parameterResolvers)
-        {
-            _executor = (request, mediaTypeMapper1, errorHandler1, logger1) =>
-                RequestExecutor.ExecuteRequest(() => Completes.WithSuccess(Response.Of(ResponseStatus.Ok)), errorHandler1, logger1);
-        }
-
-        internal RequestHandlerFake(Method method, string path, List<IParameterResolver> parameterResolvers, RequestHandler0.Handler0 handler) : base (method, path, parameterResolvers)
-        {
-            _executor = (request, mediaTypeMapper1, errorHandler1, logger1) =>
-                RequestExecutor.ExecuteRequest(handler.Invoke, errorHandler1, logger1);
-        }
-
-        internal override ICompletes<Response> Execute(Request request, Action.MappedParameters mappedParameters, ILogger logger)
-        {
-            throw new NotImplementedException();
-        }
-        
-        internal ICompletes<Response> Execute(Request request, IErrorHandler errorHandler, ILogger logger) => 
-            _executor.Invoke(request, null, errorHandler, logger);
+        _executor = (request, mediaTypeMapper1, errorHandler1, logger1) =>
+            RequestExecutor.ExecuteRequest(() => Completes.WithSuccess(Response.Of(ResponseStatus.Ok)), errorHandler1, logger1);
     }
+
+    internal RequestHandlerFake(Method method, string path, List<IParameterResolver> parameterResolvers, RequestHandler0.Handler0 handler) : base (method, path, parameterResolvers)
+    {
+        _executor = (request, mediaTypeMapper1, errorHandler1, logger1) =>
+            RequestExecutor.ExecuteRequest(handler.Invoke, errorHandler1, logger1);
+    }
+
+    internal override ICompletes<Response> Execute(Request request, Action.MappedParameters mappedParameters, ILogger logger)
+    {
+        throw new NotImplementedException();
+    }
+        
+    internal ICompletes<Response> Execute(Request request, IErrorHandler errorHandler, ILogger logger) => 
+        _executor.Invoke(request, null, errorHandler, logger);
 }

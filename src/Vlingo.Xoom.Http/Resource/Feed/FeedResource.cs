@@ -9,47 +9,46 @@ using System;
 using System.Collections.Generic;
 using Vlingo.Xoom.Actors;
 
-namespace Vlingo.Xoom.Http.Resource.Feed
+namespace Vlingo.Xoom.Http.Resource.Feed;
+
+/// <summary>
+/// Standard reusable resource for serving feeds.
+/// </summary>
+public class FeedResource : ResourceHandler
 {
+    private readonly World _world;
+    private readonly Dictionary<string, IFeedProducer> _producers;
+
     /// <summary>
-    /// Standard reusable resource for serving feeds.
+    /// Construct my default state.
     /// </summary>
-    public class FeedResource : ResourceHandler
+    /// <param name="world">The World</param>
+    public FeedResource(World world)
     {
-        private readonly World _world;
-        private readonly Dictionary<string, IFeedProducer> _producers;
-
-        /// <summary>
-        /// Construct my default state.
-        /// </summary>
-        /// <param name="world">The World</param>
-        public FeedResource(World world)
-        {
-            _world = world;
-            _producers = new Dictionary<string, IFeedProducer>(2);
-        }
+        _world = world;
+        _producers = new Dictionary<string, IFeedProducer>(2);
+    }
         
-        public void Feed(string feedName, string feedProductId, Type feedProducerClass, int feedProductElements)
+    public void Feed(string feedName, string feedProductId, Type feedProducerClass, int feedProductElements)
+    {
+        var producer = FeedProducer(feedName, feedProducerClass);
+        if (producer == null)
         {
-            var producer = FeedProducer(feedName, feedProducerClass);
-            if (producer == null)
-            {
-                Completes?.With(Response.Of(ResponseStatus.NotFound, $"Feed '{feedName}' does not exist."));
-            }
-            else
-            {
-                producer.ProduceFeedFor(new FeedProductRequest(Context, feedName, feedProductId, feedProductElements));
-            }
+            Completes?.With(Response.Of(ResponseStatus.NotFound, $"Feed '{feedName}' does not exist."));
         }
+        else
+        {
+            producer.ProduceFeedFor(new FeedProductRequest(Context, feedName, feedProductId, feedProductElements));
+        }
+    }
 
-        private IFeedProducer FeedProducer(string feedName, Type feedProducerClass)
+    private IFeedProducer FeedProducer(string feedName, Type feedProducerClass)
+    {
+        if (!_producers.TryGetValue(feedName, out var producer))
         {
-            if (!_producers.TryGetValue(feedName, out var producer))
-            {
-                producer = FeedProducerFactory.Using(_world.Stage, feedProducerClass);
-                _producers.Add(feedName, producer);
-            }
-            return producer;
+            producer = FeedProducerFactory.Using(_world.Stage, feedProducerClass);
+            _producers.Add(feedName, producer);
         }
+        return producer;
     }
 }

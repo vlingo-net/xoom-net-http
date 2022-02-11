@@ -8,12 +8,11 @@
 using System;
 using Vlingo.Xoom.Http.Resource;
 
-namespace Vlingo.Xoom.Http.Tests.Sample.User
-{
-    public class ProfileDataMapper : IMapper
-    {
-        public object From(string data, Type type) => DefaultJsonMapper.Instance.From(data, type);
+namespace Vlingo.Xoom.Http.Tests.Sample.User;
 
-        public string From<T>(T data) => DefaultJsonMapper.Instance.From(data);
-    }
+public class ProfileDataMapper : IMapper
+{
+    public object From(string data, Type type) => DefaultJsonMapper.Instance.From(data, type);
+
+    public string From<T>(T data) => DefaultJsonMapper.Instance.From(data);
 }

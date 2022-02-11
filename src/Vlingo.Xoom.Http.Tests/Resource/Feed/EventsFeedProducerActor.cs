@@ -9,26 +9,25 @@ using System.Text;
 using Vlingo.Xoom.Actors;
 using Vlingo.Xoom.Http.Resource.Feed;
 
-namespace Vlingo.Xoom.Http.Tests.Resource.Feed
+namespace Vlingo.Xoom.Http.Tests.Resource.Feed;
+
+public class EventsFeedProducerActor : Actor, IFeedProducer
 {
-    public class EventsFeedProducerActor : Actor, IFeedProducer
+    public void ProduceFeedFor(FeedProductRequest request)
     {
-        public void ProduceFeedFor(FeedProductRequest request)
+        var body =
+            new StringBuilder()
+                .Append(request.FeedName)
+                .Append(":")
+                .Append(request.FeedProductId)
+                .Append(":");
+            
+        for (var count = 1; count <= request.FeedProductElements; ++count)
         {
-            var body =
-                new StringBuilder()
-                    .Append(request.FeedName)
-                    .Append(":")
-                    .Append(request.FeedProductId)
-                    .Append(":");
-            
-            for (var count = 1; count <= request.FeedProductElements; ++count)
-            {
-                body.Append(count).Append("\n");
-            }
-            
-            var response = Response.Of(ResponseStatus.Ok, body.ToString());
-            request.Context?.Completes.With(response);
+            body.Append(count).Append("\n");
         }
+            
+        var response = Response.Of(ResponseStatus.Ok, body.ToString());
+        request.Context?.Completes.With(response);
     }
 }

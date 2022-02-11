@@ -10,74 +10,73 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using Vlingo.Xoom.Actors;
 
-namespace Vlingo.Xoom.Http.Resource
+namespace Vlingo.Xoom.Http.Resource;
+
+public class Resources
 {
-    public class Resources
+    private readonly IDictionary<string, IResource> _namedResources;
+
+    public static Resources Are(params IResource[] resources)
     {
-        private readonly IDictionary<string, IResource> _namedResources;
-
-        public static Resources Are(params IResource[] resources)
+        var all = new Resources();
+        foreach(var resource in resources)
         {
-            var all = new Resources();
-            foreach(var resource in resources)
-            {
-                all._namedResources[resource.Name] = resource;
-            }
-
-            return all;
+            all._namedResources[resource.Name] = resource;
         }
 
-        private Resources()
-        {
-            _namedResources = new Dictionary<string, IResource>();
-        }
+        return all;
+    }
 
-        internal Resources(IDictionary<string, IResource> namedResource)
-        {
-            _namedResources = new ReadOnlyDictionary<string, IResource>(namedResource);
-        }
+    private Resources()
+    {
+        _namedResources = new Dictionary<string, IResource>();
+    }
 
-        internal Resources(Resource resource)
-        {
-            _namedResources = new Dictionary<string, IResource>();
-            _namedResources[resource.Name] = resource;
-        }
+    internal Resources(IDictionary<string, IResource> namedResource)
+    {
+        _namedResources = new ReadOnlyDictionary<string, IResource>(namedResource);
+    }
 
-        public IResource ResourceOf(string name) => _namedResources[name];
+    internal Resources(Resource resource)
+    {
+        _namedResources = new Dictionary<string, IResource>();
+        _namedResources[resource.Name] = resource;
+    }
 
-        public IEnumerable<IResource> ResourceHandlers => _namedResources.Values;
+    public IResource ResourceOf(string name) => _namedResources[name];
+
+    public IEnumerable<IResource> ResourceHandlers => _namedResources.Values;
         
-        public IDictionary<string, IResource> NamedResources => _namedResources;
+    public IDictionary<string, IResource> NamedResources => _namedResources;
 
-        public override string ToString()
-            => $"Resources[namedResource={_namedResources}]";
+    public override string ToString()
+        => $"Resources[namedResource={_namedResources}]";
 
-        internal void DispatchMatching(Context context, ILogger logger)
+    internal void DispatchMatching(Context context, ILogger logger)
+    {
+        string message;
+
+        try
         {
-            string message;
-
-            try
+            foreach (var resource in _namedResources.Values)
             {
-                foreach (var resource in _namedResources.Values)
+                var matchResults = resource.MatchWith(context.Request?.Method, context.Request?.Uri);
+                if (matchResults.IsMatched)
                 {
-                    var matchResults = resource.MatchWith(context.Request?.Method, context.Request?.Uri);
-                    if (matchResults.IsMatched)
-                    {
-                        var mappedParameters = matchResults.Action?.Map(context.Request, matchResults.Parameters);
-                        resource.DispatchToHandlerWith(context, mappedParameters);
-                        return;
-                    }
+                    var mappedParameters = matchResults.Action?.Map(context.Request, matchResults.Parameters);
+                    resource.DispatchToHandlerWith(context, mappedParameters);
+                    return;
                 }
-                message = $"No matching resource for method {context.Request?.Method} and Uri {context.Request?.Uri}";
-                logger.Warn(message);
             }
-            catch (Exception e)
-            {
-                message = $"Problem dispatching request for method {context.Request?.Method} and Uri {context.Request?.Uri} because: {e.Message}";
-                logger.Error(message, e);
-            }
-
-            context.Completes.With(Response.Of(ResponseStatus.NotFound, message));
+            message = $"No matching resource for method {context.Request?.Method} and Uri {context.Request?.Uri}";
+            logger.Warn(message);
         }
+        catch (Exception e)
+        {
+            message = $"Problem dispatching request for method {context.Request?.Method} and Uri {context.Request?.Uri} because: {e.Message}";
+            logger.Error(message, e);
+        }
+
+        context.Completes.With(Response.Of(ResponseStatus.NotFound, message));
     }
 }

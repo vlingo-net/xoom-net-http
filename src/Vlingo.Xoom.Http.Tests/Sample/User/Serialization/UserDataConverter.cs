@@ -9,25 +9,24 @@ using System;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace Vlingo.Xoom.Http.Tests.Sample.User.Serialization
+namespace Vlingo.Xoom.Http.Tests.Sample.User.Serialization;
+
+public class UserDataConverter : JsonConverter<UserData>
 {
-    public class UserDataConverter : JsonConverter<UserData>
+    public override bool CanWrite { get; } = false;
+
+    public override void WriteJson(JsonWriter writer, UserData value, JsonSerializer serializer)
     {
-        public override bool CanWrite { get; } = false;
+    }
 
-        public override void WriteJson(JsonWriter writer, UserData value, JsonSerializer serializer)
-        {
-        }
+    public override UserData ReadJson(JsonReader reader, Type objectType, UserData existingValue, bool hasExistingValue, JsonSerializer serializer)
+    {
+        JObject jo = JObject.Load(reader);
 
-        public override UserData ReadJson(JsonReader reader, Type objectType, UserData existingValue, bool hasExistingValue, JsonSerializer serializer)
-        {
-            JObject jo = JObject.Load(reader);
-
-            var id = jo["Id"].ToObject<string>();
-            var nameData = jo["NameData"].ToObject<NameData>();
-            var contactData = jo["ContactData"].ToObject<ContactData>();
+        var id = jo["Id"].ToObject<string>();
+        var nameData = jo["NameData"].ToObject<NameData>();
+        var contactData = jo["ContactData"].ToObject<ContactData>();
             
-            return UserData.From(id, nameData, contactData);
-        }
+        return UserData.From(id, nameData, contactData);
     }
 }

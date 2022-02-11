@@ -10,38 +10,37 @@ using Vlingo.Xoom.Actors;
 using Vlingo.Xoom.Common;
 using Vlingo.Xoom.Wire.Message;
 
-namespace Vlingo.Xoom.Http.Resource
+namespace Vlingo.Xoom.Http.Resource;
+
+/// <summary>
+/// Load-balancing router of <code>IClientConsumer</code> requests.
+/// </summary>
+public class LoadBalancingClientRequestConsumerActor : SmallestMailboxRouter<IClientConsumer>, IClientConsumer
 {
-    /// <summary>
-    /// Load-balancing router of <code>IClientConsumer</code> requests.
-    /// </summary>
-    public class LoadBalancingClientRequestConsumerActor : SmallestMailboxRouter<IClientConsumer>, IClientConsumer
+    private const string ErrorMessage = "LoadBalancingClientRequestConsumerActor: Should not be reached. Message: ";
+
+    public LoadBalancingClientRequestConsumerActor(
+        Client.Configuration configuration,
+        RouterSpecification<IClientConsumer> specification) 
+        : base(specification)
     {
-        private const string ErrorMessage = "LoadBalancingClientRequestConsumerActor: Should not be reached. Message: ";
+    }
 
-        public LoadBalancingClientRequestConsumerActor(
-            Client.Configuration configuration,
-            RouterSpecification<IClientConsumer> specification) 
-            : base(specification)
-        {
-        }
+    public void Consume(IConsumerByteBuffer buffer)
+    {
+        var message = $"{ErrorMessage} Consume()";
+        Logger.Error(message, new NotSupportedException(message));
+    }
 
-        public void Consume(IConsumerByteBuffer buffer)
-        {
-            var message = $"{ErrorMessage} Consume()";
-            Logger.Error(message, new NotSupportedException(message));
-        }
+    public void IntervalSignal(IScheduled<object> scheduled, object data)
+    {
+        var message = $"{ErrorMessage} IntervalSignal()";
+        Logger.Error(message, new NotSupportedException(message));
+    }
 
-        public void IntervalSignal(IScheduled<object> scheduled, object data)
-        {
-            var message = $"{ErrorMessage} IntervalSignal()";
-            Logger.Error(message, new NotSupportedException(message));
-        }
-
-        public ICompletes<Response> RequestWith(Request request, ICompletes<Response> completes)
-        {
-            DispatchCommand((a, b, c) => a.RequestWith(b, c), request, completes);
-            return completes;
-        }
+    public ICompletes<Response> RequestWith(Request request, ICompletes<Response> completes)
+    {
+        DispatchCommand((a, b, c) => a.RequestWith(b, c), request, completes);
+        return completes;
     }
 }

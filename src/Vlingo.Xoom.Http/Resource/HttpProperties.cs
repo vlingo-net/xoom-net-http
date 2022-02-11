@@ -11,52 +11,51 @@ using System.IO;
 using System.Linq;
 using Vlingo.Xoom.Common;
 
-namespace Vlingo.Xoom.Http.Resource
+namespace Vlingo.Xoom.Http.Resource;
+
+public sealed class HttpProperties : ConfigurationProperties
 {
-    public sealed class HttpProperties : ConfigurationProperties
+    private static IDictionary<string, string> _properties = new Dictionary<string, string>();
+        
+    private static Func<HttpProperties> Factory = () =>
     {
-        private static IDictionary<string, string> _properties = new Dictionary<string, string>();
-        
-        private static Func<HttpProperties> Factory = () =>
-        {
-            var props = new HttpProperties(_properties);
-            props.Load(new FileInfo("vlingo-http.json"));
-            return props;
-        };
+        var props = new HttpProperties(_properties);
+        props.Load(new FileInfo("vlingo-http.json"));
+        return props;
+    };
 
-        private static Lazy<HttpProperties> SingleInstance = new Lazy<HttpProperties>(Factory, true);
+    private static Lazy<HttpProperties> SingleInstance = new Lazy<HttpProperties>(Factory, true);
 
-        public static HttpProperties Instance
+    public static HttpProperties Instance
+    {
+        get
         {
-            get
+            if (_properties.Any())
             {
-                if (_properties.Any())
-                {
-                    SingleInstance.Value.UpdateCustomProperties(_properties);
-                    _properties.Clear();
-                }
+                SingleInstance.Value.UpdateCustomProperties(_properties);
+                _properties.Clear();
+            }
                 
-                return SingleInstance.Value;
-            }
+            return SingleInstance.Value;
         }
+    }
         
-        public void SetCustomProperties(IDictionary<string, string> properties)
-        {
-            _properties = properties;
-            UpdateCustomProperties(_properties);
-        }
+    public void SetCustomProperties(IDictionary<string, string> properties)
+    {
+        _properties = properties;
+        UpdateCustomProperties(_properties);
+    }
 
-        private HttpProperties(IDictionary<string, string> properties)
-        {
-            _properties = properties;
-        }
+    private HttpProperties(IDictionary<string, string> properties)
+    {
+        _properties = properties;
+    }
         
-        private void UpdateCustomProperties(IDictionary<string, string> properties)
+    private void UpdateCustomProperties(IDictionary<string, string> properties)
+    {
+        foreach (var property in properties)
         {
-            foreach (var property in properties)
-            {
-                SetProperty(property.Key, property.Value);
-            }
+            SetProperty(property.Key, property.Value);
         }
     }
 }

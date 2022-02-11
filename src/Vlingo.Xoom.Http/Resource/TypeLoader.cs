@@ -8,40 +8,39 @@
 using System;
 using System.Linq;
 
-namespace Vlingo.Xoom.Http.Resource
+namespace Vlingo.Xoom.Http.Resource;
+
+public static class TypeLoader
 {
-    public static class TypeLoader
+    public static Type Load(string? className)
     {
-        public static Type Load(string? className)
+        if (string.IsNullOrEmpty(className))
         {
-            if (string.IsNullOrEmpty(className))
-            {
-                throw new ArgumentNullException(nameof(className), "Cannot load type for empty type name");
-            }
+            throw new ArgumentNullException(nameof(className), "Cannot load type for empty type name");
+        }
             
-            var classType = Type.GetType(className);
-            if (classType == null)
+        var classType = Type.GetType(className);
+        if (classType == null)
+        {
+            // tires to load type with assembly name
+            var classNameParts = className!.Split('.');
+            for (var i = 0; i < classNameParts.Length; i++)
             {
-                // tires to load type with assembly name
-                var classNameParts = className!.Split('.');
-                for (var i = 0; i < classNameParts.Length; i++)
+                var potentialAssemblyName = string.Join("." ,classNameParts.Take(i + 1));
+                var fullyQualifiedTypeName = $"{className}, {potentialAssemblyName}";
+                classType = Type.GetType(fullyQualifiedTypeName);
+                if (classType != null)
                 {
-                    var potentialAssemblyName = string.Join("." ,classNameParts.Take(i + 1));
-                    var fullyQualifiedTypeName = $"{className}, {potentialAssemblyName}";
-                    classType = Type.GetType(fullyQualifiedTypeName);
-                    if (classType != null)
-                    {
-                        break;
-                    }
+                    break;
                 }
             }
-
-            if (classType == null)
-            {
-                throw new InvalidOperationException($"Cannot load class for: {className}");
-            }
-                
-            return classType;
         }
+
+        if (classType == null)
+        {
+            throw new InvalidOperationException($"Cannot load class for: {className}");
+        }
+                
+        return classType;
     }
 }

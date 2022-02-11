@@ -10,56 +10,55 @@ using System.Collections.Generic;
 using System.Linq;
 using Vlingo.Xoom.Http.Media;
 
-namespace Vlingo.Xoom.Http.Resource
+namespace Vlingo.Xoom.Http.Resource;
+
+public class MediaTypeMapper
 {
-    public class MediaTypeMapper
+    private readonly IDictionary<ContentMediaType, IMapper> _mappersByContentType;
+
+    public MediaTypeMapper(IDictionary<ContentMediaType, IMapper> mappersByContentType) => 
+        _mappersByContentType = mappersByContentType;
+
+    public T From<T>(string? data, ContentMediaType contentMediaType)
+    {
+        var baseType = contentMediaType.ToBaseType();
+        if (_mappersByContentType.ContainsKey(baseType))
+        {
+            return (T)_mappersByContentType[baseType].From(data, typeof(T))!;
+        }
+        throw new MediaTypeNotSupportedException(contentMediaType.ToString());
+    }
+
+    public string From<T>(T data, ContentMediaType contentMediaType)
+    {
+        var baseType = contentMediaType.ToBaseType();
+        if (_mappersByContentType.ContainsKey(baseType))
+        {
+            return _mappersByContentType[baseType].From(data)!;
+        }
+        throw new MediaTypeNotSupportedException(contentMediaType.ToString());
+    }
+
+    public ContentMediaType[] MappedMediaTypes => _mappersByContentType.Keys.ToArray();
+
+    public class Builder
     {
         private readonly IDictionary<ContentMediaType, IMapper> _mappersByContentType;
 
-        public MediaTypeMapper(IDictionary<ContentMediaType, IMapper> mappersByContentType) => 
-            _mappersByContentType = mappersByContentType;
+        public Builder() => _mappersByContentType = new Dictionary<ContentMediaType, IMapper>();
 
-        public T From<T>(string? data, ContentMediaType contentMediaType)
+        public Builder AddMapperFor(ContentMediaType contentMediaType, IMapper mapper)
         {
-            var baseType = contentMediaType.ToBaseType();
-            if (_mappersByContentType.ContainsKey(baseType))
+            if (_mappersByContentType.ContainsKey(contentMediaType))
             {
-                return (T)_mappersByContentType[baseType].From(data, typeof(T))!;
-            }
-            throw new MediaTypeNotSupportedException(contentMediaType.ToString());
-        }
-
-        public string From<T>(T data, ContentMediaType contentMediaType)
-        {
-            var baseType = contentMediaType.ToBaseType();
-            if (_mappersByContentType.ContainsKey(baseType))
-            {
-                return _mappersByContentType[baseType].From(data)!;
-            }
-            throw new MediaTypeNotSupportedException(contentMediaType.ToString());
-        }
-
-        public ContentMediaType[] MappedMediaTypes => _mappersByContentType.Keys.ToArray();
-
-        public class Builder
-        {
-            private readonly IDictionary<ContentMediaType, IMapper> _mappersByContentType;
-
-            public Builder() => _mappersByContentType = new Dictionary<ContentMediaType, IMapper>();
-
-            public Builder AddMapperFor(ContentMediaType contentMediaType, IMapper mapper)
-            {
-                if (_mappersByContentType.ContainsKey(contentMediaType))
-                {
-                    throw new InvalidOperationException("Content mimeType already added");
-                }
-
-                _mappersByContentType[contentMediaType] = mapper;
-
-                return this;
+                throw new InvalidOperationException("Content mimeType already added");
             }
 
-            public MediaTypeMapper Build() => new MediaTypeMapper(_mappersByContentType);
+            _mappersByContentType[contentMediaType] = mapper;
+
+            return this;
         }
+
+        public MediaTypeMapper Build() => new MediaTypeMapper(_mappersByContentType);
     }
 }

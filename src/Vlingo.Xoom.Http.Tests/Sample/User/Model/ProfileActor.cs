@@ -8,30 +8,29 @@
 using Vlingo.Xoom.Actors;
 using Vlingo.Xoom.Common;
 
-namespace Vlingo.Xoom.Http.Tests.Sample.User.Model
+namespace Vlingo.Xoom.Http.Tests.Sample.User.Model;
+
+public class ProfileActor : Actor, IProfile
 {
-    public class ProfileActor : Actor, IProfile
+    private ProfileState _state;
+
+    public ProfileActor(ProfileState profileState) => _state = profileState;
+
+    public ICompletes<ProfileState> WithTwitterAccount(string twitterAccount)
     {
-        private ProfileState _state;
+        _state = _state.WithTwitterAccount(twitterAccount);
+        return Completes().With(_state);
+    }
 
-        public ProfileActor(ProfileState profileState) => _state = profileState;
+    public ICompletes<ProfileState> WithLinkedInAccount(string linkedInAccount)
+    {
+        _state = _state.WithLinkedInAccount(linkedInAccount);
+        return Completes().With(_state);
+    }
 
-        public ICompletes<ProfileState> WithTwitterAccount(string twitterAccount)
-        {
-            _state = _state.WithTwitterAccount(twitterAccount);
-            return Completes().With(_state);
-        }
-
-        public ICompletes<ProfileState> WithLinkedInAccount(string linkedInAccount)
-        {
-            _state = _state.WithLinkedInAccount(linkedInAccount);
-            return Completes().With(_state);
-        }
-
-        public ICompletes<ProfileState> WithWebSite(string website)
-        {
-            _state = _state.WithWebSite(website);
-            return Completes().With(_state);
-        }
+    public ICompletes<ProfileState> WithWebSite(string website)
+    {
+        _state = _state.WithWebSite(website);
+        return Completes().With(_state);
     }
 }

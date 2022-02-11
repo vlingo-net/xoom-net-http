@@ -9,35 +9,34 @@ using System;
 using Vlingo.Xoom.Http.Resource;
 using Xunit;
 
-namespace Vlingo.Xoom.Http.Tests.Resource
+namespace Vlingo.Xoom.Http.Tests.Resource;
+
+public class DefaultTextPlainMapperTest
 {
-    public class DefaultTextPlainMapperTest
+    [Fact]
+    public void TestFromObjectToStringUsesToString()
     {
-        [Fact]
-        public void TestFromObjectToStringUsesToString()
-        {
-            var mapper = new DefaultTextPlainMapper();
-            Assert.Equal("toStringResult", mapper.From(new ObjectForTest()));
-        }
-
-        [Fact]
-        public void TestDeserializationToNonStringFails()
-        {
-            var mapper = new DefaultTextPlainMapper();
-            Assert.Throws<InvalidOperationException>(() => mapper.From("some string", typeof(ObjectForTest)));
-        }
-
-        [Fact]
-        public void TestDeserializationToStringSucceed()
-        {
-            var mapper = new DefaultTextPlainMapper();
-            var canBeSerialized = mapper.From("some string", typeof(string));
-            Assert.Equal("some string", canBeSerialized);
-        }
+        var mapper = new DefaultTextPlainMapper();
+        Assert.Equal("toStringResult", mapper.From(new ObjectForTest()));
     }
+
+    [Fact]
+    public void TestDeserializationToNonStringFails()
+    {
+        var mapper = new DefaultTextPlainMapper();
+        Assert.Throws<InvalidOperationException>(() => mapper.From("some string", typeof(ObjectForTest)));
+    }
+
+    [Fact]
+    public void TestDeserializationToStringSucceed()
+    {
+        var mapper = new DefaultTextPlainMapper();
+        var canBeSerialized = mapper.From("some string", typeof(string));
+        Assert.Equal("some string", canBeSerialized);
+    }
+}
     
-    internal class ObjectForTest
-    {
-        public override string ToString() => "toStringResult";
-    }
+internal class ObjectForTest
+{
+    public override string ToString() => "toStringResult";
 }

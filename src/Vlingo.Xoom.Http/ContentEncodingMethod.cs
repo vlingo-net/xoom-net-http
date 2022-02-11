@@ -8,26 +8,25 @@
 using System;
 using Vlingo.Xoom.Common;
 
-namespace Vlingo.Xoom.Http
-{
-    public enum ContentEncodingMethod
-    {
-        Gzip,
-        Compress,
-        Deflate,
-        Brotli
-    }
+namespace Vlingo.Xoom.Http;
 
-    public static class ContentEncodingMethodHelper
+public enum ContentEncodingMethod
+{
+    Gzip,
+    Compress,
+    Deflate,
+    Brotli
+}
+
+public static class ContentEncodingMethodHelper
+{
+    public static Optional<ContentEncodingMethod> Parse(string value)
     {
-        public static Optional<ContentEncodingMethod> Parse(string value)
+        if (Enum.TryParse(value.ToLower().Trim() == "br" ? "brotli" : value.Trim(), true, out ContentEncodingMethod parsed))
         {
-            if (Enum.TryParse(value.ToLower().Trim() == "br" ? "brotli" : value.Trim(), true, out ContentEncodingMethod parsed))
-            {
-                return Optional.Of(parsed);
-            }
-            
-            return Optional.Empty<ContentEncodingMethod>();
+            return Optional.Of(parsed);
         }
+            
+        return Optional.Empty<ContentEncodingMethod>();
     }
 }

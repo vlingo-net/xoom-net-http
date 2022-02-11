@@ -7,17 +7,16 @@
 
 using System;
 
-namespace Vlingo.Xoom.Http.Resource
+namespace Vlingo.Xoom.Http.Resource;
+
+public class MediaTypeNotSupportedException : Exception
 {
-    public class MediaTypeNotSupportedException : Exception
+    private readonly string _mediaType;
+
+    public MediaTypeNotSupportedException(string mediaType)
     {
-        private readonly string _mediaType;
-
-        public MediaTypeNotSupportedException(string mediaType)
-        {
-            _mediaType = mediaType;
-        }
-
-        public override string Message => $"No mapper registered for the following media mimeType: {_mediaType}";
+        _mediaType = mediaType;
     }
+
+    public override string Message => $"No mapper registered for the following media mimeType: {_mediaType}";
 }

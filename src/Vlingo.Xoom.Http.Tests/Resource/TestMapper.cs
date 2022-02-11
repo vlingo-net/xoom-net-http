@@ -9,12 +9,11 @@ using System;
 using Vlingo.Xoom.Common.Serialization;
 using Vlingo.Xoom.Http.Resource;
 
-namespace Vlingo.Xoom.Http.Tests.Resource
-{
-    public class TestMapper : IMapper
-    {
-        public object From(string data, Type type) => JsonSerialization.Deserialized(data, type);
+namespace Vlingo.Xoom.Http.Tests.Resource;
 
-        public string From<T>(T data) => JsonSerialization.Serialized(data);
-    }
+public class TestMapper : IMapper
+{
+    public object From(string data, Type type) => JsonSerialization.Deserialized(data, type);
+
+    public string From<T>(T data) => JsonSerialization.Serialized(data);
 }

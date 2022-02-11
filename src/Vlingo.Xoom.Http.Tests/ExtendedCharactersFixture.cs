@@ -7,39 +7,38 @@
 
 using System.Text;
 
-namespace Vlingo.Xoom.Http.Tests
+namespace Vlingo.Xoom.Http.Tests;
+
+public class ExtendedCharactersFixture
 {
-    public class ExtendedCharactersFixture
+    public static string AsciiWithExtendedCharacters()
     {
-        public static string AsciiWithExtendedCharacters()
+        var builder = new StringBuilder();
+
+        var asciiBegin = 0x0020;
+        var asciiEnd = 0x007E;
+
+        for (var ascii = asciiBegin; ascii <= asciiEnd; ++ascii)
         {
-            var builder = new StringBuilder();
-
-            var asciiBegin = 0x0020;
-            var asciiEnd = 0x007E;
-
-            for (var ascii = asciiBegin; ascii <= asciiEnd; ++ascii)
-            {
-                builder.Append((char) ascii);
-            }
-
-            var cyrillicBegin = 0x0409;
-            var cyrillicEnd = 0x04FF;
-
-            for (var cyrillic = cyrillicBegin; cyrillic <= cyrillicEnd; ++cyrillic)
-            {
-                builder.Append((char) cyrillic);
-            }
-
-            var greekCopticBegin = 0x0370;
-            var greekCopticEnd = 0x03FF;
-
-            for (var greekCoptic = greekCopticBegin; greekCoptic <= greekCopticEnd; ++greekCoptic)
-            {
-                builder.Append((char) greekCoptic);
-            }
-
-            return builder.ToString();
+            builder.Append((char) ascii);
         }
+
+        var cyrillicBegin = 0x0409;
+        var cyrillicEnd = 0x04FF;
+
+        for (var cyrillic = cyrillicBegin; cyrillic <= cyrillicEnd; ++cyrillic)
+        {
+            builder.Append((char) cyrillic);
+        }
+
+        var greekCopticBegin = 0x0370;
+        var greekCopticEnd = 0x03FF;
+
+        for (var greekCoptic = greekCopticBegin; greekCoptic <= greekCopticEnd; ++greekCoptic)
+        {
+            builder.Append((char) greekCoptic);
+        }
+
+        return builder.ToString();
     }
 }

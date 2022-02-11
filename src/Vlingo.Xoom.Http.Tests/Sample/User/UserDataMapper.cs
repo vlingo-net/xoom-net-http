@@ -11,20 +11,19 @@ using Vlingo.Xoom.Common.Serialization;
 using Vlingo.Xoom.Http.Resource;
 using Vlingo.Xoom.Http.Tests.Sample.User.Serialization;
 
-namespace Vlingo.Xoom.Http.Tests.Sample.User
+namespace Vlingo.Xoom.Http.Tests.Sample.User;
+
+public class UserDataMapper : IMapper
 {
-    public class UserDataMapper : IMapper
+    private readonly JsonSerializerSettings _settings;
+
+    public UserDataMapper()
     {
-        private readonly JsonSerializerSettings _settings;
-
-        public UserDataMapper()
-        {
-            _settings = new JsonSerializerSettings();
-            _settings.Converters.Add(new UserDataConverter());
-        }
-        
-        public object From(string data, Type type) => JsonSerialization.Deserialized(data, type, _settings);
-
-        public string From<T>(T data) => JsonSerialization.Serialized(data, _settings);
+        _settings = new JsonSerializerSettings();
+        _settings.Converters.Add(new UserDataConverter());
     }
+        
+    public object From(string data, Type type) => JsonSerialization.Deserialized(data, type, _settings);
+
+    public string From<T>(T data) => JsonSerialization.Serialized(data, _settings);
 }

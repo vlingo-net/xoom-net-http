@@ -5,10 +5,9 @@
 // was not distributed with this file, You can obtain
 // one at https://mozilla.org/MPL/2.0/.
 
-namespace Vlingo.Xoom.Http.Resource
+namespace Vlingo.Xoom.Http.Resource;
+
+public interface IResponseConsumer
 {
-    public interface IResponseConsumer
-    {
-        void Consume(Response response);
-    }
+    void Consume(Response response);
 }

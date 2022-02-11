@@ -7,18 +7,17 @@
 
 using System;
 
-namespace Vlingo.Xoom.Http
+namespace Vlingo.Xoom.Http;
+
+public static class UrlFactory
 {
-    public static class UrlFactory
+    public static Uri ToMatchableUri(this string uri)
     {
-        public static Uri ToMatchableUri(this string uri)
-        {
-            var pathAndQuery = uri.Contains("?")
-                ? uri.Split('?')
-                : new []{ uri };
-            return pathAndQuery.Length == 1
-                ? new UriBuilder("http", "localhost", 80, pathAndQuery[0]).Uri
-                : new UriBuilder("http", "localhost", 80, pathAndQuery[0], $"?{pathAndQuery[1]}").Uri;
-        }
+        var pathAndQuery = uri.Contains("?")
+            ? uri.Split('?')
+            : new []{ uri };
+        return pathAndQuery.Length == 1
+            ? new UriBuilder("http", "localhost", 80, pathAndQuery[0]).Uri
+            : new UriBuilder("http", "localhost", 80, pathAndQuery[0], $"?{pathAndQuery[1]}").Uri;
     }
 }

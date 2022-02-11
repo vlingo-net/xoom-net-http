@@ -9,25 +9,24 @@ using System;
 using Vlingo.Xoom.Actors;
 using Vlingo.Xoom.Common;
 
-namespace Vlingo.Xoom.Http.Resource
-{
-    internal abstract class RequestExecutor
-    {
-        internal static ICompletes<Response> ExecuteRequest(
-            Func<ICompletes<Response>?> executeAction,
-            IErrorHandler errorHandler,
-            ILogger logger)
-        {
+namespace Vlingo.Xoom.Http.Resource;
 
-            try
-            {
-                return executeAction.Invoke()?
-                    .RecoverFrom(ex => ResourceErrorProcessor.ResourceHandlerError(errorHandler, logger, ex))!;
-            }
-            catch (Exception ex)
-            {
-                return Completes.WithFailure(ResourceErrorProcessor.ResourceHandlerError(errorHandler, logger, ex));
-            }
+internal abstract class RequestExecutor
+{
+    internal static ICompletes<Response> ExecuteRequest(
+        Func<ICompletes<Response>?> executeAction,
+        IErrorHandler errorHandler,
+        ILogger logger)
+    {
+
+        try
+        {
+            return executeAction.Invoke()?
+                .RecoverFrom(ex => ResourceErrorProcessor.ResourceHandlerError(errorHandler, logger, ex))!;
+        }
+        catch (Exception ex)
+        {
+            return Completes.WithFailure(ResourceErrorProcessor.ResourceHandlerError(errorHandler, logger, ex));
         }
     }
 }

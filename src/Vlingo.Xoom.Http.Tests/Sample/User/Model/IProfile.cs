@@ -7,12 +7,11 @@
 
 using Vlingo.Xoom.Common;
 
-namespace Vlingo.Xoom.Http.Tests.Sample.User.Model
+namespace Vlingo.Xoom.Http.Tests.Sample.User.Model;
+
+public interface IProfile
 {
-    public interface IProfile
-    {
-        ICompletes<ProfileState> WithTwitterAccount(string twitterAccount);
-        ICompletes<ProfileState> WithLinkedInAccount(string linkedInAccount);
-        ICompletes<ProfileState> WithWebSite(string website);
-    }
+    ICompletes<ProfileState> WithTwitterAccount(string twitterAccount);
+    ICompletes<ProfileState> WithLinkedInAccount(string linkedInAccount);
+    ICompletes<ProfileState> WithWebSite(string website);
 }

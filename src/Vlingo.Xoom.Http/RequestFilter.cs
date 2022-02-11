@@ -7,21 +7,20 @@
 
 using Vlingo.Xoom.Http.Resource;
 
-namespace Vlingo.Xoom.Http
+namespace Vlingo.Xoom.Http;
+
+/// <summary>
+/// A <see cref="Filter"/> for <see cref="Request"/> handling.
+/// </summary>
+public abstract class RequestFilter : Filter
 {
     /// <summary>
-    /// A <see cref="Filter"/> for <see cref="Request"/> handling.
+    /// Answer the <see cref="Request"/> to be propagated forward to the next <see cref="RequestFilter"/>
+    /// or to the <see cref="ResourceHandler"/>, and a <code>bool</code> indicating whether or not the
+    /// chain should continue or be short circuited. If the <code>bool</code> is true, the chain
+    /// will continue; if false, it will be short circuited.
     /// </summary>
-    public abstract class RequestFilter : Filter
-    {
-        /// <summary>
-        /// Answer the <see cref="Request"/> to be propagated forward to the next <see cref="RequestFilter"/>
-        /// or to the <see cref="ResourceHandler"/>, and a <code>bool</code> indicating whether or not the
-        /// chain should continue or be short circuited. If the <code>bool</code> is true, the chain
-        /// will continue; if false, it will be short circuited.
-        /// </summary>
-        /// <param name="request">The <see cref="Request"/> to filter</param>
-        /// <returns>A pair of <code>(Request, bool)</code></returns>
-        public abstract (Request, bool) Filter(Request request);
-    }
+    /// <param name="request">The <see cref="Request"/> to filter</param>
+    /// <returns>A pair of <code>(Request, bool)</code></returns>
+    public abstract (Request, bool) Filter(Request request);
 }

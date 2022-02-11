@@ -9,13 +9,12 @@ using System;
 using System.Collections.Generic;
 using Vlingo.Xoom.Actors;
 
-namespace Vlingo.Xoom.Http.Resource
+namespace Vlingo.Xoom.Http.Resource;
+
+public interface IConfigurationResource : IResource
 {
-    public interface IConfigurationResource : IResource
-    {
-        Type ResourceHandlerClass { get; }
-        IReadOnlyList<Action> Actions { get; }
-        IResourceRequestHandler PooledHandler { get; }
-        ResourceHandler ResourceHandlerInstance(Stage stage);
-    }
+    Type ResourceHandlerClass { get; }
+    IReadOnlyList<Action> Actions { get; }
+    IResourceRequestHandler PooledHandler { get; }
+    ResourceHandler ResourceHandlerInstance(Stage stage);
 }

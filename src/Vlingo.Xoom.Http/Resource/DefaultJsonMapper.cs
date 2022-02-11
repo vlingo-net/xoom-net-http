@@ -8,23 +8,22 @@
 using System;
 using Vlingo.Xoom.Common.Serialization;
 
-namespace Vlingo.Xoom.Http.Resource
+namespace Vlingo.Xoom.Http.Resource;
+
+public class DefaultJsonMapper : IMapper
 {
-    public class DefaultJsonMapper : IMapper
+    public static DefaultJsonMapper Instance { get; } = new DefaultJsonMapper();
+
+    public object? From(string? data, Type? type)
     {
-        public static DefaultJsonMapper Instance { get; } = new DefaultJsonMapper();
-
-        public object? From(string? data, Type? type)
+        if (type == typeof(string))
         {
-            if (type == typeof(string))
-            {
-                return data;
-            }
-
-            return JsonSerialization.Deserialized(data!, type!);
+            return data;
         }
 
-        public string From<T>(T data)
-            => JsonSerialization.Serialized(data);
+        return JsonSerialization.Deserialized(data!, type!);
     }
+
+    public string From<T>(T data)
+        => JsonSerialization.Serialized(data);
 }

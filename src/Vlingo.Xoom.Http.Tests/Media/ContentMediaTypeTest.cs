@@ -9,42 +9,41 @@ using Vlingo.Xoom.Http.Media;
 using Vlingo.Xoom.Http.Resource;
 using Xunit;
 
-namespace Vlingo.Xoom.Http.Tests.Media
+namespace Vlingo.Xoom.Http.Tests.Media;
+
+public class ContentMediaTypeTest
 {
-    public class ContentMediaTypeTest
+    [Fact]
+    public void WildCardsAreNotAllowed()
     {
-        [Fact]
-        public void WildCardsAreNotAllowed()
-        {
-            Assert.Throws<MediaTypeNotSupportedException>(() => new ContentMediaType("application", "*"));
-        }
+        Assert.Throws<MediaTypeNotSupportedException>(() => new ContentMediaType("application", "*"));
+    }
         
-        [Fact]
-        public void InvalidMimeTypeNotAllowed()
-        {
-            Assert.Throws<MediaTypeNotSupportedException>(() => new ContentMediaType("unknownMimeType", "foo"));
-        }
+    [Fact]
+    public void InvalidMimeTypeNotAllowed()
+    {
+        Assert.Throws<MediaTypeNotSupportedException>(() => new ContentMediaType("unknownMimeType", "foo"));
+    }
         
-        [Fact]
-        public void BuilderCreates()
-        {
-            var builder = new MediaTypeDescriptor.Builder<ContentMediaType>((a, b, c) => new ContentMediaType(a, b, c));
-            var contentMediaType = builder
-                .WithMimeType(ContentMediaType.MimeTypes.Application.ToString().ToLower())
-                .WithMimeSubType("json")
-                .Build();
+    [Fact]
+    public void BuilderCreates()
+    {
+        var builder = new MediaTypeDescriptor.Builder<ContentMediaType>((a, b, c) => new ContentMediaType(a, b, c));
+        var contentMediaType = builder
+            .WithMimeType(ContentMediaType.MimeTypes.Application.ToString().ToLower())
+            .WithMimeSubType("json")
+            .Build();
 
-            Assert.Equal(ContentMediaType.Json, contentMediaType);
-        }
+        Assert.Equal(ContentMediaType.Json, contentMediaType);
+    }
         
-        [Fact]
-        public void BuiltInTypesHaveCorrectFormat()
-        {
-            var jsonType = new ContentMediaType("application", "json");
-            Assert.Equal(jsonType, ContentMediaType.Json);
+    [Fact]
+    public void BuiltInTypesHaveCorrectFormat()
+    {
+        var jsonType = new ContentMediaType("application", "json");
+        Assert.Equal(jsonType, ContentMediaType.Json);
 
-            var xmlType = new ContentMediaType("application", "xml");
-            Assert.Equal(xmlType, ContentMediaType.Xml);
-        }
+        var xmlType = new ContentMediaType("application", "xml");
+        Assert.Equal(xmlType, ContentMediaType.Xml);
     }
 }

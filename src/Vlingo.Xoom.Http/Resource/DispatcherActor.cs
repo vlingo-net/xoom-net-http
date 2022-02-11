@@ -7,27 +7,26 @@
 
 using Vlingo.Xoom.Actors;
 
-namespace Vlingo.Xoom.Http.Resource
+namespace Vlingo.Xoom.Http.Resource;
+
+public class DispatcherActor : Actor, IDispatcher
 {
-    public class DispatcherActor : Actor, IDispatcher
+    private readonly Resources _resources;
+
+    public DispatcherActor(Resources resources)
     {
-        private readonly Resources _resources;
+        _resources = resources;
+        AllocateHandlerPools();
+    }
 
-        public DispatcherActor(Resources resources)
+    public void DispatchFor(Context context)
+        => _resources.DispatchMatching(context, Logger);
+
+    private void AllocateHandlerPools()
+    {
+        foreach (var resource in _resources.ResourceHandlers)
         {
-            _resources = resources;
-            AllocateHandlerPools();
-        }
-
-        public void DispatchFor(Context context)
-            => _resources.DispatchMatching(context, Logger);
-
-        private void AllocateHandlerPools()
-        {
-            foreach (var resource in _resources.ResourceHandlers)
-            {
-                resource.AllocateHandlerPool(Stage);
-            }
+            resource.AllocateHandlerPool(Stage);
         }
     }
 }

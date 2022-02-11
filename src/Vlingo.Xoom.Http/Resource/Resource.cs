@@ -9,46 +9,45 @@ using System;
 using Vlingo.Xoom.Actors;
 using Vlingo.Xoom.Common;
 
-namespace Vlingo.Xoom.Http.Resource
+namespace Vlingo.Xoom.Http.Resource;
+
+public abstract class Resource : IResource
 {
-    public abstract class Resource : IResource
+    private readonly IResourceRequestHandler[] _handlerPool;
+    private readonly AtomicLong _handlerPoolIndex;
+
+    public Resource(string name, int handlerPoolSize)
     {
-        private readonly IResourceRequestHandler[] _handlerPool;
-        private readonly AtomicLong _handlerPoolIndex;
-
-        public Resource(string name, int handlerPoolSize)
-        {
-            Name = name;
-            HandlerPoolSize = handlerPoolSize;
-            _handlerPool = new IResourceRequestHandler[handlerPoolSize];
-            _handlerPoolIndex = new AtomicLong(0);
-        }
+        Name = name;
+        HandlerPoolSize = handlerPoolSize;
+        _handlerPool = new IResourceRequestHandler[handlerPoolSize];
+        _handlerPoolIndex = new AtomicLong(0);
+    }
         
-        public string Name { get; }
-        public int HandlerPoolSize { get; }
+    public string Name { get; }
+    public int HandlerPoolSize { get; }
 
-        public abstract void DispatchToHandlerWith(Context context, Action.MappedParameters? mappedParameters);
-        public abstract Action.MatchResults MatchWith(Method? method, Uri? uri);
-        public abstract void Log(ILogger logger);
+    public abstract void DispatchToHandlerWith(Context context, Action.MappedParameters? mappedParameters);
+    public abstract Action.MatchResults MatchWith(Method? method, Uri? uri);
+    public abstract void Log(ILogger logger);
 
-        public abstract ResourceHandler ResourceHandlerInstance(Stage stage);
+    public abstract ResourceHandler ResourceHandlerInstance(Stage stage);
 
-        public void AllocateHandlerPool(Stage stage)
+    public void AllocateHandlerPool(Stage stage)
+    {
+        for (var i = 0; i < HandlerPoolSize; ++i)
         {
-            for (var i = 0; i < HandlerPoolSize; ++i)
-            {
-                _handlerPool[i] = stage.ActorFor<IResourceRequestHandler>(
-                    () => new ResourceRequestHandlerActor(ResourceHandlerInstance(stage)));
-            }
+            _handlerPool[i] = stage.ActorFor<IResourceRequestHandler>(
+                () => new ResourceRequestHandlerActor(ResourceHandlerInstance(stage)));
         }
+    }
 
-        public IResourceRequestHandler PooledHandler
+    public IResourceRequestHandler PooledHandler
+    {
+        get
         {
-            get
-            {
-                var index = (int)(_handlerPoolIndex.IncrementAndGet() % HandlerPoolSize);
-                return _handlerPool[index];
-            }
+            var index = (int)(_handlerPoolIndex.IncrementAndGet() % HandlerPoolSize);
+            return _handlerPool[index];
         }
     }
 }

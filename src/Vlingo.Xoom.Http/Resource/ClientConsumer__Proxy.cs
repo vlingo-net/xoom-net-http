@@ -10,128 +10,127 @@ using Vlingo.Xoom.Actors;
 using Vlingo.Xoom.Common;
 using Vlingo.Xoom.Wire.Message;
 
-namespace Vlingo.Xoom.Http.Resource
+namespace Vlingo.Xoom.Http.Resource;
+
+public class ClientConsumer__Proxy : IClientConsumer
 {
-    public class ClientConsumer__Proxy : IClientConsumer
+    private const string RepresentationConclude0 = "Conclude()";
+    private const string RequestWithRepresentation1 = "RequestWith(Vlingo.Xoom.Http.Request)";
+    private const string ConsumeRepresentation3 = "Consume(Vlingo.Xoom.Wire.Message.IConsumerByteBuffer)";
+    private const string IntervalSignalRepresentation4 = "IntervalSignal(Vlingo.Xoom.Actors.IScheduled<object>, object)";
+    private const string StopRepresentation5 = "Stop()";
+
+    private readonly Actor _actor;
+    private readonly IMailbox _mailbox;
+
+    public ClientConsumer__Proxy(Actor actor, IMailbox mailbox)
     {
-        private const string RepresentationConclude0 = "Conclude()";
-        private const string RequestWithRepresentation1 = "RequestWith(Vlingo.Xoom.Http.Request)";
-        private const string ConsumeRepresentation3 = "Consume(Vlingo.Xoom.Wire.Message.IConsumerByteBuffer)";
-        private const string IntervalSignalRepresentation4 = "IntervalSignal(Vlingo.Xoom.Actors.IScheduled<object>, object)";
-        private const string StopRepresentation5 = "Stop()";
+        _actor = actor;
+        _mailbox = mailbox;
+    }
 
-        private readonly Actor _actor;
-        private readonly IMailbox _mailbox;
+    public bool IsStopped => _actor.IsStopped;
 
-        public ClientConsumer__Proxy(Actor actor, IMailbox mailbox)
+    public void Consume(IConsumerByteBuffer buffer)
+    {
+        if (!_actor.IsStopped)
         {
-            _actor = actor;
-            _mailbox = mailbox;
-        }
-
-        public bool IsStopped => _actor.IsStopped;
-
-        public void Consume(IConsumerByteBuffer buffer)
-        {
-            if (!_actor.IsStopped)
+            Action<IClientConsumer> consumer = actor => actor.Consume(buffer);
+            if (_mailbox.IsPreallocated)
             {
-                Action<IClientConsumer> consumer = actor => actor.Consume(buffer);
-                if (_mailbox.IsPreallocated)
-                {
-                    _mailbox.Send(_actor, consumer, null, ConsumeRepresentation3);
-                }
-                else
-                {
-                    _mailbox.Send(new LocalMessage<IClientConsumer>(_actor, consumer, ConsumeRepresentation3));
-                }
+                _mailbox.Send(_actor, consumer, null, ConsumeRepresentation3);
             }
             else
             {
-                _actor.DeadLetters?.FailedDelivery(new DeadLetter(_actor, ConsumeRepresentation3));
+                _mailbox.Send(new LocalMessage<IClientConsumer>(_actor, consumer, ConsumeRepresentation3));
             }
         }
-
-        public void IntervalSignal(IScheduled<object> scheduled, object data)
+        else
         {
-            if (!_actor.IsStopped)
+            _actor.DeadLetters?.FailedDelivery(new DeadLetter(_actor, ConsumeRepresentation3));
+        }
+    }
+
+    public void IntervalSignal(IScheduled<object> scheduled, object data)
+    {
+        if (!_actor.IsStopped)
+        {
+            Action<IClientConsumer> consumer = actor => actor.IntervalSignal(scheduled, data);
+            if (_mailbox.IsPreallocated)
             {
-                Action<IClientConsumer> consumer = actor => actor.IntervalSignal(scheduled, data);
-                if (_mailbox.IsPreallocated)
-                {
-                    _mailbox.Send(_actor, consumer, null, IntervalSignalRepresentation4);
-                }
-                else
-                {
-                    _mailbox.Send(new LocalMessage<IClientConsumer>(_actor, consumer, IntervalSignalRepresentation4));
-                }
+                _mailbox.Send(_actor, consumer, null, IntervalSignalRepresentation4);
             }
             else
             {
-                _actor.DeadLetters?.FailedDelivery(new DeadLetter(_actor, IntervalSignalRepresentation4));
+                _mailbox.Send(new LocalMessage<IClientConsumer>(_actor, consumer, IntervalSignalRepresentation4));
             }
         }
-
-        public ICompletes<Response> RequestWith(Request request, ICompletes<Response> completes)
+        else
         {
-            if (!_actor.IsStopped)
+            _actor.DeadLetters?.FailedDelivery(new DeadLetter(_actor, IntervalSignalRepresentation4));
+        }
+    }
+
+    public ICompletes<Response> RequestWith(Request request, ICompletes<Response> completes)
+    {
+        if (!_actor.IsStopped)
+        {
+            Action<IClientConsumer> consumer = actor => actor.RequestWith(request, completes);
+            var innerCompletes = Completes.Using<Response>(_actor.Scheduler);
+            if (_mailbox.IsPreallocated)
             {
-                Action<IClientConsumer> consumer = actor => actor.RequestWith(request, completes);
-                var innerCompletes = Completes.Using<Response>(_actor.Scheduler);
-                if (_mailbox.IsPreallocated)
-                {
-                    _mailbox.Send(_actor, consumer, innerCompletes, RequestWithRepresentation1);
-                }
-                else
-                {
-                    _mailbox.Send(new LocalMessage<IClientConsumer>(_actor, consumer, innerCompletes, RequestWithRepresentation1));
-                }
+                _mailbox.Send(_actor, consumer, innerCompletes, RequestWithRepresentation1);
             }
             else
             {
-                _actor.DeadLetters?.FailedDelivery(new DeadLetter(_actor, RequestWithRepresentation1));
+                _mailbox.Send(new LocalMessage<IClientConsumer>(_actor, consumer, innerCompletes, RequestWithRepresentation1));
             }
-
-            return null!;
+        }
+        else
+        {
+            _actor.DeadLetters?.FailedDelivery(new DeadLetter(_actor, RequestWithRepresentation1));
         }
 
-        public void Stop()
+        return null!;
+    }
+
+    public void Stop()
+    {
+        if (!_actor.IsStopped)
         {
-            if (!_actor.IsStopped)
+            Action<IClientConsumer> consumer = actor => actor.Stop();
+            if (_mailbox.IsPreallocated)
             {
-                Action<IClientConsumer> consumer = actor => actor.Stop();
-                if (_mailbox.IsPreallocated)
-                {
-                    _mailbox.Send(_actor, consumer, null, StopRepresentation5);
-                }
-                else
-                {
-                    _mailbox.Send(new LocalMessage<IClientConsumer>(_actor, consumer, StopRepresentation5));
-                }
+                _mailbox.Send(_actor, consumer, null, StopRepresentation5);
             }
             else
             {
-                _actor.DeadLetters?.FailedDelivery(new DeadLetter(_actor, StopRepresentation5));
+                _mailbox.Send(new LocalMessage<IClientConsumer>(_actor, consumer, StopRepresentation5));
             }
         }
+        else
+        {
+            _actor.DeadLetters?.FailedDelivery(new DeadLetter(_actor, StopRepresentation5));
+        }
+    }
         
-        public void Conclude()
+    public void Conclude()
+    {
+        if (!_actor.IsStopped)
         {
-            if (!_actor.IsStopped)
+            Action<IStoppable> consumer = actor => actor.Conclude();
+            if (_mailbox.IsPreallocated)
             {
-                Action<IStoppable> consumer = actor => actor.Conclude();
-                if (_mailbox.IsPreallocated)
-                {
-                    _mailbox.Send(_actor, consumer, null, RepresentationConclude0);
-                }
-                else
-                {
-                    _mailbox.Send(new LocalMessage<IStoppable>(_actor, consumer, RepresentationConclude0));
-                }
+                _mailbox.Send(_actor, consumer, null, RepresentationConclude0);
             }
             else
             {
-                _actor.DeadLetters?.FailedDelivery(new DeadLetter(_actor, RepresentationConclude0));
+                _mailbox.Send(new LocalMessage<IStoppable>(_actor, consumer, RepresentationConclude0));
             }
+        }
+        else
+        {
+            _actor.DeadLetters?.FailedDelivery(new DeadLetter(_actor, RepresentationConclude0));
         }
     }
 }

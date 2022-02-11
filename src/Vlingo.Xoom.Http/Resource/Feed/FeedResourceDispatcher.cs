@@ -8,36 +8,35 @@
 using System;
 using System.Collections.Generic;
 
-namespace Vlingo.Xoom.Http.Resource.Feed
+namespace Vlingo.Xoom.Http.Resource.Feed;
+
+public class FeedResourceDispatcher : ConfigurationResource
 {
-    public class FeedResourceDispatcher : ConfigurationResource
+    public FeedResourceDispatcher(string name, Type resourceHandlerClass, int handlerPoolSize,
+        IList<Action> actions) : base(name, resourceHandlerClass, handlerPoolSize, actions)
     {
-        public FeedResourceDispatcher(string name, Type resourceHandlerClass, int handlerPoolSize,
-            IList<Action> actions) : base(name, resourceHandlerClass, handlerPoolSize, actions)
+    }
+
+    public override void DispatchToHandlerWith(Context context, Action.MappedParameters? mappedParameters)
+    {
+        Action<FeedResource> consumer;
+
+        try
         {
+            switch (mappedParameters?.ActionId)
+            {
+                case 0
+                    : // GET /feeds/{feedName}/{feedItemId} feed(String feedName, String feedProductId, Class<? extends Actor> feedProducerClass, int feedProductElements)
+                    consumer = handler => handler.Feed((string) mappedParameters.Mapped[0].Value!,
+                        (string) mappedParameters.Mapped[1].Value!, (Type) mappedParameters.Mapped[2].Value!,
+                        (int) mappedParameters.Mapped[3].Value!);
+                    PooledHandler.HandleFor(context, consumer);
+                    break;
+            }
         }
-
-        public override void DispatchToHandlerWith(Context context, Action.MappedParameters? mappedParameters)
+        catch (Exception e)
         {
-            Action<FeedResource> consumer;
-
-            try
-            {
-                switch (mappedParameters?.ActionId)
-                {
-                    case 0
-                        : // GET /feeds/{feedName}/{feedItemId} feed(String feedName, String feedProductId, Class<? extends Actor> feedProducerClass, int feedProductElements)
-                        consumer = handler => handler.Feed((string) mappedParameters.Mapped[0].Value!,
-                            (string) mappedParameters.Mapped[1].Value!, (Type) mappedParameters.Mapped[2].Value!,
-                            (int) mappedParameters.Mapped[3].Value!);
-                        PooledHandler.HandleFor(context, consumer);
-                        break;
-                }
-            }
-            catch (Exception e)
-            {
-                throw new InvalidOperationException($"Action mismatch: Request: {context.Request}Parameters: {mappedParameters}", e);
-            }
+            throw new InvalidOperationException($"Action mismatch: Request: {context.Request}Parameters: {mappedParameters}", e);
         }
     }
 }

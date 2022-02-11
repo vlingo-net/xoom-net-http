@@ -7,33 +7,32 @@
 
 using Vlingo.Xoom.Http.Tests.Sample.User.Model;
 
-namespace Vlingo.Xoom.Http.Tests.Sample.User
+namespace Vlingo.Xoom.Http.Tests.Sample.User;
+
+public class ContactData
 {
-    public class ContactData
-    {
-        public string EmailAddress { get; }
-        public string TelephoneNumber { get; }
+    public string EmailAddress { get; }
+    public string TelephoneNumber { get; }
 
-        public static ContactData From(string emailAddress, string telephoneNumber) => new ContactData(emailAddress, telephoneNumber);
+    public static ContactData From(string emailAddress, string telephoneNumber) => new ContactData(emailAddress, telephoneNumber);
 
-        public static ContactData From(Contact contact) => new ContactData(contact.EmailAddress, contact.TelephoneNumber);
+    public static ContactData From(Contact contact) => new ContactData(contact.EmailAddress, contact.TelephoneNumber);
   
-        public ContactData(string emailAddress, string telephoneNumber)
-        {
-            EmailAddress = emailAddress;
-            TelephoneNumber = telephoneNumber;
-        }
-
-        public override string ToString() => $"ContactData[emailAddress={EmailAddress}, telephoneNumber={TelephoneNumber}]";
-
-        public override bool Equals(object obj)
-        {
-            if (this == obj) return true;
-            if (!(obj is ContactData)) return false;
-            var contactData = (ContactData) obj;
-            return EmailAddress.Equals(contactData.EmailAddress) && TelephoneNumber.Equals(contactData.TelephoneNumber);
-        }
-
-        public override int GetHashCode() => 13 * EmailAddress.GetHashCode() + TelephoneNumber.GetHashCode();
+    public ContactData(string emailAddress, string telephoneNumber)
+    {
+        EmailAddress = emailAddress;
+        TelephoneNumber = telephoneNumber;
     }
+
+    public override string ToString() => $"ContactData[emailAddress={EmailAddress}, telephoneNumber={TelephoneNumber}]";
+
+    public override bool Equals(object obj)
+    {
+        if (this == obj) return true;
+        if (!(obj is ContactData)) return false;
+        var contactData = (ContactData) obj;
+        return EmailAddress.Equals(contactData.EmailAddress) && TelephoneNumber.Equals(contactData.TelephoneNumber);
+    }
+
+    public override int GetHashCode() => 13 * EmailAddress.GetHashCode() + TelephoneNumber.GetHashCode();
 }

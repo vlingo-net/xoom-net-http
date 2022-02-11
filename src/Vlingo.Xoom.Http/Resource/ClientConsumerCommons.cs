@@ -9,31 +9,30 @@ using Vlingo.Xoom.Actors;
 using Vlingo.Xoom.Wire.Channel;
 using Vlingo.Xoom.Wire.Fdx.Bidirectional;
 
-namespace Vlingo.Xoom.Http.Resource
-{
-    public static class ClientConsumerCommons
-    {
-        public static IClientRequestResponseChannel ClientChannel(
-            Client.Configuration configuration,
-            IResponseChannelConsumer consumer,
-            ILogger logger)
-        {
-            if (configuration.IsSecure)
-            {
-                return new SecureClientRequestResponseChannel(
-                  configuration.AddressOfHost,
-                  consumer,
-                  configuration.ReadBufferPoolSize,
-                  configuration.ReadBufferSize,
-                  logger);
-            }
+namespace Vlingo.Xoom.Http.Resource;
 
-            return new BasicClientRequestResponseChannel(
+public static class ClientConsumerCommons
+{
+    public static IClientRequestResponseChannel ClientChannel(
+        Client.Configuration configuration,
+        IResponseChannelConsumer consumer,
+        ILogger logger)
+    {
+        if (configuration.IsSecure)
+        {
+            return new SecureClientRequestResponseChannel(
                 configuration.AddressOfHost,
                 consumer,
                 configuration.ReadBufferPoolSize,
                 configuration.ReadBufferSize,
                 logger);
         }
+
+        return new BasicClientRequestResponseChannel(
+            configuration.AddressOfHost,
+            consumer,
+            configuration.ReadBufferPoolSize,
+            configuration.ReadBufferSize,
+            logger);
     }
 }

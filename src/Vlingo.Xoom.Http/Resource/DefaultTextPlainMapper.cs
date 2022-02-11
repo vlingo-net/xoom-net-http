@@ -7,22 +7,21 @@
 
 using System;
 
-namespace Vlingo.Xoom.Http.Resource
-{
-    public class DefaultTextPlainMapper : IMapper
-    {
-        public static IMapper Instance => new DefaultTextPlainMapper();
-        
-        public object? From(string? data, Type? type)
-        {
-            if (type == typeof(string))
-            {
-                return data;
-            }
+namespace Vlingo.Xoom.Http.Resource;
 
-            throw new InvalidOperationException("Cannot deserialize text into type");
+public class DefaultTextPlainMapper : IMapper
+{
+    public static IMapper Instance => new DefaultTextPlainMapper();
+        
+    public object? From(string? data, Type? type)
+    {
+        if (type == typeof(string))
+        {
+            return data;
         }
 
-        public string? From<T>(T data) => data?.ToString();
+        throw new InvalidOperationException("Cannot deserialize text into type");
     }
+
+    public string? From<T>(T data) => data?.ToString();
 }

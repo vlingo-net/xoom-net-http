@@ -13,34 +13,33 @@ using Vlingo.Xoom.Http.Resource;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Vlingo.Xoom.Http.Tests.Resource
+namespace Vlingo.Xoom.Http.Tests.Resource;
+
+public class RequestHandlerTestBase
 {
-    public class RequestHandlerTestBase
+    protected readonly ILogger Logger;
+
+    protected RequestHandlerTestBase(ITestOutputHelper output)
     {
-        protected readonly ILogger Logger;
-
-        protected RequestHandlerTestBase(ITestOutputHelper output)
-        {
-            var converter = new Converter(output);
-            Console.SetOut(converter);
+        var converter = new Converter(output);
+        Console.SetOut(converter);
             
-            Logger = ConsoleLogger.TestInstance();
-        }
+        Logger = ConsoleLogger.TestInstance();
+    }
 
-        protected void AssertResponsesAreEquals(Response expected, Response actual) => Assert.Equal(expected.ToString(), actual.ToString());
+    protected void AssertResponsesAreEquals(Response expected, Response actual) => Assert.Equal(expected.ToString(), actual.ToString());
 
-        internal void AssertResolvesAreEquals<T>(ParameterResolver<T> expected, ParameterResolver<T> actual)
-        {
-            Assert.Equal(expected.Type, actual.Type);
-            Assert.Equal(expected.ParamClass, actual.ParamClass);
-        }
+    internal void AssertResolvesAreEquals<T>(ParameterResolver<T> expected, ParameterResolver<T> actual)
+    {
+        Assert.Equal(expected.Type, actual.Type);
+        Assert.Equal(expected.ParamClass, actual.ParamClass);
+    }
 
-        protected MediaTypeMapper DefaultMediaTypeMapperForJson()
-        {
+    protected MediaTypeMapper DefaultMediaTypeMapperForJson()
+    {
 
-            return new MediaTypeMapper.Builder()
-                .AddMapperFor(ContentMediaType.Json, new DefaultJsonMapper())
-                .Build();
-        }
+        return new MediaTypeMapper.Builder()
+            .AddMapperFor(ContentMediaType.Json, new DefaultJsonMapper())
+            .Build();
     }
 }

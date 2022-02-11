@@ -7,11 +7,10 @@
 
 using System;
 
-namespace Vlingo.Xoom.Http.Resource
+namespace Vlingo.Xoom.Http.Resource;
+
+public interface IMapper
 {
-    public interface IMapper
-    {
-        object? From(string? data, Type? type);
-        string? From<T>(T data);
-    }
+    object? From(string? data, Type? type);
+    string? From<T>(T data);
 }

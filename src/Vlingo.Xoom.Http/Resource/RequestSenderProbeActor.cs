@@ -13,42 +13,41 @@ using Vlingo.Xoom.Wire.Channel;
 using Vlingo.Xoom.Wire.Fdx.Bidirectional;
 using Vlingo.Xoom.Wire.Message;
 
-namespace Vlingo.Xoom.Http.Resource
+namespace Vlingo.Xoom.Http.Resource;
+
+public sealed class RequestSenderProbeActor : Actor, IRequestSender, IScheduled<object>
 {
-    public sealed class RequestSenderProbeActor : Actor, IRequestSender, IScheduled<object>
+    private readonly MemoryStream _buffer;
+    private readonly IClientRequestResponseChannel _channel;
+    private readonly ICancellable _cancellable;
+
+    public RequestSenderProbeActor(Client.Configuration configuration, IResponseChannelConsumer consumer, string testId)
     {
-        private readonly MemoryStream _buffer;
-        private readonly IClientRequestResponseChannel _channel;
-        private readonly ICancellable _cancellable;
+        _channel = ClientConsumerCommons.ClientChannel(configuration, consumer, Logger);
+        _cancellable = Stage.Scheduler.Schedule(
+            SelfAs<IScheduled<object?>>(), 
+            null, 
+            TimeSpan.FromMilliseconds(1), 
+            TimeSpan.FromMilliseconds(configuration.ProbeInterval));
+        _buffer = new MemoryStream(configuration.WriteBufferSize);
+    }
 
-        public RequestSenderProbeActor(Client.Configuration configuration, IResponseChannelConsumer consumer, string testId)
-        {
-            _channel = ClientConsumerCommons.ClientChannel(configuration, consumer, Logger);
-            _cancellable = Stage.Scheduler.Schedule(
-                SelfAs<IScheduled<object?>>(), 
-                null, 
-                TimeSpan.FromMilliseconds(1), 
-                TimeSpan.FromMilliseconds(configuration.ProbeInterval));
-            _buffer = new MemoryStream(configuration.WriteBufferSize);
-        }
+    public void IntervalSignal(IScheduled<object> scheduled, object data)
+        => _channel.ProbeChannel();
 
-        public void IntervalSignal(IScheduled<object> scheduled, object data)
-            => _channel.ProbeChannel();
+    public void SendRequest(Request request)
+    {
+        _buffer.Clear();
+        var array = Converters.TextToBytes(request.ToString());
+        _buffer.Write(array, 0, array.Length);
+        _buffer.Flip();
+        _channel.RequestWith(_buffer.ToArray());
+    }
 
-        public void SendRequest(Request request)
-        {
-            _buffer.Clear();
-            var array = Converters.TextToBytes(request.ToString());
-            _buffer.Write(array, 0, array.Length);
-            _buffer.Flip();
-            _channel.RequestWith(_buffer.ToArray());
-        }
-
-        public override void Stop()
-        {
-            _cancellable.Cancel();
-            _channel.Close();
-            base.Stop();
-        }
+    public override void Stop()
+    {
+        _cancellable.Cancel();
+        _channel.Close();
+        base.Stop();
     }
 }

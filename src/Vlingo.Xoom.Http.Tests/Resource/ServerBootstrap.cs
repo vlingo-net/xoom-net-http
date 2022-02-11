@@ -12,57 +12,56 @@ using Vlingo.Xoom.Http.Resource;
 using Vlingo.Xoom.Http.Tests.Sample.User;
 using Configuration = Vlingo.Xoom.Http.Resource.Configuration;
 
-namespace Vlingo.Xoom.Http.Tests.Resource
+namespace Vlingo.Xoom.Http.Tests.Resource;
+
+public class ServerBootstrap
 {
-    public class ServerBootstrap
+    private static readonly Random Random = new Random();
+    private static readonly AtomicInteger PortToUse = new AtomicInteger(Random.Next(32_768, 60_999));
+        
+    public static ServerBootstrap Instance { get; private set; }
+        
+    public World World { get; }
+        
+    public static void Main(string[] args)
     {
-        private static readonly Random Random = new Random();
-        private static readonly AtomicInteger PortToUse = new AtomicInteger(Random.Next(32_768, 60_999));
+        Instance = new ServerBootstrap();
+    }
         
-        public static ServerBootstrap Instance { get; private set; }
+    public IServer Server { get; }
         
-        public World World { get; }
-        
-        public static void Main(string[] args)
-        {
-            Instance = new ServerBootstrap();
-        }
-        
-        public IServer Server { get; }
-        
-        private ServerBootstrap()
-        {
-            World = World.Start("vlingo-http-server");
+    private ServerBootstrap()
+    {
+        World = World.Start("vlingo-http-server");
 
-            var userResource = new UserResourceFluent(World);
-            var profileResource = new ProfileResourceFluent(World);
-            var r1 = userResource.Routes();
-            var r2 = profileResource.Routes();
-            var resources = Resources.Are(r1, r2);
+        var userResource = new UserResourceFluent(World);
+        var profileResource = new ProfileResourceFluent(World);
+        var r1 = userResource.Routes();
+        var r2 = profileResource.Routes();
+        var resources = Resources.Are(r1, r2);
 
-            Server =
-                Server.StartWith(
-                    World.Stage,
-                    resources,
-                    Filters.None(),
-                    PortToUse.IncrementAndGet(),
-                    Configuration.SizingConf.DefineWith(4, 10, 100, 10240),
-                    Configuration.TimingConf.DefineWith(3, 1, 100),
-                    "arrayQueueMailbox",
-                    "arrayQueueMailbox");
+        Server =
+            Server.StartWith(
+                World.Stage,
+                resources,
+                Filters.None(),
+                PortToUse.IncrementAndGet(),
+                Configuration.SizingConf.DefineWith(4, 10, 100, 10240),
+                Configuration.TimingConf.DefineWith(3, 1, 100),
+                "arrayQueueMailbox",
+                "arrayQueueMailbox");
             
-            AppDomain.CurrentDomain.ProcessExit += (s, e) =>
+        AppDomain.CurrentDomain.ProcessExit += (s, e) =>
+        {
+            if (Instance != null)
             {
-                if (Instance != null)
-                {
-                    Instance.Server.Stop();
+                Instance.Server.Stop();
 
-                    Console.WriteLine("\n");
-                    Console.WriteLine("==============================");
-                    Console.WriteLine("Stopping vlingo/http Server...");
-                    Console.WriteLine("==============================");
-                }
-            };
-        }
+                Console.WriteLine("\n");
+                Console.WriteLine("==============================");
+                Console.WriteLine("Stopping vlingo/http Server...");
+                Console.WriteLine("==============================");
+            }
+        };
     }
 }

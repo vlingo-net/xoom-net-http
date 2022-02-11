@@ -5,16 +5,15 @@
 // was not distributed with this file, You can obtain
 // one at https://mozilla.org/MPL/2.0/.
 
-namespace Vlingo.Xoom.Http
+namespace Vlingo.Xoom.Http;
+
+/// <summary>
+/// Base filter supporting starting and stopping.
+/// </summary>
+public abstract class Filter
 {
     /// <summary>
-    /// Base filter supporting starting and stopping.
+    /// Sent when I am to be stopped.
     /// </summary>
-    public abstract class Filter
-    {
-        /// <summary>
-        /// Sent when I am to be stopped.
-        /// </summary>
-        public abstract void Stop();
-    }
+    public abstract void Stop();
 }

@@ -7,29 +7,28 @@
 
 using System;
 
-namespace Vlingo.Xoom.Http.Resource
+namespace Vlingo.Xoom.Http.Resource;
+
+public interface IErrorHandler
 {
-    public interface IErrorHandler
+    Response Handle(Exception error);
+}
+
+public static class ErrorHandler
+{
+    public static IErrorHandler HandleAllWith(ResponseStatus status)
+        => new ErrorHandlerImpl(err => Response.Of(status));
+}
+
+internal class ErrorHandlerImpl : IErrorHandler
+{
+    private readonly Func<Exception, Response> _handler;
+
+    public ErrorHandlerImpl(Func<Exception, Response> handler)
     {
-        Response Handle(Exception error);
+        _handler = handler;
     }
 
-    public static class ErrorHandler
-    {
-        public static IErrorHandler HandleAllWith(ResponseStatus status)
-            => new ErrorHandlerImpl(err => Response.Of(status));
-    }
-
-    internal class ErrorHandlerImpl : IErrorHandler
-    {
-        private readonly Func<Exception, Response> _handler;
-
-        public ErrorHandlerImpl(Func<Exception, Response> handler)
-        {
-            _handler = handler;
-        }
-
-        public Response Handle(Exception error)
-            => _handler.Invoke(error);
-    }
+    public Response Handle(Exception error)
+        => _handler.Invoke(error);
 }

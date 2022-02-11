@@ -5,22 +5,21 @@
 // was not distributed with this file, You can obtain
 // one at https://mozilla.org/MPL/2.0/.
 
-namespace Vlingo.Xoom.Http.Resource
+namespace Vlingo.Xoom.Http.Resource;
+
+/// <summary>
+/// A pool of <code>IDispatcher</code> instances.
+/// </summary>
+public interface IDispatcherPool
 {
     /// <summary>
-    /// A pool of <code>IDispatcher</code> instances.
+    /// Close the <code>IDispatcher</code> instances of my internal pool.
     /// </summary>
-    public interface IDispatcherPool
-    {
-        /// <summary>
-        /// Close the <code>IDispatcher</code> instances of my internal pool.
-        /// </summary>
-        void Close();
+    void Close();
 
-        /// <summary>
-        /// Answer an available <code>IDispatcher</code> from my pool.
-        /// </summary>
-        /// <returns><see cref="IDispatcher"/></returns>
-        IDispatcher Dispatcher();
-    }
+    /// <summary>
+    /// Answer an available <code>IDispatcher</code> from my pool.
+    /// </summary>
+    /// <returns><see cref="IDispatcher"/></returns>
+    IDispatcher Dispatcher();
 }

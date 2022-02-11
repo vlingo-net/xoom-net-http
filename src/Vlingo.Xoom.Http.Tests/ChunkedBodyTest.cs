@@ -7,27 +7,26 @@
 
 using Xunit;
 
-namespace Vlingo.Xoom.Http.Tests
+namespace Vlingo.Xoom.Http.Tests;
+
+public class ChunkedBodyTest
 {
-    public class ChunkedBodyTest
+    private const string Chunk1 = "ABCDEFGHIJKLMNOPQRSTUVWYYZ0123";
+    private const string Chunk2 = "abcdefghijklmnopqrstuvwxyz012345";
+
+    [Fact]
+    public void TestThatChunkedBodyChunks()
     {
-        private const string Chunk1 = "ABCDEFGHIJKLMNOPQRSTUVWYYZ0123";
-        private const string Chunk2 = "abcdefghijklmnopqrstuvwxyz012345";
+        var body =
+            Body
+                .BeginChunked()
+                .AppendChunk(Chunk1)
+                .AppendChunk(Chunk2)
+                .End();
 
-        [Fact]
-        public void TestThatChunkedBodyChunks()
-        {
-            var body =
-                Body
-                    .BeginChunked()
-                    .AppendChunk(Chunk1)
-                    .AppendChunk(Chunk2)
-                    .End();
-
-            Assert.Contains(AsChunk(Chunk1), body.Content);
-            Assert.Contains(AsChunk(Chunk2), body.Content);
-        }
-        
-        private string AsChunk(string content) => $"{content.Length:x8}\r\n{content}\r\n";
+        Assert.Contains(AsChunk(Chunk1), body.Content);
+        Assert.Contains(AsChunk(Chunk2), body.Content);
     }
+        
+    private string AsChunk(string content) => $"{content.Length:x8}\r\n{content}\r\n";
 }

@@ -8,23 +8,22 @@
 using Vlingo.Xoom.Actors;
 using Vlingo.Xoom.Common;
 
-namespace Vlingo.Xoom.Http.Resource
-{
-    public class AgentDispatcherPool : AbstractDispatcherPool
-    {
-        private readonly AtomicLong _dispatcherPoolIndex;
-        private readonly long _dispatcherPoolSize;
-        
-        public AgentDispatcherPool(Stage stage, Resources resources, int dispatcherPoolSize) : base(stage, resources, dispatcherPoolSize)
-        {
-            _dispatcherPoolIndex = new AtomicLong(-1);
-            _dispatcherPoolSize = dispatcherPoolSize;
-        }
+namespace Vlingo.Xoom.Http.Resource;
 
-        public override IDispatcher Dispatcher()
-        {
-            var index = (int) (_dispatcherPoolIndex.IncrementAndGet() % _dispatcherPoolSize);
-            return DispatcherPool[index];
-        }
+public class AgentDispatcherPool : AbstractDispatcherPool
+{
+    private readonly AtomicLong _dispatcherPoolIndex;
+    private readonly long _dispatcherPoolSize;
+        
+    public AgentDispatcherPool(Stage stage, Resources resources, int dispatcherPoolSize) : base(stage, resources, dispatcherPoolSize)
+    {
+        _dispatcherPoolIndex = new AtomicLong(-1);
+        _dispatcherPoolSize = dispatcherPoolSize;
+    }
+
+    public override IDispatcher Dispatcher()
+    {
+        var index = (int) (_dispatcherPoolIndex.IncrementAndGet() % _dispatcherPoolSize);
+        return DispatcherPool[index];
     }
 }

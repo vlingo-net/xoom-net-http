@@ -7,33 +7,32 @@
 
 using Vlingo.Xoom.Actors;
 
-namespace Vlingo.Xoom.Http.Resource
+namespace Vlingo.Xoom.Http.Resource;
+
+/// <summary>
+/// Default behavior for all <see cref="IDispatcherPool"/> implementations.
+/// </summary>
+public abstract class AbstractDispatcherPool : IDispatcherPool
 {
-    /// <summary>
-    /// Default behavior for all <see cref="IDispatcherPool"/> implementations.
-    /// </summary>
-    public abstract class AbstractDispatcherPool : IDispatcherPool
+    protected readonly IDispatcher[] DispatcherPool;
+
+    protected AbstractDispatcherPool(Stage stage, Resources resources, int dispatcherPoolSize)
     {
-        protected readonly IDispatcher[] DispatcherPool;
+        DispatcherPool = new IDispatcher[dispatcherPoolSize];
 
-        protected AbstractDispatcherPool(Stage stage, Resources resources, int dispatcherPoolSize)
+        for (var idx = 0; idx < dispatcherPoolSize; ++idx)
         {
-            DispatcherPool = new IDispatcher[dispatcherPoolSize];
-
-            for (var idx = 0; idx < dispatcherPoolSize; ++idx)
-            {
-                DispatcherPool[idx] = Http.Resource.Dispatcher.StartWith(stage, resources);
-            }
+            DispatcherPool[idx] = Http.Resource.Dispatcher.StartWith(stage, resources);
         }
-        
-        public void Close()
-        {
-            foreach (var dispatcher in DispatcherPool)
-            {
-                dispatcher.Stop();
-            }
-        }
-
-        public abstract IDispatcher Dispatcher();
     }
+        
+    public void Close()
+    {
+        foreach (var dispatcher in DispatcherPool)
+        {
+            dispatcher.Stop();
+        }
+    }
+
+    public abstract IDispatcher Dispatcher();
 }

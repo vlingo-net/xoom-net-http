@@ -9,55 +9,54 @@ using System;
 using System.Collections.Generic;
 using Vlingo.Xoom.Http.Tests.Sample.User.Model;
 
-namespace Vlingo.Xoom.Http.Tests.Sample.User
+namespace Vlingo.Xoom.Http.Tests.Sample.User;
+
+public class UserData
 {
-    public class UserData
+    public string Id { get; }
+    public NameData NameData { get; }
+    public ContactData ContactData { get; }
+  
+    public static UserData From(NameData nameData, ContactData contactData) => new UserData(nameData, contactData);
+  
+    public static UserData From(string id, NameData nameData, ContactData contactData) => new UserData(id, nameData, contactData);
+  
+    public static UserData From(UserState userState) =>
+        new UserData(userState.Id, NameData.From(userState.Name), ContactData.From(userState.Contact));
+
+    public static UserData UserAt(string location, List<UserData> userData)
     {
-        public string Id { get; }
-        public NameData NameData { get; }
-        public ContactData ContactData { get; }
-  
-        public static UserData From(NameData nameData, ContactData contactData) => new UserData(nameData, contactData);
-  
-        public static UserData From(string id, NameData nameData, ContactData contactData) => new UserData(id, nameData, contactData);
-  
-        public static UserData From(UserState userState) =>
-            new UserData(userState.Id, NameData.From(userState.Name), ContactData.From(userState.Contact));
-
-        public static UserData UserAt(string location, List<UserData> userData)
-        {
-            var index = location.LastIndexOf("/", StringComparison.Ordinal);
-            var id = location.Substring(index + 1);
-            return UserOf(id, userData);
-        }
-
-        public static UserData UserOf(string id, List<UserData> userData)
-        {
-            foreach (var data in userData)
-            {
-                if (data.Id.Equals(id))
-                {
-                    return data;
-                }   
-            }
-            
-            return null;
-        }
-
-        private UserData(NameData nameData, ContactData contactData)
-        {
-            Id = Guid.NewGuid().ToString();
-            NameData = nameData;
-            ContactData = contactData;
-        }
-  
-        public UserData(string id, NameData nameData, ContactData contactData)
-        {
-            Id = id;
-            NameData = nameData;
-            ContactData = contactData;
-        }
-
-        public override string ToString() => $"UserData[id={Id}, nameData={NameData}, contactData={ContactData}]";
+        var index = location.LastIndexOf("/", StringComparison.Ordinal);
+        var id = location.Substring(index + 1);
+        return UserOf(id, userData);
     }
+
+    public static UserData UserOf(string id, List<UserData> userData)
+    {
+        foreach (var data in userData)
+        {
+            if (data.Id.Equals(id))
+            {
+                return data;
+            }   
+        }
+            
+        return null;
+    }
+
+    private UserData(NameData nameData, ContactData contactData)
+    {
+        Id = Guid.NewGuid().ToString();
+        NameData = nameData;
+        ContactData = contactData;
+    }
+  
+    public UserData(string id, NameData nameData, ContactData contactData)
+    {
+        Id = id;
+        NameData = nameData;
+        ContactData = contactData;
+    }
+
+    public override string ToString() => $"UserData[id={Id}, nameData={NameData}, contactData={ContactData}]";
 }

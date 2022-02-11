@@ -13,79 +13,78 @@ using Xunit;
 using Xunit.Abstractions;
 using Action = Vlingo.Xoom.Http.Resource.Action;
 
-namespace Vlingo.Xoom.Http.Tests.Resource
+namespace Vlingo.Xoom.Http.Tests.Resource;
+
+public class ResourceDispatcherGeneratorTest
 {
-    public class ResourceDispatcherGeneratorTest
+    private readonly List<Action> _actions;
+    private readonly IConfigurationResource _resource;
+
+    [Fact]
+    public void TestSourceCodeGeneration()
     {
-        private readonly List<Action> _actions;
-        private readonly IConfigurationResource _resource;
+        var generator = ResourceDispatcherGenerator.ForTest(_actions, false, ConsoleLogger.TestInstance());
 
-        [Fact]
-        public void TestSourceCodeGeneration()
-        {
-            var generator = ResourceDispatcherGenerator.ForTest(_actions, false, ConsoleLogger.TestInstance());
+        var result = generator.GenerateFor(_resource.ResourceHandlerClass);
 
-            var result = generator.GenerateFor(_resource.ResourceHandlerClass);
-
-            Assert.NotNull(result);
-            Assert.NotNull(result.SourceFile);
-            Assert.False(result.SourceFile.Exists);
-            Assert.NotNull(result.FullyQualifiedClassName);
-            Assert.NotNull(result.ClassName);
-            Assert.NotNull(result.Source);
-        }
+        Assert.NotNull(result);
+        Assert.NotNull(result.SourceFile);
+        Assert.False(result.SourceFile.Exists);
+        Assert.NotNull(result.FullyQualifiedClassName);
+        Assert.NotNull(result.ClassName);
+        Assert.NotNull(result.Source);
+    }
         
-        [Fact]
-        public void TestSourceCodeGenerationWithPersistence()
-        {
-            var generator = ResourceDispatcherGenerator.ForTest(_actions, true, ConsoleLogger.TestInstance());
+    [Fact]
+    public void TestSourceCodeGenerationWithPersistence()
+    {
+        var generator = ResourceDispatcherGenerator.ForTest(_actions, true, ConsoleLogger.TestInstance());
 
-            var result = generator.GenerateFor(_resource.ResourceHandlerClass);
+        var result = generator.GenerateFor(_resource.ResourceHandlerClass);
 
-            Assert.NotNull(result);
-            Assert.NotNull(result.SourceFile);
-            Assert.True(result.SourceFile.Exists);
-            Assert.NotNull(result.FullyQualifiedClassName);
-            Assert.NotNull(result.ClassName);
-            Assert.NotNull(result.Source);
-        }
+        Assert.NotNull(result);
+        Assert.NotNull(result.SourceFile);
+        Assert.True(result.SourceFile.Exists);
+        Assert.NotNull(result.FullyQualifiedClassName);
+        Assert.NotNull(result.ClassName);
+        Assert.NotNull(result.Source);
+    }
     
-        public ResourceDispatcherGeneratorTest(ITestOutputHelper output)
+    public ResourceDispatcherGeneratorTest(ITestOutputHelper output)
+    {
+        var converter = new Converter(output);
+        Console.SetOut(converter);
+            
+        var actionPostUser = new Action(0, "POST", "/users", "register(body:Vlingo.Xoom.Http.Tests.Sample.User.UserData userData)", null);
+        var actionPatchUserContact = new Action(1, "PATCH", "/users/{userId}/contact", "changeContact(string userId, body:Vlingo.Xoom.Http.Tests.Sample.User.ContactData contactData)", null);
+        var actionPatchUserName = new Action(2, "PATCH", "/users/{userId}/name", "changeName(string userId, body:Vlingo.Xoom.Http.Tests.Sample.User.NameData nameData)", null);
+        var actionGetUser = new Action(3, "GET", "/users/{userId}", "queryUser(string userId)", null);
+        var actionGetUsers = new Action(4, "GET", "/users", "queryUsers()", null);
+        var actionQueryUserError = new Action(5, "GET", "/users/{userId}/error", "queryUserError(string userId)", null);
+        var actionPutUser = new Action(6, "PUT", "/users/{userId}", "changeUser(string userId, body:Vlingo.Xoom.Http.Tests.Sample.User.UserData userData)", null);
+
+        _actions = new List<Action>
         {
-            var converter = new Converter(output);
-            Console.SetOut(converter);
-            
-            var actionPostUser = new Action(0, "POST", "/users", "register(body:Vlingo.Xoom.Http.Tests.Sample.User.UserData userData)", null);
-            var actionPatchUserContact = new Action(1, "PATCH", "/users/{userId}/contact", "changeContact(string userId, body:Vlingo.Xoom.Http.Tests.Sample.User.ContactData contactData)", null);
-            var actionPatchUserName = new Action(2, "PATCH", "/users/{userId}/name", "changeName(string userId, body:Vlingo.Xoom.Http.Tests.Sample.User.NameData nameData)", null);
-            var actionGetUser = new Action(3, "GET", "/users/{userId}", "queryUser(string userId)", null);
-            var actionGetUsers = new Action(4, "GET", "/users", "queryUsers()", null);
-            var actionQueryUserError = new Action(5, "GET", "/users/{userId}/error", "queryUserError(string userId)", null);
-            var actionPutUser = new Action(6, "PUT", "/users/{userId}", "changeUser(string userId, body:Vlingo.Xoom.Http.Tests.Sample.User.UserData userData)", null);
+            actionPostUser,
+            actionPatchUserContact,
+            actionPatchUserName,
+            actionGetUser,
+            actionGetUsers,
+            actionQueryUserError,
+            actionPutUser
+        };
 
-            _actions = new List<Action>
-            {
-                actionPostUser,
-                actionPatchUserContact,
-                actionPatchUserName,
-                actionGetUser,
-                actionGetUsers,
-                actionQueryUserError,
-                actionPutUser
-            };
-
-            Type resourceHandlerClass;
+        Type resourceHandlerClass;
             
-            try
-            {
-                resourceHandlerClass = Type.GetType("Vlingo.Xoom.Http.Tests.Sample.User.UserResource");
-            }
-            catch (Exception)
-            {
-                resourceHandlerClass = ConfigurationResource.NewResourceHandlerTypeFor("Vlingo.Xoom.Http.Tests.Sample.User.UserResource");
-            }
-            
-            _resource = ConfigurationResource.NewResourceFor("user", resourceHandlerClass, 5, _actions, ConsoleLogger.TestInstance());
+        try
+        {
+            resourceHandlerClass = Type.GetType("Vlingo.Xoom.Http.Tests.Sample.User.UserResource");
         }
+        catch (Exception)
+        {
+            resourceHandlerClass = ConfigurationResource.NewResourceHandlerTypeFor("Vlingo.Xoom.Http.Tests.Sample.User.UserResource");
+        }
+            
+        _resource = ConfigurationResource.NewResourceFor("user", resourceHandlerClass, 5, _actions, ConsoleLogger.TestInstance());
     }
 }

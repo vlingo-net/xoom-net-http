@@ -7,11 +7,10 @@
 
 using Vlingo.Xoom.Common;
 
-namespace Vlingo.Xoom.Http.Tests.Sample.User.Model
+namespace Vlingo.Xoom.Http.Tests.Sample.User.Model;
+
+public interface IUser
 {
-    public interface IUser
-    {
-        ICompletes<UserState> WithContact(Contact contact);
-        ICompletes<UserState> WithName(Name name);
-    }
+    ICompletes<UserState> WithContact(Contact contact);
+    ICompletes<UserState> WithName(Name name);
 }

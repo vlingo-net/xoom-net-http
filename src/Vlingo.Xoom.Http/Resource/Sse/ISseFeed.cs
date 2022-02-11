@@ -7,10 +7,9 @@
 
 using System.Collections.Generic;
 
-namespace Vlingo.Xoom.Http.Resource.Sse
+namespace Vlingo.Xoom.Http.Resource.Sse;
+
+public interface ISseFeed
 {
-    public interface ISseFeed
-    {
-        void To(ICollection<SseSubscriber> subscribers);
-    }
+    void To(ICollection<SseSubscriber> subscribers);
 }

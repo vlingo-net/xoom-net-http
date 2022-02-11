@@ -7,38 +7,37 @@
 
 using System.Collections.Generic;
 
-namespace Vlingo.Xoom.Http.Tests.Sample.User.Model
+namespace Vlingo.Xoom.Http.Tests.Sample.User.Model;
+
+public class ProfileRepository
 {
-    public class ProfileRepository
+    private static ProfileRepository _instance;
+
+    private readonly Dictionary<string, ProfileState> _profiles;
+        
+    private static volatile object _lockSync = new object();
+        
+    public static ProfileRepository Instance()
     {
-        private static ProfileRepository _instance;
-
-        private readonly Dictionary<string, ProfileState> _profiles;
-        
-        private static volatile object _lockSync = new object();
-        
-        public static ProfileRepository Instance()
+        lock (_lockSync)
         {
-            lock (_lockSync)
+            if (_instance == null)
             {
-                if (_instance == null)
-                {
-                    _instance = new ProfileRepository();
-                }
-
-                return _instance;
+                _instance = new ProfileRepository();
             }
-        }
 
-        public ProfileState ProfileOf(string userId)
-        {
-            var profileState = _profiles[userId];
-    
-            return profileState == null ? ProfileStateFactory.NonExisting() : profileState;
+            return _instance;
         }
-        
-        public void Save(ProfileState profileState) => _profiles.Add(profileState.Id, profileState);
-
-        private ProfileRepository() => _profiles = new Dictionary<string, ProfileState>();
     }
+
+    public ProfileState ProfileOf(string userId)
+    {
+        var profileState = _profiles[userId];
+    
+        return profileState == null ? ProfileStateFactory.NonExisting() : profileState;
+    }
+        
+    public void Save(ProfileState profileState) => _profiles.Add(profileState.Id, profileState);
+
+    private ProfileRepository() => _profiles = new Dictionary<string, ProfileState>();
 }

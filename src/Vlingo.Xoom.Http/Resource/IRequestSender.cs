@@ -7,17 +7,16 @@
 
 using Vlingo.Xoom.Actors;
 
-namespace Vlingo.Xoom.Http.Resource
+namespace Vlingo.Xoom.Http.Resource;
+
+/// <summary>
+/// Sends <code>Request</code> messages in behalf of a client.
+/// </summary>
+public interface IRequestSender : IStoppable
 {
     /// <summary>
-    /// Sends <code>Request</code> messages in behalf of a client.
+    /// Sends the <paramref name="request"/>.
     /// </summary>
-    public interface IRequestSender : IStoppable
-    {
-        /// <summary>
-        /// Sends the <paramref name="request"/>.
-        /// </summary>
-        /// <param name="request">The <code>Request</code> to send.</param>
-        void SendRequest(Request request);
-    }
+    /// <param name="request">The <code>Request</code> to send.</param>
+    void SendRequest(Request request);
 }

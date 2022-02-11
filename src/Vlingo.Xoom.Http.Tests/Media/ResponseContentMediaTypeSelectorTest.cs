@@ -8,44 +8,43 @@
 using Vlingo.Xoom.Http.Media;
 using Xunit;
 
-namespace Vlingo.Xoom.Http.Tests.Media
+namespace Vlingo.Xoom.Http.Tests.Media;
+
+public class ResponseContentMediaTypeSelectorTest
 {
-    public class ResponseContentMediaTypeSelectorTest
+    [Fact]
+    public void Single_media_type_matches()
     {
-        [Fact]
-        public void Single_media_type_matches()
-        {
-            var specificTypeAccepted = "application/json";
-            var selector = new ResponseMediaTypeSelector(specificTypeAccepted);
-            var selected = selector.SelectType(new[]{ContentMediaType.Json});
-            Assert.Equal(ContentMediaType.Json, selected);
-        }
+        var specificTypeAccepted = "application/json";
+        var selector = new ResponseMediaTypeSelector(specificTypeAccepted);
+        var selected = selector.SelectType(new[]{ContentMediaType.Json});
+        Assert.Equal(ContentMediaType.Json, selected);
+    }
         
-        [Fact]
-        public void Wild_card_media_type_matches()
-        {
-            var xmlAndJsonSuperTypeAccepted = "application/*";
-            var selector = new ResponseMediaTypeSelector(xmlAndJsonSuperTypeAccepted);
-            var selected = selector.SelectType(new[]{ContentMediaType.Json});
-            Assert.Equal(ContentMediaType.Json, selected);
-        }
+    [Fact]
+    public void Wild_card_media_type_matches()
+    {
+        var xmlAndJsonSuperTypeAccepted = "application/*";
+        var selector = new ResponseMediaTypeSelector(xmlAndJsonSuperTypeAccepted);
+        var selected = selector.SelectType(new[]{ContentMediaType.Json});
+        Assert.Equal(ContentMediaType.Json, selected);
+    }
         
-        [Fact]
-        public void Generic_media_type_select_by_order_of_media_type()
-        {
-            var xmlAndJsonSuperTypeAccepted = "application/*";
-            var selector = new ResponseMediaTypeSelector(xmlAndJsonSuperTypeAccepted);
-            var selected = selector.SelectType(new[]{ContentMediaType.Xml, ContentMediaType.Json});
-            Assert.Equal(ContentMediaType.Xml, selected);
-        }
+    [Fact]
+    public void Generic_media_type_select_by_order_of_media_type()
+    {
+        var xmlAndJsonSuperTypeAccepted = "application/*";
+        var selector = new ResponseMediaTypeSelector(xmlAndJsonSuperTypeAccepted);
+        var selected = selector.SelectType(new[]{ContentMediaType.Xml, ContentMediaType.Json});
+        Assert.Equal(ContentMediaType.Xml, selected);
+    }
         
-        [Fact]
-        public void Specific_media_type_select_highest_ranked()
-        {
-            var jsonHigherPriorityXmlLowerPriorityAccepted = "application/xml;q=0.8, application/json";
-            var selector = new ResponseMediaTypeSelector(jsonHigherPriorityXmlLowerPriorityAccepted);
-            var selected = selector.SelectType(new[]{ContentMediaType.Xml, ContentMediaType.Json});
-            Assert.Equal(ContentMediaType.Json, selected);
-        }
+    [Fact]
+    public void Specific_media_type_select_highest_ranked()
+    {
+        var jsonHigherPriorityXmlLowerPriorityAccepted = "application/xml;q=0.8, application/json";
+        var selector = new ResponseMediaTypeSelector(jsonHigherPriorityXmlLowerPriorityAccepted);
+        var selected = selector.SelectType(new[]{ContentMediaType.Xml, ContentMediaType.Json});
+        Assert.Equal(ContentMediaType.Json, selected);
     }
 }

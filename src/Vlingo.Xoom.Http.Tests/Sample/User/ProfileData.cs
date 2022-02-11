@@ -7,21 +7,20 @@
 
 using Vlingo.Xoom.Http.Tests.Sample.User.Model;
 
-namespace Vlingo.Xoom.Http.Tests.Sample.User
+namespace Vlingo.Xoom.Http.Tests.Sample.User;
+
+public class ProfileData
 {
-    public class ProfileData
+    public string LinkedInAccount { get; }
+    public string TwitterAccount { get; }
+    public string Website { get; }
+
+    public static ProfileData From(ProfileState profile) => new ProfileData(profile.TwitterAccount, profile.LinkedInAccount, profile.Website);
+
+    public ProfileData(string twitterAccount, string linkedInAccount, string website)
     {
-        public string LinkedInAccount { get; }
-        public string TwitterAccount { get; }
-        public string Website { get; }
-
-        public static ProfileData From(ProfileState profile) => new ProfileData(profile.TwitterAccount, profile.LinkedInAccount, profile.Website);
-
-        public ProfileData(string twitterAccount, string linkedInAccount, string website)
-        {
-            TwitterAccount = twitterAccount;
-            LinkedInAccount = linkedInAccount;
-            Website = website;
-        }
+        TwitterAccount = twitterAccount;
+        LinkedInAccount = linkedInAccount;
+        Website = website;
     }
 }

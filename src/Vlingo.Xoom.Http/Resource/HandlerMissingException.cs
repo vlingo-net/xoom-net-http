@@ -8,24 +8,23 @@
 using System;
 using System.Runtime.Serialization;
 
-namespace Vlingo.Xoom.Http.Resource
+namespace Vlingo.Xoom.Http.Resource;
+
+public class HandlerMissingException : Exception
 {
-    public class HandlerMissingException : Exception
+    public HandlerMissingException()
     {
-        public HandlerMissingException()
-        {
-        }
+    }
 
-        public HandlerMissingException(string message) : base(message)
-        {
-        }
+    public HandlerMissingException(string message) : base(message)
+    {
+    }
 
-        public HandlerMissingException(string message, Exception innerException) : base(message, innerException)
-        {
-        }
+    public HandlerMissingException(string message, Exception innerException) : base(message, innerException)
+    {
+    }
 
-        protected HandlerMissingException(SerializationInfo info, StreamingContext context) : base(info, context)
-        {
-        }
+    protected HandlerMissingException(SerializationInfo info, StreamingContext context) : base(info, context)
+    {
     }
 }

@@ -7,15 +7,14 @@
 
 using Vlingo.Xoom.Http.Media;
 
-namespace Vlingo.Xoom.Http.Resource
-{
-    public static class DefaultMediaTypeMapper
-    {
-        private static MediaTypeMapper BuildInstance()
-            => new MediaTypeMapper.Builder()
-                    .AddMapperFor(ContentMediaType.Json, DefaultJsonMapper.Instance)
-                    .Build();
+namespace Vlingo.Xoom.Http.Resource;
 
-        public static MediaTypeMapper Instance { get; } = BuildInstance();
-    }
+public static class DefaultMediaTypeMapper
+{
+    private static MediaTypeMapper BuildInstance()
+        => new MediaTypeMapper.Builder()
+            .AddMapperFor(ContentMediaType.Json, DefaultJsonMapper.Instance)
+            .Build();
+
+    public static MediaTypeMapper Instance { get; } = BuildInstance();
 }

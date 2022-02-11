@@ -8,14 +8,14 @@
 using Vlingo.Xoom.Http.Resource.Sse;
 using Xunit;
 
-namespace Vlingo.Xoom.Http.Tests.Resource.Sse
+namespace Vlingo.Xoom.Http.Tests.Resource.Sse;
+
+public class SseEventTest
 {
-    public class SseEventTest
+    [Fact]
+    public void TestThatEventBuilds()
     {
-        [Fact]
-        public void TestThatEventBuilds()
-        {
-            var @event =
+        var @event =
             SseEvent.Builder.Instance
                 .WithComment("I like events.")
                 .WithId(1)
@@ -24,40 +24,40 @@ namespace Vlingo.Xoom.Http.Tests.Resource.Sse
                 .WithRetry(2500)
                 .ToEvent();
 
-            Assert.Equal("I like events.",  @event.Comment);
-            Assert.Equal("1",  @event.Id);
-            Assert.Equal("E1",  @event.Event);
-            Assert.Equal("{ \"name\" : \"value\" }",  @event.Data);
-            Assert.Equal(2500,  @event.Retry);
-        }
+        Assert.Equal("I like events.",  @event.Comment);
+        Assert.Equal("1",  @event.Id);
+        Assert.Equal("E1",  @event.Event);
+        Assert.Equal("{ \"name\" : \"value\" }",  @event.Data);
+        Assert.Equal(2500,  @event.Retry);
+    }
 
-        [Fact]
-        public void TestDefaults()
-        {
-            var @event = SseEvent.Builder.Instance.ToEvent();
+    [Fact]
+    public void TestDefaults()
+    {
+        var @event = SseEvent.Builder.Instance.ToEvent();
 
-            Assert.Null(@event.Comment);
-            Assert.Null(@event.Id);
-            Assert.False(@event.HasId);
-            Assert.Null(@event.Event);
-            Assert.Null(@event.Data);
-            Assert.Equal(SseEvent.NoRetry,  @event.Retry);
-        }
+        Assert.Null(@event.Comment);
+        Assert.Null(@event.Id);
+        Assert.False(@event.HasId);
+        Assert.Null(@event.Event);
+        Assert.Null(@event.Data);
+        Assert.Equal(SseEvent.NoRetry,  @event.Retry);
+    }
 
-        [Fact]
-        public void TestThatMarksEndOfStream()
-        {
-            var @event = SseEvent.Builder.Instance.WithEndOfStream().ToEvent();
+    [Fact]
+    public void TestThatMarksEndOfStream()
+    {
+        var @event = SseEvent.Builder.Instance.WithEndOfStream().ToEvent();
 
-            Assert.Equal("",  @event.Id);
-            Assert.True(@event.EndOfStream);
-            Assert.True(string.IsNullOrEmpty(@event.Id));
-        }
+        Assert.Equal("",  @event.Id);
+        Assert.True(@event.EndOfStream);
+        Assert.True(string.IsNullOrEmpty(@event.Id));
+    }
 
-        [Fact]
-        public void TestThatEventIsSendable()
-        {
-            var @event =
+    [Fact]
+    public void TestThatEventIsSendable()
+    {
+        var @event =
             SseEvent.Builder.Instance
                 .WithComment("I like events.")
                 .WithId(1)
@@ -66,13 +66,13 @@ namespace Vlingo.Xoom.Http.Tests.Resource.Sse
                 .WithRetry(2500)
                 .ToEvent();
 
-            Assert.Equal(": I like events.\nid: 1\nevent: E1\ndata: value\nretry: 2500\n\n",  @event.Sendable());
-        }
+        Assert.Equal(": I like events.\nid: 1\nevent: E1\ndata: value\nretry: 2500\n\n",  @event.Sendable());
+    }
 
-        [Fact]
-        public void TestThatEventTranslates()
-        {
-            var @event =
+    [Fact]
+    public void TestThatEventTranslates()
+    {
+        var @event =
             SseEvent.Builder.Instance
                 .WithComment("I like events.")
                 .WithId(1)
@@ -81,64 +81,63 @@ namespace Vlingo.Xoom.Http.Tests.Resource.Sse
                 .WithRetry(2500)
                 .ToEvent();
 
-            var response =
-                Response.Of(
-                    ResponseStatus.Ok,
-                    Headers.Of(ResponseHeader.WithContentType("text/@event-stream")), 
+        var response =
+            Response.Of(
+                ResponseStatus.Ok,
+                Headers.Of(ResponseHeader.WithContentType("text/@event-stream")), 
                 @event.Sendable());
 
-            var messageEvents = MessageEvent.From(response);
+        var messageEvents = MessageEvent.From(response);
 
-            Assert.Single(messageEvents);
+        Assert.Single(messageEvents);
 
-            var messageEvent = messageEvents[0];
+        var messageEvent = messageEvents[0];
 
-            Assert.Equal("I like events.", messageEvent.Comment);
-            Assert.Equal("1", messageEvent.Id);
-            Assert.Equal("E1", messageEvent.Event);
-            Assert.Equal("value", messageEvent.Data);
-            Assert.Equal(2500, messageEvent.Retry);
-        }
+        Assert.Equal("I like events.", messageEvent.Comment);
+        Assert.Equal("1", messageEvent.Id);
+        Assert.Equal("E1", messageEvent.Event);
+        Assert.Equal("value", messageEvent.Data);
+        Assert.Equal(2500, messageEvent.Retry);
+    }
 
-        [Fact]
-        public void TestThatEventTranslatesEndOfStream()
-        {
-            var @event = SseEvent.Builder.Instance.WithEndOfStream().ToEvent();
+    [Fact]
+    public void TestThatEventTranslatesEndOfStream()
+    {
+        var @event = SseEvent.Builder.Instance.WithEndOfStream().ToEvent();
 
-            var response =
-                Response.Of(
-                    ResponseStatus.Ok,
-                    Headers.Of(ResponseHeader.WithContentType("text/@event-stream")), 
+        var response =
+            Response.Of(
+                ResponseStatus.Ok,
+                Headers.Of(ResponseHeader.WithContentType("text/@event-stream")), 
                 @event.Sendable());
 
-            var messageEvents = MessageEvent.From(response);
+        var messageEvents = MessageEvent.From(response);
 
-            Assert.Single(messageEvents);
+        Assert.Single(messageEvents);
 
-            var messageEvent = messageEvents[0];
+        var messageEvent = messageEvents[0];
 
-            Assert.True(messageEvent.EndOfStream);
-        }
+        Assert.True(messageEvent.EndOfStream);
+    }
 
-        [Fact]
-        public void TestThatEventTranslatesEndOfStreamWithComment()
-        {
-            var @event = SseEvent.Builder.Instance.WithComment("EOS").WithEndOfStream().ToEvent();
+    [Fact]
+    public void TestThatEventTranslatesEndOfStreamWithComment()
+    {
+        var @event = SseEvent.Builder.Instance.WithComment("EOS").WithEndOfStream().ToEvent();
 
-            var response =
-                Response.Of(
-                    ResponseStatus.Ok,
-                    Headers.Of(ResponseHeader.WithContentType("text/@event-stream")), 
+        var response =
+            Response.Of(
+                ResponseStatus.Ok,
+                Headers.Of(ResponseHeader.WithContentType("text/@event-stream")), 
                 @event.Sendable());
 
-            var messageEvents = MessageEvent.From(response);
+        var messageEvents = MessageEvent.From(response);
 
-            Assert.Single(messageEvents);
+        Assert.Single(messageEvents);
 
-            var messageEvent = messageEvents[0];
+        var messageEvent = messageEvents[0];
 
-            Assert.True(messageEvent.EndOfStream);
-            Assert.Equal("EOS", messageEvent.Comment);
-        }
+        Assert.True(messageEvent.EndOfStream);
+        Assert.Equal("EOS", messageEvent.Comment);
     }
 }

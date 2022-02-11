@@ -9,66 +9,65 @@ using System.Collections.Generic;
 using Vlingo.Xoom.Http.Media;
 using Xunit;
 
-namespace Vlingo.Xoom.Http.Tests.Media
+namespace Vlingo.Xoom.Http.Tests.Media;
+
+public class MediaTypeParserTest
 {
-    public class MediaTypeParserTest
+    [Fact]
+    public void SimpleTypeEmptyParameters()
     {
-        [Fact]
-        public void SimpleTypeEmptyParameters()
-        {
-            var mediaType = Parse("application/json");
-            var mediaTypeExpected = new MediaTypeDescriptor.Builder<MediaTypeTest>(
-                    (a, b, c) => new MediaTypeTest(a, b, c))
-                .WithMimeType("application")
-                .WithMimeSubType("json")
-                .Build();
+        var mediaType = Parse("application/json");
+        var mediaTypeExpected = new MediaTypeDescriptor.Builder<MediaTypeTest>(
+                (a, b, c) => new MediaTypeTest(a, b, c))
+            .WithMimeType("application")
+            .WithMimeSubType("json")
+            .Build();
 
-            Assert.Equal(mediaTypeExpected, mediaType);
-        }
+        Assert.Equal(mediaTypeExpected, mediaType);
+    }
         
-        [Fact]
-        public void ParseParameters()
-        {
-            var mediaTypeDescriptor = Parse("application/*;q=0.8;foo=bar");
+    [Fact]
+    public void ParseParameters()
+    {
+        var mediaTypeDescriptor = Parse("application/*;q=0.8;foo=bar");
 
-            var mediaTypeExpected = new MediaTypeDescriptor.Builder<MediaTypeTest>(
-                    (a, b, c) => new MediaTypeTest(a, b, c))
-                .WithMimeType("application")
-                .WithMimeSubType("*")
-                .WithParameter("q", "0.8")
-                .WithParameter("foo", "bar")
-                .Build();
+        var mediaTypeExpected = new MediaTypeDescriptor.Builder<MediaTypeTest>(
+                (a, b, c) => new MediaTypeTest(a, b, c))
+            .WithMimeType("application")
+            .WithMimeSubType("*")
+            .WithParameter("q", "0.8")
+            .WithParameter("foo", "bar")
+            .Build();
 
-            Assert.Equal(mediaTypeExpected, mediaTypeDescriptor);
-            Assert.Equal("application/*;q=0.8;foo=bar", mediaTypeDescriptor.ToString());
-        }
+        Assert.Equal(mediaTypeExpected, mediaTypeDescriptor);
+        Assert.Equal("application/*;q=0.8;foo=bar", mediaTypeDescriptor.ToString());
+    }
         
-        [Fact]
-        public void IncorrectFormatUsesEmptyStringAndDefaultQuality()
-        {
-            var mediaType = Parse("typeOnly");
-            var mediaTypeExpected = new MediaTypeDescriptor.Builder<MediaTypeTest>(
-                    (a, b, c) => new MediaTypeTest(a, b, c))
-                .WithMimeType("")
-                .WithMimeSubType("")
-                .Build();
+    [Fact]
+    public void IncorrectFormatUsesEmptyStringAndDefaultQuality()
+    {
+        var mediaType = Parse("typeOnly");
+        var mediaTypeExpected = new MediaTypeDescriptor.Builder<MediaTypeTest>(
+                (a, b, c) => new MediaTypeTest(a, b, c))
+            .WithMimeType("")
+            .WithMimeSubType("")
+            .Build();
 
-            Assert.Equal(mediaTypeExpected, mediaType);
-        }
+        Assert.Equal(mediaTypeExpected, mediaType);
+    }
         
-        private MediaTypeTest Parse(string descriptor)
-        {
-            return MediaTypeParser.ParseFrom(descriptor,
-                new MediaTypeDescriptor.Builder<MediaTypeTest>(
-                    (a, b, c) => new MediaTypeTest(a, b, c)));
-        }
+    private MediaTypeTest Parse(string descriptor)
+    {
+        return MediaTypeParser.ParseFrom(descriptor,
+            new MediaTypeDescriptor.Builder<MediaTypeTest>(
+                (a, b, c) => new MediaTypeTest(a, b, c)));
+    }
         
-        private class MediaTypeTest : MediaTypeDescriptor
+    private class MediaTypeTest : MediaTypeDescriptor
+    {
+        public MediaTypeTest(string mimeType, string mimeSubType, IDictionary<string, string> parameters) 
+            : base(mimeType, mimeSubType, parameters)
         {
-            public MediaTypeTest(string mimeType, string mimeSubType, IDictionary<string, string> parameters) 
-                : base(mimeType, mimeSubType, parameters)
-            {
-            }
         }
     }
 }

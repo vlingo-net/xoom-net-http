@@ -9,74 +9,73 @@ using System;
 using Vlingo.Xoom.Actors;
 using Vlingo.Xoom.Common;
 
-namespace Vlingo.Xoom.Http.Tests.Sample.User.Model
+namespace Vlingo.Xoom.Http.Tests.Sample.User.Model;
+
+public class User__Proxy : IUser
 {
-    public class User__Proxy : IUser
+    private const string WithContactRepresentation1 = "WithContact(Vlingo.Xoom.Http.Tests.Sample.User.Model.Contact)";
+    private const string WithNameRepresentation2 = "WithName(Vlingo.Xoom.Http.Tests.Sample.User.Model.Name)";
+
+    private readonly Actor _actor;
+    private readonly IMailbox _mailbox;
+
+    public User__Proxy(Actor actor, IMailbox mailbox)
     {
-        private const string WithContactRepresentation1 = "WithContact(Vlingo.Xoom.Http.Tests.Sample.User.Model.Contact)";
-        private const string WithNameRepresentation2 = "WithName(Vlingo.Xoom.Http.Tests.Sample.User.Model.Name)";
+        _actor = actor;
+        _mailbox = mailbox;
+    }
 
-        private readonly Actor _actor;
-        private readonly IMailbox _mailbox;
-
-        public User__Proxy(Actor actor, IMailbox mailbox)
+    public ICompletes<UserState> WithContact(
+        Contact contact)
+    {
+        if (!_actor.IsStopped)
         {
-            _actor = actor;
-            _mailbox = mailbox;
-        }
-
-        public ICompletes<UserState> WithContact(
-            Contact contact)
-        {
-            if (!_actor.IsStopped)
+            Action<IUser> cons128873 = __ => __.WithContact(contact);
+            var completes = new BasicCompletes<UserState>(_actor.Scheduler);
+            if (_mailbox.IsPreallocated)
             {
-                Action<IUser> cons128873 = __ => __.WithContact(contact);
-                var completes = new BasicCompletes<UserState>(_actor.Scheduler);
-                if (_mailbox.IsPreallocated)
-                {
-                    _mailbox.Send(_actor, cons128873, completes, WithContactRepresentation1);
-                }
-                else
-                {
-                    _mailbox.Send(new LocalMessage<IUser>(_actor,
-                        cons128873, completes, WithContactRepresentation1));
-                }
-
-                return completes;
+                _mailbox.Send(_actor, cons128873, completes, WithContactRepresentation1);
             }
             else
             {
-                _actor.DeadLetters?.FailedDelivery(new DeadLetter(_actor, WithContactRepresentation1));
+                _mailbox.Send(new LocalMessage<IUser>(_actor,
+                    cons128873, completes, WithContactRepresentation1));
             }
 
-            return null;
+            return completes;
+        }
+        else
+        {
+            _actor.DeadLetters?.FailedDelivery(new DeadLetter(_actor, WithContactRepresentation1));
         }
 
-        public ICompletes<UserState> WithName(
-            Name name)
-        {
-            if (!_actor.IsStopped)
-            {
-                Action<IUser> cons128873 = __ => __.WithName(name);
-                var completes = new BasicCompletes<UserState>(_actor.Scheduler);
-                if (_mailbox.IsPreallocated)
-                {
-                    _mailbox.Send(_actor, cons128873, completes, WithNameRepresentation2);
-                }
-                else
-                {
-                    _mailbox.Send(new LocalMessage<IUser>(_actor,
-                        cons128873, completes, WithNameRepresentation2));
-                }
+        return null;
+    }
 
-                return completes;
+    public ICompletes<UserState> WithName(
+        Name name)
+    {
+        if (!_actor.IsStopped)
+        {
+            Action<IUser> cons128873 = __ => __.WithName(name);
+            var completes = new BasicCompletes<UserState>(_actor.Scheduler);
+            if (_mailbox.IsPreallocated)
+            {
+                _mailbox.Send(_actor, cons128873, completes, WithNameRepresentation2);
             }
             else
             {
-                _actor.DeadLetters?.FailedDelivery(new DeadLetter(_actor, WithNameRepresentation2));
+                _mailbox.Send(new LocalMessage<IUser>(_actor,
+                    cons128873, completes, WithNameRepresentation2));
             }
 
-            return null;
+            return completes;
         }
+        else
+        {
+            _actor.DeadLetters?.FailedDelivery(new DeadLetter(_actor, WithNameRepresentation2));
+        }
+
+        return null;
     }
 }

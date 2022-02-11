@@ -9,37 +9,36 @@ using System;
 using Vlingo.Xoom.Actors;
 using Vlingo.Xoom.Common;
 
-namespace Vlingo.Xoom.Http.Resource
-{
-    internal abstract class RequestObjectExecutor
-    {
-        internal static ICompletes<Response> ExecuteRequest(
-            Request request,
-            MediaTypeMapper mediaTypeMapper,
-            Func<ICompletes<IObjectResponse>> executeAction,
-            IErrorHandler errorHandler,
-            ILogger logger)
-        {
-            try
-            {
-                return executeAction.Invoke()
-                  .AndThen(objectResponse => ToResponse(objectResponse, request, mediaTypeMapper, errorHandler, logger));
-            }
-            catch (Exception ex)
-            {
-                return Completes.WithFailure(ResourceErrorProcessor.ResourceHandlerError(errorHandler, logger, ex));
-            }
-        }
+namespace Vlingo.Xoom.Http.Resource;
 
-        internal static Response ToResponse(
-            IObjectResponse objectResponse,
-            Request request,
-            MediaTypeMapper mediaTypeMapper,
-            IErrorHandler errorHandler,
-            ILogger logger)
-            => Success.Of<Exception, Response>(objectResponse.ResponseFrom(request, mediaTypeMapper))
-                .Resolve(
-                    ex => ResourceErrorProcessor.ResourceHandlerError(errorHandler, logger, ex),
-                    response => response);
+internal abstract class RequestObjectExecutor
+{
+    internal static ICompletes<Response> ExecuteRequest(
+        Request request,
+        MediaTypeMapper mediaTypeMapper,
+        Func<ICompletes<IObjectResponse>> executeAction,
+        IErrorHandler errorHandler,
+        ILogger logger)
+    {
+        try
+        {
+            return executeAction.Invoke()
+                .AndThen(objectResponse => ToResponse(objectResponse, request, mediaTypeMapper, errorHandler, logger));
+        }
+        catch (Exception ex)
+        {
+            return Completes.WithFailure(ResourceErrorProcessor.ResourceHandlerError(errorHandler, logger, ex));
+        }
     }
+
+    internal static Response ToResponse(
+        IObjectResponse objectResponse,
+        Request request,
+        MediaTypeMapper mediaTypeMapper,
+        IErrorHandler errorHandler,
+        ILogger logger)
+        => Success.Of<Exception, Response>(objectResponse.ResponseFrom(request, mediaTypeMapper))
+            .Resolve(
+                ex => ResourceErrorProcessor.ResourceHandlerError(errorHandler, logger, ex),
+                response => response);
 }

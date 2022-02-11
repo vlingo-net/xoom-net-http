@@ -9,21 +9,20 @@ using Vlingo.Xoom.Common;
 using Vlingo.Xoom.Http.Resource;
 using Xunit.Abstractions;
 
-namespace Vlingo.Xoom.Http.Tests.Resource
+namespace Vlingo.Xoom.Http.Tests.Resource;
+
+public class FailResource : ResourceHandler
 {
-    public class FailResource : ResourceHandler
+    private readonly ITestOutputHelper _output;
+
+    public FailResource(ITestOutputHelper output) => _output = output;
+
+    public ICompletes<Response> Query()
     {
-        private readonly ITestOutputHelper _output;
-
-        public FailResource(ITestOutputHelper output) => _output = output;
-
-        public ICompletes<Response> Query()
-        {
-            _output.WriteLine("QUERY");
-            return Xoom.Common.Completes.WithFailure(Response.Of(ResponseStatus.BadRequest));
-        }
-
-        public override Http.Resource.Resource Routes() 
-            => ResourceBuilder.Resource("Failure API", ResourceBuilder.Get("/fail").Handle(Query));
+        _output.WriteLine("QUERY");
+        return Xoom.Common.Completes.WithFailure(Response.Of(ResponseStatus.BadRequest));
     }
+
+    public override Http.Resource.Resource Routes() 
+        => ResourceBuilder.Resource("Failure API", ResourceBuilder.Get("/fail").Handle(Query));
 }

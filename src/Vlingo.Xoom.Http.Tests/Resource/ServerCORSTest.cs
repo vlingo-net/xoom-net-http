@@ -17,85 +17,84 @@ using Vlingo.Xoom.Wire.Nodes;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Vlingo.Xoom.Http.Tests.Resource
+namespace Vlingo.Xoom.Http.Tests.Resource;
+
+public class ServerCorsTest : ResourceTestFixtures
 {
-    public class ServerCorsTest : ResourceTestFixtures
+    private readonly ITestOutputHelper _output;
+    private static readonly Random Random = new Random();
+    private static readonly AtomicInteger BaseServerPort = new AtomicInteger(10_000 + Random.Next(50_000));
+
+    private static readonly string HeaderAcceptOriginAny = "*";
+    private static readonly string ResponseHeaderAcceptAllHeaders = "X-Requested-With, Content-Type, Content-Length";
+    private static readonly string ResponseHeaderAcceptMethodsAll = "POST,GET,PUT,PATCH,DELETE";
+
+    protected readonly int ServerPort;
+
+    private readonly IClientRequestResponseChannel _client;
+    private readonly Progress _progress;
+    private readonly IServer _server;
+        
+    [Fact]
+    public void TestThatServerRespondsWithAccessControlHeaders()
     {
-        private readonly ITestOutputHelper _output;
-        private static readonly Random Random = new Random();
-        private static readonly AtomicInteger BaseServerPort = new AtomicInteger(10_000 + Random.Next(50_000));
+        var consumeCalls = _progress.ExpectConsumeTimes(1);
 
-        private static readonly string HeaderAcceptOriginAny = "*";
-        private static readonly string ResponseHeaderAcceptAllHeaders = "X-Requested-With, Content-Type, Content-Length";
-        private static readonly string ResponseHeaderAcceptMethodsAll = "POST,GET,PUT,PATCH,DELETE";
+        var request = GetUsersOriginHeader();
+        _client.RequestWith(ToStream(request).ToArray());
 
-        protected readonly int ServerPort;
-
-        private readonly IClientRequestResponseChannel _client;
-        private readonly Progress _progress;
-        private readonly IServer _server;
-        
-        [Fact]
-        public void TestThatServerRespondsWithAccessControlHeaders()
+        while (consumeCalls.TotalWrites < 1)
         {
-            var consumeCalls = _progress.ExpectConsumeTimes(1);
-
-            var request = GetUsersOriginHeader();
-            _client.RequestWith(ToStream(request).ToArray());
-
-            while (consumeCalls.TotalWrites < 1)
-            {
-                _client.ProbeChannel();
-            }
-            consumeCalls.ReadFrom<int>("completed");
-
-            _progress.Responses.TryDequeue(out var response);
-
-            Assert.NotNull(response);
-            Assert.Equal(ResponseStatus.Ok, response.Status);
-            Assert.Equal(1, _progress.ConsumeCount.Get());
-
-            Assert.Equal(HeaderAcceptOriginAny, response.HeaderValueOr(ResponseHeader.AccessControlAllowOrigin, null));
-            Assert.Equal(ResponseHeaderAcceptAllHeaders, response.HeaderValueOr(ResponseHeader.AccessControlAllowHeaders, null));
-            Assert.Equal(ResponseHeaderAcceptMethodsAll, response.HeaderValueOr(ResponseHeader.AccessControlAllowMethods, null));
+            _client.ProbeChannel();
         }
+        consumeCalls.ReadFrom<int>("completed");
+
+        _progress.Responses.TryDequeue(out var response);
+
+        Assert.NotNull(response);
+        Assert.Equal(ResponseStatus.Ok, response.Status);
+        Assert.Equal(1, _progress.ConsumeCount.Get());
+
+        Assert.Equal(HeaderAcceptOriginAny, response.HeaderValueOr(ResponseHeader.AccessControlAllowOrigin, null));
+        Assert.Equal(ResponseHeaderAcceptAllHeaders, response.HeaderValueOr(ResponseHeader.AccessControlAllowHeaders, null));
+        Assert.Equal(ResponseHeaderAcceptMethodsAll, response.HeaderValueOr(ResponseHeader.AccessControlAllowMethods, null));
+    }
         
-        public ServerCorsTest(ITestOutputHelper output) : base(output)
+    public ServerCorsTest(ITestOutputHelper output) : base(output)
+    {
+        _output = output;
+        UserStateFactory.ResetId();
+
+        var filter = new CORSResponseFilter();
+
+        var headers = new List<ResponseHeader>
         {
-            _output = output;
-            UserStateFactory.ResetId();
+            ResponseHeader.Of(ResponseHeader.AccessControlAllowOrigin, HeaderAcceptOriginAny),
+            ResponseHeader.Of(ResponseHeader.AccessControlAllowHeaders, ResponseHeaderAcceptAllHeaders),
+            ResponseHeader.Of(ResponseHeader.AccessControlAllowMethods, ResponseHeaderAcceptMethodsAll)
+        };
 
-            var filter = new CORSResponseFilter();
+        filter.OriginHeadersFor(HeaderAcceptOriginAny, headers);
 
-            var headers = new List<ResponseHeader>
-            {
-                ResponseHeader.Of(ResponseHeader.AccessControlAllowOrigin, HeaderAcceptOriginAny),
-                ResponseHeader.Of(ResponseHeader.AccessControlAllowHeaders, ResponseHeaderAcceptAllHeaders),
-                ResponseHeader.Of(ResponseHeader.AccessControlAllowMethods, ResponseHeaderAcceptMethodsAll)
-            };
+        var filters = Filters.Are(Filters.NoRequestFilters(), new []{filter});
 
-            filter.OriginHeadersFor(HeaderAcceptOriginAny, headers);
+        ServerPort = BaseServerPort.GetAndIncrement();
+        _server = ServerFactory.StartWithAgent(World.Stage, Resources, filters, ServerPort, 100);
+        Assert.True(_server.StartUp().Await(TimeSpan.FromMilliseconds(500)));
 
-            var filters = Filters.Are(Filters.NoRequestFilters(), new []{filter});
+        _progress = new Progress();
 
-            ServerPort = BaseServerPort.GetAndIncrement();
-            _server = ServerFactory.StartWithAgent(World.Stage, Resources, filters, ServerPort, 100);
-            Assert.True(_server.StartUp().Await(TimeSpan.FromMilliseconds(500)));
+        var consumer = World.ActorFor<IResponseChannelConsumer>(Definition.Has<TestResponseChannelConsumer>(Definition.Parameters(_progress)));
 
-            _progress = new Progress();
+        _client = new BasicClientRequestResponseChannel(Address.From(Host.Of("localhost"), ServerPort, AddressType.None), consumer, 100, 10240, World.DefaultLogger);
+    }
 
-            var consumer = World.ActorFor<IResponseChannelConsumer>(Definition.Has<TestResponseChannelConsumer>(Definition.Parameters(_progress)));
+    public override void Dispose()
+    {
+        _client.Close();
 
-            _client = new BasicClientRequestResponseChannel(Address.From(Host.Of("localhost"), ServerPort, AddressType.None), consumer, 100, 10240, World.DefaultLogger);
-        }
-
-        public override void Dispose()
-        {
-            _client.Close();
-
-            _server.ShutDown();
+        _server.ShutDown();
             
-            base.Dispose();
-        }
+        base.Dispose();
     }
 }

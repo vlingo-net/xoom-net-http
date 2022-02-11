@@ -9,45 +9,44 @@ using Vlingo.Xoom.Actors;
 using Vlingo.Xoom.Actors.TestKit;
 using Vlingo.Xoom.Common;
 
-namespace Vlingo.Xoom.Http.Tests.Resource
+namespace Vlingo.Xoom.Http.Tests.Resource;
+
+public class MockCompletesEventuallyResponse : ICompletesEventually
 {
-    public class MockCompletesEventuallyResponse : ICompletesEventually
-    {
-        private AccessSafely _withCalls = AccessSafely.AfterCompleting(0);
+    private AccessSafely _withCalls = AccessSafely.AfterCompleting(0);
         
-        public AtomicReference<Response> Response { get; } = new AtomicReference<Response>();
+    public AtomicReference<Response> Response { get; } = new AtomicReference<Response>();
 
-        /// <summary>
-        /// Answer with an AccessSafely which writes nulls to "with" and reads the write count from the "completed".
-        /// </summary>
-        /// <param name="n">Number of times With(outcome) must be called before ReadFrom(...) will return.</param>
-        /// <returns>AccessSafely instance</returns>
-        /// <remarks>Note: Clients can replace the default lambdas with their own via readingWith/writingWith.</remarks>
-        public AccessSafely ExpectWithTimes(int n)
-        {
-            _withCalls = AccessSafely.AfterCompleting(n)
-                .WritingWith<Response>("with", r => Response.Set(r))
-                .ReadingWith("completed", () => _withCalls.TotalWrites)
-                .ReadingWith("response", () => Response.Get());
-            return _withCalls;
-        }
-        public void Conclude()
-        {
-        }
-
-        public void Stop()
-        {
-        }
-
-        public bool IsStopped => false;
-        public void With(object outcome)
-        {
-            _withCalls.WriteUsing("with", (Response)outcome);
-        }
-
-        public IAddress Address => null;
-
-        public override string ToString() =>
-            $"MockCompletesEventuallyResponse [response={Response}, withCalls={_withCalls}]";
+    /// <summary>
+    /// Answer with an AccessSafely which writes nulls to "with" and reads the write count from the "completed".
+    /// </summary>
+    /// <param name="n">Number of times With(outcome) must be called before ReadFrom(...) will return.</param>
+    /// <returns>AccessSafely instance</returns>
+    /// <remarks>Note: Clients can replace the default lambdas with their own via readingWith/writingWith.</remarks>
+    public AccessSafely ExpectWithTimes(int n)
+    {
+        _withCalls = AccessSafely.AfterCompleting(n)
+            .WritingWith<Response>("with", r => Response.Set(r))
+            .ReadingWith("completed", () => _withCalls.TotalWrites)
+            .ReadingWith("response", () => Response.Get());
+        return _withCalls;
     }
+    public void Conclude()
+    {
+    }
+
+    public void Stop()
+    {
+    }
+
+    public bool IsStopped => false;
+    public void With(object outcome)
+    {
+        _withCalls.WriteUsing("with", (Response)outcome);
+    }
+
+    public IAddress Address => null;
+
+    public override string ToString() =>
+        $"MockCompletesEventuallyResponse [response={Response}, withCalls={_withCalls}]";
 }

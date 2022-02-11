@@ -7,26 +7,25 @@
 
 using System;
 
-namespace Vlingo.Xoom.Http.Resource
-{
-    public static class DefaultErrorHandler
-    {
-        private static Func<Exception, Response> Handler = ex =>
-        {
-            if (ex is MediaTypeNotSupportedException)
-            {
-                return Response.Of(ResponseStatus.UnsupportedMediaType);
-            }
-            else if (ex is ArgumentException)
-            {
-                return Response.Of(ResponseStatus.BadRequest);
-            }
-            else
-            {
-                return Response.Of(ResponseStatus.InternalServerError);
-            }
-        };
+namespace Vlingo.Xoom.Http.Resource;
 
-        public static IErrorHandler Instance { get; } = new ErrorHandlerImpl(Handler);
-    }
+public static class DefaultErrorHandler
+{
+    private static Func<Exception, Response> Handler = ex =>
+    {
+        if (ex is MediaTypeNotSupportedException)
+        {
+            return Response.Of(ResponseStatus.UnsupportedMediaType);
+        }
+        else if (ex is ArgumentException)
+        {
+            return Response.Of(ResponseStatus.BadRequest);
+        }
+        else
+        {
+            return Response.Of(ResponseStatus.InternalServerError);
+        }
+    };
+
+    public static IErrorHandler Instance { get; } = new ErrorHandlerImpl(Handler);
 }

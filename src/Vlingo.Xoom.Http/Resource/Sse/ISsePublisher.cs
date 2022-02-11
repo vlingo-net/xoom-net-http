@@ -7,11 +7,10 @@
 
 using Vlingo.Xoom.Actors;
 
-namespace Vlingo.Xoom.Http.Resource.Sse
+namespace Vlingo.Xoom.Http.Resource.Sse;
+
+public interface ISsePublisher : IStoppable
 {
-    public interface ISsePublisher : IStoppable
-    {
-        void Subscribe(SseSubscriber subscriber);
-        void Unsubscribe(SseSubscriber subscriber);
-    }
+    void Subscribe(SseSubscriber subscriber);
+    void Unsubscribe(SseSubscriber subscriber);
 }

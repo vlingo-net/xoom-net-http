@@ -8,36 +8,35 @@
 using System;
 using Vlingo.Xoom.Actors;
 
-namespace Vlingo.Xoom.Http.Resource.Feed
+namespace Vlingo.Xoom.Http.Resource.Feed;
+
+public class FeedProducer__Proxy : IFeedProducer
 {
-    public class FeedProducer__Proxy : IFeedProducer
+    private const string ProduceFeedForRepresentation1 =
+        "ProduceFeedFor(Vlingo.Xoom.Http.Resource.Feed.FeedProductRequest)";
+
+    private readonly Actor _actor;
+    private readonly IMailbox _mailbox;
+
+    public FeedProducer__Proxy(Actor actor, IMailbox mailbox)
     {
-        private const string ProduceFeedForRepresentation1 =
-            "ProduceFeedFor(Vlingo.Xoom.Http.Resource.Feed.FeedProductRequest)";
+        _actor = actor;
+        _mailbox = mailbox;
+    }
 
-        private readonly Actor _actor;
-        private readonly IMailbox _mailbox;
-
-        public FeedProducer__Proxy(Actor actor, IMailbox mailbox)
+    public void ProduceFeedFor(FeedProductRequest request)
+    {
+        if (!_actor.IsStopped)
         {
-            _actor = actor;
-            _mailbox = mailbox;
-        }
-
-        public void ProduceFeedFor(FeedProductRequest request)
-        {
-            if (!_actor.IsStopped)
-            {
-                Action<IFeedProducer> cons1617155091 = __ => __.ProduceFeedFor(request);
-                if (_mailbox.IsPreallocated)
-                    _mailbox.Send(_actor, cons1617155091, null, ProduceFeedForRepresentation1);
-                else
-                    _mailbox.Send(new LocalMessage<IFeedProducer>(_actor, cons1617155091, ProduceFeedForRepresentation1));
-            }
+            Action<IFeedProducer> cons1617155091 = __ => __.ProduceFeedFor(request);
+            if (_mailbox.IsPreallocated)
+                _mailbox.Send(_actor, cons1617155091, null, ProduceFeedForRepresentation1);
             else
-            {
-                _actor.DeadLetters?.FailedDelivery(new DeadLetter(_actor, ProduceFeedForRepresentation1));
-            }
+                _mailbox.Send(new LocalMessage<IFeedProducer>(_actor, cons1617155091, ProduceFeedForRepresentation1));
+        }
+        else
+        {
+            _actor.DeadLetters?.FailedDelivery(new DeadLetter(_actor, ProduceFeedForRepresentation1));
         }
     }
 }

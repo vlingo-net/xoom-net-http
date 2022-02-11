@@ -10,96 +10,95 @@ using Vlingo.Xoom.Common;
 using Vlingo.Xoom.Wire.Channel;
 using Vlingo.Xoom.Wire.Message;
 
-namespace Vlingo.Xoom.Http.Resource
+namespace Vlingo.Xoom.Http.Resource;
+
+public class ClientConsumerWorkerActor : Actor, IClientConsumer
 {
-    public class ClientConsumerWorkerActor : Actor, IClientConsumer
+    private const string EmptyTestId = "";
+    private static readonly AtomicInteger TestIdGenerator = new AtomicInteger(0);
+
+    private readonly string _testId;
+    private readonly IRequestSender _requestSender;
+
+    private ICompletesEventually? _completesEventually;
+    private ResponseParser? _parser;
+
+    public ClientConsumerWorkerActor(Client.Configuration configuration)
     {
-        private const string EmptyTestId = "";
-        private static readonly AtomicInteger TestIdGenerator = new AtomicInteger(0);
+        _testId = configuration.HasTestInfo
+            ? TestIdGenerator.IncrementAndGet().ToString()
+            : EmptyTestId;
 
-        private readonly string _testId;
-        private readonly IRequestSender _requestSender;
+        _requestSender = StartRequestSender(configuration);
+        _parser = null;
+    }
 
-        private ICompletesEventually? _completesEventually;
-        private ResponseParser? _parser;
-
-        public ClientConsumerWorkerActor(Client.Configuration configuration)
+    public void Consume(IConsumerByteBuffer buffer)
+    {
+        if (_parser == null)
         {
-            _testId = configuration.HasTestInfo
-                ? TestIdGenerator.IncrementAndGet().ToString()
-                : EmptyTestId;
-
-            _requestSender = StartRequestSender(configuration);
-            _parser = null;
+            _parser = ResponseParser.ParserFor(buffer);
         }
-
-        public void Consume(IConsumerByteBuffer buffer)
+        else
         {
-            if (_parser == null)
-            {
-                _parser = ResponseParser.ParserFor(buffer);
-            }
-            else
-            {
-                _parser.ParseNext(buffer);
-            }
-            buffer.Release();
-
-            // don't disperse stowed messages unless a full response has arrived
-            if (_parser.HasFullResponse())
-            {
-                var response = _parser.FullResponse();
-
-                if (_testId != EmptyTestId)
-                {
-                    response.Headers.Add(ResponseHeader.Of(Client.ClientIdCustomHeader, _testId));
-                }
-
-                _completesEventually?.With(response);
-                _completesEventually = null;
-                DisperseStowedMessages();
-            }
-
-            if (!_parser.IsMissingContent)
-            {
-                _parser = null;
-            }
+            _parser.ParseNext(buffer);
         }
+        buffer.Release();
 
-        public void IntervalSignal(IScheduled<object> scheduled, object data)
+        // don't disperse stowed messages unless a full response has arrived
+        if (_parser.HasFullResponse())
         {
-        }
-
-        public ICompletes<Response> RequestWith(Request request, ICompletes<Response> completes)
-        {
-            _completesEventually = Stage.World.CompletesFor(completes);
+            var response = _parser.FullResponse();
 
             if (_testId != EmptyTestId)
             {
-                request.Headers.Add(RequestHeader.Of(Client.ClientIdCustomHeader, _testId));
-                request.Headers.Add(RequestHeader.Of(RequestHeader.XCorrelationID, _testId));
+                response.Headers.Add(ResponseHeader.Of(Client.ClientIdCustomHeader, _testId));
             }
 
-            _requestSender.SendRequest(request);
-
-            StowMessages(typeof(IResponseChannelConsumer));
-
-            return completes;
+            _completesEventually?.With(response);
+            _completesEventually = null;
+            DisperseStowedMessages();
         }
 
-        public override void Stop()
+        if (!_parser.IsMissingContent)
         {
-            _requestSender.Stop();
-            base.Stop();
+            _parser = null;
+        }
+    }
+
+    public void IntervalSignal(IScheduled<object> scheduled, object data)
+    {
+    }
+
+    public ICompletes<Response> RequestWith(Request request, ICompletes<Response> completes)
+    {
+        _completesEventually = Stage.World.CompletesFor(completes);
+
+        if (_testId != EmptyTestId)
+        {
+            request.Headers.Add(RequestHeader.Of(Client.ClientIdCustomHeader, _testId));
+            request.Headers.Add(RequestHeader.Of(RequestHeader.XCorrelationID, _testId));
         }
 
-        private IRequestSender StartRequestSender(Client.Configuration configuration)
-        {
-            var self = SelfAs<IResponseChannelConsumer>();
+        _requestSender.SendRequest(request);
+
+        StowMessages(typeof(IResponseChannelConsumer));
+
+        return completes;
+    }
+
+    public override void Stop()
+    {
+        _requestSender.Stop();
+        base.Stop();
+    }
+
+    private IRequestSender StartRequestSender(Client.Configuration configuration)
+    {
+        var self = SelfAs<IResponseChannelConsumer>();
             
-            var requestSender = ChildActorFor<IRequestSender>(() => new RequestSenderProbeActor(configuration, self, _testId));
+        var requestSender = ChildActorFor<IRequestSender>(() => new RequestSenderProbeActor(configuration, self, _testId));
 
-            return requestSender;
-        }
+        return requestSender;
     }
 }

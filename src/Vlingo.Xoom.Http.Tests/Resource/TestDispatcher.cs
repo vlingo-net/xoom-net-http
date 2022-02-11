@@ -9,30 +9,29 @@ using Vlingo.Xoom.Actors;
 using Vlingo.Xoom.Http.Resource;
 using IDispatcher = Vlingo.Xoom.Http.Resource.IDispatcher;
 
-namespace Vlingo.Xoom.Http.Tests.Resource
+namespace Vlingo.Xoom.Http.Tests.Resource;
+
+public class TestDispatcher : IDispatcher
 {
-    public class TestDispatcher : IDispatcher
+    private readonly Resources _resources;
+    private readonly ILogger _logger;
+
+    public TestDispatcher(Resources resources, ILogger logger)
     {
-        private readonly Resources _resources;
-        private readonly ILogger _logger;
-
-        public TestDispatcher(Resources resources, ILogger logger)
-        {
-            _resources = resources;
-            _logger = logger;
-        }
-
-
-        public void Conclude()
-        {
-        }
-
-        public void Stop()
-        {
-        }
-
-        public bool IsStopped => false;
-
-        public void DispatchFor(Context context) => _resources.DispatchMatching(context, _logger);
+        _resources = resources;
+        _logger = logger;
     }
+
+
+    public void Conclude()
+    {
+    }
+
+    public void Stop()
+    {
+    }
+
+    public bool IsStopped => false;
+
+    public void DispatchFor(Context context) => _resources.DispatchMatching(context, _logger);
 }

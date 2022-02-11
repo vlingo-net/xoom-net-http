@@ -9,258 +9,257 @@ using System;
 using Vlingo.Xoom.Actors;
 using Vlingo.Xoom.Common;
 
-namespace Vlingo.Xoom.Http.Resource
+namespace Vlingo.Xoom.Http.Resource;
+
+public class Server__Proxy : IServer
 {
-    public class Server__Proxy : IServer
+    private const string StartWithRepresentation1 = "StartWith(Vlingo.Xoom.Actors.Stage)";
+
+    private const string StartWithRepresentation2 =
+        "StartWith(Vlingo.Xoom.Actors.Stage, Vlingo.Xoom.Http.Resource.HttpProperties)";
+
+    private const string StartWithRepresentation3 =
+        "StartWith(Vlingo.Xoom.Actors.Stage, Vlingo.Xoom.Http.Resource.Resources, int, Vlingo.Xoom.Http.Resource.Configuration.SizingConf, Vlingo.Xoom.Http.Resource.Configuration.TimingConf)";
+
+    private const string StartWithRepresentation4 =
+        "StartWith(Vlingo.Xoom.Actors.Stage, Vlingo.Xoom.Http.Resource.Resources, Vlingo.Xoom.Http.Filters, int, Vlingo.Xoom.Http.Resource.Configuration.SizingConf, Vlingo.Xoom.Http.Resource.Configuration.TimingConf)";
+
+    private const string StartWithRepresentation5 =
+        "StartWith(Vlingo.Xoom.Actors.Stage, Vlingo.Xoom.Http.Resource.Resources, Vlingo.Xoom.Http.Filters, int, Vlingo.Xoom.Http.Resource.Configuration.SizingConf, Vlingo.Xoom.Http.Resource.Configuration.TimingConf, string, string)";
+
+    private const string ShutDownRepresentation6 = "ShutDown()";
+    private const string StartUpRepresentation7 = "StartUp()";
+    private const string ConcludeRepresentation8 = "Conclude()";
+    private const string StopRepresentation9 = "Stop()";
+
+    private readonly Actor _actor;
+    private readonly IMailbox _mailbox;
+
+    public Server__Proxy(Actor actor, IMailbox mailbox)
     {
-        private const string StartWithRepresentation1 = "StartWith(Vlingo.Xoom.Actors.Stage)";
+        _actor = actor;
+        _mailbox = mailbox;
+    }
 
-        private const string StartWithRepresentation2 =
-            "StartWith(Vlingo.Xoom.Actors.Stage, Vlingo.Xoom.Http.Resource.HttpProperties)";
+    public bool IsStopped => false;
 
-        private const string StartWithRepresentation3 =
-            "StartWith(Vlingo.Xoom.Actors.Stage, Vlingo.Xoom.Http.Resource.Resources, int, Vlingo.Xoom.Http.Resource.Configuration.SizingConf, Vlingo.Xoom.Http.Resource.Configuration.TimingConf)";
-
-        private const string StartWithRepresentation4 =
-            "StartWith(Vlingo.Xoom.Actors.Stage, Vlingo.Xoom.Http.Resource.Resources, Vlingo.Xoom.Http.Filters, int, Vlingo.Xoom.Http.Resource.Configuration.SizingConf, Vlingo.Xoom.Http.Resource.Configuration.TimingConf)";
-
-        private const string StartWithRepresentation5 =
-            "StartWith(Vlingo.Xoom.Actors.Stage, Vlingo.Xoom.Http.Resource.Resources, Vlingo.Xoom.Http.Filters, int, Vlingo.Xoom.Http.Resource.Configuration.SizingConf, Vlingo.Xoom.Http.Resource.Configuration.TimingConf, string, string)";
-
-        private const string ShutDownRepresentation6 = "ShutDown()";
-        private const string StartUpRepresentation7 = "StartUp()";
-        private const string ConcludeRepresentation8 = "Conclude()";
-        private const string StopRepresentation9 = "Stop()";
-
-        private readonly Actor _actor;
-        private readonly IMailbox _mailbox;
-
-        public Server__Proxy(Actor actor, IMailbox mailbox)
+    public IServer StartWith(Stage stage)
+    {
+        if (!_actor.IsStopped)
         {
-            _actor = actor;
-            _mailbox = mailbox;
-        }
-
-        public bool IsStopped => false;
-
-        public IServer StartWith(Stage stage)
-        {
-            if (!_actor.IsStopped)
+            Action<IServer> cons128873 = __ => __.StartWith(stage);
+            if (_mailbox.IsPreallocated)
             {
-                Action<IServer> cons128873 = __ => __.StartWith(stage);
-                if (_mailbox.IsPreallocated)
-                {
-                    _mailbox.Send(_actor, cons128873, null, StartWithRepresentation1);
-                }
-                else
-                {
-                    _mailbox.Send(new LocalMessage<IServer>(_actor, cons128873,
-                        StartWithRepresentation1));
-                }
+                _mailbox.Send(_actor, cons128873, null, StartWithRepresentation1);
             }
             else
             {
-                _actor.DeadLetters?.FailedDelivery(new DeadLetter(_actor, StartWithRepresentation1));
+                _mailbox.Send(new LocalMessage<IServer>(_actor, cons128873,
+                    StartWithRepresentation1));
             }
-
-            return null!;
+        }
+        else
+        {
+            _actor.DeadLetters?.FailedDelivery(new DeadLetter(_actor, StartWithRepresentation1));
         }
 
-        public IServer StartWith(Stage stage,
-            HttpProperties properties)
+        return null!;
+    }
+
+    public IServer StartWith(Stage stage,
+        HttpProperties properties)
+    {
+        if (!_actor.IsStopped)
         {
-            if (!_actor.IsStopped)
+            Action<IServer> cons128873 = __ => __.StartWith(stage, properties);
+            if (_mailbox.IsPreallocated)
             {
-                Action<IServer> cons128873 = __ => __.StartWith(stage, properties);
-                if (_mailbox.IsPreallocated)
-                {
-                    _mailbox.Send(_actor, cons128873, null, StartWithRepresentation2);
-                }
-                else
-                {
-                    _mailbox.Send(new LocalMessage<IServer>(_actor, cons128873,
-                        StartWithRepresentation2));
-                }
+                _mailbox.Send(_actor, cons128873, null, StartWithRepresentation2);
             }
             else
             {
-                _actor.DeadLetters?.FailedDelivery(new DeadLetter(_actor, StartWithRepresentation2));
+                _mailbox.Send(new LocalMessage<IServer>(_actor, cons128873,
+                    StartWithRepresentation2));
             }
-
-            return null!;
+        }
+        else
+        {
+            _actor.DeadLetters?.FailedDelivery(new DeadLetter(_actor, StartWithRepresentation2));
         }
 
-        public IServer StartWith(Stage stage,
-            Resources resources, int port, Configuration.SizingConf sizing,
-            Configuration.TimingConf timing)
+        return null!;
+    }
+
+    public IServer StartWith(Stage stage,
+        Resources resources, int port, Configuration.SizingConf sizing,
+        Configuration.TimingConf timing)
+    {
+        if (!_actor.IsStopped)
         {
-            if (!_actor.IsStopped)
+            Action<IServer> cons128873 = __ =>
+                __.StartWith(stage, resources, port, sizing, timing);
+            if (_mailbox.IsPreallocated)
             {
-                Action<IServer> cons128873 = __ =>
-                    __.StartWith(stage, resources, port, sizing, timing);
-                if (_mailbox.IsPreallocated)
-                {
-                    _mailbox.Send(_actor, cons128873, null, StartWithRepresentation3);
-                }
-                else
-                {
-                    _mailbox.Send(new LocalMessage<IServer>(_actor, cons128873,
-                        StartWithRepresentation3));
-                }
+                _mailbox.Send(_actor, cons128873, null, StartWithRepresentation3);
             }
             else
             {
-                _actor.DeadLetters?.FailedDelivery(new DeadLetter(_actor, StartWithRepresentation3));
+                _mailbox.Send(new LocalMessage<IServer>(_actor, cons128873,
+                    StartWithRepresentation3));
             }
-
-            return null!;
+        }
+        else
+        {
+            _actor.DeadLetters?.FailedDelivery(new DeadLetter(_actor, StartWithRepresentation3));
         }
 
-        public IServer StartWith(Stage stage,
-            Resources resources, Filters filters, int port,
-            Configuration.SizingConf sizing, Configuration.TimingConf timing)
+        return null!;
+    }
+
+    public IServer StartWith(Stage stage,
+        Resources resources, Filters filters, int port,
+        Configuration.SizingConf sizing, Configuration.TimingConf timing)
+    {
+        if (!_actor.IsStopped)
         {
-            if (!_actor.IsStopped)
+            Action<IServer> cons128873 = __ =>
+                __.StartWith(stage, resources, filters, port, sizing, timing);
+            if (_mailbox.IsPreallocated)
             {
-                Action<IServer> cons128873 = __ =>
-                    __.StartWith(stage, resources, filters, port, sizing, timing);
-                if (_mailbox.IsPreallocated)
-                {
-                    _mailbox.Send(_actor, cons128873, null, StartWithRepresentation4);
-                }
-                else
-                {
-                    _mailbox.Send(new LocalMessage<IServer>(_actor, cons128873,
-                        StartWithRepresentation4));
-                }
+                _mailbox.Send(_actor, cons128873, null, StartWithRepresentation4);
             }
             else
             {
-                _actor.DeadLetters?.FailedDelivery(new DeadLetter(_actor, StartWithRepresentation4));
+                _mailbox.Send(new LocalMessage<IServer>(_actor, cons128873,
+                    StartWithRepresentation4));
             }
-
-            return null!;
+        }
+        else
+        {
+            _actor.DeadLetters?.FailedDelivery(new DeadLetter(_actor, StartWithRepresentation4));
         }
 
-        public IServer StartWith(Stage stage,
-            Resources resources, Filters filters, int port,
-            Configuration.SizingConf sizing, Configuration.TimingConf timing,
-            string severMailboxTypeName, string channelMailboxTypeName)
+        return null!;
+    }
+
+    public IServer StartWith(Stage stage,
+        Resources resources, Filters filters, int port,
+        Configuration.SizingConf sizing, Configuration.TimingConf timing,
+        string severMailboxTypeName, string channelMailboxTypeName)
+    {
+        if (!_actor.IsStopped)
         {
-            if (!_actor.IsStopped)
+            Action<IServer> cons128873 = __ => __.StartWith(stage, resources, filters, port,
+                sizing, timing, severMailboxTypeName, channelMailboxTypeName);
+            if (_mailbox.IsPreallocated)
             {
-                Action<IServer> cons128873 = __ => __.StartWith(stage, resources, filters, port,
-                    sizing, timing, severMailboxTypeName, channelMailboxTypeName);
-                if (_mailbox.IsPreallocated)
-                {
-                    _mailbox.Send(_actor, cons128873, null, StartWithRepresentation5);
-                }
-                else
-                {
-                    _mailbox.Send(new LocalMessage<IServer>(_actor, cons128873,
-                        StartWithRepresentation5));
-                }
+                _mailbox.Send(_actor, cons128873, null, StartWithRepresentation5);
             }
             else
             {
-                _actor.DeadLetters?.FailedDelivery(new DeadLetter(_actor, StartWithRepresentation5));
+                _mailbox.Send(new LocalMessage<IServer>(_actor, cons128873,
+                    StartWithRepresentation5));
             }
-
-            return null!;
+        }
+        else
+        {
+            _actor.DeadLetters?.FailedDelivery(new DeadLetter(_actor, StartWithRepresentation5));
         }
 
-        public ICompletes<bool> ShutDown()
-        {
-            if (!_actor.IsStopped)
-            {
-                Action<IServer> cons128873 = __ => __.ShutDown();
-                var completes = new BasicCompletes<bool>(_actor.Scheduler);
-                if (_mailbox.IsPreallocated)
-                {
-                    _mailbox.Send(_actor, cons128873, completes, ShutDownRepresentation6);
-                }
-                else
-                {
-                    _mailbox.Send(new LocalMessage<IServer>(_actor, cons128873, completes,
-                        ShutDownRepresentation6));
-                }
+        return null!;
+    }
 
-                return completes;
+    public ICompletes<bool> ShutDown()
+    {
+        if (!_actor.IsStopped)
+        {
+            Action<IServer> cons128873 = __ => __.ShutDown();
+            var completes = new BasicCompletes<bool>(_actor.Scheduler);
+            if (_mailbox.IsPreallocated)
+            {
+                _mailbox.Send(_actor, cons128873, completes, ShutDownRepresentation6);
             }
             else
             {
-                _actor.DeadLetters?.FailedDelivery(new DeadLetter(_actor, ShutDownRepresentation6));
+                _mailbox.Send(new LocalMessage<IServer>(_actor, cons128873, completes,
+                    ShutDownRepresentation6));
             }
 
-            return null!;
+            return completes;
+        }
+        else
+        {
+            _actor.DeadLetters?.FailedDelivery(new DeadLetter(_actor, ShutDownRepresentation6));
         }
 
-        public ICompletes<bool> StartUp()
-        {
-            if (!_actor.IsStopped)
-            {
-                Action<IServer> cons128873 = __ => __.StartUp();
-                var completes = new BasicCompletes<bool>(_actor.Scheduler);
-                if (_mailbox.IsPreallocated)
-                {
-                    _mailbox.Send(_actor, cons128873, completes, StartUpRepresentation7);
-                }
-                else
-                {
-                    _mailbox.Send(new LocalMessage<IServer>(_actor, cons128873, completes,
-                        StartUpRepresentation7));
-                }
+        return null!;
+    }
 
-                return completes;
+    public ICompletes<bool> StartUp()
+    {
+        if (!_actor.IsStopped)
+        {
+            Action<IServer> cons128873 = __ => __.StartUp();
+            var completes = new BasicCompletes<bool>(_actor.Scheduler);
+            if (_mailbox.IsPreallocated)
+            {
+                _mailbox.Send(_actor, cons128873, completes, StartUpRepresentation7);
             }
             else
             {
-                _actor.DeadLetters?.FailedDelivery(new DeadLetter(_actor, StartUpRepresentation7));
+                _mailbox.Send(new LocalMessage<IServer>(_actor, cons128873, completes,
+                    StartUpRepresentation7));
             }
 
-            return null!;
+            return completes;
+        }
+        else
+        {
+            _actor.DeadLetters?.FailedDelivery(new DeadLetter(_actor, StartUpRepresentation7));
         }
 
-        public void Conclude()
+        return null!;
+    }
+
+    public void Conclude()
+    {
+        if (!_actor.IsStopped)
         {
-            if (!_actor.IsStopped)
+            Action<IServer> cons128873 = __ => __.Conclude();
+            if (_mailbox.IsPreallocated)
             {
-                Action<IServer> cons128873 = __ => __.Conclude();
-                if (_mailbox.IsPreallocated)
-                {
-                    _mailbox.Send(_actor, cons128873, null, ConcludeRepresentation8);
-                }
-                else
-                {
-                    _mailbox.Send(new LocalMessage<IServer>(_actor, cons128873,
-                        ConcludeRepresentation8));
-                }
+                _mailbox.Send(_actor, cons128873, null, ConcludeRepresentation8);
             }
             else
             {
-                _actor.DeadLetters?.FailedDelivery(new DeadLetter(_actor, ConcludeRepresentation8));
+                _mailbox.Send(new LocalMessage<IServer>(_actor, cons128873,
+                    ConcludeRepresentation8));
             }
         }
-
-        public void Stop()
+        else
         {
-            if (!_actor.IsStopped)
+            _actor.DeadLetters?.FailedDelivery(new DeadLetter(_actor, ConcludeRepresentation8));
+        }
+    }
+
+    public void Stop()
+    {
+        if (!_actor.IsStopped)
+        {
+            Action<IServer> cons128873 = __ => __.Stop();
+            if (_mailbox.IsPreallocated)
             {
-                Action<IServer> cons128873 = __ => __.Stop();
-                if (_mailbox.IsPreallocated)
-                {
-                    _mailbox.Send(_actor, cons128873, null, StopRepresentation9);
-                }
-                else
-                {
-                    _mailbox.Send(
-                        new LocalMessage<IServer>(_actor, cons128873, StopRepresentation9));
-                }
+                _mailbox.Send(_actor, cons128873, null, StopRepresentation9);
             }
             else
             {
-                _actor.DeadLetters?.FailedDelivery(new DeadLetter(_actor, StopRepresentation9));
+                _mailbox.Send(
+                    new LocalMessage<IServer>(_actor, cons128873, StopRepresentation9));
             }
+        }
+        else
+        {
+            _actor.DeadLetters?.FailedDelivery(new DeadLetter(_actor, StopRepresentation9));
         }
     }
 }

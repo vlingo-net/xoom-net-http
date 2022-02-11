@@ -11,37 +11,36 @@ using Vlingo.Xoom.Common;
 using Vlingo.Xoom.Wire.Channel;
 using Vlingo.Xoom.Wire.Fdx.Bidirectional;
 
-namespace Vlingo.Xoom.Http.Resource
+namespace Vlingo.Xoom.Http.Resource;
+
+/// <summary>
+/// The client that is a request sender and that checks for
+/// responses and consumes them.
+/// </summary>
+public interface IClientConsumer : IResponseChannelConsumer, IScheduled<object>, IStoppable
 {
-    /// <summary>
-    /// The client that is a request sender and that checks for
-    /// responses and consumes them.
-    /// </summary>
-    public interface IClientConsumer : IResponseChannelConsumer, IScheduled<object>, IStoppable
-    {
-        ICompletes<Response> RequestWith(Request request, ICompletes<Response> completes);
-    }
+    ICompletes<Response> RequestWith(Request request, ICompletes<Response> completes);
+}
 
-    internal sealed class State
-    {
-        public MemoryStream Buffer { get; }
-        public IClientRequestResponseChannel Channel { get; }
-        public Client.Configuration Configuration { get; }
-        public ResponseParser? Parser { get; internal set; }
-        public ICancellable Probe { get; }
+internal sealed class State
+{
+    public MemoryStream Buffer { get; }
+    public IClientRequestResponseChannel Channel { get; }
+    public Client.Configuration Configuration { get; }
+    public ResponseParser? Parser { get; internal set; }
+    public ICancellable Probe { get; }
 
-        public State(
-            Client.Configuration configuration,
-            IClientRequestResponseChannel channel,
-            ResponseParser? parser,
-            ICancellable probe,
-            MemoryStream buffer)
-        {
-            Configuration = configuration;
-            Channel = channel;
-            Parser = parser;
-            Probe = probe;
-            Buffer = buffer;
-        }
+    public State(
+        Client.Configuration configuration,
+        IClientRequestResponseChannel channel,
+        ResponseParser? parser,
+        ICancellable probe,
+        MemoryStream buffer)
+    {
+        Configuration = configuration;
+        Channel = channel;
+        Parser = parser;
+        Probe = probe;
+        Buffer = buffer;
     }
 }

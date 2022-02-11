@@ -8,29 +8,28 @@
 using System;
 using Vlingo.Xoom.Actors;
 
-namespace Vlingo.Xoom.Http.Resource.Feed
+namespace Vlingo.Xoom.Http.Resource.Feed;
+
+/// <summary>
+/// Produce a feed item for a named feed.
+/// </summary>
+public interface IFeedProducer
 {
     /// <summary>
-    /// Produce a feed item for a named feed.
+    /// Produce the feed to fulfill the <see cref="FeedProductRequest"/>
     /// </summary>
-    public interface IFeedProducer
-    {
-        /// <summary>
-        /// Produce the feed to fulfill the <see cref="FeedProductRequest"/>
-        /// </summary>
-        /// <param name="request">The FeedProductRequest holding request information</param>
-        void ProduceFeedFor(FeedProductRequest request);
-    }
+    /// <param name="request">The FeedProductRequest holding request information</param>
+    void ProduceFeedFor(FeedProductRequest request);
+}
 
-    public static class FeedProducerFactory
-    {
-        /// <summary>
-        /// Answer a new <see cref="IFeedProducer"/>
-        /// </summary>
-        /// <param name="stage">The Stage in which the FeedProducer is created</param>
-        /// <param name="feedProducerClass">feedProducerClass</param>
-        /// <returns>FeedProducer</returns>
-        public static IFeedProducer Using(Stage stage, Type feedProducerClass)
-            => stage.ActorFor<IFeedProducer>(feedProducerClass);
-    }
+public static class FeedProducerFactory
+{
+    /// <summary>
+    /// Answer a new <see cref="IFeedProducer"/>
+    /// </summary>
+    /// <param name="stage">The Stage in which the FeedProducer is created</param>
+    /// <param name="feedProducerClass">feedProducerClass</param>
+    /// <returns>FeedProducer</returns>
+    public static IFeedProducer Using(Stage stage, Type feedProducerClass)
+        => stage.ActorFor<IFeedProducer>(feedProducerClass);
 }

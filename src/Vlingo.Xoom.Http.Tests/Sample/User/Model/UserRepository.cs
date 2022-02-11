@@ -7,44 +7,43 @@
 
 using System.Collections.Generic;
 
-namespace Vlingo.Xoom.Http.Tests.Sample.User.Model
+namespace Vlingo.Xoom.Http.Tests.Sample.User.Model;
+
+public class UserRepository
 {
-    public class UserRepository
+    private static UserRepository _instance;
+        
+    private readonly Dictionary<string, UserState> _users;
+        
+    private static volatile object _lockSync = new object();
+
+    private UserRepository()
     {
-        private static UserRepository _instance;
-        
-        private readonly Dictionary<string, UserState> _users;
-        
-        private static volatile object _lockSync = new object();
-
-        private UserRepository()
-        {
-            _users = new Dictionary<string, UserState>();
-        }
-
-        public static UserRepository Instance()
-        {
-            lock (_lockSync)
-            {
-                if (_instance == null)
-                {
-                    _instance = new UserRepository();
-                }
-
-                return _instance;
-            }
-        }
-
-        public static void Reset() => _instance = null;
-        
-        public UserState UserOf(string userId)
-        {
-            var userState = _users[userId];
-            return userState == null ? UserStateFactory.NonExisting() : userState;
-        }
-
-        public IEnumerable<UserState> Users => _users.Values;
-
-        public void Save(UserState userState) => _users[userState.Id] = userState;
+        _users = new Dictionary<string, UserState>();
     }
+
+    public static UserRepository Instance()
+    {
+        lock (_lockSync)
+        {
+            if (_instance == null)
+            {
+                _instance = new UserRepository();
+            }
+
+            return _instance;
+        }
+    }
+
+    public static void Reset() => _instance = null;
+        
+    public UserState UserOf(string userId)
+    {
+        var userState = _users[userId];
+        return userState == null ? UserStateFactory.NonExisting() : userState;
+    }
+
+    public IEnumerable<UserState> Users => _users.Values;
+
+    public void Save(UserState userState) => _users[userState.Id] = userState;
 }

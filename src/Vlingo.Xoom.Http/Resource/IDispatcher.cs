@@ -7,16 +7,15 @@
 
 using Vlingo.Xoom.Actors;
 
-namespace Vlingo.Xoom.Http.Resource
-{
-    public interface IDispatcher : IStoppable
-    {
-        void DispatchFor(Context context);
-    }
+namespace Vlingo.Xoom.Http.Resource;
 
-    public static class Dispatcher
-    {
-        public static IDispatcher StartWith(Stage stage, Resources resources)
-            => stage.ActorFor<IDispatcher>(() => new DispatcherActor(resources));
-    }
+public interface IDispatcher : IStoppable
+{
+    void DispatchFor(Context context);
+}
+
+public static class Dispatcher
+{
+    public static IDispatcher StartWith(Stage stage, Resources resources)
+        => stage.ActorFor<IDispatcher>(() => new DispatcherActor(resources));
 }
