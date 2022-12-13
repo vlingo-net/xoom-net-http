@@ -51,7 +51,7 @@ internal class ResourceDispatcherGenerator
 
     public static ResourceDispatcherGenerator ForMain(IList<Action> actions, bool persist, ILogger logger)
     {
-        var classPath = new FileInfo(Properties.Instance.GetProperty("resource.dispatcher.generated.classes.main", RootOfMainClasses));
+        var classPath = new FileInfo(Properties.Instance.GetProperty("resource.dispatcher.generated.classes.main", RootOfMainClasses)!);
         var type = DynaType.Main;
         var rootOfGenerated = RootOfGeneratedSources(type);
 
@@ -60,7 +60,7 @@ internal class ResourceDispatcherGenerator
 
     public static ResourceDispatcherGenerator ForTest(IList<Action> actions, bool persist, ILogger logger)
     {
-        var classPath = new FileInfo(Properties.Instance.GetProperty("resource.dispatcher.generated.classes.test", RootOfTestClasses));
+        var classPath = new FileInfo(Properties.Instance.GetProperty("resource.dispatcher.generated.classes.test", RootOfTestClasses)!);
         var type = DynaType.Test;
         var rootOfGenerated = RootOfGeneratedSources(type);
 
@@ -89,8 +89,8 @@ internal class ResourceDispatcherGenerator
 
     private static DirectoryInfo RootOfGeneratedSources(DynaType type)
         => type == DynaType.Main ?
-            new DirectoryInfo(Properties.Instance.GetProperty("resource.dispatcher.generated.sources.main", GeneratedSources)) :
-            new DirectoryInfo(Properties.Instance.GetProperty("resource.dispatcher.generated.sources.test", GeneratedTestSources));
+            new DirectoryInfo(Properties.Instance.GetProperty("resource.dispatcher.generated.sources.main", GeneratedSources)!) :
+            new DirectoryInfo(Properties.Instance.GetProperty("resource.dispatcher.generated.sources.test", GeneratedTestSources)!);
 
     private ResourceDispatcherGenerator(IList<Action> actions, FileInfo rootOfClasses, DirectoryInfo rootOfGenerated, DynaType type, bool persist, ILogger logger)
     {

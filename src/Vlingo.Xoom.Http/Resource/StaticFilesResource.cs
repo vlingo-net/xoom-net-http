@@ -197,7 +197,7 @@ public class StaticFilesResource : ResourceHandler
     {
         if (FileExists(path))
         {
-            return File.ReadAllBytes(path);
+            return File.ReadAllBytes(path!);
         }
         throw new ArgumentException("File not found.");
     }

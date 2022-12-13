@@ -14,7 +14,7 @@ namespace Vlingo.Xoom.Http.Resource;
 
 public sealed class Action
 {
-    internal static readonly MatchResults UnmatchedResults = new MatchResults(null, null, new List<string>(), "");
+    internal static readonly MatchResults UnmatchedResults = new(null, null, new List<string>(), "");
 
     private readonly IList<MappedParameter> _additionalParameters;
     private readonly Method _method;
@@ -91,7 +91,7 @@ public sealed class Action
 
     private int IndexOfNextSegmentStart(int currentIndex, string path)
     {
-        int nextSegmentStart = path.IndexOf("/", currentIndex, StringComparison.InvariantCulture);
+        var nextSegmentStart = path.IndexOf("/", currentIndex, StringComparison.InvariantCulture);
         if (nextSegmentStart < currentIndex)
         {
             return path.Length;
@@ -133,7 +133,7 @@ public sealed class Action
                     pathCurrentIndex = lastIndex;
                 }
             }
-            int nextPathSegmentIndex = IndexOfNextSegmentStart(pathCurrentIndex, path);
+            var nextPathSegmentIndex = IndexOfNextSegmentStart(pathCurrentIndex, path);
             if (nextPathSegmentIndex != path.Length)
             {
                 if (nextPathSegmentIndex < path.Length - 1)
@@ -192,7 +192,7 @@ public sealed class Action
 
     private object? MapOtherFrom(RawPathParameter parameter)
     {
-        var type = _to.ParameterOf(parameter.Name).Type;
+        var type = _to.ParameterOf(parameter.Name)?.Type;
 
         switch (type)
         {
@@ -363,7 +363,7 @@ public sealed class Action
             Value = value;
         }
 
-        public static RawPathParameter Named(string name, IList<RawPathParameter> parameters)
+        public static RawPathParameter? Named(string name, IList<RawPathParameter> parameters)
             => parameters.FirstOrDefault(p => string.Equals(name, p.Name));
 
         public override string ToString()
@@ -418,7 +418,7 @@ public sealed class Action
             => _matchSegments.Add(new MatchSegment(false, pathStartIndex));
 
         public int NextSegmentStartIndex(int index, int maxIndex)
-            => index < (Total - 1) ? MatchSegment(index + 1).PathStartIndex : maxIndex;
+            => index < Total - 1 ? MatchSegment(index + 1).PathStartIndex : maxIndex;
 
         public MatchSegment MatchSegment(int index)
             => _matchSegments[index];
@@ -567,17 +567,17 @@ public sealed class Action
         public override string ToString()
             => $"ToSpec[MethodName={MethodName}, Parameters={Parameters}]";
 
-        public MethodParameter Body
+        public MethodParameter? Body
             => Parameters.FirstOrDefault(p => p.IsBody);
 
-        public MethodParameter ParameterOf(string name)
+        public MethodParameter? ParameterOf(string name)
             => Parameters.FirstOrDefault(p => string.Equals(name, p.Name));
 
         private string CommaSeparatedParameters()
         {
             var builder = new StringBuilder();
 
-            string separator = "";
+            var separator = "";
 
             foreach (var parameter in Parameters)
             {
@@ -672,10 +672,10 @@ public sealed class Action
             {
                 throw new InvalidOperationException($"Parameter mimeType and name must be separated by space: {rawParameter}");
             }
-            var type_name = new string[2];
-            type_name[0] = rawParameter.Substring(0, space).Trim();
-            type_name[1] = rawParameter.Substring(space + 1).Trim();
-            return type_name;
+            var typeName = new string[2];
+            typeName[0] = rawParameter.Substring(0, space).Trim();
+            typeName[1] = rawParameter.Substring(space + 1).Trim();
+            return typeName;
         }
             
         private string FirstLetterToUpperCase(string s)
@@ -683,7 +683,7 @@ public sealed class Action
             if (string.IsNullOrEmpty(s))
                 throw new ArgumentException("There is no first letter");
 
-            char[] a = s.ToCharArray();
+            var a = s.ToCharArray();
             a[0] = char.ToUpper(a[0]);
             return new string(a);
         }
